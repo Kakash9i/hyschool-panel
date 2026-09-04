@@ -1,0 +1,4259 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>HYSCHOOL ADMIN PANEL</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    background: #090a0f; 
+    color: #94a3b8; 
+    font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+    min-height: 100vh; 
+    overflow-x: hidden;
+    background-image: radial-gradient(circle at 50% 0%, rgba(229, 169, 60, 0.03) 0%, transparent 60%);
+  }
+
+  /* LOGIN */
+  #login-screen { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); width: 400px; text-align: center; }
+  .login-box { 
+    background: #10121a; 
+    border: 1px solid #1e2230; 
+    padding: 38px 32px; 
+    border-radius: 12px; 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(0,0,0,0.5); 
+  }
+  .login-box h1 { color: #f1f5f9; font-size: 24px; letter-spacing: 4px; margin-bottom: 4px; font-weight: 900; }
+  .login-box p { font-size: 11px; color: #64748b; margin-bottom: 24px; letter-spacing: 2px; font-weight: 700; }
+  .login-box input { 
+    width: 100%; 
+    background: #090a0f; 
+    border: 1px solid #1e2333; 
+    color: #f8fafc; 
+    padding: 12px 16px; 
+    border-radius: 8px; 
+    font-size: 14px; 
+    outline: none; 
+    margin-bottom: 12px; 
+    transition: .2s; 
+  }
+  .login-box input:focus { border-color: #e5a93c; box-shadow: 0 0 14px rgba(229,169,60,0.2); }
+  .login-box button { 
+    width: 100%; 
+    background: linear-gradient(135deg, #e5a93c, #c68924); 
+    border: none; 
+    color: #0b0c10; 
+    padding: 13px; 
+    border-radius: 8px; 
+    font-size: 13px; 
+    letter-spacing: 2px; 
+    cursor: pointer; 
+    font-weight: 900; 
+    transition: .2s; 
+    box-shadow: 0 4px 18px rgba(229,169,60,0.25);
+  }
+  .login-box button:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(229,169,60,0.35); }
+  #login-error { color: #f43f5e; font-size: 12px; margin-top: 12px; display: none; font-weight: 700; }
+
+  /* MAIN PANEL */
+  #main-panel { display: none; padding: 24px 36px; max-width: 1550px; width: 100%; margin: 0 auto; }
+  
+  .header { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    margin-bottom: 22px; 
+    padding-bottom: 18px; 
+    border-bottom: 1px solid #1a1d28; 
+  }
+  .header h1 { 
+    color: #f8fafc; 
+    font-size: 18px; 
+    letter-spacing: 2.5px; 
+    font-weight: 900; 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+  }
+
+  .status-indicator { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    font-size: 11px; 
+    color: #10b981; 
+    font-weight: 800; 
+    letter-spacing: 1.5px; 
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: 6px 14px;
+    border-radius: 20px;
+  }
+  .blink-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #10b981; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.85); } 100% { opacity: 1; transform: scale(1); } }
+
+  /* TOAST NOTIFICATION */
+  #toast-msg { position: fixed; bottom: 28px; right: 28px; z-index: 99999; padding: 14px 22px; border-radius: 8px; font-size: 12px; font-weight: 800; letter-spacing: 1px; display: none; box-shadow: 0 12px 30px rgba(0,0,0,0.9); backdrop-filter: blur(8px); }
+  #toast-msg.ok { display: block; background: #111827; color: #e5a93c; border: 1px solid #e5a93c; }
+  #toast-msg.err { display: block; background: #271116; color: #f43f5e; border: 1px solid #f43f5e; }
+
+  /* MAIN TABS */
+  .main-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+  .main-tab { 
+    padding: 8px 12px; 
+    border-radius: 7px; 
+    font-size: 10.5px; 
+    font-weight: 800; 
+    letter-spacing: 0.5px; 
+    cursor: pointer; 
+    background: #10121a; 
+    color: #94a3b8; 
+    border: 1px solid #1a1e2b; 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+    transition: all .2s cubic-bezier(0.4, 0, 0.2, 1); 
+    white-space: nowrap;
+  }
+  .main-tab:hover { color: #f8fafc; background: #161924; border-color: #272d40; transform: translateY(-1px); }
+  .main-tab.active { 
+    background: #141724; 
+    color: #f8fafc; 
+    border-color: #e5a93c; 
+    box-shadow: 0 4px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(229,169,60,0.25); 
+  }
+
+  .tab-content { 
+    display: none; 
+    background: #10121a; 
+    border: 1px solid #1a1e2b; 
+    border-radius: 12px; 
+    padding: 26px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .tab-content.active { display: block; }
+
+  /* SUB-TABS (CHEAT SELECTOR) */
+  .sub-tabs-container { display: flex; gap: 8px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #1a1e2b; overflow-x: auto; }
+  .sub-tab { 
+    padding: 9px 18px; 
+    border-radius: 6px; 
+    font-size: 11px; 
+    font-weight: 800; 
+    letter-spacing: 0.8px; 
+    cursor: pointer; 
+    background: #141724; 
+    color: #64748b; 
+    border: 1px solid #1f2538; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    transition: .2s; 
+    white-space: nowrap; 
+  }
+  .sub-tab:hover { color: #f8fafc; background: #1a1f30; }
+  .sub-tab.active { background: #1c2133; color: #e5a93c; border-color: #e5a93c; box-shadow: 0 2px 10px rgba(229,169,60,0.15); }
+
+  /* CHEAT VIEW GRID */
+  .cheat-view-grid { display: grid; grid-template-columns: 320px 1fr; gap: 24px; }
+
+  /* LEFT PANEL - CHEAT INFO */
+  .info-panel { background: #0c0d13; border: 1px solid #1a1e2b; border-radius: 8px; padding: 20px; }
+  .info-panel h3 { font-size: 11px; color: #e5a93c; letter-spacing: 1.5px; margin-bottom: 16px; font-weight: 800; }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 10px; color: #64748b; letter-spacing: 1px; margin-bottom: 5px; font-weight: 700; }
+  .field input, .field select { 
+    width: 100%; 
+    background: #10121a; 
+    border: 1px solid #1e2333; 
+    color: #f8fafc; 
+    padding: 9px 12px; 
+    border-radius: 6px; 
+    font-size: 12px; 
+    outline: none; 
+    transition: .2s; 
+  }
+  .field input:focus, .field select:focus { border-color: #e5a93c; box-shadow: 0 0 10px rgba(229,169,60,0.15); }
+  
+  .loadable-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-top: 1px solid #1a1e2b; border-bottom: 1px solid #1a1e2b; margin: 16px 0; }
+  .lbl { font-size: 11px; color: #cbd5e1; letter-spacing: 1px; font-weight: 700; }
+  .toggle { position: relative; width: 38px; height: 20px; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle .slider { position: absolute; cursor: pointer; inset: 0; background: #1e2333; border-radius: 20px; transition: .2s; }
+  .toggle .slider:before { content:''; position:absolute; height:14px; width:14px; left:3px; bottom:3px; background:#64748b; border-radius:50%; transition:.2s; }
+  .toggle input:checked + .slider { background: #e5a93c; }
+  .toggle input:checked + .slider:before { transform: translateX(18px); background: #0b0c10; }
+
+  /* RIGHT PANEL - UPLOAD */
+  .upload-panel { display: flex; flex-direction: column; gap: 16px; background: #0c0d13; border: 1px solid #1a1e2b; border-radius: 8px; padding: 20px; }
+  .section-title { font-size: 11px; color: #e5a93c; letter-spacing: 1.5px; margin-bottom: 12px; font-weight: 800; }
+
+  .drop-zone { 
+    border: 2px dashed #22283a; 
+    border-radius: 8px; 
+    padding: 24px; 
+    text-align: center; 
+    cursor: pointer; 
+    transition: .2s; 
+    min-height: 110px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 6px; 
+    font-size: 12px; 
+    color: #64748b; 
+    background: #0e1017; 
+  }
+  .drop-zone:hover, .drop-zone.over { border-color: #e5a93c; background: #141724; color: #cbd5e1; }
+  .drop-zone input { display: none; }
+
+  .file-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+  .file-item { display: flex; align-items: center; justify-content: space-between; background: #141724; border: 1px solid #1f2538; border-radius: 6px; padding: 8px 14px; font-size: 11px; }
+
+  .upload-btn { 
+    background: linear-gradient(135deg, #e5a93c, #c68924); 
+    border: none; 
+    color: #0b0c10; 
+    padding: 11px 20px; 
+    border-radius: 6px; 
+    font-size: 12px; 
+    letter-spacing: 1px; 
+    cursor: pointer; 
+    width: 100%; 
+    font-weight: 800; 
+    transition: .2s; 
+    box-shadow: 0 4px 14px rgba(229,169,60,0.2);
+  }
+  .upload-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(229,169,60,0.3); }
+  .upload-btn:disabled { background: #1e2333; color: #475569; cursor: not-allowed; box-shadow: none; transform: none; }
+
+  .save-cheat-btn { 
+    background: linear-gradient(135deg, #e5a93c, #c68924); 
+    border: none; 
+    color: #0b0c10; 
+    padding: 12px 20px; 
+    border-radius: 6px; 
+    font-size: 12px; 
+    letter-spacing: 1px; 
+    cursor: pointer; 
+    width: 100%; 
+    font-weight: 900; 
+    margin-top: 14px; 
+    transition: .2s; 
+    box-shadow: 0 4px 15px rgba(229,169,60,0.2);
+  }
+  .save-cheat-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(229,169,60,0.3); }
+
+  /* PROGRESS BAR */
+  .prog-wrap { display: none; margin-top: 10px; }
+  .prog-bar { background: #1a1e2b; border-radius: 4px; height: 6px; overflow: hidden; }
+  .prog-bar .bar { height: 100%; width: 0%; background: #e5a93c; transition: width .3s; }
+  .prog-lbl { font-size: 11px; color: #64748b; margin-top: 6px; text-align: center; font-weight: 700; }
+  .prog-lbl.ok { color: #10b981; }
+  .prog-lbl.err { color: #f43f5e; }
+
+  /* LUXURY TABLE & CARD LIST */
+  .logs-table-wrap { overflow-x: hidden; border: 1px solid #1a1e2b; border-radius: 8px; background: #0c0d13; }
+  .logs-table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; table-layout: fixed; }
+  .logs-table th { 
+    background: #10121a; 
+    color: #e5a93c; 
+    padding: 10px 8px; 
+    font-weight: 800; 
+    letter-spacing: 0.5px; 
+    border-bottom: 1px solid #1a1e2b; 
+    font-size: 10px; 
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .logs-table td { padding: 9px 8px; border-bottom: 1px solid #161822; vertical-align: middle; white-space: nowrap; }
+  .logs-table tr:last-child td { border-bottom: none; }
+  .logs-table tr:hover td { background: #121520; }
+
+  /* CUSTOM LUXURY CHECKBOX */
+  .custom-cb-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+  }
+  .custom-cb-wrap input {
+    display: none;
+  }
+  .custom-cb-box {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    background: #090a0f;
+    border: 1.5px solid #283046;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: transparent;
+    font-size: 11px;
+    font-weight: 900;
+  }
+  .custom-cb-wrap:hover .custom-cb-box {
+    border-color: #e5a93c;
+    background: #141724;
+  }
+  .custom-cb-wrap input:checked + .custom-cb-box {
+    background: linear-gradient(135deg, #e5a93c, #c68924);
+    border-color: #e5a93c;
+    color: #0b0c10;
+    box-shadow: 0 0 10px rgba(229,169,60,0.4);
+  }
+  .custom-cb-wrap input:disabled + .custom-cb-box {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: #1a1e2b;
+  }
+
+  .tag-key-box {
+    font-family: 'JetBrains Mono', monospace; 
+    font-weight: 800; 
+    background: #090a0f; 
+    border: 1px solid #1e2333; 
+    padding: 5px 8px; 
+    border-radius: 5px; 
+    color: #f8fafc; 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: .2s;
+  }
+  .tag-key-box:hover {
+    border-color: #e5a93c;
+    color: #e5a93c;
+  }
+
+  .tag-product {
+    background: #141724; 
+    color: #e5a93c; 
+    padding: 3px 8px; 
+    border-radius: 4px; 
+    font-weight: 800; 
+    font-size: 10px; 
+    border: 1px solid #272d40; 
+    letter-spacing: 0.5px;
+  }
+  .tag-duration {
+    background: #141724; 
+    color: #94a3b8; 
+    padding: 3px 8px; 
+    border-radius: 4px; 
+    font-weight: 700; 
+    font-size: 10px; 
+    border: 1px solid #1f2538;
+  }
+
+  /* LUXURY HWID BADGES */
+  .hwid-badge-empty {
+    background: #0d0f17;
+    color: #64748b;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    border: 1px solid #1c2234;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+  }
+  .hwid-badge-bound {
+    background: #0b111e;
+    border: 1px solid #1d2c48;
+    color: #38bdf8;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all .2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    white-space: nowrap;
+  }
+  .hwid-badge-bound:hover {
+    border-color: #38bdf8;
+    background: #101a2e;
+    box-shadow: 0 0 12px rgba(56,189,248,0.25);
+    transform: translateY(-1px);
+  }
+  .hwid-badge-admin {
+    background: rgba(229,169,60,0.08);
+    border: 1px solid rgba(229,169,60,0.3);
+    color: #e5a93c;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+
+  .admin-crown-badge {
+    background: linear-gradient(135deg, rgba(229,169,60,0.2), rgba(229,169,60,0.05));
+    color: #fbbf24;
+    border: 1px solid rgba(229,169,60,0.35);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 9.5px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+
+  /* LUXURY ACTION BUTTONS */
+  .action-btn-group {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    flex-wrap: nowrap;
+  }
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    height: 25px;
+    padding: 0 6px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    transition: all .2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    border: 1px solid transparent;
+    user-select: none;
+    box-sizing: border-box;
+  }
+  .action-btn:hover {
+    transform: translateY(-1px);
+  }
+  .action-btn-pause {
+    background: #141724;
+    border-color: #2a2d3e;
+    color: #fbbf24;
+  }
+  .action-btn-pause:hover {
+    background: #1c2033;
+    border-color: #fbbf24;
+    box-shadow: 0 0 10px rgba(251,191,36,0.25);
+  }
+  .action-btn-resume {
+    background: linear-gradient(135deg, #e5a93c, #c68924);
+    color: #0b0c10;
+    border: none;
+    box-shadow: 0 2px 10px rgba(229,169,60,0.25);
+  }
+  .action-btn-resume:hover {
+    box-shadow: 0 4px 14px rgba(229,169,60,0.4);
+  }
+  .action-btn-reset {
+    background: #111522;
+    border-color: #21293f;
+    color: #94a3b8;
+  }
+  .action-btn-reset:hover {
+    background: #171d30;
+    border-color: #38bdf8;
+    color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56,189,248,0.2);
+  }
+  .action-btn-edit {
+    background: #111522;
+    border-color: #21293f;
+    color: #cbd5e1;
+  }
+  .action-btn-edit:hover {
+    background: #171d30;
+    border-color: #e5a93c;
+    color: #e5a93c;
+  }
+  .action-btn-del {
+    background: rgba(244,63,94,0.12);
+    border-color: rgba(244,63,94,0.3);
+    color: #f43f5e;
+    padding: 0 8px;
+    font-size: 11px;
+    min-width: 26px;
+  }
+  .action-btn-del:hover {
+    background: rgba(244,63,94,0.25);
+    border-color: #f43f5e;
+    box-shadow: 0 0 12px rgba(244,63,94,0.35);
+  }
+
+  /* EDIT LICENSE MODAL & HWID MODAL */
+  #edit-lic-modal, #hwid-modal, #staff-modal { 
+    display: none; 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.85); 
+    z-index: 100000; 
+    align-items: center; 
+    justify-content: center; 
+    backdrop-filter: blur(6px); 
+  }
+  .edit-lic-modal-box, .hwid-modal-box, .staff-modal-box { 
+    background: #10121a; 
+    border: 1px solid #22283a; 
+    border-radius: 12px; 
+    padding: 26px; 
+    width: 520px; 
+    max-width: 92%; 
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 35px rgba(0,0,0,0.5); 
+  }
+  .hwid-modal-box { width: 480px; }
+  .modal-field-group { margin-bottom: 14px; }
+  .modal-field-group label { font-size: 10px; color: #64748b; font-weight: 800; letter-spacing: 1px; display: block; margin-bottom: 6px; }
+  .modal-field-group input, .modal-field-group select { 
+    width: 100%; 
+    background: #090a0f; 
+    border: 1px solid #1e2333; 
+    color: #f8fafc; 
+    padding: 10px 12px; 
+    border-radius: 6px; 
+    font-size: 12px; 
+    outline: none; 
+    box-sizing: border-box;
+  }
+  .modal-field-group input:focus, .modal-field-group select:focus { border-color: #e5a93c; }
+  .quick-pill-btn {
+    background: #141724;
+    border: 1px solid #232a3e;
+    color: #cbd5e1;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .15s;
+  }
+  .quick-pill-btn:hover { background: #1c2133; color: #e5a93c; border-color: #e5a93c; }
+
+  .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .perm-item { background: #090a0f; border: 1px solid #1e2333; padding: 10px 12px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<!-- STAFF MODAL POPUP -->
+<div id="staff-modal">
+  <div class="staff-modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
+        <span style="color:#e5a93c;">👔</span> MITARBEITER / TEAM-MITGLIED BEARBEITEN
+      </h3>
+      <button onclick="closeStaffModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="modal-field-group">
+        <label>BENUTZERNAME</label>
+        <input type="text" id="staff-name-input" placeholder="z.B. Supporter1" />
+      </div>
+      <div class="modal-field-group">
+        <label>PASSWORT</label>
+        <input type="text" id="staff-pw-input" placeholder="z.B. safe_pass123" />
+      </div>
+    </div>
+
+    <div class="modal-field-group">
+      <label>ROLLE / BEZEICHNUNG</label>
+      <select id="staff-role-input">
+        <option value="Supporter">Supporter (Standard Support)</option>
+        <option value="Reseller">Reseller (Verkäufer / Keys)</option>
+        <option value="Moderator">Moderator (Erweitert)</option>
+        <option value="Co-Admin">Co-Admin (Fast alle Rechte)</option>
+      </select>
+    </div>
+
+    <div style="margin-top:14px;margin-bottom:6px;font-size:10px;color:#e5a93c;font-weight:800;letter-spacing:1px;">ERLAUBTE BERECHTIGUNGEN:</div>
+    <div class="perm-grid">
+      <!-- 1. KEYS GENERIEREN -->
+      <div class="perm-item" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; align-items: stretch;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-weight:700;">⚡ Keys generieren</span>
+          <label class="toggle"><input type="checkbox" id="sp-gen" onchange="document.getElementById('sp-max-dur-wrap').style.display=this.checked?'flex':'none'"><span class="slider"></span></label>
+        </div>
+        <div id="sp-max-dur-wrap" style="background:#050608; border:1px solid #1a1e2b; padding:8px 12px; border-radius:6px; display:flex; align-items:center; justify-content:space-between;">
+          <span style="color:#94a3b8; font-size:11px; font-weight:700;">⏱️ Max. erlaubte Erstellungs-Laufzeit:</span>
+          <select id="sp-max-duration" style="background:#141724; border:1px solid #232a3e; color:#f8fafc; padding:6px 10px; border-radius:5px; font-size:11px; outline:none;">
+            <option value="all">♾️ Alle Laufzeiten (inkl. Lifetime)</option>
+            <option value="1">Max. 1 Tag (Trial)</option>
+            <option value="3">Max. 3 Tage</option>
+            <option value="7">Max. 7 Tage (Woche)</option>
+            <option value="14">Max. 14 Tage</option>
+            <option value="30" selected>Max. 30 Tage (1 Monat)</option>
+            <option value="90">Max. 90 Tage (3 Monate)</option>
+            <option value="365">Max. 365 Tage (1 Jahr)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 2. KEYS BEARBEITEN (DETAILRECHTE) -->
+      <div class="perm-item" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; align-items: stretch;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-weight:700;">✏️ Keys bearbeiten</span>
+          <label class="toggle"><input type="checkbox" id="sp-edit" onchange="document.getElementById('sp-edit-sub-wrap').style.display=this.checked?'flex':'none'"><span class="slider"></span></label>
+        </div>
+        <div id="sp-edit-sub-wrap" style="background:#050608; border:1px solid #1a1e2b; padding:10px 12px; border-radius:6px; display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2px;">
+            <span style="color:#94a3b8; font-size:11px; font-weight:700;">⏱️ Max. erlaubte Edit-Laufzeit:</span>
+            <select id="sp-edit-max-dur" style="background:#141724; border:1px solid #232a3e; color:#f8fafc; padding:5px 10px; border-radius:5px; font-size:11px; outline:none;">
+              <option value="all">♾️ Alle Laufzeiten (inkl. Lifetime)</option>
+              <option value="1">Max. 1 Tag (Trial)</option>
+              <option value="3">Max. 3 Tage</option>
+              <option value="7">Max. 7 Tage (Woche)</option>
+              <option value="14">Max. 14 Tage</option>
+              <option value="30" selected>Max. 30 Tage (1 Monat)</option>
+              <option value="90">Max. 90 Tage (3 Monate)</option>
+              <option value="365">Max. 365 Tage (1 Jahr)</option>
+            </select>
+          </div>
+          <div style="font-size:10px; color:#64748b; font-weight:700; letter-spacing:0.5px; margin-top:2px;">WAS DARF BEARBEITET WERDEN:</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+            <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
+              <input type="checkbox" id="sp-edit-f-dur" checked style="width:auto;margin:0;cursor:pointer;"> ⏱️ Laufzeit / Ablauf
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
+              <input type="checkbox" id="sp-edit-f-prod" style="width:auto;margin:0;cursor:pointer;"> 🎮 Cheat-Produkt
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
+              <input type="checkbox" id="sp-edit-f-stat" checked style="width:auto;margin:0;cursor:pointer;"> 🟢 Status (Aktiv/Unused)
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
+              <input type="checkbox" id="sp-edit-f-note" checked style="width:auto;margin:0;cursor:pointer;"> 👤 Notiz / Kunde
+            </label>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px; padding-top:6px; border-top:1px solid #1a1e2b;">
+            <span style="color:#94a3b8; font-size:11px; font-weight:700;">🎯 Erlaubte Keys zum Bearbeiten:</span>
+            <select id="sp-edit-scope" style="background:#141724; border:1px solid #232a3e; color:#e5a93c; padding:5px 10px; border-radius:5px; font-size:11px; font-weight:800; outline:none;">
+              <option value="all">🌍 Alle Keys bearbeiten</option>
+              <option value="own" selected>👤 Nur selbst erstellte Keys</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. KEYS PAUSIEREN (MIT MAX PAUSE DAUER) -->
+      <div class="perm-item" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; align-items: stretch;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-weight:700;">⏸️ Keys pausieren</span>
+          <label class="toggle"><input type="checkbox" id="sp-pause" onchange="document.getElementById('sp-pause-dur-wrap').style.display=this.checked?'flex':'none'"><span class="slider"></span></label>
+        </div>
+        <div id="sp-pause-dur-wrap" style="background:#050608; border:1px solid #1a1e2b; padding:8px 12px; border-radius:6px; display:flex; align-items:center; justify-content:space-between;">
+          <span style="color:#94a3b8; font-size:11px; font-weight:700;">⏳ Max. erlaubte Pausierungsdauer:</span>
+          <select id="sp-pause-max-dur" style="background:#141724; border:1px solid #232a3e; color:#f8fafc; padding:6px 10px; border-radius:5px; font-size:11px; outline:none;">
+            <option value="all">♾️ Unbegrenzt pausieren</option>
+            <option value="1">Max. 1 Tag pausieren</option>
+            <option value="3">Max. 3 Tage pausieren</option>
+            <option value="7" selected>Max. 7 Tage pausieren</option>
+            <option value="14">Max. 14 Tage pausieren</option>
+            <option value="30">Max. 30 Tage pausieren</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- WEITERE RECHTE -->
+      <div class="perm-item">
+        <span>🔄 HWID Reset</span>
+        <label class="toggle"><input type="checkbox" id="sp-hwid"><span class="slider"></span></label>
+      </div>
+      <div class="perm-item">
+        <span>🗑️ Keys löschen</span>
+        <label class="toggle"><input type="checkbox" id="sp-del"><span class="slider"></span></label>
+      </div>
+      <div class="perm-item">
+        <span>🎮 Cheats / Loader Updaten</span>
+        <label class="toggle"><input type="checkbox" id="sp-cheat"><span class="slider"></span></label>
+      </div>
+      <div class="perm-item">
+        <span>📊 User Logs ansehen</span>
+        <label class="toggle"><input type="checkbox" id="sp-logs"><span class="slider"></span></label>
+      </div>
+      <div class="perm-item" style="grid-column: 1 / -1;">
+        <span>👔 Team verwalten</span>
+        <label class="toggle"><input type="checkbox" id="sp-staff"><span class="slider"></span></label>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:22px;">
+      <button onclick="saveStaffModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">💾 MITARBEITER SPEICHERN</button>
+      <button onclick="closeStaffModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT LICENSE MODAL POPUP -->
+<div id="edit-lic-modal">
+  <div class="edit-lic-modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
+        <span style="color:#e5a93c;">✏️</span> LIZENZ BEARBEITEN
+      </h3>
+      <button onclick="closeEditLicModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
+    </div>
+
+    <!-- KEY DISPLAY & PRODUCT SELECTION -->
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:12px;">
+      <div class="modal-field-group">
+        <label>KEYAUTH LICENSE KEY</label>
+        <div id="edit-lic-key-display" style="color:#f8fafc;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:12px;background:#090a0f;padding:10px 12px;border-radius:6px;border:1px solid #1e2333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+      </div>
+
+      <div class="modal-field-group">
+        <label>FREIGESCHALTETES PRODUKT</label>
+        <select id="edit-lic-product">
+          <option value="ALL">ALL CHEATS</option>
+          <option value="valorant">VALORANT</option>
+          <option value="apex">AI HYSCHOOL</option>
+          <option value="tft_helper">TFT HELPER</option>
+          <option value="naraka">NARAKA BLADEPOINT</option>
+          <option value="coc">CLASH OF CLANS</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 2 COLUMN GRID FOR DURATION & STATUS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="modal-field-group">
+        <label>LAUFZEIT (DAUER)</label>
+        <select id="edit-lic-duration" onchange="onEditModalDurationChange()">
+          <option value="1">1 Tag (Trial)</option>
+          <option value="3">3 Tage</option>
+          <option value="7">7 Tage (Woche)</option>
+          <option value="14">14 Tage</option>
+          <option value="30">30 Tage (1 Monat)</option>
+          <option value="90">90 Tage (3 Monate)</option>
+          <option value="365">365 Tage (1 Jahr)</option>
+          <option value="lifetime">Lifetime (Unbegrenzt)</option>
+        </select>
+      </div>
+
+      <div class="modal-field-group">
+        <label>STATUS</label>
+        <select id="edit-lic-status">
+          <option value="unused">🟢 Unbenutzt (Startet bei Login)</option>
+          <option value="active">⚪ Eingelöst / Aktiv</option>
+          <option value="paused">⏸️ Pausiert</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- EXPIRES AT FIELD -->
+    <div class="modal-field-group">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <label style="margin-bottom:0;">ABLAUFDATUM &amp; UHRZEIT</label>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;">
+          <button type="button" class="quick-pill-btn" onclick="addDaysToModalExpiry(1)">+1 Tag</button>
+          <button type="button" class="quick-pill-btn" onclick="addDaysToModalExpiry(7)">+7 Tage</button>
+          <button type="button" class="quick-pill-btn" onclick="addDaysToModalExpiry(30)">+30 Tage</button>
+          <button type="button" class="quick-pill-btn" onclick="setModalExpiryLifetime()">♾️ Lifetime</button>
+          <button type="button" class="quick-pill-btn" onclick="resetModalExpiryToUnused()">🔄 Unbenutzt</button>
+        </div>
+      </div>
+      <input type="text" id="edit-lic-expires" placeholder="z.B. 12.10.2026 18:30 oder LIFETIME oder leer" />
+      <div style="font-size:10px;color:#64748b;margin-top:4px;">Format: TT.MM.JJJJ HH:mm oder leer lassen für unbenutzte Keys.</div>
+    </div>
+
+    <!-- BENUTZER / NOTIZ -->
+    <div class="modal-field-group">
+      <label>BENUTZERNAME / KUNDE / NOTIZ</label>
+      <input type="text" id="edit-lic-user" placeholder="(Login-Name)" />
+    </div>
+
+    <!-- ACTIONS -->
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button onclick="saveEditLicModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">💾 ÄNDERUNGEN SPEICHERN</button>
+      <button onclick="closeEditLicModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+<!-- HWID MODAL POPUP -->
+<div id="hwid-modal">
+  <div class="hwid-modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+      <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;">
+        <span style="color:#e5a93c;">💻</span> HWID-GERÄTEBINDUNG
+      </h3>
+      <button onclick="closeHwidModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:5px;letter-spacing:1px;">LICENSE KEY:</div>
+      <div id="modal-hwid-key" style="color:#f8fafc;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:13px;background:#090a0f;padding:8px 12px;border-radius:6px;border:1px solid #1e2333;"></div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:5px;letter-spacing:1px;">BENUTZERNAME:</div>
+      <div id="modal-hwid-user" style="color:#f8fafc;font-weight:800;font-size:13px;background:#090a0f;padding:8px 12px;border-radius:6px;border:1px solid #1e2333;"></div>
+    </div>
+    <div style="margin-bottom:18px;">
+      <div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:5px;letter-spacing:1px;">AKTUELL GEBUNDENE HWID:</div>
+      <div id="modal-hwid-val" style="background:#090a0f;border:1px solid #1e2333;padding:12px 14px;border-radius:6px;color:#e5a93c;font-family:'JetBrains Mono',monospace;font-size:11px;word-break:break-all;line-height:1.5;"></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:22px;">
+      <button id="modal-hwid-reset-btn" onclick="executeHwidResetFromModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">🔄 HWID JETZT ZURÜCKSETZEN</button>
+      <button onclick="closeHwidModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<div id="login-screen">
+  <div class="login-box">
+    <h1>HYSCHOOL</h1>
+    <p>ADMIN PANEL</p>
+    <input type="text" id="user-input" placeholder="Benutzername" onkeydown="if(event.key==='Enter')document.getElementById('pw-input').focus()">
+    <input type="password" id="pw-input" placeholder="Passwort" onkeydown="if(event.key==='Enter')doLogin()">
+    <div style="display:flex;align-items:center;justify-content:flex-start;gap:8px;margin-bottom:16px;font-size:11px;color:#64748b;">
+      <input type="checkbox" id="save-pw-cb" checked style="width:auto;margin:0;cursor:pointer;">
+      <label for="save-pw-cb" style="cursor:pointer;user-select:none;">Zugangsdaten speichern</label>
+    </div>
+    <button onclick="doLogin()">LOGIN</button>
+    <div id="login-error">Falscher Benutzername oder Passwort!</div>
+  </div>
+</div>
+
+<div id="toast-msg"></div>
+
+<div id="main-panel">
+  <div class="header">
+    <h1>HYSCHOOL ADMIN PANEL <span id="user-badge" style="background:#141724;color:#e5a93c;border:1px solid #272d40;padding:3px 10px;border-radius:4px;font-size:10px;font-weight:800;letter-spacing:1px;">👑 INHABER (ADMIN)</span></h1>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="status-indicator">
+        <span class="blink-dot"></span>
+        <span id="hdr-status">SYSTEM ONLINE</span>
+      </div>
+      <button onclick="doLogout()" style="background:#141724;border:1px solid #272d40;color:#f43f5e;padding:6px 14px;border-radius:20px;font-size:11px;cursor:pointer;font-weight:800;">🚪 LOGOUT</button>
+    </div>
+  </div>
+
+  <!-- MAIN NAVIGATION TABS -->
+  <div class="main-tabs">
+    <div class="main-tab active" onclick="switchMainTab(0)" id="mtab-0">
+      <span style="font-size:14px;color:#e5a93c;">🎮</span> CHEATS &amp; CLOUD UPLOAD
+    </div>
+    <div class="main-tab" onclick="switchMainTab(1)" id="mtab-1">
+      <span style="font-size:14px;color:#cbd5e1;">⚙️</span> MAYA UPDATER
+    </div>
+    <div class="main-tab" onclick="switchMainTab(2)" id="mtab-2">
+      <span style="font-size:14px;color:#cbd5e1;">📊</span> USER LOGS
+    </div>
+    <div class="main-tab" onclick="switchMainTab(3)" id="mtab-3">
+      <span style="font-size:14px;color:#cbd5e1;">🔑</span> KEYAUTH &amp; RECHTE
+    </div>
+    <div class="main-tab" onclick="switchMainTab(4)" id="mtab-4">
+      <span style="font-size:14px;color:#cbd5e1;">👔</span> MITARBEITER &amp; RECHTE
+    </div>
+    <div class="main-tab" onclick="switchMainTab(5)" id="mtab-5">
+      <span style="font-size:14px;color:#cbd5e1;">📜</span> ADMIN AUDIT LOGS
+    </div>
+    <div class="main-tab" onclick="switchMainTab(6)" id="mtab-6">
+      <span style="font-size:14px;color:#cbd5e1;">💬</span> TEAM CHAT
+    </div>
+  </div>
+
+  <!-- TAB 0: CHEATS & CLOUD UPLOAD -->
+  <div class="tab-content active" id="tc-0">
+    <div class="sub-tabs-container" id="cheat-sub-tabs"></div>
+    <div id="cheat-sub-contents"></div>
+  </div>
+
+  <!-- TAB 1: MAYA UPDATER -->
+  <div class="tab-content" id="tc-1">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+      <div class="section-title" style="margin-bottom:0;font-size:13px;color:#f8fafc;">MAYA LOADER EXE UPDATER — AUTOMATISCHES KUNDEN-UPDATE</div>
+    </div>
+    <p style="font-size:12px;color:#94a3b8;margin-bottom:18px;line-height:1.6;">Sobald du hier eine neue <code style="color:#e5a93c;font-weight:700;background:#090a0f;padding:2px 6px;border-radius:4px;border:1px solid #1e2333;">maya.exe</code> hochlädst, erhöht das System die Versionsnummer ganz <b>automatisch</b> und löst bei deinen Kunden beim nächsten Start das Update-Fenster aus!</p>
+    
+    <div class="upload-panel">
+      <div>
+        <div class="drop-zone" onclick="document.getElementById('mup-file').click()">
+          <input type="file" id="mup-file" accept=".exe" onchange="_mayaFile=this.files[0];document.getElementById('mup-fn').textContent=this.files[0]?this.files[0].name:''">
+          <div style="font-size:32px;color:#e5a93c;">&#8679;</div>
+          <div style="font-weight:800;color:#f8fafc;margin-top:8px;">Neue maya.exe hier reinziehen oder klicken</div>
+          <div id="mup-fn" style="font-size:12px;color:#e5a93c;margin-top:6px;font-weight:800;"></div>
+        </div>
+      </div>
+      <div>
+        <button class="upload-btn" id="maya-upload-btn" onclick="uploadMayaExe()">&#8593; Neue maya.exe Hochladen &amp; Kunden-Update Auslösen</button>
+        <div class="prog-wrap" id="mup-prog-wrap">
+          <div class="prog-bar"><div class="bar" id="mup-fill"></div></div>
+          <div class="prog-lbl" id="mup-lbl"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: USER LOGS -->
+  <div class="tab-content" id="tc-2">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+      <div class="section-title" style="margin-bottom:0;font-size:13px;color:#f8fafc;">KEYAUTH BENUTZER-AKTIVITÄT &amp; ECHTZEIT-LOGINS</div>
+      
+      <!-- SUCHLEISTE UND SORTIERUNG -->
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <input type="text" id="log-search-input" placeholder="🔍 Name, Key, HWID, IP suchen..." oninput="filterUserLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:9px 14px;border-radius:6px;font-size:12px;outline:none;width:240px;" />
+        
+        <select id="log-sort-select" onchange="filterUserLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#cbd5e1;padding:9px 12px;border-radius:6px;font-size:12px;outline:none;">
+          <option value="date_desc">Neueste zuerst</option>
+          <option value="date_asc">Älteste zuerst</option>
+          <option value="logins_desc">Häufigste Logins</option>
+          <option value="name_asc">Name (A-Z)</option>
+        </select>
+
+        <button onclick="loadLiveLogs()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🔄 AKTUALISIEREN</button>
+        <button id="del-all-userlogs-btn" onclick="deleteAllUserLogs()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🗑 ALLE LÖSCHEN</button>
+      </div>
+    </div>
+
+    <!-- STATISTIK KARTEN -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:14px;margin-bottom:20px;">
+      <div style="background:#0c0d13;border:1px solid #1a1e2b;border-radius:8px;padding:16px;text-align:center;">
+        <div style="font-size:10px;color:#64748b;letter-spacing:1px;font-weight:800;">GESAMT LOGINS</div>
+        <div id="stat-total-logins" style="font-size:24px;font-weight:900;color:#e5a93c;margin-top:4px;">0</div>
+      </div>
+      <div style="background:#0c0d13;border:1px solid #1a1e2b;border-radius:8px;padding:16px;text-align:center;">
+        <div style="font-size:10px;color:#64748b;letter-spacing:1px;font-weight:800;">EINZIGARTIGE NUTZER</div>
+        <div id="stat-unique-users" style="font-size:24px;font-weight:900;color:#f8fafc;margin-top:4px;">0</div>
+      </div>
+      <div style="background:#0c0d13;border:1px solid #1a1e2b;border-radius:8px;padding:16px;text-align:center;">
+        <div style="font-size:10px;color:#64748b;letter-spacing:1px;font-weight:800;">TOP NUTZER</div>
+        <div id="stat-top-user" style="font-size:14px;font-weight:900;color:#e5a93c;margin-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">---</div>
+      </div>
+    </div>
+
+    <!-- LOGS TABELLE -->
+    <div class="logs-table-wrap">
+      <table class="logs-table">
+        <thead>
+          <tr>
+            <th style="width:10%;">NUTZER</th>
+            <th style="width:10%;">PRODUKT</th>
+            <th style="width:14%;">DATUM &amp; UHRZEIT</th>
+            <th style="width:12%;">IP-ADRESSE</th>
+            <th style="width:18%;">HWID</th>
+            <th style="width:6%;text-align:center;">LOGINS</th>
+            <th style="width:20%;">KEYAUTH LICENSE KEY</th>
+            <th style="width:10%;text-align:center;">AKTION</th>
+          </tr>
+        </thead>
+        <tbody id="logs-table-body">
+          <tr><td colspan="8" style="text-align:center;color:#64748b;padding:24px;">Keine Benutzer-Logins aufgezeichnet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 3: KEYAUTH & RECHTE -->
+  <div class="tab-content" id="tc-3">
+    <!-- SUB SWITCHER FOR KEYAUTH: LIZENZEN vs PERMISSIONS -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+      <div style="display:flex;gap:8px;">
+        <button id="btn-sub-lic" onclick="switchKeyAuthView('licenses')" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:10px 20px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 14px rgba(229,169,60,0.2);">🔑 LIZENZ-VERWALTUNG</button>
+        <button id="btn-sub-perm" onclick="switchKeyAuthView('permissions')" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:10px 20px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:800;">🛡️ CHEAT-PERMISSIONS</button>
+      </div>
+      
+      <div style="display:flex;gap:8px;" id="keyauth-action-btns">
+        <button onclick="loadLicenses()" style="background:#141724;border:1px solid #1f2538;color:#f8fafc;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🔄 AKTUALISIEREN</button>
+        <button onclick="copyAllUnusedLicenses()" style="background:rgba(229,169,60,0.1);border:1px solid rgba(229,169,60,0.3);color:#e5a93c;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">📋 UNBENUTZTE KOPIEREN</button>
+      </div>
+    </div>
+
+    <!-- VIEW 1: LICENSES -->
+    <div id="view-licenses">
+      <!-- KEY GENERATOR -->
+      <div id="key-gen-card" style="background:#0c0d13;border:1px solid #1a1e2b;border-radius:8px;padding:20px;margin-bottom:22px;">
+        <div style="font-size:12px;font-weight:900;color:#f8fafc;margin-bottom:16px;letter-spacing:1px;display:flex;align-items:center;gap:8px;">
+          <span style="color:#e5a93c;">⚡</span> NEUE LICENSE KEYS GENERIEREN
+        </div>
+        
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:12px;align-items:end;">
+          <div>
+            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:5px;font-weight:700;">PRODUKT / CHEAT</label>
+            <select id="gen-product" style="width:100%;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:10px 12px;border-radius:6px;font-size:12px;outline:none;">
+              <option value="ALL">ALL CHEATS</option>
+              <option value="valorant">VALORANT</option>
+              <option value="apex">AI HYSCHOOL</option>
+              <option value="tft_helper">TFT HELPER</option>
+              <option value="naraka">NARAKA BLADEPOINT</option>
+              <option value="coc">CLASH OF CLANS</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:5px;font-weight:700;">LAUFZEIT (DAUER)</label>
+            <select id="gen-duration" style="width:100%;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:10px 12px;border-radius:6px;font-size:12px;outline:none;">
+              <option value="1">1 Tag (Trial)</option>
+              <option value="3">3 Tage</option>
+              <option value="7">7 Tage (Woche)</option>
+              <option value="14">14 Tage</option>
+              <option value="30" selected>30 Tage (1 Monat)</option>
+              <option value="90">90 Tage (3 Monate)</option>
+              <option value="365">365 Tage (1 Jahr)</option>
+              <option value="lifetime">Lifetime (Unbegrenzt)</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:5px;font-weight:700;">ANZAHL KEYS</label>
+            <select id="gen-qty" style="width:100%;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:10px 12px;border-radius:6px;font-size:12px;outline:none;">
+              <option value="1">1 Key</option>
+              <option value="5">5 Keys</option>
+              <option value="10">10 Keys</option>
+              <option value="25">25 Keys</option>
+              <option value="50">50 Keys</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size:10px;color:#e5a93c;letter-spacing:1px;display:block;margin-bottom:5px;font-weight:800;">LOGIN BENUTZERNAME (PFLICHT)</label>
+            <input type="text" id="gen-note" placeholder="(Login-Name)" style="width:100%;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:10px 12px;border-radius:6px;font-size:12px;outline:none;" />
+          </div>
+
+          <div>
+            <button id="gen-keys-btn" onclick="generateNewLicenses()" style="width:100%;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:11px 16px;border-radius:6px;font-size:12px;font-weight:900;cursor:pointer;letter-spacing:1px;height:40px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">
+              ⚡ KEYS ERSTELLEN
+            </button>
+          </div>
+        </div>
+
+        <!-- GENERATED OUTPUT BOX -->
+        <div id="gen-output-box" style="display:none;margin-top:16px;background:#090a0f;border:1px solid #232a3e;border-radius:8px;padding:14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <span style="font-size:11px;color:#e5a93c;font-weight:900;letter-spacing:0.5px;">✅ NEU GENERIERTE KEYS:</span>
+            <button onclick="copyGeneratedKeys()" style="background:#141724;border:1px solid #232a3e;color:#e5a93c;padding:5px 12px;border-radius:4px;font-size:11px;font-weight:800;cursor:pointer;">📋 In Zwischenablage kopieren</button>
+          </div>
+          <textarea id="gen-keys-textarea" readonly style="width:100%;height:80px;background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;font-family:'JetBrains Mono',monospace;font-size:12px;padding:10px;border-radius:6px;resize:none;outline:none;line-height:1.6;"></textarea>
+        </div>
+      </div>
+
+      <!-- FILTER & STATS BAR -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+        <div style="display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap;">
+          <input type="text" id="lic-search-input" placeholder="🔍 Key, Benutzer, HWID, Notiz suchen..." oninput="filterLicenses()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:8px 14px;border-radius:6px;font-size:12px;outline:none;width:260px;" />
+          
+          <select id="lic-filter-status" onchange="filterLicenses()" style="background:#0c0d13;border:1px solid #1e2333;color:#cbd5e1;padding:8px 12px;border-radius:6px;font-size:12px;outline:none;">
+            <option value="all">Alle Status</option>
+            <option value="unused">Nur Unbenutzt (Aktiv)</option>
+            <option value="used">Nur Eingelöst</option>
+            <option value="expired">Nur Abgelaufen</option>
+          </select>
+
+          <select id="lic-filter-product" onchange="filterLicenses()" style="background:#0c0d13;border:1px solid #1e2333;color:#cbd5e1;padding:8px 12px;border-radius:6px;font-size:12px;outline:none;">
+            <option value="all">Alle Produkte</option>
+            <option value="ALL">ALL PRODUCTS</option>
+            <option value="valorant">VALORANT</option>
+            <option value="apex">AI HYSCHOOL</option>
+            <option value="tft_helper">TFT HELPER</option>
+            <option value="naraka">NARAKA</option>
+            <option value="coc">CLASH OF CLANS</option>
+          </select>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:16px;font-size:11px;color:#94a3b8;background:#0c0d13;padding:8px 16px;border-radius:6px;border:1px solid #1a1e2b;">
+            <div>GESAMT: <b id="stat-lic-total" style="color:#f8fafc;">0</b></div>
+            <div>UNBENUTZT: <b id="stat-lic-unused" style="color:#e5a93c;">0</b></div>
+            <div>EINGELÖST: <b id="stat-lic-used" style="color:#f8fafc;">0</b></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FLOATING MULTI-SELECT ACTION BAR -->
+      <div id="batch-action-bar" style="display:none;background:linear-gradient(135deg, #141824, #0f121c);border:1px solid #e5a93c;border-radius:8px;padding:10px 18px;margin-bottom:14px;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(229,169,60,0.15);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="color:#e5a93c;font-size:14px;">✨</span>
+          <span style="font-weight:900;font-size:12px;color:#f8fafc;"><span id="batch-del-count" style="color:#e5a93c;">0</span> Keys ausgewählt</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button onclick="copySelectedLicenses()" style="background:#1c2234;border:1px solid #2b354f;color:#e5a93c;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+            📋 Ausgewählte kopieren
+          </button>
+          <button onclick="deleteSelectedLicenses()" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.4);color:#f43f5e;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+            🗑️ Ausgewählte löschen
+          </button>
+          <button onclick="clearLicenseSelection()" style="background:none;border:none;color:#64748b;font-size:11px;font-weight:700;cursor:pointer;padding:6px 8px;">
+            Auswahl aufheben
+          </button>
+        </div>
+      </div>
+
+      <!-- STREAMLINED LICENSES TABLE -->
+      <div class="logs-table-wrap">
+        <table class="logs-table">
+          <thead>
+            <tr>
+              <th style="width:34px;text-align:center;">
+                <label class="custom-cb-wrap" title="Alle auswählen">
+                  <input type="checkbox" id="lic-select-all-cb" onchange="toggleSelectAllLicenses(this.checked)">
+                  <span class="custom-cb-box">✓</span>
+                </label>
+              </th>
+              <th style="width:24%;">LIZENZ-SCHLÜSSEL &amp; PRODUKT</th>
+              <th style="width:16%;">BENUTZER &amp; NOTIZ</th>
+              <th style="width:14%;">STATUS &amp; ABLAUF</th>
+              <th style="width:16%;text-align:center;">HWID-BINDUNG</th>
+              <th style="width:30%;text-align:center;">SCHNELL-AKTIONEN</th>
+            </tr>
+          </thead>
+          <tbody id="licenses-table-body">
+            <tr><td colspan="6" style="text-align:center;color:#64748b;padding:24px;">Lade Lizenzschlüssel...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VIEW 2: PERMISSIONS -->
+    <div id="view-permissions" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+        <p style="font-size:12px;color:#94a3b8;margin:0;">Hier kannst du festlegen, welche Cheats für die jeweiligen License Keys freigeschaltet sind.</p>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="saveUserPermissions()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">💾 RECHTE SPEICHERN &amp; ANWENDEN</button>
+        </div>
+      </div>
+
+      <div class="logs-table-wrap">
+        <table class="logs-table">
+          <thead>
+            <tr>
+              <th style="width:28%;">KEYAUTH LICENSE KEY</th>
+              <th style="width:22%;">BENUTZER / INHABER</th>
+              <th style="width:10%;text-align:center;">VALORANT</th>
+              <th style="width:10%;text-align:center;">AI HYSCHOOL</th>
+              <th style="width:10%;text-align:center;">TFT HELPER</th>
+              <th style="width:10%;text-align:center;">NARAKA</th>
+              <th style="width:10%;text-align:center;">CLASH OF CLANS</th>
+            </tr>
+          </thead>
+          <tbody id="permissions-table-body">
+            <tr><td colspan="7" style="text-align:center;color:#64748b;padding:24px;">Lade Benutzerberechtigungen...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: MITARBEITER & RECHTE -->
+  <div class="tab-content" id="tc-4">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div class="section-title" style="margin-bottom:4px;font-size:13px;color:#f8fafc;">👔 MITARBEITER &amp; TEAM-VERWALTUNG</div>
+        <p style="font-size:12px;color:#94a3b8;margin:0;">Verwalte deine Mitarbeiter, erstelle Zugänge und lege individuelle Rechte fest.</p>
+      </div>
+      <button id="add-staff-btn" onclick="openStaffModal()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">➕ NEUEN MITARBEITER ANLEGEN</button>
+    </div>
+
+    <div class="logs-table-wrap">
+      <table class="logs-table">
+        <thead>
+          <tr>
+            <th style="width:20%;">BENUTZERNAME</th>
+            <th style="width:15%;">ROLLE</th>
+            <th style="width:15%;">PASSWORT</th>
+            <th style="width:35%;">AKTIVE BERECHTIGUNGEN</th>
+            <th style="width:15%;text-align:right;">AKTIONEN</th>
+          </tr>
+        </thead>
+        <tbody id="staff-table-body">
+          <tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px;">Lade Mitarbeiter...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 5: ADMIN AUDIT LOGS -->
+  <div class="tab-content" id="tc-5">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div class="section-title" style="margin-bottom:4px;font-size:13px;color:#f8fafc;">📜 ADMIN &amp; TEAM AUDIT-LOG</div>
+        <p style="font-size:12px;color:#94a3b8;margin:0;">Vollständiges Protokoll aller durchgeführten Aktionen im Admin Panel.</p>
+      </div>
+      
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <input type="text" id="audit-search-input" placeholder="🔍 Suche in Aktionen, Nutzer, Key..." oninput="filterAuditLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:9px 14px;border-radius:6px;font-size:12px;outline:none;width:240px;" />
+        <button onclick="loadAuditLogs()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🔄 AKTUALISIEREN</button>
+        <button id="del-audit-btn" onclick="clearAuditLogs()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🗑 LOGS LEEREN</button>
+      </div>
+    </div>
+
+    <div class="logs-table-wrap">
+      <table class="logs-table">
+        <thead>
+          <tr>
+            <th style="width:16%;">ZEITSTEMPEL</th>
+            <th style="width:16%;">AUSFÜHRENDER</th>
+            <th style="width:20%;">AKTION</th>
+            <th style="width:20%;">ZIEL / KEY</th>
+            <th style="width:28%;">DETAILS</th>
+          </tr>
+        </thead>
+        <tbody id="audit-table-body">
+          <tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px;">Lade Audit-Logs...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 6: TEAM CHAT -->
+  <div class="tab-content" id="tc-6">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div class="section-title" style="margin-bottom:0;font-size:13px;color:#f8fafc;display:flex;align-items:center;gap:8px;">
+          <span>💬</span> TEAM CHAT — INTERNER AUSTAUSCH
+          <span style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:2px 8px;border-radius:12px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:4px;"><span style="width:6px;height:6px;background:#10b981;border-radius:50%;"></span> LIVE</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;">
+        <button onclick="loadTeamChat(false, true)" style="background:#141724;border:1px solid #1f2538;color:#f8fafc;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🔄 AKTUALISIEREN</button>
+        <button id="del-chat-btn" onclick="clearTeamChat()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🗑 CHAT LEEREN</button>
+      </div>
+    </div>
+
+    <!-- CHAT BOX CONTAINER -->
+    <div style="background:#0a0c13;border:1px solid #1c2235;border-radius:12px;display:flex;flex-direction:column;height:560px;max-width:100%;box-shadow:0 12px 36px rgba(0,0,0,0.6);overflow:hidden;">
+      <!-- CHAT HEADER BAR -->
+      <div style="padding:12px 20px;background:#0e111a;border-bottom:1px solid #1c2235;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:10px;height:10px;background:#10b981;border-radius:50%;box-shadow:0 0 8px #10b981;"></div>
+          <span style="font-size:12px;font-weight:800;color:#f8fafc;letter-spacing:0.5px;">TEAM CHANNEL</span>
+          <span id="chat-count-badge" style="font-size:10px;background:#161c2c;color:#94a3b8;padding:2px 8px;border-radius:10px;border:1px solid #232b40;font-weight:700;">0 Nachrichten</span>
+        </div>
+        <div style="font-size:11px;color:#64748b;font-weight:600;">Echtzeit-Synchronisierung aktiv</div>
+      </div>
+
+      <!-- MESSAGES SCROLL AREA -->
+      <div id="chat-messages-wrap" style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;background:radial-gradient(ellipse at top, #111420 0%, #0a0c13 100%);">
+        <div style="text-align:center;color:#64748b;padding:30px;font-size:12px;">Lade Chat-Nachrichten...</div>
+      </div>
+
+      <!-- INPUT BAR -->
+      <div style="padding:14px 20px;background:#0d1017;border-top:1px solid #1c2235;display:flex;gap:12px;align-items:center;">
+        <input type="text" id="chat-input" placeholder="Schreibe eine Nachricht ans Team... (Enter zum Senden)" onkeydown="if(event.key==='Enter')sendChatMessage()" style="flex:1;background:#131722;border:1px solid #232b40;color:#f8fafc;padding:12px 18px;border-radius:8px;font-size:12px;font-weight:500;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#e5a93c'" onblur="this.style.borderColor='#232b40'" />
+        <button onclick="sendChatMessage()" id="chat-send-btn" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px 24px;border-radius:8px;font-size:12px;font-weight:900;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.25);display:flex;align-items:center;gap:6px;transition:.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+          <span>⚡</span> SENDEN
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const MASTER_PASS = "admin1337";
+const REPO        = "Kakash9i/loader";
+const API_BASE    = `https://api.github.com/repos/${REPO}/contents`;
+const RAW_BASE    = `https://raw.githubusercontent.com/${REPO}/main`;
+
+const CHEATS = [
+  { key:"valorant", label:"VALORANT", color:"#ffcc00", prefix:"val" },
+  { key:"apex", label:"AI HYSCHOOL", color:"#ffb700", prefix:"apex" },
+  { key:"tft_helper", label:"TFT HELPER", color:"#ffd000", prefix:"tft" },
+  { key:"naraka", label:"NARAKA BLADEPOINT", color:"#ffa200", prefix:"nar" },
+  { key:"coc", label:"CLASH OF CLANS", color:"#ffcc00", prefix:"coc" }
+];
+
+let CURRENT_USER = {
+  is_admin: true,
+  name: "Kovak",
+  role: "Inhaber",
+  permissions: {
+    can_generate_keys: true,
+    can_edit_keys: true,
+    can_delete_keys: true,
+    can_reset_hwid: true,
+    can_pause_keys: true,
+    can_manage_cheats: true,
+    can_view_logs: true,
+    can_manage_staff: true
+  }
+};
+
+let _activeCheatIdx = 0;
+let _mayaFile = null;
+const state = {};
+CHEATS.forEach(c => {
+  state[c.prefix] = { files: [], url: "", script: "" };
+});
+
+function getToken() {
+  const p1 = "ghp_";
+  const p2 = "cpFey2IaLI4T3YnPwJ3QUnDX1LuYvq4PLXcL";
+  return p1 + p2;
+}
+
+function utf8_to_b64(str) {
+  return window.btoa(unescape(encodeURIComponent(str)));
+}
+
+function b64_to_utf8(str) {
+  try {
+    return decodeURIComponent(escape(window.atob(str.replace(/\s+/g, ''))));
+  } catch(_) {
+    const bin = window.atob(str.replace(/\s+/g, ''));
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+}
+
+function showToast(msg, type="ok") {
+  const el = document.getElementById("toast-msg");
+  el.textContent = msg;
+  el.className = type;
+  setTimeout(() => { el.className = ""; }, 4000);
+}
+
+async function uploadFileToGitHub(path, contentB64, commitMsg) {
+  const token = getToken();
+  let sha = "";
+
+  for(let attempt = 1; attempt <= 4; attempt++) {
+    try {
+      const infoRes = await fetch(`${API_BASE}/${path}?nc=${Date.now()}_${Math.random()}`, {
+        cache: "no-store",
+        headers: { 
+          Authorization: `token ${token}`, 
+          Accept: "application/vnd.github.v3+json"
+        }
+      });
+      if(infoRes.ok) {
+        const info = await infoRes.json();
+        if(info && info.sha) sha = info.sha;
+      }
+    } catch(_) {}
+
+    const bodyObj = { message: commitMsg, content: contentB64, branch: "main" };
+    if(sha) bodyObj.sha = sha;
+
+    const res = await fetch(`${API_BASE}/${path}`, {
+      method: "PUT",
+      headers: { 
+        Authorization: `token ${token}`, 
+        Accept: "application/vnd.github.v3+json", 
+        "Content-Type": "application/json" 
+      },
+      body: JSON.stringify(bodyObj)
+    });
+
+    if(res.ok) {
+      return await res.json();
+    }
+
+    const errData = await res.json().catch(() => ({}));
+    const errMsg = (errData && errData.message) ? errData.message : "";
+
+    // Extract expected SHA from GitHub conflict message: "is at <remote_sha> but expected <old_sha>"
+    const match = errMsg.match(/is at ([a-f0-9]{40})/i);
+    if(match && match[1]) {
+      sha = match[1];
+      await new Promise(r => setTimeout(r, 200));
+      continue;
+    }
+
+    if(res.status === 409 || errMsg.includes("sha")) {
+      await new Promise(r => setTimeout(r, 350 * attempt));
+      continue;
+    }
+
+    throw new Error(errMsg || ("HTTP " + res.status));
+  }
+  throw new Error("GitHub Synchronisierungs-Konflikt (Bitte erneut versuchen)");
+}
+
+async function deleteFileFromGitHub(path, commitMsg) {
+  const token = getToken();
+  let sha = "";
+
+  for(let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const infoRes = await fetch(`${API_BASE}/${path}?nc=${Date.now()}_${Math.random()}`, {
+        cache: "no-store",
+        headers: { 
+          Authorization: `token ${token}`, 
+          Accept: "application/vnd.github.v3+json"
+        }
+      });
+      if(infoRes.ok) {
+        const info = await infoRes.json();
+        if(info && info.sha) sha = info.sha;
+      } else if(infoRes.status === 404) {
+        return true;
+      }
+    } catch(_) {}
+
+    if(!sha) return true;
+
+    const bodyObj = { message: commitMsg, sha: sha, branch: "main" };
+    const res = await fetch(`${API_BASE}/${path}`, {
+      method: "DELETE",
+      headers: { 
+        Authorization: `token ${token}`, 
+        Accept: "application/vnd.github.v3+json", 
+        "Content-Type": "application/json" 
+      },
+      body: JSON.stringify(bodyObj)
+    });
+
+    if(res.ok || res.status === 404) {
+      return true;
+    }
+
+    const errData = await res.json().catch(() => ({}));
+    const errMsg = (errData && errData.message) ? errData.message : "";
+    const match = errMsg.match(/is at ([a-f0-9]{40})/i);
+    if(match && match[1]) {
+      sha = match[1];
+      await new Promise(r => setTimeout(r, 200));
+      continue;
+    }
+
+    if(res.status === 409) {
+      await new Promise(r => setTimeout(r, 300 * attempt));
+      continue;
+    }
+
+    throw new Error(errMsg || ("HTTP " + res.status));
+  }
+  return false;
+}
+
+// LOGIN LOGIC
+async function doLogin() {
+  const userInput = (document.getElementById("user-input").value || "").trim();
+  const pwInput = (document.getElementById("pw-input").value || "").trim();
+  
+  if(!pwInput) return;
+
+  // 1. Admin Login (Username "Admin" or "Kovak" or blank if direct admin password)
+  const isMasterUser = !userInput || userInput.toLowerCase() === "admin" || userInput.toLowerCase() === "kovak";
+  if (isMasterUser && pwInput === MASTER_PASS) {
+    CURRENT_USER = {
+      is_admin: true,
+      name: "Admin",
+      role: "Inhaber",
+      permissions: {
+        can_generate_keys: true,
+        can_edit_keys: true,
+        can_delete_keys: true,
+        can_reset_hwid: true,
+        can_pause_keys: true,
+        can_manage_cheats: true,
+        can_view_logs: true,
+        can_manage_staff: true
+      }
+    };
+    handleLoginSuccess("Admin", pwInput);
+    return;
+  }
+
+  // 2. Staff Accounts Check (Username + Password matching)
+  await loadStaffList(true);
+  const matchedStaff = ALL_STAFF.find(s => 
+    (userInput ? s.name.toLowerCase() === userInput.toLowerCase() : true) && 
+    (s.password === pwInput)
+  );
+
+  if(matchedStaff) {
+    CURRENT_USER = {
+      is_admin: false,
+      name: matchedStaff.name,
+      role: matchedStaff.role || "Mitarbeiter",
+      permissions: matchedStaff.permissions || {}
+    };
+    handleLoginSuccess(matchedStaff.name, pwInput);
+    return;
+  }
+
+  document.getElementById("login-error").style.display = "block";
+}
+
+function handleLoginSuccess(user, pass) {
+  if (document.getElementById("save-pw-cb").checked) {
+    localStorage.setItem("admin_user", user);
+    localStorage.setItem("admin_pw", pass);
+  } else {
+    localStorage.removeItem("admin_user");
+    localStorage.removeItem("admin_pw");
+  }
+  document.getElementById("login-screen").style.display = "none";
+  document.getElementById("main-panel").style.display = "block";
+  
+  applyUserPermissions();
+  buildUI();
+  if(CURRENT_USER.is_admin || CURRENT_USER.permissions.can_manage_cheats) {
+    loadCheats();
+  }
+
+  // Activate first visible/allowed tab: Staff defaults to KeyAuth (Tab 3) if allowed
+  let initialTab = 0;
+  if(!CURRENT_USER.is_admin) {
+    if(CURRENT_USER.permissions.can_generate_keys || CURRENT_USER.permissions.can_edit_keys) initialTab = 3;
+    else if(CURRENT_USER.permissions.can_view_logs) initialTab = 2;
+    else if(CURRENT_USER.permissions.can_manage_cheats) initialTab = 0;
+    else initialTab = 6;
+  }
+  switchMainTab(initialTab);
+
+  logAdminAction("LOGIN", "-", `${CURRENT_USER.name} (${CURRENT_USER.role}) hat sich eingeloggt`);
+}
+
+function doLogout() {
+  localStorage.removeItem("admin_user");
+  localStorage.removeItem("admin_pw");
+  document.getElementById("user-input").value = "";
+  document.getElementById("pw-input").value = "";
+  document.getElementById("main-panel").style.display = "none";
+  document.getElementById("login-screen").style.display = "block";
+}
+
+function applyUserPermissions() {
+  const badge = document.getElementById("user-badge");
+  if(CURRENT_USER.is_admin) {
+    badge.innerHTML = `👑 INHABER (ADMIN)`;
+  } else {
+    badge.innerHTML = `👔 ${CURRENT_USER.name} (${CURRENT_USER.role})`;
+  }
+
+  // Restrict UI elements based on permissions
+  const p = CURRENT_USER.permissions;
+  const mtab0 = document.getElementById("mtab-0");
+  const mtab1 = document.getElementById("mtab-1");
+  const mtab2 = document.getElementById("mtab-2");
+  const mtab4 = document.getElementById("mtab-4");
+  const mtab5 = document.getElementById("mtab-5");
+
+  if(mtab0) mtab0.style.display = (CURRENT_USER.is_admin || p.can_manage_cheats) ? "flex" : "none";
+  if(mtab1) mtab1.style.display = (CURRENT_USER.is_admin || p.can_manage_cheats) ? "flex" : "none";
+  if(mtab2) mtab2.style.display = (CURRENT_USER.is_admin || p.can_view_logs) ? "flex" : "none";
+  if(mtab4) mtab4.style.display = (CURRENT_USER.is_admin || p.can_manage_staff) ? "flex" : "none";
+  if(mtab5) mtab5.style.display = CURRENT_USER.is_admin ? "flex" : "none";
+
+  // Cheat Permissions subtab button: visible for Admin OR Staff with Cheat-Product edit permission
+  const btnSubPerm = document.getElementById("btn-sub-perm");
+  if(btnSubPerm) btnSubPerm.style.display = (CURRENT_USER.is_admin || (p.can_edit_keys && p.edit_allow_product)) ? "inline-block" : "none";
+
+  const keyGenCard = document.getElementById("key-gen-card");
+  if(keyGenCard) keyGenCard.style.display = (CURRENT_USER.is_admin || p.can_generate_keys) ? "block" : "none";
+
+  const delAllUserLogsBtn = document.getElementById("del-all-userlogs-btn");
+  if(delAllUserLogsBtn) delAllUserLogsBtn.style.display = (CURRENT_USER.is_admin || p.can_delete_keys) ? "inline-block" : "none";
+
+  const delAuditBtn = document.getElementById("del-audit-btn");
+  if(delAuditBtn) delAuditBtn.style.display = CURRENT_USER.is_admin ? "inline-block" : "none";
+
+  const delChatBtn = document.getElementById("del-chat-btn");
+  if(delChatBtn) delChatBtn.style.display = CURRENT_USER.is_admin ? "inline-block" : "none";
+
+  // Duration restrictions for staff
+  const allDurations = [
+    { value: "1", label: "1 Tag (Trial)", days: 1 },
+    { value: "3", label: "3 Tage", days: 3 },
+    { value: "7", label: "7 Tage (Woche)", days: 7 },
+    { value: "14", label: "14 Tage", days: 14 },
+    { value: "30", label: "30 Tage (1 Monat)", days: 30 },
+    { value: "90", label: "90 Tage (3 Monate)", days: 90 },
+    { value: "365", label: "365 Tage (1 Jahr)", days: 365 },
+    { value: "lifetime", label: "Lifetime (Unbegrenzt)", days: 999999 }
+  ];
+
+  let allowedDays = Infinity;
+  if(!CURRENT_USER.is_admin) {
+    const maxDur = p.max_duration || "all";
+    if(maxDur !== "all") {
+      allowedDays = parseInt(maxDur, 10) || 30;
+    }
+  }
+
+  const genDurSelect = document.getElementById("gen-duration");
+  if(genDurSelect) {
+    const filtered = allDurations.filter(d => d.days <= allowedDays);
+    const prevVal = genDurSelect.value;
+    genDurSelect.innerHTML = filtered.map(d => `<option value="${d.value}">${d.label}</option>`).join("");
+    if(filtered.some(d => d.value === prevVal)) genDurSelect.value = prevVal;
+    else if(filtered.length > 0) genDurSelect.selectedIndex = 0;
+  }
+
+  const editDurSelect = document.getElementById("edit-lic-duration");
+  if(editDurSelect) {
+    const filtered = allDurations.filter(d => d.days <= allowedDays);
+    const prevVal = editDurSelect.value;
+    editDurSelect.innerHTML = filtered.map(d => `<option value="${d.value}">${d.label}</option>`).join("");
+    if(filtered.some(d => d.value === prevVal)) editDurSelect.value = prevVal;
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const savedUser = localStorage.getItem("admin_user");
+  const savedPw = localStorage.getItem("admin_pw");
+  if (savedPw) {
+    if (savedUser) document.getElementById("user-input").value = savedUser;
+    document.getElementById("pw-input").value = savedPw;
+    doLogin();
+  }
+});
+
+function buildUI() {
+  buildCheatsUI();
+}
+
+function buildCheatsUI() {
+  const subTabs = document.getElementById("cheat-sub-tabs");
+  const subContents = document.getElementById("cheat-sub-contents");
+
+  subTabs.innerHTML = CHEATS.map((c, i) => `
+    <div class="sub-tab ${i === _activeCheatIdx ? 'active' : ''}" onclick="switchCheatSubTab(${i})" id="csub-${i}">
+      <span style="color:#e5a93c">&#9679;</span> ${c.label}
+    </div>
+  `).join("");
+
+  subContents.innerHTML = CHEATS.map((c, i) => `
+    <div class="cheat-view-grid" id="cview-${i}" style="${i === _activeCheatIdx ? '' : 'display:none;'}">
+      <!-- INFO PANEL -->
+      <div class="info-panel">
+        <h3>CHEAT KONFIGURATION (${c.label})</h3>
+        <div class="field"><label>SUBSCRIPTION</label><input type="text" id="${c.prefix}-sub" /></div>
+        <div class="field"><label>VERSION</label><input type="text" id="${c.prefix}-ver" /></div>
+        <div class="field"><label>STATUS</label>
+          <select id="${c.prefix}-status">
+            <option value="UNDETECTED">UNDETECTED</option>
+            <option value="TESTING">TESTING</option>
+            <option value="MAINTENANCE">MAINTENANCE</option>
+          </select>
+        </div>
+        <div class="field"><label>LAST UPDATE</label><input type="text" id="${c.prefix}-last" placeholder="TT.MM.JJJJ" /></div>
+        <input type="hidden" id="${c.prefix}-url" />
+        <div class="loadable-row">
+          <span class="lbl">LOADABLE (FREIGESCHALTET)</span>
+          <label class="toggle"><input type="checkbox" id="${c.prefix}-load"><span class="slider"></span></label>
+        </div>
+
+        <button class="save-cheat-btn" id="save-btn-${c.prefix}" onclick="saveAllToGitHub()">
+          💾 SPEICHERN &amp; PUSHEN
+        </button>
+      </div>
+
+      <!-- UPLOAD PANEL -->
+      <div class="upload-panel" style="display:flex;flex-direction:column;gap:12px;">
+        <div class="section-title" style="margin-bottom:0;">CHEAT FILE HOCHLADEN (.ZIP oder .EXE)</div>
+        
+        <div class="drop-zone" id="dz-${c.prefix}"
+          onclick="document.getElementById('fi-${c.prefix}').click()"
+          ondragover="event.preventDefault();this.classList.add('over')"
+          ondragleave="this.classList.remove('over')"
+          ondrop="handleDrop(event,'${c.prefix}')">
+          <input type="file" id="fi-${c.prefix}" onchange="addFiles(this,'${c.prefix}')">
+          <div style="font-size:26px;color:#e5a93c;">&#8597;</div>
+          <div style="font-weight:800;color:#f8fafc;font-size:13px;">${c.label} Datei hier reinziehen oder klicken</div>
+          <div style="font-size:11px;color:#64748b">Lädt die Datei hoch und aktiviert den Download im Loader</div>
+        </div>
+        
+        <div class="file-list" id="fl-${c.prefix}"></div>
+
+        <div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:#64748b;margin-bottom:6px;text-transform:uppercase;">Aktuell hochgeladene Datei</div>
+          <div id="${c.prefix}-active-file-wrap" style="background:#10121a;border:1px solid #1e2333;padding:10px 14px;border-radius:6px;font-size:12px;color:#f8fafc;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+            <div id="${c.prefix}-active-file" style="word-break:break-all;flex:1;">
+              <span style="color:#64748b;font-size:11px;">Lade Datei-Info...</span>
+            </div>
+            <button id="${c.prefix}-del-file-btn" onclick="deleteCheatFile('${c.prefix}','${c.key}')" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;">
+              🗑️ DATEI LÖSCHEN
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <button class="upload-btn" id="ub-${c.prefix}" onclick="doUpload('${c.prefix}','${c.key}')">
+            &#8593; ${c.label} Datei Hochladen &amp; Aktivieren
+          </button>
+          <div class="prog-wrap" id="pw-${c.prefix}">
+            <div class="prog-bar"><div class="bar" id="pb-${c.prefix}"></div></div>
+            <div class="prog-lbl" id="pl-${c.prefix}"></div>
+          </div>
+        </div>
+
+        ${c.prefix === 'val' ? `
+        <!-- DEDICATED RAZER.DLL UPLOAD SECTION -->
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid #1a1e2b;display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="section-title" style="margin-bottom:0;color:#10b981;">⚡ RAZER.DLL HOCHLADEN (AUTO-INJECTION DATEI)</div>
+            <span style="font-size:10px;color:#64748b;font-family:'JetBrains Mono',monospace;">C:\\Program Files\\Razer\\RazerAppEngine\\RAZER.dll</span>
+          </div>
+          <div style="font-size:11px;color:#94a3b8;line-height:1.4;">
+            Wird vom Maya Loader beim Starten von Valorant automatisch einmalig in den Razer Ordner des Users heruntergeladen/kopiert.
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center;">
+            <input type="file" id="razer-file-input" accept=".dll" style="display:none;" onchange="onRazerFileSelected(this)">
+            <button onclick="document.getElementById('razer-file-input').click()" style="background:#141724;border:1px solid #283046;color:#cbd5e1;padding:8px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;">
+              📁 RAZER.dll AUSWÄHLEN
+            </button>
+            <span id="razer-file-name" style="font-size:11px;color:#e5a93c;font-weight:700;">Keine neue Datei gewählt</span>
+          </div>
+
+          <div id="razer-status-wrap" style="background:#10121a;border:1px solid #1e2333;padding:8px 12px;border-radius:6px;font-size:11px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+            <div id="razer-active-status" style="color:#64748b;flex:1;">
+              Lade RAZER.dll Status...
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <button id="razer-del-btn" onclick="deleteRazerDll()" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;">
+                🗑️ RAZER.dll LÖSCHEN
+              </button>
+              <button id="razer-upload-btn" onclick="uploadRazerDll()" disabled style="background:linear-gradient(135deg, #10b981, #059669);border:none;color:#0b0c10;padding:6px 14px;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;">
+                🚀 RAZER.dll PUSHEN
+              </button>
+            </div>
+          </div>
+
+          <div class="prog-wrap" id="razer-prog-wrap" style="display:none;">
+            <div class="prog-bar"><div class="bar" id="razer-prog-fill" style="background:#10b981;"></div></div>
+            <div class="prog-lbl" id="razer-prog-lbl"></div>
+          </div>
+        </div>
+        ` : ''}
+      </div>
+    </div>
+  `).join("");
+}
+
+function switchMainTab(idx) {
+  document.querySelectorAll(".main-tab").forEach((t, i) => t.classList.toggle("active", i === idx));
+  document.querySelectorAll(".tab-content").forEach((t, i) => t.classList.toggle("active", i === idx));
+
+  if(_chatPollInterval) {
+    clearInterval(_chatPollInterval);
+    _chatPollInterval = null;
+  }
+
+  if(idx === 0) loadCheats();
+  if(idx === 2) loadLiveLogs();
+  if(idx === 3) {
+    if(document.getElementById("view-licenses").style.display !== "none") loadLicenses();
+    else loadUserPermissions();
+  }
+  if(idx === 4) loadStaffList();
+  if(idx === 5) loadAuditLogs();
+  if(idx === 6) {
+    loadTeamChat();
+    _chatPollInterval = setInterval(() => loadTeamChat(true), 3500);
+  }
+}
+
+function switchCheatSubTab(idx) {
+  _activeCheatIdx = idx;
+  CHEATS.forEach((_, i) => {
+    const tabEl = document.getElementById(`csub-${i}`);
+    const viewEl = document.getElementById(`cview-${i}`);
+    if(tabEl) tabEl.classList.toggle("active", i === idx);
+    if(viewEl) viewEl.style.display = (i === idx) ? "grid" : "none";
+  });
+}
+
+function switchKeyAuthView(view) {
+  const vLic = document.getElementById("view-licenses");
+  const vPerm = document.getElementById("view-permissions");
+  const btnLic = document.getElementById("btn-sub-lic");
+  const btnPerm = document.getElementById("btn-sub-perm");
+
+  if(view === 'licenses') {
+    vLic.style.display = "block";
+    vPerm.style.display = "none";
+    btnLic.style.background = "linear-gradient(135deg, #e5a93c, #c68924)";
+    btnLic.style.color = "#0b0c10";
+    btnPerm.style.background = "#141724";
+    btnPerm.style.color = "#94a3b8";
+    loadLicenses();
+  } else {
+    vLic.style.display = "none";
+    vPerm.style.display = "block";
+    btnPerm.style.background = "linear-gradient(135deg, #e5a93c, #c68924)";
+    btnPerm.style.color = "#0b0c10";
+    btnLic.style.background = "#141724";
+    btnLic.style.color = "#94a3b8";
+    loadUserPermissions();
+  }
+}
+
+function fileIcon(name) {
+  if(name.endsWith('.exe')) return '&#9881;';
+  if(name.endsWith('.sys')) return '&#128262;';
+  if(name.endsWith('.cfg')||name.endsWith('.ini')) return '&#9965;';
+  return '&#128196;';
+}
+
+function fmtSize(b) {
+  if(b<1024) return b+'B';
+  if(b<1048576) return (b/1024).toFixed(1)+'KB';
+  return (b/1048576).toFixed(1)+'MB';
+}
+
+function handleDrop(ev, prefix) {
+  ev.preventDefault();
+  document.getElementById("dz-"+prefix).classList.remove("over");
+  addToList(prefix, Array.from(ev.dataTransfer.files));
+}
+
+function addFiles(inp, prefix) {
+  addToList(prefix, Array.from(inp.files));
+  inp.value = "";
+}
+
+function addToList(prefix, newFiles) {
+  newFiles.forEach(f => {
+    if(!state[prefix].files.find(x => x.name === f.name)) state[prefix].files.push(f);
+  });
+  renderFileList(prefix);
+}
+
+function removeFile(prefix, name) {
+  state[prefix].files = state[prefix].files.filter(f => f.name !== name);
+  renderFileList(prefix);
+}
+
+function renderFileList(prefix) {
+  const el = document.getElementById("fl-"+prefix);
+  if(!el) return;
+  el.innerHTML = state[prefix].files.map(f => `
+    <div class="file-item">
+      <span>${fileIcon(f.name)} ${f.name} <span style="color:#64748b;font-size:10px">(${fmtSize(f.size)})</span></span>
+      <button onclick="removeFile('${prefix}','${f.name}')" style="background:none;border:none;color:#f43f5e;cursor:pointer;font-size:14px;">&times;</button>
+    </div>
+  `).join("");
+}
+
+// GITHUB CHEATS SYNC
+async function loadCheats() {
+  // 1. Instant load from local cache if available
+  try {
+    const cached = localStorage.getItem("hyschool_cheats_cache");
+    if(cached) {
+      applyCheatsDataToDOM(JSON.parse(cached));
+    }
+  } catch(_) {}
+
+  const token = getToken();
+  let data = null;
+
+  // 2. Fetch directly from RAW_BASE or API_BASE
+  try {
+    const rawRes = await fetch(`${RAW_BASE}/cheats.json?nc=${Date.now()}`, {
+      cache: "no-store",
+      headers: { Authorization: `token ${token}` }
+    });
+    if(rawRes.ok) {
+      data = await rawRes.json();
+    }
+  } catch(_) {}
+
+  if(!data) {
+    try {
+      const apiRes = await fetch(`${API_BASE}/cheats.json?nc=${Date.now()}`, {
+        cache: "no-store",
+        headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+      });
+      if(apiRes.ok) {
+        const info = await apiRes.json();
+        if(info && info.content) {
+          data = JSON.parse(b64_to_utf8(info.content));
+        } else if(info && typeof info === 'object') {
+          data = info;
+        }
+      }
+    } catch(_) {}
+  }
+
+  if(data && typeof data === 'object') {
+    try { localStorage.setItem("hyschool_cheats_cache", JSON.stringify(data)); } catch(_) {}
+    applyCheatsDataToDOM(data);
+  }
+}
+
+function applyCheatsDataToDOM(data) {
+  if(!data || typeof data !== 'object') return;
+  CHEATS.forEach(c => {
+    const d = data[c.key];
+    if(!d) return;
+    const sub = document.getElementById(`${c.prefix}-sub`);
+    const ver = document.getElementById(`${c.prefix}-ver`);
+    const st  = document.getElementById(`${c.prefix}-status`);
+    const lu  = document.getElementById(`${c.prefix}-last`);
+    const url = document.getElementById(`${c.prefix}-url`);
+    const lod = document.getElementById(`${c.prefix}-load`);
+    const activeFileEl = document.getElementById(`${c.prefix}-active-file`);
+    const delBtn = document.getElementById(`${c.prefix}-del-file-btn`);
+
+    if(sub && d.subscription !== undefined) sub.value = d.subscription || "";
+    if(ver && d.version !== undefined) ver.value = d.version || "";
+    if(st && d.status) st.value = d.status || "UNDETECTED";
+    if(lu && d.last_update !== undefined) lu.value = d.last_update || "";
+    if(url && d.download_url !== undefined) url.value = d.download_url || "";
+    if(lod && d.loadable !== undefined) lod.checked = !!d.loadable;
+
+    if(activeFileEl) {
+      if(d.download_url && d.download_url.trim()) {
+        const fileName = d.download_url.split('/').pop();
+        activeFileEl.innerHTML = `<span style="color:#10b981;font-weight:700;">🟢 Online:</span> <a href="${d.download_url}" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">${fileName}</a>`;
+        if(delBtn) delBtn.style.display = "inline-flex";
+      } else {
+        activeFileEl.innerHTML = `<span style="color:#64748b;font-size:11px;">Keine Datei hinterlegt</span>`;
+        if(delBtn) delBtn.style.display = "none";
+      }
+    }
+  });
+  checkRazerDllStatus();
+}
+
+async function deleteCheatFile(prefix, key) {
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
+    alert("Keine Berechtigung zum Löschen von Cheat-Dateien!");
+    return;
+  }
+
+  const urlInput = document.getElementById(`${prefix}-url`);
+  const curUrl = (urlInput ? urlInput.value : "").trim();
+  
+  if(!curUrl) {
+    alert("Keine Datei für diesen Cheat hinterlegt!");
+    return;
+  }
+
+  const fileName = curUrl.split('/').pop();
+  if(!confirm(`Möchtest du die Cheat-Datei '${fileName}' wirklich komplett vom Server / GitHub löschen?`)) {
+    return;
+  }
+
+  try {
+    showToast(`Lösche ${fileName} von GitHub...`, "ok");
+    
+    // 1. Delete release file on GitHub
+    try {
+      await deleteFileFromGitHub(`releases/${fileName}`, `Delete ${fileName} via Admin Panel`);
+    } catch(_) {}
+
+    // 2. Clear URL & uncheck loadable in config
+    if(urlInput) urlInput.value = "";
+    const loadCb = document.getElementById(`${prefix}-load`);
+    if(loadCb) loadCb.checked = false;
+
+    // 3. Clear file selection list
+    state[prefix].files = [];
+    renderFileList(prefix);
+
+    // 4. Save cheats.json & reload
+    await saveAllToGitHub();
+    await loadCheats();
+
+    logAdminAction("CHEAT_FILE_DELETED", fileName, `Cheat-Datei '${fileName}' für ${key} restlos gelöscht`);
+    showToast(`Cheat-Datei '${fileName}' wurde erfolgreich gelöscht!`, "ok");
+  } catch(e) {
+    showToast("Fehler beim Löschen: " + e.message, "err");
+  }
+}
+
+async function saveAllToGitHub() {
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
+    alert("Keine Berechtigung zum Ändern der Cheats!");
+    return;
+  }
+  try {
+    const out = {};
+    CHEATS.forEach(c => {
+      out[c.key] = {
+        subscription: (document.getElementById(`${c.prefix}-sub`)||{}).value || "",
+        version:      (document.getElementById(`${c.prefix}-ver`)||{}).value || "",
+        status:       (document.getElementById(`${c.prefix}-status`)||{}).value || "UNDETECTED",
+        last_update:  (document.getElementById(`${c.prefix}-last`)||{}).value || "",
+        download_url: (document.getElementById(`${c.prefix}-url`)||{}).value || "",
+        loadable:     !!(document.getElementById(`${c.prefix}-load`)||{}).checked
+      };
+    });
+
+    try { localStorage.setItem("hyschool_cheats_cache", JSON.stringify(out)); } catch(_) {}
+
+    await uploadFileToGitHub("cheats.json", utf8_to_b64(JSON.stringify(out, null, 2)), "Update cheats configuration via Admin Panel");
+
+    showToast("Cheat-Einstellungen erfolgreich gespeichert & gepusht!", "ok");
+    logAdminAction("CHEAT_CONFIG", "cheats.json", "Cheat-Konfigurationen und Status aktualisiert");
+  } catch(e) {
+    showToast("Fehler: " + e.message, "err");
+  }
+}
+
+// UPLOAD FUNCTION FOR CHEAT FILES
+async function doUpload(prefix, key) {
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
+    alert("Keine Berechtigung zum Hochladen!");
+    return;
+  }
+  const files = state[prefix].files;
+  if(!files || files.length === 0) {
+    alert("Bitte wähle mindestens eine Datei zum Hochladen aus!");
+    return;
+  }
+
+  const ub = document.getElementById("ub-"+prefix);
+  const pw = document.getElementById("pw-"+prefix);
+  const pb = document.getElementById("pb-"+prefix);
+  const pl = document.getElementById("pl-"+prefix);
+
+  ub.disabled = true;
+  pw.style.display = "block";
+  pb.style.width = "20%";
+  pl.textContent = "Erstelle Archiv...";
+
+  try {
+    let finalBlob = null;
+    let finalFileName = "";
+
+    if(files.length === 1 && (files[0].name.endsWith(".zip") || files[0].name.endsWith(".exe"))) {
+      finalBlob = files[0];
+      finalFileName = files[0].name;
+    } else {
+      if(typeof JSZip === "undefined") {
+        throw new Error("JSZip nicht verfügbar. Bitte eine .exe oder .zip Datei auswählen.");
+      }
+      const zip = new JSZip();
+      for(const f of files) {
+        const arrBuf = await f.arrayBuffer();
+        zip.file(f.name, arrBuf);
+      }
+      finalBlob = await zip.generateAsync({ type:"blob" });
+      finalFileName = `${key}.zip`;
+    }
+
+    pb.style.width = "50%";
+    pl.textContent = "Lese Datei-Inhalt...";
+
+    const reader = new FileReader();
+    reader.readAsDataURL(finalBlob);
+    reader.onloadend = async () => {
+      try {
+        const b64Data = reader.result.split(',')[1];
+        pb.style.width = "75%";
+        pl.textContent = "Pushe zu GitHub Releases...";
+
+        const path = `releases/${finalFileName}`;
+        await uploadFileToGitHub(path, b64Data, `Upload ${finalFileName} via Admin Panel`);
+
+        pb.style.width = "100%";
+        pl.textContent = "Erfolgreich hochgeladen!";
+        pl.className = "prog-lbl ok";
+
+        const rawUrl = `${RAW_BASE}/releases/${finalFileName}`;
+        document.getElementById(`${prefix}-url`).value = rawUrl;
+        document.getElementById(`${prefix}-load`).checked = true;
+        await saveAllToGitHub();
+        await loadCheats();
+
+        showToast(`${finalFileName} erfolgreich hochgeladen & aktiviert!`, "ok");
+        logAdminAction("CHEAT_UPLOAD", finalFileName, `Neues Cheat-Paket hochgeladen für ${key}`);
+      } catch(err) {
+        pl.textContent = "Fehler: " + err.message;
+        pl.className = "prog-lbl err";
+        showToast("Upload Fehler: " + err.message, "err");
+      } finally {
+        ub.disabled = false;
+      }
+    };
+  } catch(e) {
+    pl.textContent = "Fehler: " + e.message;
+    pl.className = "prog-lbl err";
+    showToast("Fehler: " + e.message, "err");
+    ub.disabled = false;
+  }
+}
+
+// MAYA LOADER UPDATER
+async function uploadMayaExe() {
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
+    alert("Keine Berechtigung zum Updaten des Loaders!");
+    return;
+  }
+  if(!_mayaFile) {
+    alert("Bitte wähle zuerst eine neue maya.exe aus!");
+    return;
+  }
+
+  const token = getToken();
+  const btn = document.getElementById("maya-upload-btn");
+  const pw = document.getElementById("mup-prog-wrap");
+  const pb = document.getElementById("mup-fill");
+  const pl = document.getElementById("mup-lbl");
+
+  btn.disabled = true;
+  pw.style.display = "block";
+  pb.style.width = "30%";
+  pl.textContent = "Lese maya.exe...";
+
+  try {
+    const reader = new FileReader();
+    reader.readAsDataURL(_mayaFile);
+    reader.onloadend = async () => {
+      try {
+        const b64 = reader.result.split(',')[1];
+        pb.style.width = "65%";
+        pl.textContent = "Lade maya.exe zu GitHub hoch...";
+
+        await uploadFileToGitHub("releases/maya.exe", b64, "Release new maya.exe via Admin Panel");
+
+        pb.style.width = "85%";
+        pl.textContent = "Erhöhe Versionsnummer in version.json...";
+
+        let curVer = 150;
+        try {
+          const vRes = await fetch(`${API_BASE}/releases/version.json?nc=${Date.now()}`, { headers:{ Authorization:`token ${token}`, Accept:"application/vnd.github.v3+json" } });
+          if(vRes.ok) {
+            const vData = await vRes.json();
+            const dec = JSON.parse(decodeURIComponent(escape(window.atob(vData.content))));
+            curVer = dec.version || 150;
+          }
+        } catch(_) {}
+
+        const nextVer = curVer + 1;
+        const vObj = {
+          version: nextVer,
+          url: `${RAW_BASE}/releases/maya.exe`,
+          message: `Auto-Update v${nextVer} via HYSCHOOL Admin Panel`
+        };
+
+        await uploadFileToGitHub("releases/version.json", utf8_to_b64(JSON.stringify(vObj, null, 2)), `Bump version to ${nextVer}`);
+
+        pb.style.width = "100%";
+        pl.textContent = `Erfolgreich! Maya Loader v${nextVer} ist jetzt live!`;
+        pl.className = "prog-lbl ok";
+        showToast(`maya.exe erfolgreich veröffentlicht (v${nextVer})!`, "ok");
+        logAdminAction("MAYA_UPDATE", "maya.exe", `Maya Loader auf Version ${nextVer} aktualisiert`);
+      } catch(err) {
+        pl.textContent = "Fehler: " + err.message;
+        pl.className = "prog-lbl err";
+        showToast("Upload Fehler: " + err.message, "err");
+      } finally {
+        btn.disabled = false;
+      }
+    };
+  } catch(e) {
+    pl.textContent = "Fehler: " + e.message;
+    pl.className = "prog-lbl err";
+    btn.disabled = false;
+  }
+}
+
+// RAZER.DLL MANAGER
+let _selectedRazerFile = null;
+
+function onRazerFileSelected(input) {
+  if(!input.files || input.files.length === 0) return;
+  _selectedRazerFile = input.files[0];
+  const nameEl = document.getElementById("razer-file-name");
+  const btnEl = document.getElementById("razer-upload-btn");
+  if(nameEl) nameEl.textContent = `${_selectedRazerFile.name} (${(_selectedRazerFile.size / 1024 / 1024).toFixed(2)} MB)`;
+  if(btnEl) btnEl.disabled = false;
+}
+
+async function checkRazerDllStatus() {
+  const statusEl = document.getElementById("razer-active-status");
+  const delBtn = document.getElementById("razer-del-btn");
+  if(!statusEl) return;
+  const token = getToken();
+  try {
+    const res = await fetch(`${API_BASE}/releases/RAZER.dll?nc=${Date.now()}`, {
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+    });
+    if(res.ok) {
+      const data = await res.json();
+      const mbSize = data.size ? (data.size / 1024 / 1024).toFixed(2) + ' MB' : '';
+      statusEl.innerHTML = `<span style="color:#10b981;font-weight:700;">🟢 Online auf GitHub:</span> <a href="${RAW_BASE}/releases/RAZER.dll" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">RAZER.dll</a> <span style="color:#64748b;">(${mbSize})</span>`;
+      if(delBtn) delBtn.style.display = "inline-flex";
+    } else {
+      statusEl.innerHTML = `<span style="color:#f43f5e;font-weight:700;">⚪ Nicht vorhanden</span>`;
+      if(delBtn) delBtn.style.display = "none";
+    }
+  } catch(e) {
+    statusEl.innerHTML = `<span style="color:#64748b;">Status konnte nicht geladen werden</span>`;
+    if(delBtn) delBtn.style.display = "none";
+  }
+}
+
+async function deleteRazerDll() {
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
+    alert("Keine Berechtigung zum Löschen von Dateien!");
+    return;
+  }
+  if(!confirm("Möchtest du RAZER.dll wirklich von GitHub releases/ löschen?")) {
+    return;
+  }
+  try {
+    showToast("Lösche RAZER.dll von GitHub...", "ok");
+    await deleteFileFromGitHub("releases/RAZER.dll", "Delete RAZER.dll via Admin Panel");
+    logAdminAction("RAZER_DLL_DELETED", "RAZER.dll", "RAZER.dll von GitHub gelöscht");
+    showToast("RAZER.dll wurde erfolgreich gelöscht!", "ok");
+    await checkRazerDllStatus();
+  } catch(e) {
+    showToast("Fehler beim Löschen von RAZER.dll: " + e.message, "err");
+  }
+}
+
+async function uploadRazerDll() {
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
+    alert("Keine Berechtigung zum Verwalten von Cheats/Dateien!");
+    return;
+  }
+  if(!_selectedRazerFile) {
+    alert("Bitte wähle zuerst eine RAZER.dll Datei aus!");
+    return;
+  }
+
+  const btn = document.getElementById("razer-upload-btn");
+  const pw = document.getElementById("razer-prog-wrap");
+  const pb = document.getElementById("razer-prog-fill");
+  const pl = document.getElementById("razer-prog-lbl");
+
+  btn.disabled = true;
+  if(pw) pw.style.display = "block";
+  if(pb) pb.style.width = "30%";
+  if(pl) { pl.textContent = "Lese RAZER.dll..."; pl.className = "prog-lbl"; }
+
+  try {
+    const reader = new FileReader();
+    reader.readAsDataURL(_selectedRazerFile);
+    reader.onloadend = async () => {
+      try {
+        const b64 = reader.result.split(',')[1];
+        if(pb) pb.style.width = "65%";
+        if(pl) pl.textContent = "Lade RAZER.dll zu GitHub releases/ hoch...";
+
+        await uploadFileToGitHub("releases/RAZER.dll", b64, "Upload RAZER.dll for Valorant via Admin Panel");
+
+        if(pb) pb.style.width = "100%";
+        if(pl) {
+          pl.textContent = "RAZER.dll erfolgreich hochgeladen & bereitgestellt!";
+          pl.className = "prog-lbl ok";
+        }
+        showToast("RAZER.dll erfolgreich auf GitHub aktualisiert!", "ok");
+        logAdminAction("RAZER_DLL_UPLOAD", "RAZER.dll", "RAZER.dll für Valorant aktualisiert");
+        await checkRazerDllStatus();
+      } catch(err) {
+        if(pl) {
+          pl.textContent = "Fehler: " + err.message;
+          pl.className = "prog-lbl err";
+        }
+        showToast("Fehler beim Hochladen: " + err.message, "err");
+      } finally {
+        btn.disabled = false;
+      }
+    };
+  } catch(e) {
+    if(pl) {
+      pl.textContent = "Fehler: " + e.message;
+      pl.className = "prog-lbl err";
+    }
+    btn.disabled = false;
+  }
+}
+
+// USER LOGS
+let ALL_USER_LOGS = [];
+let LOG_ENTRIES_CACHE = {};
+
+function initUserLogsCache() {
+  try {
+    const raw = localStorage.getItem("hyschool_userlogs_cache");
+    if(raw) {
+      LOG_ENTRIES_CACHE = JSON.parse(raw) || {};
+    }
+  } catch(_) {
+    LOG_ENTRIES_CACHE = {};
+  }
+}
+
+async function loadLiveLogs(silent=false) {
+  const tbody = document.getElementById("logs-table-body");
+  if(!tbody) return;
+
+  initUserLogsCache();
+
+  // 1. Instant render from local cache if we have previous data
+  if(ALL_USER_LOGS.length === 0 && Object.keys(LOG_ENTRIES_CACHE).length > 0) {
+    ALL_USER_LOGS = Object.values(LOG_ENTRIES_CACHE);
+    filterUserLogs();
+  } else if(!silent && ALL_USER_LOGS.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:#e5a93c;padding:24px;">Lade Benutzer-Logs...</td></tr>`;
+  }
+
+  const token = getToken();
+  try {
+    const res = await fetch(`${API_BASE}/logs?nc=${Date.now()}`, {
+      cache: "no-store",
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+    });
+
+    if(res.ok) {
+      const files = await res.json();
+      const logFiles = files.filter(f => f.name && f.name.endsWith(".json"));
+      
+      const toFetch = [];
+      const currentLogs = [];
+
+      for(const f of logFiles) {
+        if(f.sha && LOG_ENTRIES_CACHE[f.sha]) {
+          const cached = LOG_ENTRIES_CACHE[f.sha];
+          cached._fileName = f.name;
+          currentLogs.push(cached);
+        } else {
+          toFetch.push(f);
+        }
+      }
+
+      // If all files were already cached, render immediately without any further network calls!
+      if(toFetch.length === 0) {
+        ALL_USER_LOGS = currentLogs;
+        filterUserLogs();
+        return;
+      }
+
+      // Fetch only new/uncached logs in parallel
+      const fetchPromises = toFetch.map(async f => {
+        try {
+          const rawUrl = `${RAW_BASE}/logs/${f.name}?nc=${Date.now()}`;
+          const rawRes = await fetch(rawUrl, { cache: "no-store", headers: { Authorization: `token ${token}` } });
+          if(rawRes.ok) {
+            const data = await rawRes.json();
+            data._fileName = f.name;
+            if(f.sha) LOG_ENTRIES_CACHE[f.sha] = data;
+            return data;
+          }
+        } catch(_) {}
+
+        try {
+          const apiUrl = f.url || `${API_BASE}/logs/${f.name}`;
+          const contentRes = await fetch(apiUrl, {
+            headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3.raw" }
+          });
+          if(contentRes.ok) {
+            const data = await contentRes.json();
+            data._fileName = f.name;
+            if(f.sha) LOG_ENTRIES_CACHE[f.sha] = data;
+            return data;
+          }
+        } catch(_) {}
+
+        return null;
+      });
+
+      const fetchedResults = await Promise.all(fetchPromises);
+      ALL_USER_LOGS = [...currentLogs, ...fetchedResults.filter(r => r !== null)];
+
+      try {
+        localStorage.setItem("hyschool_userlogs_cache", JSON.stringify(LOG_ENTRIES_CACHE));
+      } catch(_) {}
+
+      filterUserLogs();
+    } else {
+      if(!silent && ALL_USER_LOGS.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:#64748b;padding:24px;">Noch keine Benutzer-Logins aufgezeichnet.</td></tr>`;
+      }
+    }
+  } catch(_) {}
+}
+
+function filterUserLogs() {
+  const tbody = document.getElementById("logs-table-body");
+  if(!tbody) return;
+
+  const query = (document.getElementById("log-search-input") ? document.getElementById("log-search-input").value : "").toLowerCase().trim();
+  const sort = document.getElementById("log-sort-select") ? document.getElementById("log-sort-select").value : "date_desc";
+
+  const groupedMap = {};
+  ALL_USER_LOGS.forEach(l => {
+    const groupKey = l.key || l.user || l.hwid || "Kunde";
+    if(!groupedMap[groupKey]) {
+      groupedMap[groupKey] = {
+        user: l.user || "Kunde",
+        key: l.key || "---",
+        hwid: l.hwid || "---",
+        ip: l.ip || "---",
+        date: l.date || "---",
+        count: 0,
+        files: []
+      };
+    }
+    groupedMap[groupKey].count++;
+    if(l._fileName) groupedMap[groupKey].files.push(l._fileName);
+
+    if(l.date) groupedMap[groupKey].date = l.date;
+    if(l.ip && l.ip !== "---") groupedMap[groupKey].ip = l.ip;
+    if(l.hwid && l.hwid !== "---") groupedMap[groupKey].hwid = l.hwid;
+    if(l.user && l.user !== "---") groupedMap[groupKey].user = l.user;
+    if(l.key && l.key !== "---") groupedMap[groupKey].key = l.key;
+  });
+
+  const uniqueList = Object.values(groupedMap);
+
+  let filtered = uniqueList.filter(l => {
+    if(!query) return true;
+    return (l.user || "").toLowerCase().includes(query) ||
+           (l.key || "").toLowerCase().includes(query) ||
+           (l.hwid || "").toLowerCase().includes(query) ||
+           (l.ip || "").toLowerCase().includes(query);
+  });
+
+  filtered.sort((a,b) => {
+    if(sort === "date_desc") return (b.date || "").localeCompare(a.date || "");
+    if(sort === "date_asc") return (a.date || "").localeCompare(b.date || "");
+    if(sort === "name_asc") return (a.user || "").localeCompare(b.user || "");
+    if(sort === "logins_desc") return b.count - a.count;
+    return 0;
+  });
+
+  document.getElementById("stat-total-logins").textContent = ALL_USER_LOGS.length;
+  document.getElementById("stat-unique-users").textContent = uniqueList.length;
+
+  let topUser = "---";
+  let maxCount = 0;
+  uniqueList.forEach(u => {
+    if(u.count > maxCount) {
+      maxCount = u.count;
+      topUser = `${u.user} (${u.count}x)`;
+    }
+  });
+  document.getElementById("stat-top-user").textContent = topUser;
+
+  if(filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:#64748b;padding:24px;">Keine passenden Logins gefunden.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(l => {
+    const filesJson = JSON.stringify(l.files).replace(/"/g, '&quot;');
+    const shortHwid = l.hwid && l.hwid.length > 18 ? (l.hwid.substring(0, 16) + '...') : (l.hwid || '---');
+    return `
+      <tr>
+        <td style="font-weight:800;color:#f8fafc;overflow:hidden;text-overflow:ellipsis;" title="${l.user || 'Kunde'}">${l.user || 'Kunde'}</td>
+        <td><span class="tag-product">VALORANT</span></td>
+        <td style="color:#64748b;font-size:10.5px;">${l.date || '---'}</td>
+        <td style="color:#e5a93c;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10.5px;">${l.ip || '---'}</td>
+        <td><span style="color:#cbd5e1;font-size:10.5px;font-family:'JetBrains Mono',monospace;" title="${l.hwid}">${shortHwid}</span></td>
+        <td style="color:#e5a93c;font-weight:800;text-align:center;">${l.count}x</td>
+        <td>
+          <div class="tag-key-box" onclick="navigator.clipboard.writeText('${l.key}');showToast('Key kopiert: ${l.key}','ok');" title="Klicken zum Kopieren: ${l.key}" style="font-size:10.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;">
+            <span>${l.key || '---'}</span>
+          </div>
+        </td>
+        <td style="text-align:center;">
+          <button class="action-btn action-btn-del" onclick="deleteUserGroupLogs(${filesJson})" style="height:24px;padding:0 8px;font-size:10.5px;" title="Alle Logins dieses Nutzers löschen">🗑️ Löschen</button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+async function deleteUserGroupLogs(fileNames) {
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
+    alert("Keine Berechtigung zum Löschen!");
+    return;
+  }
+  if(!fileNames || fileNames.length === 0) return;
+  if(!confirm(`Möchtest du alle ${fileNames.length} Log-Einträge dieses Nutzers wirklich löschen?`)) return;
+  
+  const token = getToken();
+  if(!token) return;
+
+  for(const fileName of fileNames) {
+    try {
+      const apiUrl = `${API_BASE}/logs/${fileName}`;
+      const infoRes = await fetch(`${apiUrl}?nc=${Date.now()}`, { headers:{ Authorization:`token ${token}`, Accept:"application/vnd.github.v3+json" } });
+      if(infoRes.ok) {
+        const info = await infoRes.json();
+        if(info.sha && LOG_ENTRIES_CACHE[info.sha]) {
+          delete LOG_ENTRIES_CACHE[info.sha];
+        }
+        await fetch(apiUrl, {
+          method: "DELETE",
+          headers: { Authorization:`token ${token}`, Accept:"application/vnd.github.v3+json", "Content-Type":"application/json" },
+          body: JSON.stringify({ message: `Delete log ${fileName} via Admin Panel`, sha: info.sha })
+        });
+      }
+    } catch(_) {}
+  }
+  try { localStorage.setItem("hyschool_userlogs_cache", JSON.stringify(LOG_ENTRIES_CACHE)); } catch(_) {}
+  showToast("Nutzer-Logs erfolgreich gelöscht!", "ok");
+  logAdminAction("DELETE_USER_LOG", "-", `${fileNames.length} Login-Logs gelöscht`);
+  loadLiveLogs();
+}
+
+async function deleteAllUserLogs() {
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
+    alert("Keine Berechtigung zum Löschen!");
+    return;
+  }
+  if(!confirm("⚠️ ACHTUNG: Möchtest du WIRKLICH ALLE Benutzer-Logs unwiderruflich löschen?")) return;
+
+  const token = getToken();
+  if(!token) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/logs?nc=${Date.now()}`, {
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+    });
+
+    if(res.ok) {
+      const files = await res.json();
+      const logFiles = files.filter(f => f.name && f.name.endsWith(".json"));
+      
+      for(const f of logFiles) {
+        try {
+          await fetch(`${API_BASE}/logs/${f.name}`, {
+            method: "DELETE",
+            headers: { Authorization:`token ${token}`, Accept:"application/vnd.github.v3+json", "Content-Type":"application/json" },
+            body: JSON.stringify({ message: `Delete all logs via Admin Panel`, sha: f.sha })
+          });
+        } catch(_) {}
+      }
+
+      showToast("Alle Benutzer-Logs wurden erfolgreich gelöscht!", "ok");
+      logAdminAction("DELETE_ALL_USER_LOGS", "-", "Alle Benutzer-Logs unwiderruflich gelöscht");
+      LOG_ENTRIES_CACHE = {};
+      try { localStorage.removeItem("hyschool_userlogs_cache"); } catch(_) {}
+      ALL_USER_LOGS = [];
+      loadLiveLogs();
+    }
+  } catch(e) {
+    showToast("Fehler beim Löschen: " + e.message, "err");
+  }
+}
+
+// PERMISSIONS
+let USER_PERMISSIONS = {};
+
+async function loadUserPermissions() {
+  const tbody = document.getElementById("permissions-table-body");
+  if(!tbody) return;
+
+  if(ALL_LICENSES.length === 0) {
+    await loadLicenses(true);
+  }
+
+  // 1. Load from cache if available
+  try {
+    const cached = localStorage.getItem("hyschool_perms_cache");
+    if(cached && Object.keys(USER_PERMISSIONS).length === 0) {
+      USER_PERMISSIONS = JSON.parse(cached);
+    }
+  } catch(_) {}
+
+  const token = getToken();
+  let loadedPerms = null;
+
+  try {
+    const rawRes = await fetch(`${RAW_BASE}/permissions.json?nc=${Date.now()}`, {
+      cache: "no-store",
+      headers: { Authorization: `token ${token}` }
+    });
+    if(rawRes.ok) {
+      loadedPerms = await rawRes.json();
+    }
+  } catch(_) {}
+
+  if(!loadedPerms) {
+    try {
+      const res = await fetch(`${API_BASE}/permissions.json?nc=${Date.now()}`, {
+        cache: "no-store",
+        headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json", "Cache-Control": "no-cache" }
+      });
+      if(res.ok) {
+        const info = await res.json();
+        if(info && info.content) {
+          loadedPerms = JSON.parse(b64_to_utf8(info.content));
+        } else if(info && typeof info === 'object') {
+          loadedPerms = info;
+        }
+      }
+    } catch(_) {}
+  }
+
+  if(loadedPerms && typeof loadedPerms === 'object') {
+    USER_PERMISSIONS = loadedPerms;
+    try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
+  }
+
+  const validLicMap = {};
+  ALL_LICENSES.forEach(lic => {
+    validLicMap[lic.key] = lic.used_by || (lic.used ? "Kunde" : (lic.note && lic.note !== "---" ? lic.note : "Unbenutzt"));
+  });
+
+  const validKeys = Object.keys(validLicMap);
+
+  if(validKeys.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#64748b;padding:24px;">Keine aktiven Lizenzschlüssel vorhanden. Erstelle zuerst einen Key in der Lizenz-Verwaltung!</td></tr>`;
+    return;
+  }
+
+  const isStaff = !CURRENT_USER.is_admin;
+  const p = CURRENT_USER.permissions || {};
+  const editScope = p.edit_scope || "own";
+
+  tbody.innerHTML = validKeys.map(key => {
+    const lic = ALL_LICENSES.find(l => l.key === key);
+    const isProtectedAdmin = isAdminAccountKey(key, lic);
+    const userPerms = USER_PERMISSIONS[key] || { valorant:true, apex:true, tft_helper:true, naraka:true, coc:true };
+    const userName = validLicMap[key] || "---";
+
+    // Staff restrictions:
+    // 1. Never allowed to edit Admin accounts
+    // 2. If editScope === 'own', only allowed to edit keys where created_by matches their name
+    const isOwnKey = lic && (lic.created_by === CURRENT_USER.name || (lic.note && lic.note === CURRENT_USER.name));
+    const canEditThisKey = CURRENT_USER.is_admin || (!isProtectedAdmin && (editScope === "all" || isOwnKey));
+    const disabledAttr = canEditThisKey ? "" : "disabled";
+
+    let labelExtra = "";
+    if (isProtectedAdmin) {
+      labelExtra = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;margin-left:6px;">🔒 ADMIN</span>`;
+    } else if (isStaff && !canEditThisKey) {
+      labelExtra = `<span style="background:#141724;color:#64748b;border:1px solid #1f2538;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;margin-left:6px;">🔒 Fremder Key</span>`;
+    }
+
+    return `
+      <tr style="${!canEditThisKey ? 'opacity:0.75;' : ''}">
+        <td><span class="tag-key-box">${key}</span></td>
+        <td style="color:#f8fafc;font-weight:800;font-size:13px;">
+          <span style="color:#e5a93c;margin-right:5px;">👤</span> ${userName}
+          ${labelExtra}
+        </td>
+        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-valorant" ${userPerms.valorant!==false?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
+        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-apex" ${userPerms.apex!==false?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
+        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-tft_helper" ${userPerms.tft_helper!==false?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
+        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-naraka" ${userPerms.naraka!==false?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
+        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-coc" ${userPerms.coc!==false?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
+      </tr>
+    `;
+  }).join("");
+}
+
+async function saveUserPermissions(fromDom = true) {
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_edit_keys) {
+    showToast("Keine Berechtigung zum Bearbeiten von Cheat-Permissions!", "err");
+    return;
+  }
+
+  const allKeys = new Set();
+  ALL_LICENSES.forEach(l => { if(l.key) allKeys.add(l.key); });
+
+  const prodNamesMap = {
+    "valorant": "VALORANT",
+    "apex": "AI HYSCHOOL",
+    "tft_helper": "TFT HELPER",
+    "naraka": "NARAKA",
+    "coc": "CLASH OF CLANS"
+  };
+
+  const newPerms = {};
+  let licenseChangesMade = false;
+  const p = CURRENT_USER.permissions || {};
+  const editScope = p.edit_scope || "own";
+
+  allKeys.forEach(k => {
+    const lic = ALL_LICENSES.find(l => l.key === k);
+    const isProtectedAdmin = isAdminAccountKey(k, lic);
+    const isOwnKey = lic && (lic.created_by === CURRENT_USER.name || (lic.note && lic.note === CURRENT_USER.name));
+    const canEditThisKey = CURRENT_USER.is_admin || (!isProtectedAdmin && (editScope === "all" || isOwnKey));
+
+    let valChecked, apexChecked, tftChecked, narChecked, cocChecked;
+
+    if(fromDom && canEditThisKey) {
+      valChecked = document.getElementById(`perm-${k}-valorant`) ? document.getElementById(`perm-${k}-valorant`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].valorant !== false : true);
+      apexChecked = document.getElementById(`perm-${k}-apex`) ? document.getElementById(`perm-${k}-apex`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].apex !== false : true);
+      tftChecked = document.getElementById(`perm-${k}-tft_helper`) ? document.getElementById(`perm-${k}-tft_helper`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].tft_helper !== false : true);
+      narChecked = document.getElementById(`perm-${k}-naraka`) ? document.getElementById(`perm-${k}-naraka`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].naraka !== false : true);
+      cocChecked = document.getElementById(`perm-${k}-coc`) ? document.getElementById(`perm-${k}-coc`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].coc !== false : true);
+    } else {
+      const cur = USER_PERMISSIONS[k] || { valorant:true, apex:true, tft_helper:true, naraka:true, coc:true };
+      valChecked = cur.valorant !== false;
+      apexChecked = cur.apex !== false;
+      tftChecked = cur.tft_helper !== false;
+      narChecked = cur.naraka !== false;
+      cocChecked = cur.coc !== false;
+    }
+
+    newPerms[k] = {
+      valorant: valChecked,
+      apex: apexChecked,
+      tft_helper: tftChecked,
+      naraka: narChecked,
+      coc: cocChecked
+    };
+
+    if(fromDom) {
+      const lic = ALL_LICENSES.find(l => l.key === k);
+      if (lic) {
+        const activeCheats = [];
+        if(valChecked) activeCheats.push("valorant");
+        if(apexChecked) activeCheats.push("apex");
+        if(tftChecked) activeCheats.push("tft_helper");
+        if(narChecked) activeCheats.push("naraka");
+        if(cocChecked) activeCheats.push("coc");
+
+        if (activeCheats.length === 5) {
+          lic.product = "ALL";
+          lic.product_name = "ALL CHEATS";
+        } else if (activeCheats.length === 0) {
+          lic.product = "NONE";
+          lic.product_name = "KEINE CHEATS (GESPERRT)";
+        } else if (activeCheats.length === 1) {
+          lic.product = activeCheats[0];
+          lic.product_name = prodNamesMap[activeCheats[0]] || activeCheats[0];
+        } else {
+          lic.product = activeCheats.join(",");
+          lic.product_name = activeCheats.map(c => prodNamesMap[c] || c).join(" + ");
+        }
+        licenseChangesMade = true;
+      }
+    }
+  });
+
+  try {
+    const jsonStr = JSON.stringify(newPerms, null, 2);
+    const b64 = utf8_to_b64(jsonStr);
+
+    try { localStorage.setItem("hyschool_perms_cache", jsonStr); } catch(_) {}
+    
+    await uploadFileToGitHub("permissions.json", b64, "Update key permissions via Admin Panel");
+
+    USER_PERMISSIONS = newPerms;
+
+    if (licenseChangesMade && fromDom) {
+      await saveLicenses();
+    }
+
+    if(fromDom) {
+      showToast("Key-Berechtigungen & Lizenz-Spiele erfolgreich synchronisiert!", "ok");
+    }
+  } catch(e) {
+    showToast("Fehler beim Speichern der Berechtigungen: " + e.message, "err");
+  }
+}
+
+// LICENSES SYSTEM
+let ALL_LICENSES = [];
+let SELECTED_LIC_KEYS = new Set();
+let _activeModalKey = null;
+
+function onLicenseCheckboxChange(key, checked) {
+  if(checked) {
+    SELECTED_LIC_KEYS.add(key);
+  } else {
+    SELECTED_LIC_KEYS.delete(key);
+  }
+  updateBatchDeleteBtn();
+}
+
+function toggleSelectAllLicenses(checked) {
+  const visibleCheckboxes = document.querySelectorAll(".lic-row-cb:not(:disabled)");
+  visibleCheckboxes.forEach(cb => {
+    cb.checked = checked;
+    const k = cb.getAttribute("data-key");
+    if(k) {
+      if(checked) SELECTED_LIC_KEYS.add(k);
+      else SELECTED_LIC_KEYS.delete(k);
+    }
+  });
+  updateBatchDeleteBtn();
+  filterLicenses();
+}
+
+function updateBatchDeleteBtn() {
+  const bar = document.getElementById("batch-action-bar");
+  const countSpan = document.getElementById("batch-del-count");
+  const selectAllCb = document.getElementById("lic-select-all-cb");
+  
+  const count = SELECTED_LIC_KEYS.size;
+  if(countSpan) countSpan.textContent = count;
+  
+  if(bar) {
+    bar.style.display = count > 0 ? "flex" : "none";
+  }
+
+  if(selectAllCb) {
+    const visibleCheckboxes = document.querySelectorAll(".lic-row-cb:not(:disabled)");
+    selectAllCb.checked = visibleCheckboxes.length > 0 && Array.from(visibleCheckboxes).every(cb => cb.checked);
+  }
+}
+
+function clearLicenseSelection() {
+  SELECTED_LIC_KEYS.clear();
+  const selectAllCb = document.getElementById("lic-select-all-cb");
+  if(selectAllCb) selectAllCb.checked = false;
+  updateBatchDeleteBtn();
+  filterLicenses();
+}
+
+function copySelectedLicenses() {
+  const selected = ALL_LICENSES.filter(l => SELECTED_LIC_KEYS.has(l.key)).map(l => `${l.key} | ${l.product_name} | ${l.duration_label} | ${l.used_by || 'Unbenutzt'}`);
+  if(selected.length === 0) {
+    alert("Keine Keys ausgewählt!");
+    return;
+  }
+  navigator.clipboard.writeText(selected.join("\n"));
+  showToast(`${selected.length} ausgewählte Keys kopiert!`, "ok");
+}
+
+async function deleteSelectedLicenses() {
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
+    alert("Keine Berechtigung zum Löschen von Keys!");
+    return;
+  }
+  const count = SELECTED_LIC_KEYS.size;
+  if(count === 0) {
+    alert("Bitte wähle mindestens einen Key zum Löschen aus!");
+    return;
+  }
+
+  // Exclude protected admin account if user is not admin
+  const keysToDelete = Array.from(SELECTED_LIC_KEYS).filter(k => CURRENT_USER.is_admin || !isAdminAccountKey(k));
+  if(keysToDelete.length === 0) {
+    alert("Die ausgewählten Keys gehören zum geschützten Admin-Account und können nicht gelöscht werden!");
+    return;
+  }
+
+  if(!confirm(`Möchtest du die ${keysToDelete.length} ausgewählten Keys wirklich unwiderruflich löschen?`)) {
+    return;
+  }
+
+  const deleteSet = new Set(keysToDelete);
+  ALL_LICENSES = ALL_LICENSES.filter(l => !deleteSet.has(l.key));
+  keysToDelete.forEach(k => delete USER_PERMISSIONS[k]);
+
+  SELECTED_LIC_KEYS.clear();
+  await saveLicenses();
+  if(CURRENT_USER.is_admin) {
+    await saveUserPermissions(false);
+  }
+  filterLicenses();
+  loadUserPermissions();
+  logAdminAction("BATCH_KEYS_DELETED", `${keysToDelete.length} Keys`, `Folgende Keys wurden gelöscht: ${keysToDelete.join(', ')}`);
+  showToast(`${keysToDelete.length} ausgewählte Keys erfolgreich gelöscht!`, "ok");
+}
+
+function makeRandomChunk(len) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let str = "";
+  for(let i=0; i<len; i++) str += chars.charAt(Math.floor(Math.random()*chars.length));
+  return str;
+}
+
+function generateLicenseString(prodCode, durationStr) {
+  const pTag = prodCode.toUpperCase().substring(0, 3);
+  let dTag = "30D";
+  if(durationStr === "1") dTag = "1D";
+  else if(durationStr === "3") dTag = "3D";
+  else if(durationStr === "7") dTag = "7D";
+  else if(durationStr === "14") dTag = "14D";
+  else if(durationStr === "30") dTag = "30D";
+  else if(durationStr === "90") dTag = "90D";
+  else if(durationStr === "365") dTag = "1Y";
+  else if(durationStr === "lifetime") dTag = "LIFE";
+
+  return `HYS-${pTag}-${dTag}-${makeRandomChunk(4)}-${makeRandomChunk(4)}`;
+}
+
+async function loadLicenses(silent=false) {
+  const tbody = document.getElementById("licenses-table-body");
+  if(tbody && !silent && ALL_LICENSES.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#e5a93c;padding:24px;">Lade Lizenzen...</td></tr>`;
+  }
+
+  const token = getToken();
+  try {
+    const res = await fetch(`${API_BASE}/licenses.json?nc=${Date.now()}`, {
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3.raw" }
+    });
+    if(res.ok) {
+      ALL_LICENSES = await res.json();
+      if(!Array.isArray(ALL_LICENSES)) ALL_LICENSES = [];
+    } else {
+      ALL_LICENSES = [];
+    }
+  } catch(_) {
+    ALL_LICENSES = [];
+  }
+
+  filterLicenses();
+}
+
+async function saveLicenses() {
+  try {
+    const jsonStr = JSON.stringify(ALL_LICENSES, null, 2);
+    const b64 = utf8_to_b64(jsonStr);
+
+    await uploadFileToGitHub("licenses.json", b64, "Update licenses.json via KeyAuth Admin Panel");
+
+    showToast("Lizenzen erfolgreich gespeichert & aktiv!", "ok");
+    filterLicenses();
+  } catch(e) {
+    showToast("Fehler beim Speichern der Lizenzen: " + e.message, "err");
+  }
+}
+
+async function generateNewLicenses() {
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_generate_keys) {
+    alert("Keine Berechtigung zum Erstellen von Keys!");
+    return;
+  }
+  const prod = document.getElementById("gen-product").value;
+  const dur = document.getElementById("gen-duration").value;
+  const qty = parseInt(document.getElementById("gen-qty").value) || 1;
+  const note = document.getElementById("gen-note").value.trim();
+
+  if(!note) {
+    alert("Bitte gib einen Login-Benutzernamen an! Ohne Name kann kein Key erstellt werden.");
+    const noteInp = document.getElementById("gen-note");
+    if(noteInp) {
+      noteInp.focus();
+      noteInp.style.borderColor = "#f43f5e";
+      setTimeout(() => { noteInp.style.borderColor = "#1e2333"; }, 2500);
+    }
+    return;
+  }
+
+  // Enforce staff max key duration
+  if(!CURRENT_USER.is_admin) {
+    const maxDur = CURRENT_USER.permissions.max_duration || "all";
+    if(maxDur !== "all") {
+      const allowedDays = parseInt(maxDur, 10) || 30;
+      const curDays = dur === "lifetime" ? 999999 : (parseInt(dur, 10) || 30);
+      if(curDays > allowedDays) {
+        alert(`Das ist nicht erlaubt! Du darfst nur Keys mit einer maximalen Laufzeit von ${maxDur} Tagen erstellen!`);
+        return;
+      }
+    }
+  }
+
+  const prodNames = {
+    "ALL": "ALL CHEATS",
+    "valorant": "VALORANT",
+    "apex": "AI HYSCHOOL",
+    "tft_helper": "TFT HELPER",
+    "naraka": "NARAKA BLADEPOINT",
+    "coc": "CLASH OF CLANS"
+  };
+
+  const durLabels = {
+    "1": "1 Tag (Trial)",
+    "3": "3 Tage",
+    "7": "7 Tage (Woche)",
+    "14": "14 Tage",
+    "30": "30 Tage (1 Monat)",
+    "90": "90 Tage (3 Monate)",
+    "365": "365 Tage (1 Jahr)",
+    "lifetime": "Lifetime"
+  };
+
+  const newKeys = [];
+  const now = new Date().toLocaleString("de-DE");
+
+  for(let i=0; i<qty; i++) {
+    const key = generateLicenseString(prod, dur);
+    const licObj = {
+      key: key,
+      product: prod,
+      product_name: prodNames[prod] || prod,
+      duration: dur,
+      duration_label: durLabels[dur] || dur,
+      used: false,
+      paused: false,
+      used_by: note || "",
+      created_by: CURRENT_USER.name || (CURRENT_USER.is_admin ? "Admin" : "Mitarbeiter"),
+      hwid: "",
+      created_at: now,
+      first_used_at: "",
+      expires_at: "",
+      note: note || "---"
+    };
+
+    ALL_LICENSES.unshift(licObj);
+    newKeys.push(key);
+  }
+
+  const outBox = document.getElementById("gen-output-box");
+  const outTxt = document.getElementById("gen-keys-textarea");
+  if(outBox && outTxt) {
+    outBox.style.display = "block";
+    outTxt.value = newKeys.join("\n");
+  }
+
+  newKeys.forEach(k => {
+    if(!USER_PERMISSIONS[k]) {
+      if(prod === "ALL") {
+        USER_PERMISSIONS[k] = { valorant:true, apex:true, tft_helper:true, naraka:true, coc:true };
+      } else {
+        USER_PERMISSIONS[k] = {
+          valorant: prod === "valorant",
+          apex: prod === "apex",
+          tft_helper: prod === "tft_helper",
+          naraka: prod === "naraka",
+          coc: prod === "coc"
+        };
+      }
+    }
+  });
+
+  await saveLicenses();
+  if(CURRENT_USER.is_admin) {
+    await saveUserPermissions(false);
+  }
+  logAdminAction("KEY_CREATED", newKeys.join(", "), `${qty}x Key (${prodNames[prod]}, ${durLabels[dur]}) generiert für Note: '${note || '---'}'`);
+  showToast(`${qty} neue(r) License Key(s) erstellt & gespeichert!`, "ok");
+}
+
+function copyGeneratedKeys() {
+  const txt = document.getElementById("gen-keys-textarea");
+  if(txt) {
+    txt.select();
+    navigator.clipboard.writeText(txt.value);
+    showToast("Keys in Zwischenablage kopiert!", "ok");
+  }
+}
+
+function copyAllUnusedLicenses() {
+  const unused = ALL_LICENSES.filter(l => !l.used).map(l => `${l.key} | ${l.product_name} | ${l.duration_label}`);
+  if(unused.length === 0) {
+    alert("Keine unbenutzten Keys vorhanden!");
+    return;
+  }
+  navigator.clipboard.writeText(unused.join("\n"));
+  showToast(`${unused.length} unbenutzte Keys kopiert!`, "ok");
+}
+
+function filterLicenses() {
+  const q = (document.getElementById("lic-search-input") ? document.getElementById("lic-search-input").value : "").toLowerCase().trim();
+  const stFilter = document.getElementById("lic-filter-status") ? document.getElementById("lic-filter-status").value : "all";
+  const prFilter = document.getElementById("lic-filter-product") ? document.getElementById("lic-filter-product").value : "all";
+
+  let filtered = ALL_LICENSES.filter(lic => {
+    if(stFilter === "unused" && lic.used) return false;
+    if(stFilter === "used" && !lic.used) return false;
+    if(prFilter !== "all" && lic.product !== prFilter) return false;
+
+    if(!q) return true;
+    return (lic.key && lic.key.toLowerCase().includes(q)) ||
+           (lic.used_by && lic.used_by.toLowerCase().includes(q)) ||
+           (lic.hwid && lic.hwid.toLowerCase().includes(q)) ||
+           (lic.note && lic.note.toLowerCase().includes(q)) ||
+           (lic.product_name && lic.product_name.toLowerCase().includes(q));
+  });
+
+  renderLicensesTable(filtered);
+}
+
+function isAdminAccountKey(key, lic) {
+  if(!lic) lic = ALL_LICENSES.find(l => l.key === key);
+  if(!lic) return false;
+  const u = (lic.used_by || "").toLowerCase().trim();
+  const n = (lic.note || "").toLowerCase().trim();
+  return u === "admin" || u === "kovak" || n === "admin" || n === "kovak" ||
+         u.startsWith("admin") || u.startsWith("kovak") ||
+         n.startsWith("admin") || n.startsWith("kovak") ||
+         u.includes("admin") || u.includes("kovak") ||
+         n.includes("admin") || n.includes("kovak");
+}
+
+function renderLicensesTable(list) {
+  const tbody = document.getElementById("licenses-table-body");
+  if(!tbody) return;
+
+  const totalEl = document.getElementById("stat-lic-total");
+  const unusedEl = document.getElementById("stat-lic-unused");
+  const usedEl = document.getElementById("stat-lic-used");
+
+  if(totalEl) totalEl.textContent = ALL_LICENSES.length;
+  if(unusedEl) unusedEl.textContent = ALL_LICENSES.filter(l => !l.used).length;
+  if(usedEl) usedEl.textContent = ALL_LICENSES.filter(l => l.used).length;
+
+  if(list.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#64748b;padding:24px;">Keine Lizenzen gefunden. Erstelle oben deinen ersten Key!</td></tr>`;
+    updateBatchDeleteBtn();
+    return;
+  }
+
+  const p = CURRENT_USER.permissions;
+
+  tbody.innerHTML = list.map(lic => {
+    const isProtectedAdmin = isAdminAccountKey(lic.key, lic);
+    const isChecked = SELECTED_LIC_KEYS.has(lic.key);
+
+    let statusBadge = "";
+    if(lic.paused) {
+      statusBadge = `<span style="background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#f59e0b;border-radius:50%;"></span> PAUSIERT</span>`;
+    } else if(!lic.used) {
+      statusBadge = `<span style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#10b981;border-radius:50%;"></span> UNBENUTZT</span>`;
+    } else {
+      statusBadge = `<span style="background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid rgba(255,255,255,0.15);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#cbd5e1;border-radius:50%;"></span> EINGELÖST</span>`;
+    }
+
+    const expireText = lic.duration === 'lifetime'
+      ? `<span style="color:#e5a93c;font-weight:800;font-size:11px;">♾️ LIFETIME</span>`
+      : (lic.expires_at ? `<span style="color:#f8fafc;font-size:11px;font-weight:700;">${lic.expires_at}</span>` : `<span style="color:#64748b;font-size:11px;">Startet bei Login</span>`);
+
+    let hwidHtml = "";
+    if(!lic.hwid) {
+      hwidHtml = `<span class="hwid-badge-empty"><span>🔓</span> Nicht gebunden</span>`;
+    } else {
+      const shortHwid = lic.hwid.substring(0, 8) + "...";
+      if (!CURRENT_USER.is_admin && isProtectedAdmin) {
+        hwidHtml = `
+          <span class="hwid-badge-admin" title="Geschützter Admin Account">
+            <span>🔒</span> ${shortHwid}
+          </span>
+        `;
+      } else {
+        hwidHtml = `
+          <button class="hwid-badge-bound" onclick="openHwidModal('${lic.key}', '${lic.hwid}', '${lic.used_by||'User'}')" title="Klicken für vollständige HWID & Details">
+            <span>💻</span> <span>${shortHwid}</span>
+          </button>
+        `;
+      }
+    }
+
+    let actionsHtml = "";
+    if(!CURRENT_USER.is_admin && isProtectedAdmin) {
+      actionsHtml = `<span class="hwid-badge-admin" style="font-size:10px;padding:4px 10px;">🔒 ADMIN GESCHÜTZT</span>`;
+    } else {
+      const pauseBtnHtml = (CURRENT_USER.is_admin || p.can_pause_keys) ? (lic.paused
+        ? `<button class="action-btn action-btn-resume" onclick="togglePauseLicense('${lic.key}')" title="Key wieder aktivieren">▶ Start</button>`
+        : `<button class="action-btn action-btn-pause" onclick="togglePauseLicense('${lic.key}')" title="Key vorübergehend pausieren">⏸ Pause</button>`) : '';
+
+      const editBtnHtml = (CURRENT_USER.is_admin || p.can_edit_keys) ? `<button class="action-btn action-btn-edit" onclick="openEditLicModal('${lic.key}')" title="Laufzeit & Status bearbeiten">✏️ Edit</button>` : '';
+      const resetBtnHtml = (CURRENT_USER.is_admin || p.can_reset_hwid) ? `<button class="action-btn action-btn-reset" onclick="resetLicenseHWID('${lic.key}')" title="HWID sofort zurücksetzen">🔄 Reset</button>` : '';
+      const delBtnHtml = (CURRENT_USER.is_admin || p.can_delete_keys) ? `<button class="action-btn action-btn-del" onclick="deleteLicenseKey('${lic.key}')" title="Key komplett löschen">🗑️</button>` : '';
+
+      actionsHtml = `
+        <div class="action-btn-group">
+          ${editBtnHtml}
+          ${pauseBtnHtml}
+          ${resetBtnHtml}
+          ${delBtnHtml}
+        </div>
+      `;
+    }
+
+    const onRowEditClick = (!CURRENT_USER.is_admin && isProtectedAdmin)
+      ? `alert('Das ist der ADMIN Account! Hier darfst du nichts ändern!');`
+      : ((CURRENT_USER.is_admin || p.can_edit_keys) ? `openEditLicModal('${lic.key}')` : '');
+
+    const noteText = lic.note && lic.note !== '---' ? `<div style="color:#64748b;font-size:11px;margin-top:3px;display:flex;align-items:center;gap:4px;"><span>📝</span> ${lic.note}</div>` : '';
+    const cbDisabled = (!CURRENT_USER.is_admin && isProtectedAdmin) ? 'disabled' : '';
+
+    return `
+      <tr style="${isChecked ? 'background:rgba(229,169,60,0.06);' : ''}">
+        <td style="text-align:center;">
+          <label class="custom-cb-wrap" title="${(!CURRENT_USER.is_admin && isProtectedAdmin) ? 'Geschützter Admin Account' : 'Auswählen'}">
+            <input type="checkbox" class="lic-row-cb" data-key="${lic.key}" onchange="onLicenseCheckboxChange('${lic.key}', this.checked)" ${isChecked ? 'checked' : ''} ${cbDisabled}>
+            <span class="custom-cb-box">✓</span>
+          </label>
+        </td>
+
+        <td>
+          <div class="tag-key-box" onclick="navigator.clipboard.writeText('${lic.key}');showToast('Key kopiert: ${lic.key}','ok');" title="Klicken zum Kopieren">
+            <span>${lic.key}</span> 
+            <span style="font-size:11px;color:#64748b;">📋</span>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:6px;align-items:center;">
+            <span class="tag-product">${lic.product_name}</span>
+            <span class="tag-duration">${lic.duration_label || lic.duration}</span>
+          </div>
+        </td>
+
+        <td>
+          <div style="color:#f8fafc;font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px;">
+            <span style="color:#e5a93c;">👤</span> ${lic.used_by || (lic.used ? 'Kunde' : '<span style="color:#64748b;font-weight:normal;">Noch unbenutzt</span>')}
+            ${isProtectedAdmin ? '<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;white-space:nowrap;">👑 ADMIN</span>' : ''}
+          </div>
+          ${noteText}
+        </td>
+
+        <td onclick="${onRowEditClick}" style="cursor:${onRowEditClick ? 'pointer' : 'default'};" title="Klicken um Status, Dauer & Ablaufzeit zu bearbeiten">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div>${statusBadge}</div>
+            ${(CURRENT_USER.is_admin || p.can_edit_keys) && !(!CURRENT_USER.is_admin && isProtectedAdmin) ? `<span style="color:#e5a93c;font-size:10px;opacity:0.8;">✏️</span>` : ''}
+          </div>
+          <div style="margin-top:6px;font-size:11px;color:#64748b;">${expireText}</div>
+        </td>
+
+        <td style="text-align:center;">
+          ${hwidHtml}
+        </td>
+
+        <td style="text-align:center;">
+          ${actionsHtml}
+        </td>
+      </tr>
+    `;
+  }).join("");
+
+  updateBatchDeleteBtn();
+}
+
+// EDIT LICENSE MODAL HANDLERS
+let _editingLicKey = null;
+
+function openEditLicModal(key) {
+  const lic = ALL_LICENSES.find(l => l.key === key);
+  if(!lic) return;
+
+  if(!CURRENT_USER.is_admin && isAdminAccountKey(key, lic)) {
+    alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
+    return;
+  }
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_edit_keys) {
+    alert("Keine Berechtigung zum Bearbeiten!");
+    return;
+  }
+
+  // Check edit_scope restriction: own vs all
+  if(!CURRENT_USER.is_admin) {
+    const editScope = CURRENT_USER.permissions.edit_scope || "own";
+    const isOwnKey = (lic.created_by === CURRENT_USER.name || (lic.note && lic.note === CURRENT_USER.name));
+    if(editScope === "own" && !isOwnKey) {
+      alert(`Keine Berechtigung! Du darfst laut deinen Mitarbeiter-Rechten nur Keys bearbeiten, die du selbst erstellt hast (${CURRENT_USER.name}).`);
+      return;
+    }
+  }
+
+  _editingLicKey = key;
+
+  const perms = CURRENT_USER.permissions || {};
+  const isAdmin = !!CURRENT_USER.is_admin;
+
+  document.getElementById("edit-lic-key-display").textContent = key;
+  
+  // 1. CHEAT PRODUCT PERMISSION
+  const prodSelect = document.getElementById("edit-lic-product");
+  if(prodSelect) {
+    prodSelect.value = lic.product || "ALL";
+    const canEditProd = isAdmin || perms.edit_allow_product;
+    prodSelect.disabled = !canEditProd;
+    prodSelect.title = canEditProd ? "" : "Keine Berechtigung zum Ändern des Cheat-Produkts.";
+  }
+
+  // 2. DURATION PERMISSION & MAX DURATION FILTER
+  const durSelect = document.getElementById("edit-lic-duration");
+  const expInput = document.getElementById("edit-lic-expires");
+  const pillBtns = document.querySelectorAll(".edit-lic-modal-box .quick-pill-btn");
+  const canEditDur = isAdmin || perms.edit_allow_duration !== false;
+
+  if(durSelect) {
+    durSelect.value = lic.duration || "30";
+    durSelect.disabled = !canEditDur;
+
+    // Filter duration options based on edit_max_duration
+    const maxEditDays = (!isAdmin && perms.edit_max_duration && perms.edit_max_duration !== "all") ? parseInt(perms.edit_max_duration, 10) : 999999;
+    Array.from(durSelect.options).forEach(opt => {
+      if(opt.value === "lifetime") {
+        opt.disabled = maxEditDays < 999999;
+      } else {
+        const d = parseInt(opt.value, 10);
+        opt.disabled = (!isNaN(d) && d > maxEditDays);
+      }
+    });
+  }
+
+  if(expInput) expInput.disabled = !canEditDur;
+  pillBtns.forEach(btn => { btn.disabled = !canEditDur; btn.style.opacity = canEditDur ? "1" : "0.4"; });
+
+  // 3. STATUS PERMISSION
+  const stSelect = document.getElementById("edit-lic-status");
+  if(stSelect) {
+    if(lic.paused) stSelect.value = "paused";
+    else if(!lic.used) stSelect.value = "unused";
+    else stSelect.value = "active";
+
+    const canEditStat = isAdmin || perms.edit_allow_status !== false;
+    stSelect.disabled = !canEditStat;
+  }
+
+  // 4. USER / NOTE PERMISSION
+  const usrInput = document.getElementById("edit-lic-user");
+  if(usrInput) {
+    usrInput.value = lic.used_by || (lic.note && lic.note !== "---" ? lic.note : "");
+    const canEditNote = isAdmin || perms.edit_allow_note !== false;
+    usrInput.disabled = !canEditNote;
+  }
+
+  document.getElementById("edit-lic-modal").style.display = "flex";
+}
+
+function closeEditLicModal() {
+  document.getElementById("edit-lic-modal").style.display = "none";
+  _editingLicKey = null;
+}
+
+function onEditModalDurationChange() {
+  const dur = document.getElementById("edit-lic-duration").value;
+  if(dur === "lifetime") {
+    setModalExpiryLifetime();
+    return;
+  }
+  const days = parseInt(dur, 10);
+  if(!isNaN(days) && days > 0) {
+    const expInput = document.getElementById("edit-lic-expires");
+    const stSelect = document.getElementById("edit-lic-status");
+    let baseDate = new Date();
+    // If the key has a first_used_at timestamp, calculate from that start date
+    if(_editingLicKey) {
+      const lic = ALL_LICENSES.find(l => l.key === _editingLicKey);
+      if(lic && lic.first_used_at) {
+        const parsedFirst = parseGermanDate(lic.first_used_at);
+        if(parsedFirst) baseDate = parsedFirst;
+      }
+    }
+    baseDate.setDate(baseDate.getDate() + days);
+    expInput.value = formatGermanDate(baseDate);
+    if(stSelect && stSelect.value === "unused") stSelect.value = "active";
+  }
+}
+
+function parseGermanDate(str) {
+  if(!str) return null;
+  const parts = str.trim().split(" ");
+  const dateParts = parts[0].split(".");
+  if(dateParts.length !== 3) return null;
+  const d = parseInt(dateParts[0], 10);
+  const m = parseInt(dateParts[1], 10) - 1;
+  const y = parseInt(dateParts[2], 10);
+  let h = 0, min = 0;
+  if(parts[1]) {
+    const timeParts = parts[1].split(":");
+    h = parseInt(timeParts[0], 10) || 0;
+    min = parseInt(timeParts[1], 10) || 0;
+  }
+  const dt = new Date(y, m, d, h, min);
+  return isNaN(dt.getTime()) ? null : dt;
+}
+
+function formatGermanDate(dt) {
+  const pad = (n) => String(n).padStart(2, '0');
+  const d = pad(dt.getDate());
+  const m = pad(dt.getMonth() + 1);
+  const y = dt.getFullYear();
+  const h = pad(dt.getHours());
+  const min = pad(dt.getMinutes());
+  return `${d}.${m}.${y} ${h}:${min}`;
+}
+
+function addDaysToModalExpiry(days) {
+  const expInput = document.getElementById("edit-lic-expires");
+  let baseDate = parseGermanDate(expInput.value);
+  if(!baseDate) baseDate = new Date();
+  baseDate.setDate(baseDate.getDate() + days);
+  expInput.value = formatGermanDate(baseDate);
+
+  const stSelect = document.getElementById("edit-lic-status");
+  if(stSelect && stSelect.value === "unused") stSelect.value = "active";
+}
+
+function setModalExpiryLifetime() {
+  document.getElementById("edit-lic-expires").value = "LIFETIME";
+  document.getElementById("edit-lic-duration").value = "lifetime";
+  const stSelect = document.getElementById("edit-lic-status");
+  if(stSelect && stSelect.value === "unused") stSelect.value = "active";
+}
+
+function resetModalExpiryToUnused() {
+  document.getElementById("edit-lic-expires").value = "";
+  const stSelect = document.getElementById("edit-lic-status");
+  if(stSelect) stSelect.value = "unused";
+}
+
+async function saveEditLicModal() {
+  if(!_editingLicKey) return;
+  if(!CURRENT_USER.is_admin && isAdminAccountKey(_editingLicKey)) {
+    alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
+    return;
+  }
+  const lic = ALL_LICENSES.find(l => l.key === _editingLicKey);
+  if(!lic) return;
+
+  const perms = CURRENT_USER.permissions || {};
+  const isAdmin = !!CURRENT_USER.is_admin;
+
+  const prod = document.getElementById("edit-lic-product").value;
+  const dur = document.getElementById("edit-lic-duration").value;
+  const st = document.getElementById("edit-lic-status").value;
+  const exp = document.getElementById("edit-lic-expires").value.trim();
+  const usr = document.getElementById("edit-lic-user").value.trim();
+
+  // Validate duration against staff permissions
+  if(!isAdmin && perms.edit_max_duration && perms.edit_max_duration !== "all") {
+    const maxDays = parseInt(perms.edit_max_duration, 10);
+    if(dur === "lifetime") {
+      alert(`Du darfst Keys maximal auf ${maxDays} Tage einstellen (kein Lifetime)!`);
+      return;
+    }
+    const d = parseInt(dur, 10);
+    if(!isNaN(d) && d > maxDays) {
+      alert(`Du darfst Keys maximal auf ${maxDays} Tage einstellen!`);
+      return;
+    }
+  }
+
+  const prodNames = {
+    "ALL": "ALL CHEATS",
+    "valorant": "VALORANT",
+    "apex": "AI HYSCHOOL",
+    "tft_helper": "TFT HELPER",
+    "naraka": "NARAKA BLADEPOINT",
+    "coc": "CLASH OF CLANS"
+  };
+
+  const durLabels = {
+    "1": "1 Tag (Trial)",
+    "3": "3 Tage",
+    "7": "7 Tage (Woche)",
+    "14": "14 Tage",
+    "30": "30 Tage (1 Monat)",
+    "90": "90 Tage (3 Monate)",
+    "365": "365 Tage (1 Jahr)",
+    "lifetime": "Lifetime"
+  };
+
+  if(isAdmin || perms.edit_allow_product) {
+    lic.product = prod;
+    lic.product_name = prodNames[prod] || prod;
+  }
+  if(isAdmin || perms.edit_allow_duration !== false) {
+    lic.duration = dur;
+    lic.duration_label = durLabels[dur] || dur;
+    lic.expires_at = exp;
+  }
+  if(isAdmin || perms.edit_allow_note !== false) {
+    lic.used_by = usr;
+    lic.note = usr || "---";
+  }
+
+  if(isAdmin || perms.edit_allow_status !== false) {
+    if(st === "paused") {
+      lic.paused = true;
+      lic.used = true;
+    } else if(st === "unused") {
+      lic.paused = false;
+      lic.used = false;
+      lic.first_used_at = "";
+      lic.expires_at = "";
+      lic.hwid = "";
+    } else if(st === "active") {
+      lic.paused = false;
+      lic.used = true;
+      if(!lic.first_used_at) lic.first_used_at = new Date().toLocaleString("de-DE");
+    }
+  }
+
+  // Synchronize permissions for this key automatically (Only for Admin or when allowed)
+  if(isAdmin || perms.edit_allow_product) {
+    if(prod === "ALL") {
+      USER_PERMISSIONS[lic.key] = { valorant:true, apex:true, tft_helper:true, naraka:true, coc:true };
+    } else {
+      USER_PERMISSIONS[lic.key] = {
+        valorant: prod === "valorant",
+        apex: prod === "apex",
+        tft_helper: prod === "tft_helper",
+        naraka: prod === "naraka",
+        coc: prod === "coc"
+      };
+    }
+  }
+
+  closeEditLicModal();
+  await saveLicenses();
+  if(isAdmin || perms.edit_allow_product) {
+    await saveUserPermissions(false);
+  }
+  filterLicenses();
+  loadUserPermissions();
+  logAdminAction("KEY_EDITED", lic.key, `Produkt: ${lic.product_name}, Dauer: ${lic.duration_label}, Ablauf: '${exp || 'Unbenutzt'}', Status: ${st}`);
+  showToast(`Key '${lic.key}' erfolgreich aktualisiert (Cheat: ${lic.product_name})!`, "ok");
+}
+
+// HWID MODAL HANDLERS
+function openHwidModal(key, hwid, user) {
+  if(!CURRENT_USER.is_admin && isAdminAccountKey(key)) {
+    alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
+    return;
+  }
+  _activeModalKey = key;
+  document.getElementById("modal-hwid-key").textContent = key;
+  document.getElementById("modal-hwid-user").textContent = user || "Kunde";
+  document.getElementById("modal-hwid-val").textContent = hwid || "Keine HWID gebunden";
+  
+  const resetBtn = document.getElementById("modal-hwid-reset-btn");
+  if(resetBtn) resetBtn.style.display = (CURRENT_USER.is_admin || CURRENT_USER.permissions.can_reset_hwid) ? "block" : "none";
+
+  document.getElementById("hwid-modal").style.display = "flex";
+}
+
+function closeHwidModal() {
+  document.getElementById("hwid-modal").style.display = "none";
+  _activeModalKey = null;
+}
+
+async function executeHwidResetFromModal() {
+  if(!_activeModalKey) return;
+  const key = _activeModalKey;
+  closeHwidModal();
+  await resetLicenseHWID(key);
+}
+
+async function togglePauseLicense(key) {
+  if(!CURRENT_USER.is_admin && isAdminAccountKey(key)) {
+    alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
+    return;
+  }
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_pause_keys) {
+    alert("Keine Berechtigung zum Pausieren!");
+    return;
+  }
+  const lic = ALL_LICENSES.find(l => l.key === key);
+  if(!lic) return;
+  
+  lic.paused = !lic.paused;
+  
+  const perms = CURRENT_USER.permissions || {};
+  let pauseNote = "";
+  if(lic.paused) {
+    const pauseMax = (!CURRENT_USER.is_admin && perms.max_pause_duration && perms.max_pause_duration !== "all") ? perms.max_pause_duration : "";
+    if(pauseMax) {
+      lic.pause_limit_days = pauseMax;
+      pauseNote = ` (Erlaubt: Max. ${pauseMax} Tage)`;
+    }
+  } else {
+    delete lic.pause_limit_days;
+  }
+
+  await saveLicenses();
+  logAdminAction(lic.paused ? "KEY_PAUSED" : "KEY_UNPAUSED", key, `Key Status geändert auf ${lic.paused ? 'Pausiert' : 'Aktiv'}${pauseNote}`);
+  showToast(`Key '${key}' ist jetzt ${lic.paused ? 'PAUSIERT ⏸️' + pauseNote : 'AKTIV ▶️'}!`, "ok");
+}
+
+async function resetLicenseHWID(key) {
+  if(!CURRENT_USER.is_admin && isAdminAccountKey(key)) {
+    alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
+    return;
+  }
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_reset_hwid) {
+    alert("Keine Berechtigung für HWID-Reset!");
+    return;
+  }
+  const lic = ALL_LICENSES.find(l => l.key === key);
+  if(!lic) return;
+  if(!confirm(`Möchtest du den HWID-Lock für den Key (${key}) wirklich zurücksetzen?`)) return;
+
+  const oldHwid = lic.hwid;
+  lic.hwid = "";
+  await saveLicenses();
+  logAdminAction("HWID_RESET", key, `HWID Bindung gelöscht (vorher: ${oldHwid || '---'})`);
+  showToast(`HWID für Key '${key}' erfolgreich zurückgesetzt!`, "ok");
+}
+
+async function deleteLicenseKey(key) {
+  if(!CURRENT_USER.is_admin && isAdminAccountKey(key)) {
+    alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
+    return;
+  }
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
+    alert("Keine Berechtigung zum Löschen von Keys!");
+    return;
+  }
+  if(!confirm(`Möchtest du den Key (${key}) wirklich unwiderruflich löschen?`)) return;
+
+  ALL_LICENSES = ALL_LICENSES.filter(l => l.key !== key);
+  delete USER_PERMISSIONS[key];
+  await saveLicenses();
+  if(CURRENT_USER.is_admin) {
+    await saveUserPermissions(false);
+  }
+  filterLicenses();
+  loadUserPermissions();
+  logAdminAction("KEY_DELETED", key, "Key und alle zugehörigen Cheat-Permissions restlos gelöscht");
+  showToast(`Key '${key}' erfolgreich gelöscht!`, "ok");
+}
+
+// ================================================================
+// MITARBEITER & TEAM VERWALTUNG (STAFF)
+// ================================================================
+let ALL_STAFF = [];
+let _editingStaffIdx = -1;
+
+async function loadStaffList(silent=false) {
+  const tbody = document.getElementById("staff-table-body");
+  if(tbody && !silent && ALL_STAFF.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#e5a93c;padding:24px;">Lade Mitarbeiter...</td></tr>`;
+  }
+
+  // First load from localStorage cache if available
+  try {
+    const cached = localStorage.getItem("hyschool_staff_cache");
+    if(cached) {
+      const parsed = JSON.parse(cached);
+      if(Array.isArray(parsed) && parsed.length > 0 && ALL_STAFF.length === 0) {
+        ALL_STAFF = parsed;
+        renderStaffTable();
+      }
+    }
+  } catch(_) {}
+
+  const token = getToken();
+  try {
+    const res = await fetch(`${API_BASE}/staff.json?nc=${Date.now()}`, {
+      cache: "no-store",
+      headers: { 
+        Authorization: `token ${token}`, 
+        Accept: "application/vnd.github.v3+json",
+        "Cache-Control": "no-cache"
+      }
+    });
+    if(res.ok) {
+      const info = await res.json();
+      let parsed = null;
+      if(info && info.content) {
+        parsed = JSON.parse(b64_to_utf8(info.content));
+      } else if(info) {
+        parsed = info;
+      }
+
+      if(Array.isArray(parsed)) {
+        ALL_STAFF = parsed;
+      } else if(parsed && typeof parsed === 'object' && parsed.name) {
+        ALL_STAFF = [parsed];
+      }
+      localStorage.setItem("hyschool_staff_cache", JSON.stringify(ALL_STAFF));
+    }
+  } catch(_) {}
+
+  renderStaffTable();
+}
+
+function renderStaffTable() {
+  const tbody = document.getElementById("staff-table-body");
+  if(!tbody) return;
+
+  if(ALL_STAFF.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px;">Keine Mitarbeiter angelegt. Klicke oben auf '➕ NEUEN MITARBEITER ANLEGEN'!</td></tr>`;
+    return;
+  }
+
+  const durTextMap = {
+    "1": "1T", "3": "3T", "7": "7T", "14": "14T", "30": "30T", "90": "90T", "365": "1J", "all": "Alle"
+  };
+
+  tbody.innerHTML = ALL_STAFF.map((s, idx) => {
+    const perms = s.permissions || {};
+    const permBadges = [];
+    if(perms.can_generate_keys) {
+      const maxD = perms.max_duration ? (durTextMap[perms.max_duration] || perms.max_duration) : "Alle";
+      permBadges.push(`<span class="tag-duration" style="color:#e5a93c;">⚡ Keys (${maxD})</span>`);
+    }
+    if(perms.can_edit_keys) {
+      const editD = perms.edit_max_duration ? (durTextMap[perms.edit_max_duration] || perms.edit_max_duration) : "Alle";
+      permBadges.push(`<span class="tag-duration" style="color:#60a5fa;">✏️ Edit (${editD})</span>`);
+    }
+    if(perms.can_pause_keys) {
+      const pauseD = perms.max_pause_duration ? (durTextMap[perms.max_pause_duration] || perms.max_pause_duration) : "Alle";
+      permBadges.push(`<span class="tag-duration" style="color:#a78bfa;">⏸️ Pause (${pauseD})</span>`);
+    }
+    if(perms.can_reset_hwid) permBadges.push(`<span class="tag-duration">🔄 HWID Reset</span>`);
+    if(perms.can_delete_keys) permBadges.push(`<span class="tag-duration" style="color:#f43f5e;">🗑️ Delete</span>`);
+    if(perms.can_manage_cheats) permBadges.push(`<span class="tag-duration">🎮 Cheats</span>`);
+    if(perms.can_view_logs) permBadges.push(`<span class="tag-duration">📊 Logs</span>`);
+    if(perms.can_manage_staff) permBadges.push(`<span class="tag-duration">👔 Team</span>`);
+
+    return `
+      <tr>
+        <td style="font-weight:800;color:#f8fafc;"><span style="color:#e5a93c;margin-right:6px;">👤</span> ${s.name}</td>
+        <td><span class="tag-product">${s.role || 'Supporter'}</span></td>
+        <td style="font-family:'JetBrains Mono',monospace;color:#64748b;">${s.password ? '••••••••' : '---'}</td>
+        <td>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;">
+            ${permBadges.length > 0 ? permBadges.join("") : '<span style="color:#64748b;font-size:11px;">Keine Rechte</span>'}
+          </div>
+        </td>
+        <td style="text-align:right;">
+          <div style="display:flex;gap:6px;justify-content:flex-end;">
+            <button onclick="openStaffModal(${idx})" style="background:#141724;border:1px solid #232a3e;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">✏️ Edit</button>
+            <button onclick="deleteStaff(${idx})" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🗑</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function openStaffModal(idx = -1) {
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_staff) {
+    alert("Keine Berechtigung zur Mitarbeiter-Verwaltung!");
+    return;
+  }
+  _editingStaffIdx = idx;
+  const nameInp = document.getElementById("staff-name-input");
+  const pwInp = document.getElementById("staff-pw-input");
+  const roleInp = document.getElementById("staff-role-input");
+
+  if(idx >= 0 && ALL_STAFF[idx]) {
+    const s = ALL_STAFF[idx];
+    nameInp.value = s.name || "";
+    pwInp.value = s.password || "";
+    roleInp.value = s.role || "Supporter";
+    const p = s.permissions || {};
+
+    // 1. GENERATE KEYS
+    document.getElementById("sp-gen").checked = !!p.can_generate_keys;
+    document.getElementById("sp-max-duration").value = p.max_duration || "all";
+    document.getElementById("sp-max-dur-wrap").style.display = p.can_generate_keys ? "flex" : "none";
+
+    // 2. EDIT KEYS & SUB-PERMISSIONS
+    document.getElementById("sp-edit").checked = !!p.can_edit_keys;
+    document.getElementById("sp-edit-max-dur").value = p.edit_max_duration || "all";
+    document.getElementById("sp-edit-f-dur").checked = p.edit_allow_duration !== false;
+    document.getElementById("sp-edit-f-prod").checked = !!p.edit_allow_product;
+    document.getElementById("sp-edit-f-stat").checked = p.edit_allow_status !== false;
+    document.getElementById("sp-edit-f-note").checked = p.edit_allow_note !== false;
+    document.getElementById("sp-edit-scope").value = p.edit_scope || "own";
+    document.getElementById("sp-edit-sub-wrap").style.display = p.can_edit_keys ? "flex" : "none";
+
+    // 3. PAUSE KEYS & MAX PAUSE DURATION
+    document.getElementById("sp-pause").checked = !!p.can_pause_keys;
+    document.getElementById("sp-pause-max-dur").value = p.max_pause_duration || "all";
+    document.getElementById("sp-pause-dur-wrap").style.display = p.can_pause_keys ? "flex" : "none";
+
+    // 4. OTHER
+    document.getElementById("sp-hwid").checked = !!p.can_reset_hwid;
+    document.getElementById("sp-del").checked = !!p.can_delete_keys;
+    document.getElementById("sp-cheat").checked = !!p.can_manage_cheats;
+    document.getElementById("sp-logs").checked = !!p.can_view_logs;
+    document.getElementById("sp-staff").checked = !!p.can_manage_staff;
+  } else {
+    nameInp.value = "";
+    pwInp.value = "";
+    roleInp.value = "Supporter";
+
+    document.getElementById("sp-gen").checked = true;
+    document.getElementById("sp-max-duration").value = "30";
+    document.getElementById("sp-max-dur-wrap").style.display = "flex";
+
+    document.getElementById("sp-edit").checked = true;
+    document.getElementById("sp-edit-max-dur").value = "30";
+    document.getElementById("sp-edit-f-dur").checked = true;
+    document.getElementById("sp-edit-f-prod").checked = false;
+    document.getElementById("sp-edit-f-stat").checked = true;
+    document.getElementById("sp-edit-f-note").checked = true;
+    document.getElementById("sp-edit-scope").value = "own";
+    document.getElementById("sp-edit-sub-wrap").style.display = "flex";
+
+    document.getElementById("sp-pause").checked = true;
+    document.getElementById("sp-pause-max-dur").value = "7";
+    document.getElementById("sp-pause-dur-wrap").style.display = "flex";
+
+    document.getElementById("sp-hwid").checked = true;
+    document.getElementById("sp-del").checked = false;
+    document.getElementById("sp-cheat").checked = false;
+    document.getElementById("sp-logs").checked = true;
+    document.getElementById("sp-staff").checked = false;
+  }
+
+  document.getElementById("staff-modal").style.display = "flex";
+}
+
+function closeStaffModal() {
+  document.getElementById("staff-modal").style.display = "none";
+  _editingStaffIdx = -1;
+}
+
+async function saveStaffModal() {
+  const name = document.getElementById("staff-name-input").value.trim();
+  const pw = document.getElementById("staff-pw-input").value.trim();
+  const role = document.getElementById("staff-role-input").value;
+
+  if(!name || !pw) {
+    alert("Bitte Name und Passwort eingeben!");
+    return;
+  }
+
+  const staffObj = {
+    name: name,
+    password: pw,
+    role: role,
+    permissions: {
+      can_generate_keys: document.getElementById("sp-gen").checked,
+      max_duration: document.getElementById("sp-max-duration").value || "all",
+      can_edit_keys: document.getElementById("sp-edit").checked,
+      edit_max_duration: document.getElementById("sp-edit-max-dur").value || "all",
+      edit_allow_duration: document.getElementById("sp-edit-f-dur").checked,
+      edit_allow_product: document.getElementById("sp-edit-f-prod").checked,
+      edit_allow_status: document.getElementById("sp-edit-f-stat").checked,
+      edit_allow_note: document.getElementById("sp-edit-f-note").checked,
+      edit_scope: document.getElementById("sp-edit-scope").value || "own",
+      can_pause_keys: document.getElementById("sp-pause").checked,
+      max_pause_duration: document.getElementById("sp-pause-max-dur").value || "all",
+      can_reset_hwid: document.getElementById("sp-hwid").checked,
+      can_delete_keys: document.getElementById("sp-del").checked,
+      can_manage_cheats: document.getElementById("sp-cheat").checked,
+      can_view_logs: document.getElementById("sp-logs").checked,
+      can_manage_staff: document.getElementById("sp-staff").checked
+    }
+  };
+
+  const targetIdx = _editingStaffIdx;
+  if(targetIdx >= 0 && targetIdx < ALL_STAFF.length) {
+    ALL_STAFF[targetIdx] = staffObj;
+    logAdminAction("STAFF_EDITED", name, `Mitarbeiter '${name}' (${role}) aktualisiert`);
+  } else {
+    const existingIdx = ALL_STAFF.findIndex(s => s.name && s.name.toLowerCase() === name.toLowerCase());
+    if(existingIdx >= 0) {
+      ALL_STAFF[existingIdx] = staffObj;
+      logAdminAction("STAFF_EDITED", name, `Mitarbeiter '${name}' (${role}) aktualisiert`);
+    } else {
+      ALL_STAFF.push(staffObj);
+      logAdminAction("STAFF_CREATED", name, `Neuen Mitarbeiter '${name}' (${role}) angelegt`);
+    }
+  }
+
+  closeStaffModal();
+  renderStaffTable();
+  await saveStaffToGitHub();
+}
+
+async function deleteStaff(idx) {
+  if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_staff) {
+    alert("Keine Berechtigung!");
+    return;
+  }
+  const s = ALL_STAFF[idx];
+  if(!s) return;
+  if(!confirm(`Möchtest du den Mitarbeiter '${s.name}' wirklich entfernen?`)) return;
+
+  ALL_STAFF.splice(idx, 1);
+  renderStaffTable();
+  await saveStaffToGitHub();
+  logAdminAction("STAFF_DELETED", s.name, `Mitarbeiter '${s.name}' entfernt`);
+  showToast(`Mitarbeiter '${s.name}' gelöscht!`, "ok");
+}
+
+async function saveStaffToGitHub() {
+  try {
+    localStorage.setItem("hyschool_staff_cache", JSON.stringify(ALL_STAFF));
+  } catch(_) {}
+
+  try {
+    const jsonStr = JSON.stringify(ALL_STAFF, null, 2);
+    const b64 = utf8_to_b64(jsonStr);
+
+    await uploadFileToGitHub("staff.json", b64, "Update staff list via Admin Panel");
+
+    renderStaffTable();
+    showToast("Mitarbeiter erfolgreich gespeichert & aktiv!", "ok");
+  } catch(e) {
+    showToast("Fehler beim Speichern der Mitarbeiter: " + e.message, "err");
+  }
+}
+
+// ================================================================
+// ADMIN AUDIT LOGS
+// ================================================================
+let ALL_AUDIT_LOGS = [];
+
+async function loadAuditLogs(silent=false) {
+  const tbody = document.getElementById("audit-table-body");
+  if(tbody && !silent && ALL_AUDIT_LOGS.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#e5a93c;padding:24px;">Lade Audit-Logs von GitHub...</td></tr>`;
+  }
+
+  const token = getToken();
+  try {
+    const res = await fetch(`${API_BASE}/admin_logs.json?nc=${Date.now()}`, {
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3.raw" }
+    });
+    if(res.ok) {
+      ALL_AUDIT_LOGS = await res.json();
+      if(!Array.isArray(ALL_AUDIT_LOGS)) ALL_AUDIT_LOGS = [];
+    } else {
+      ALL_AUDIT_LOGS = [];
+    }
+  } catch(_) {
+    ALL_AUDIT_LOGS = [];
+  }
+
+  filterAuditLogs();
+}
+
+function filterAuditLogs() {
+  const tbody = document.getElementById("audit-table-body");
+  if(!tbody) return;
+
+  const q = (document.getElementById("audit-search-input") ? document.getElementById("audit-search-input").value : "").toLowerCase().trim();
+
+  let filtered = ALL_AUDIT_LOGS.filter(l => {
+    if(!q) return true;
+    return (l.user && l.user.toLowerCase().includes(q)) ||
+           (l.action && l.action.toLowerCase().includes(q)) ||
+           (l.target && l.target.toLowerCase().includes(q)) ||
+           (l.details && l.details.toLowerCase().includes(q)) ||
+           (l.time && l.time.toLowerCase().includes(q));
+  });
+
+  if(filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px;">Keine Audit-Logs gefunden.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(l => {
+    return `
+      <tr>
+        <td style="color:#64748b;font-size:11px;">${l.time || '---'}</td>
+        <td style="color:#f8fafc;font-weight:800;"><span style="color:#e5a93c;margin-right:5px;">👤</span> ${l.user || 'Admin'}</td>
+        <td><span class="tag-product">${l.action || 'ACTION'}</span></td>
+        <td><span class="tag-key-box" style="font-size:11px;">${l.target || '---'}</span></td>
+        <td style="color:#cbd5e1;font-size:11px;">${l.details || '---'}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+async function logAdminAction(action, target, details) {
+  const now = new Date().toLocaleString("de-DE");
+  const logItem = {
+    time: now,
+    user: `${CURRENT_USER.name} (${CURRENT_USER.role})`,
+    action: action,
+    target: target || "---",
+    details: details || "---"
+  };
+
+  ALL_AUDIT_LOGS.unshift(logItem);
+  if(ALL_AUDIT_LOGS.length > 500) ALL_AUDIT_LOGS = ALL_AUDIT_LOGS.slice(0, 500);
+
+  // Background save to GitHub
+  const token = getToken();
+  try {
+    const jsonStr = JSON.stringify(ALL_AUDIT_LOGS, null, 2);
+    const b64 = utf8_to_b64(jsonStr);
+
+    let sha = "";
+    const infoRes = await fetch(`${API_BASE}/admin_logs.json?nc=${Date.now()}`, {
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+    });
+    if(infoRes.ok) { const info = await infoRes.json(); sha = info.sha; }
+
+    const bodyObj = { message: `Audit log: ${action} by ${CURRENT_USER.name}`, content: b64 };
+    if(sha) bodyObj.sha = sha;
+
+    await fetch(`${API_BASE}/admin_logs.json`, {
+      method: "PUT",
+      headers: { Authorization:`token ${token}`, Accept:"application/vnd.github.v3+json", "Content-Type":"application/json" },
+      body: JSON.stringify(bodyObj)
+    });
+  } catch(_) {}
+}
+
+async function clearAuditLogs() {
+  if(!CURRENT_USER.is_admin) {
+    alert("Nur der Haupt-Admin darf das Audit-Log leeren!");
+    return;
+  }
+  if(!confirm("Möchtest du das gesamte Admin Audit-Log wirklich leeren?")) return;
+
+  ALL_AUDIT_LOGS = [];
+  const token = getToken();
+  try {
+    let sha = "";
+    const infoRes = await fetch(`${API_BASE}/admin_logs.json?nc=${Date.now()}`, { headers:{ Authorization:`token ${token}`, Accept:"application/vnd.github.v3+json" } });
+    if(infoRes.ok) { const info = await infoRes.json(); sha = info.sha; }
+
+    const bodyObj = { message: "Clear audit logs via Admin Panel", content: utf8_to_b64("[]") };
+    if(sha) bodyObj.sha = sha;
+
+    await fetch(`${API_BASE}/admin_logs.json`, {
+      method: "PUT",
+      headers: { Authorization:`token ${token}`, Accept:"application/vnd.github.v3+json", "Content-Type":"application/json" },
+      body: JSON.stringify(bodyObj)
+    });
+
+    filterAuditLogs();
+    showToast("Audit-Log erfolgreich geleert!", "ok");
+  } catch(_) {}
+}
+
+// ================================================================
+// TEAM CHAT SYSTEM
+// ================================================================
+let ALL_CHAT_MESSAGES = [];
+let _chatPollInterval = null;
+
+async function loadTeamChat(silent = false, manualToast = false) {
+  const wrap = document.getElementById("chat-messages-wrap");
+  if(!wrap) return;
+
+  // 1. Initial render from local cache if we have no messages yet
+  if(ALL_CHAT_MESSAGES.length === 0) {
+    try {
+      const cached = localStorage.getItem("hyschool_chat_cache");
+      if(cached) {
+        ALL_CHAT_MESSAGES = JSON.parse(cached);
+        if(Array.isArray(ALL_CHAT_MESSAGES)) renderChatMessages();
+      }
+    } catch(_) {}
+  }
+
+  const token = getToken();
+  let remoteMessages = null;
+  let loaded = false;
+
+  try {
+    const res = await fetch(`${API_BASE}/chat.json?nc=${Date.now()}`, {
+      cache: "no-store",
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+    });
+    if(res.ok) {
+      const info = await res.json();
+      if(info && info.content) {
+        try {
+          const decoded = b64_to_utf8(info.content);
+          remoteMessages = JSON.parse(decoded);
+          loaded = true;
+        } catch(_) {}
+      }
+    } else if(res.status === 404) {
+      remoteMessages = [];
+      loaded = true;
+    }
+  } catch(_) {}
+
+  if(!loaded) {
+    try {
+      const rawRes = await fetch(`${RAW_BASE}/chat.json?nc=${Date.now()}`, { cache: "no-store" });
+      if(rawRes.ok) {
+        remoteMessages = await rawRes.json();
+        loaded = true;
+      }
+    } catch(_) {}
+  }
+
+  if(loaded && Array.isArray(remoteMessages)) {
+    // Merge by id so pending local messages aren't wiped
+    const map = new Map();
+    remoteMessages.forEach(m => {
+      if(m && m.id) map.set(m.id, m);
+    });
+    ALL_CHAT_MESSAGES.forEach(m => {
+      if(m && m.id) map.set(m.id, m);
+    });
+    ALL_CHAT_MESSAGES = Array.from(map.values()).sort((a,b) => (a.timestamp || 0) - (b.timestamp || 0));
+    try { localStorage.setItem("hyschool_chat_cache", JSON.stringify(ALL_CHAT_MESSAGES)); } catch(_) {}
+    renderChatMessages();
+    if(manualToast) showToast("Chat aktualisiert!", "ok");
+  } else if(!silent && ALL_CHAT_MESSAGES.length === 0) {
+    wrap.innerHTML = `<div style="text-align:center;color:#f43f5e;padding:30px;">Fehler beim Laden des Chats von GitHub</div>`;
+  }
+}
+
+function renderChatMessages() {
+  const wrap = document.getElementById("chat-messages-wrap");
+  if(!wrap) return;
+
+  const countBadge = document.getElementById("chat-count-badge");
+  if(countBadge) {
+    countBadge.textContent = `${ALL_CHAT_MESSAGES.length} Nachricht${ALL_CHAT_MESSAGES.length === 1 ? '' : 'en'}`;
+  }
+
+  if(ALL_CHAT_MESSAGES.length === 0) {
+    wrap.innerHTML = `
+      <div style="text-align:center;color:#64748b;padding:80px 20px;font-size:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div style="width:52px;height:52px;border-radius:50%;background:#131722;border:1px solid #1c2235;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,0.4);">💬</div>
+        <b style="color:#cbd5e1;font-size:14px;letter-spacing:0.5px;">Noch keine Nachrichten im Team-Chat</b>
+        <span style="font-size:11px;color:#64748b;margin-top:4px;">Schreibe unten die erste Nachricht an dein Team!</span>
+      </div>
+    `;
+    return;
+  }
+
+  const isScrolledToBottom = wrap.scrollHeight - wrap.clientHeight <= wrap.scrollTop + 100;
+
+  wrap.innerHTML = ALL_CHAT_MESSAGES.map(msg => {
+    const isMe = msg.user === CURRENT_USER.name || (CURRENT_USER.is_admin && (msg.user === 'Admin' || msg.user === 'Kovak'));
+    const isAdmin = msg.is_admin || msg.user === 'Admin' || msg.user === 'Kovak';
+    const initial = (msg.user || "?").charAt(0).toUpperCase();
+
+    const userBadge = isAdmin
+      ? `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.4);padding:2px 8px;border-radius:4px;font-size:9px;font-weight:900;letter-spacing:0.5px;">👑 INHABER</span>`
+      : `<span style="background:#141724;color:#cbd5e1;border:1px solid #232a3e;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:0.5px;">👔 ${msg.role || 'Mitarbeiter'}</span>`;
+
+    const avatar = `<div style="width:32px;height:32px;border-radius:50%;background:${isAdmin ? 'linear-gradient(135deg,#e5a93c,#b87714)' : 'linear-gradient(135deg,#3b82f6,#1d4ed8)'};color:#0b0c10;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.4);">${initial}</div>`;
+
+    const bubbleBg = isMe
+      ? "background: linear-gradient(135deg, rgba(229,169,60,0.12), rgba(229,169,60,0.05)); border: 1px solid rgba(229,169,60,0.32);"
+      : (isAdmin ? "background: #11141f; border: 1px solid rgba(229,169,60,0.22);" : "background: #111522; border: 1px solid #1e2638;");
+
+    return `
+      <div style="display:flex;gap:10px;align-items:flex-start;${isMe ? 'flex-direction:row-reverse;align-self:flex-end;' : 'align-self:flex-start;'}max-width:82%;">
+        ${avatar}
+        <div style="display:flex;flex-direction:column;${isMe ? 'align-items:flex-end;' : 'align-items:flex-start;'}">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span style="font-size:12px;font-weight:900;color:${isAdmin ? '#e5a93c' : '#f8fafc'};">${escapeHtml(msg.user)}</span>
+            ${userBadge}
+            <span style="font-size:10px;color:#64748b;font-weight:600;">${msg.time || ''}</span>
+          </div>
+          <div style="${bubbleBg} padding: 10px 14px; border-radius: ${isMe ? '10px 2px 10px 10px' : '2px 10px 10px 10px'}; color: #f8fafc; font-size: 12.5px; line-height: 1.5; word-break: break-word; box-shadow: 0 4px 14px rgba(0,0,0,0.35);">
+            ${escapeHtml(msg.text)}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  if(isScrolledToBottom || ALL_CHAT_MESSAGES.length === 1) {
+    wrap.scrollTop = wrap.scrollHeight;
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+async function sendChatMessage() {
+  const inp = document.getElementById("chat-input");
+  if(!inp) return;
+  const text = inp.value.trim();
+  if(!text) return;
+
+  const btn = document.getElementById("chat-send-btn");
+  if(btn) btn.disabled = true;
+
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())} (${pad(now.getDate())}.${pad(now.getMonth()+1)}.)`;
+
+  const newMsg = {
+    id: "msg_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4),
+    user: CURRENT_USER.name || (CURRENT_USER.is_admin ? "Admin" : "Mitarbeiter"),
+    role: CURRENT_USER.is_admin ? "Inhaber" : (CURRENT_USER.role || "Mitarbeiter"),
+    is_admin: !!CURRENT_USER.is_admin,
+    text: text,
+    time: timeStr,
+    timestamp: Date.now()
+  };
+
+  inp.value = "";
+  ALL_CHAT_MESSAGES.push(newMsg);
+  try { localStorage.setItem("hyschool_chat_cache", JSON.stringify(ALL_CHAT_MESSAGES)); } catch(_) {}
+  renderChatMessages();
+  const wrap = document.getElementById("chat-messages-wrap");
+  if(wrap) wrap.scrollTop = wrap.scrollHeight;
+
+  const token = getToken();
+  try {
+    // 1. Fetch latest remote messages and merge before upload
+    try {
+      const infoRes = await fetch(`${API_BASE}/chat.json?nc=${Date.now()}`, {
+        cache: "no-store",
+        headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+      });
+      if(infoRes.ok) {
+        const info = await infoRes.json();
+        if(info && info.content) {
+          const remoteList = JSON.parse(b64_to_utf8(info.content));
+          if(Array.isArray(remoteList)) {
+            const map = new Map();
+            remoteList.forEach(m => { if(m && m.id) map.set(m.id, m); });
+            ALL_CHAT_MESSAGES.forEach(m => { if(m && m.id) map.set(m.id, m); });
+            ALL_CHAT_MESSAGES = Array.from(map.values()).sort((a,b) => (a.timestamp || 0) - (b.timestamp || 0));
+          }
+        }
+      }
+    } catch(_) {}
+
+    try { localStorage.setItem("hyschool_chat_cache", JSON.stringify(ALL_CHAT_MESSAGES)); } catch(_) {}
+
+    const jsonStr = JSON.stringify(ALL_CHAT_MESSAGES, null, 2);
+    const b64 = utf8_to_b64(jsonStr);
+
+    await uploadFileToGitHub("chat.json", b64, `Chat: [${newMsg.user}] ${text.substring(0, 30)}`);
+    renderChatMessages();
+  } catch(e) {
+    showToast("Nachricht konnte nicht an GitHub gesendet werden: " + e.message, "err");
+  } finally {
+    if(btn) btn.disabled = false;
+    if(inp) inp.focus();
+  }
+}
+
+async function clearTeamChat() {
+  if(!CURRENT_USER.is_admin) {
+    alert("Nur der Inhaber (Admin) darf den Chat leeren!");
+    return;
+  }
+  if(!confirm("Möchtest du den gesamten Team-Chat wirklich unwiderruflich leeren?")) return;
+
+  try {
+    const b64 = utf8_to_b64("[]");
+    await uploadFileToGitHub("chat.json", b64, "Clear Team Chat via Admin Panel");
+
+    ALL_CHAT_MESSAGES = [];
+    try { localStorage.setItem("hyschool_chat_cache", JSON.stringify([])); } catch(_) {}
+    renderChatMessages();
+    logAdminAction("CHAT_CLEARED", "-", "Team-Chat wurde vom Admin geleert");
+    showToast("Team-Chat erfolgreich geleert!", "ok");
+  } catch(e) {
+    showToast("Fehler beim Leeren des Chats: " + e.message, "err");
+  }
+}
+
+// Silent Auto-Polling alle 5 Sekunden
+setInterval(() => {
+  const tc3 = document.getElementById("tc-3");
+  if(tc3 && tc3.classList.contains("active")) {
+    const vLic = document.getElementById("view-licenses");
+    if(vLic && vLic.style.display !== "none") {
+      loadLicenses(true);
+    }
+  }
+  const tc2 = document.getElementById("tc-2");
+  if(tc2 && tc2.classList.contains("active")) {
+    loadLiveLogs(true);
+  }
+  const tc5 = document.getElementById("tc-5");
+  if(tc5 && tc5.classList.contains("active")) {
+    loadAuditLogs(true);
+  }
+}, 5000);
+
+</script>
+
+</body>
+</html>
