@@ -1035,7 +1035,13 @@
           </div>
 
           <div>
-            <label style="font-size:10px;color:#e5a93c;letter-spacing:1px;display:block;margin-bottom:5px;font-weight:800;">LOGIN BENUTZERNAME (PFLICHT)</label>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+              <label style="font-size:10px;color:#e5a93c;letter-spacing:1px;font-weight:800;margin-bottom:0;" id="lbl-gen-username">LOGIN BENUTZERNAME</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:#cbd5e1;cursor:pointer;user-select:none;font-weight:700;">
+                <input type="checkbox" id="gen-random-names-cb" onchange="toggleRandomNameInput(this.checked)" style="width:13px;height:13px;accent-color:#e5a93c;cursor:pointer;">
+                <span>🎲 Random Namen</span>
+              </label>
+            </div>
             <input type="text" id="gen-note" placeholder="(Login-Name)" style="width:100%;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:10px 12px;border-radius:6px;font-size:12px;outline:none;" />
           </div>
 
@@ -2940,6 +2946,39 @@ async function saveLicenses(showNotification = true) {
   }
 }
 
+function toggleRandomNameInput(checked) {
+  const noteInp = document.getElementById("gen-note");
+  const lbl = document.getElementById("lbl-gen-username");
+  if(checked) {
+    if(noteInp) noteInp.placeholder = "🎲 Automatisch zufällig (oder Präfix z.B. Kunde)";
+    if(lbl) lbl.textContent = "LOGIN BENUTZERNAME (RANDOM AKTIV)";
+  } else {
+    if(noteInp) noteInp.placeholder = "(Login-Name)";
+    if(lbl) lbl.textContent = "LOGIN BENUTZERNAME (PFLICHT)";
+  }
+}
+
+const RANDOM_NAME_POOL = [
+  "Shadow", "Viper", "Ghost", "Phantom", "Matrix", "Nexus", "Nova", "Cyber", 
+  "Echo", "Frost", "Volt", "Zero", "Titan", "Specter", "Raven", "Pulse", 
+  "Aura", "Helix", "Karma", "Storm", "Zenith", "Hydra", "Blaze", "Krypton", 
+  "Vortex", "Rogue", "Apex", "Reaper", "Vector", "Orbit", "Strike", "Havoc"
+];
+
+function generateRandomUsername(customPrefix = "", index = 0, total = 1) {
+  if (customPrefix && customPrefix.trim() !== "") {
+    const cleanPrefix = customPrefix.trim().replace(/\s+/g, "_");
+    if (total === 1) {
+      return `${cleanPrefix}_${Math.floor(100 + Math.random() * 900)}`;
+    } else {
+      return `${cleanPrefix}_${Math.floor(1000 + Math.random() * 9000)}`;
+    }
+  }
+  const tag = RANDOM_NAME_POOL[Math.floor(Math.random() * RANDOM_NAME_POOL.length)];
+  const num = Math.floor(100 + Math.random() * 900);
+  return `${tag}_${num}`;
+}
+
 async function generateNewLicenses() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_generate_keys) {
     alert("Keine Berechtigung zum Erstellen von Keys!");
@@ -2948,10 +2987,11 @@ async function generateNewLicenses() {
   const prod = document.getElementById("gen-product").value;
   const dur = document.getElementById("gen-duration").value;
   const qty = parseInt(document.getElementById("gen-qty").value) || 1;
-  const note = document.getElementById("gen-note").value.trim();
+  const rawNote = document.getElementById("gen-note").value.trim();
+  const isRandomChecked = document.getElementById("gen-random-names-cb") ? document.getElementById("gen-random-names-cb").checked : false;
 
-  if(!note) {
-    alert("Bitte gib einen Login-Benutzernamen an! Ohne Name kann kein Key erstellt werden.");
+  if(!rawNote && !isRandomChecked) {
+    alert("Bitte gib einen Login-Benutzernamen an oder aktiviere das Häkchen für '🎲 Random Namen'!");
     const noteInp = document.getElementById("gen-note");
     if(noteInp) {
       noteInp.focus();
@@ -2999,6 +3039,15 @@ async function generateNewLicenses() {
 
   for(let i=0; i<qty; i++) {
     const key = generateLicenseString(prod, dur);
+    
+    // Determine username per key (Random or specific name)
+    let finalUserName = rawNote;
+    if (isRandomChecked) {
+      finalUserName = generateRandomUsername(rawNote, i, qty);
+    } else if (qty > 1 && rawNote) {
+      finalUserName = `${rawNote}_${i + 1}`;
+    }
+
     const licObj = {
       key: key,
       product: prod,
@@ -3007,13 +3056,13 @@ async function generateNewLicenses() {
       duration_label: durLabels[dur] || dur,
       used: false,
       paused: false,
-      used_by: note || "",
+      used_by: finalUserName || "",
       created_by: CURRENT_USER.name || (CURRENT_USER.is_admin ? "Admin" : "Mitarbeiter"),
       hwid: "",
       created_at: now,
       first_used_at: "",
       expires_at: "",
-      note: note || "---"
+      note: finalUserName || "---"
     };
 
     ALL_LICENSES.unshift(licObj);
@@ -3048,7 +3097,7 @@ async function generateNewLicenses() {
   try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
   filterLicenses();
   showToast(`${qty} neue(r) Key(s) sofort erstellt & in Tabelle eingefügt!`, "ok");
-  logAdminAction("KEY_CREATED", newKeys.join(", "), `${qty}x Key (${prodNames[prod]}, ${durLabels[dur]}) generiert für Note: '${note || '---'}'`);
+  logAdminAction("KEY_CREATED", newKeys.join(", "), `${qty}x Key (${prodNames[prod]}, ${durLabels[dur]}) generiert für ${isRandomChecked ? 'Random Namen' : "'" + (rawNote || '---') + "'"}`);
 
   // 2. BACKGROUND CLOUD SYNC (Non-blocking parallel promises)
   const syncPromises = [saveLicenses(false)];
