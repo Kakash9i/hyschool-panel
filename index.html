@@ -2852,14 +2852,18 @@ async function deleteSelectedLicenses() {
   keysToDelete.forEach(k => delete USER_PERMISSIONS[k]);
 
   SELECTED_LIC_KEYS.clear();
-  await saveLicenses();
-  if(CURRENT_USER.is_admin) {
-    await saveUserPermissions(false);
-  }
+  try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
+  try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
   filterLicenses();
   loadUserPermissions();
   logAdminAction("BATCH_KEYS_DELETED", `${keysToDelete.length} Keys`, `Folgende Keys wurden gelöscht: ${keysToDelete.join(', ')}`);
-  showToast(`${keysToDelete.length} ausgewählte Keys erfolgreich gelöscht!`, "ok");
+  showToast(`${keysToDelete.length} ausgewählte Keys sofort gelöscht!`, "ok");
+
+  const syncPromises = [saveLicenses(false)];
+  if(CURRENT_USER.is_admin) {
+    syncPromises.push(saveUserPermissions(false));
+  }
+  Promise.all(syncPromises);
 }
 
 function makeRandomChunk(len) {
@@ -2886,8 +2890,21 @@ function generateLicenseString(prodCode, durationStr) {
 
 async function loadLicenses(silent=false) {
   const tbody = document.getElementById("licenses-table-body");
+  
+  // Instant load from localStorage cache if present
+  try {
+    const cached = localStorage.getItem("hyschool_licenses_cache");
+    if(cached && ALL_LICENSES.length === 0) {
+      const parsed = JSON.parse(cached);
+      if(Array.isArray(parsed)) {
+        ALL_LICENSES = parsed;
+        filterLicenses();
+      }
+    }
+  } catch(_) {}
+
   if(tbody && !silent && ALL_LICENSES.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#e5a93c;padding:24px;">Lade Lizenzen...</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#e5a93c;padding:24px;">Lade Lizenzen...</td></tr>`;
   }
 
   const token = getToken();
@@ -2898,27 +2915,28 @@ async function loadLicenses(silent=false) {
     if(res.ok) {
       ALL_LICENSES = await res.json();
       if(!Array.isArray(ALL_LICENSES)) ALL_LICENSES = [];
-    } else {
-      ALL_LICENSES = [];
+      try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
     }
-  } catch(_) {
-    ALL_LICENSES = [];
-  }
+  } catch(_) {}
 
   filterLicenses();
 }
 
-async function saveLicenses() {
+async function saveLicenses(showNotification = true) {
   try {
     const jsonStr = JSON.stringify(ALL_LICENSES, null, 2);
+    try { localStorage.setItem("hyschool_licenses_cache", jsonStr); } catch(_) {}
     const b64 = utf8_to_b64(jsonStr);
 
     await uploadFileToGitHub("licenses.json", b64, "Update licenses.json via KeyAuth Admin Panel");
 
-    showToast("Lizenzen erfolgreich gespeichert & aktiv!", "ok");
-    filterLicenses();
+    if(showNotification) {
+      showToast("Lizenzen erfolgreich gespeichert & aktiv!", "ok");
+    }
   } catch(e) {
-    showToast("Fehler beim Speichern der Lizenzen: " + e.message, "err");
+    if(showNotification) {
+      showToast("Fehler beim Speichern der Lizenzen: " + e.message, "err");
+    }
   }
 }
 
@@ -3025,12 +3043,23 @@ async function generateNewLicenses() {
     }
   });
 
-  await saveLicenses();
-  if(CURRENT_USER.is_admin) {
-    await saveUserPermissions(false);
-  }
+  // 1. INSTANT OPTIMISTIC UI UPDATE (< 1ms)
+  try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
+  try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
+  filterLicenses();
+  showToast(`${qty} neue(r) Key(s) sofort erstellt & in Tabelle eingefügt!`, "ok");
   logAdminAction("KEY_CREATED", newKeys.join(", "), `${qty}x Key (${prodNames[prod]}, ${durLabels[dur]}) generiert für Note: '${note || '---'}'`);
-  showToast(`${qty} neue(r) License Key(s) erstellt & gespeichert!`, "ok");
+
+  // 2. BACKGROUND CLOUD SYNC (Non-blocking parallel promises)
+  const syncPromises = [saveLicenses(false)];
+  if(CURRENT_USER.is_admin) {
+    syncPromises.push(saveUserPermissions(false));
+  }
+  Promise.all(syncPromises).then(() => {
+    showToast(`☁️ Cloud-Sync abgeschlossen: ${qty} Key(s) online gesichert!`, "ok");
+  }).catch(err => {
+    console.warn("Background license sync error:", err);
+  });
 }
 
 function copyGeneratedKeys() {
@@ -3491,14 +3520,18 @@ async function saveEditLicModal() {
   }
 
   closeEditLicModal();
-  await saveLicenses();
-  if(isAdmin || perms.edit_allow_product) {
-    await saveUserPermissions(false);
-  }
+  try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
+  try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
   filterLicenses();
   loadUserPermissions();
   logAdminAction("KEY_EDITED", lic.key, `Produkt: ${lic.product_name}, Dauer: ${lic.duration_label}, Ablauf: '${exp || 'Unbenutzt'}', Status: ${st}`);
   showToast(`Key '${lic.key}' erfolgreich aktualisiert (Cheat: ${lic.product_name})!`, "ok");
+
+  const syncPromises = [saveLicenses(false)];
+  if(isAdmin || perms.edit_allow_product) {
+    syncPromises.push(saveUserPermissions(false));
+  }
+  Promise.all(syncPromises);
 }
 
 // HWID MODAL HANDLERS
@@ -3556,9 +3589,11 @@ async function togglePauseLicense(key) {
     delete lic.pause_limit_days;
   }
 
-  await saveLicenses();
+  try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
+  filterLicenses();
   logAdminAction(lic.paused ? "KEY_PAUSED" : "KEY_UNPAUSED", key, `Key Status geändert auf ${lic.paused ? 'Pausiert' : 'Aktiv'}${pauseNote}`);
   showToast(`Key '${key}' ist jetzt ${lic.paused ? 'PAUSIERT ⏸️' + pauseNote : 'AKTIV ▶️'}!`, "ok");
+  saveLicenses(false);
 }
 
 async function resetLicenseHWID(key) {
@@ -3576,9 +3611,11 @@ async function resetLicenseHWID(key) {
 
   const oldHwid = lic.hwid;
   lic.hwid = "";
-  await saveLicenses();
+  try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
+  filterLicenses();
   logAdminAction("HWID_RESET", key, `HWID Bindung gelöscht (vorher: ${oldHwid || '---'})`);
   showToast(`HWID für Key '${key}' erfolgreich zurückgesetzt!`, "ok");
+  saveLicenses(false);
 }
 
 async function deleteLicenseKey(key) {
@@ -3594,14 +3631,18 @@ async function deleteLicenseKey(key) {
 
   ALL_LICENSES = ALL_LICENSES.filter(l => l.key !== key);
   delete USER_PERMISSIONS[key];
-  await saveLicenses();
-  if(CURRENT_USER.is_admin) {
-    await saveUserPermissions(false);
-  }
+  try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
+  try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
   filterLicenses();
   loadUserPermissions();
   logAdminAction("KEY_DELETED", key, "Key und alle zugehörigen Cheat-Permissions restlos gelöscht");
   showToast(`Key '${key}' erfolgreich gelöscht!`, "ok");
+
+  const syncPromises = [saveLicenses(false)];
+  if(CURRENT_USER.is_admin) {
+    syncPromises.push(saveUserPermissions(false));
+  }
+  Promise.all(syncPromises);
 }
 
 // ================================================================
