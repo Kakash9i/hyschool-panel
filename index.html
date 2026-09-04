@@ -1034,15 +1034,14 @@
             </select>
           </div>
 
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
-              <label style="font-size:10px;color:#e5a93c;letter-spacing:1px;font-weight:800;margin-bottom:0;" id="lbl-gen-username">LOGIN BENUTZERNAME</label>
-              <label style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:#cbd5e1;cursor:pointer;user-select:none;font-weight:700;">
-                <input type="checkbox" id="gen-random-names-cb" onchange="toggleRandomNameInput(this.checked)" style="width:13px;height:13px;accent-color:#e5a93c;cursor:pointer;">
-                <span>🎲 Random Namen</span>
-              </label>
+          <div style="min-width:220px;">
+            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:5px;font-weight:700;">LOGIN BENUTZERNAME</label>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <input type="text" id="gen-note" placeholder="(Login-Name)" style="flex:1;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:10px 12px;border-radius:6px;font-size:12px;outline:none;height:38px;transition:border-color .2s;" />
+              <button type="button" id="btn-toggle-random" onclick="toggleRandomNameBtn()" style="background:#141724;border:1px solid #232a3e;color:#94a3b8;padding:0 12px;border-radius:6px;font-size:11px;font-weight:800;height:38px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .2s;" title="Klicken für automatische Zufallsnamen">
+                <span>🎲</span> <span id="btn-toggle-random-text">Random</span>
+              </button>
             </div>
-            <input type="text" id="gen-note" placeholder="(Login-Name)" style="width:100%;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:10px 12px;border-radius:6px;font-size:12px;outline:none;" />
           </div>
 
           <div>
@@ -2946,15 +2945,35 @@ async function saveLicenses(showNotification = true) {
   }
 }
 
-function toggleRandomNameInput(checked) {
+let _isRandomNameActive = false;
+
+function toggleRandomNameBtn(forceState = null) {
+  _isRandomNameActive = (forceState !== null) ? forceState : !_isRandomNameActive;
+  const btn = document.getElementById("btn-toggle-random");
   const noteInp = document.getElementById("gen-note");
-  const lbl = document.getElementById("lbl-gen-username");
-  if(checked) {
-    if(noteInp) noteInp.placeholder = "🎲 Automatisch zufällig (oder Präfix z.B. Kunde)";
-    if(lbl) lbl.textContent = "LOGIN BENUTZERNAME (RANDOM AKTIV)";
+  
+  if(_isRandomNameActive) {
+    if(btn) {
+      btn.style.background = "linear-gradient(135deg, rgba(229,169,60,0.25), rgba(198,137,36,0.25))";
+      btn.style.border = "1px solid #e5a93c";
+      btn.style.color = "#e5a93c";
+      btn.style.boxShadow = "0 0 10px rgba(229,169,60,0.2)";
+    }
+    if(noteInp) {
+      noteInp.placeholder = "🎲 Zufallsnamen aktiv (Präfix optional)";
+      noteInp.style.borderColor = "rgba(229,169,60,0.4)";
+    }
   } else {
-    if(noteInp) noteInp.placeholder = "(Login-Name)";
-    if(lbl) lbl.textContent = "LOGIN BENUTZERNAME (PFLICHT)";
+    if(btn) {
+      btn.style.background = "#141724";
+      btn.style.border = "1px solid #232a3e";
+      btn.style.color = "#94a3b8";
+      btn.style.boxShadow = "none";
+    }
+    if(noteInp) {
+      noteInp.placeholder = "(Login-Name)";
+      noteInp.style.borderColor = "#1e2333";
+    }
   }
 }
 
@@ -2988,10 +3007,10 @@ async function generateNewLicenses() {
   const dur = document.getElementById("gen-duration").value;
   const qty = parseInt(document.getElementById("gen-qty").value) || 1;
   const rawNote = document.getElementById("gen-note").value.trim();
-  const isRandomChecked = document.getElementById("gen-random-names-cb") ? document.getElementById("gen-random-names-cb").checked : false;
+  const isRandom = _isRandomNameActive;
 
-  if(!rawNote && !isRandomChecked) {
-    alert("Bitte gib einen Login-Benutzernamen an oder aktiviere das Häkchen für '🎲 Random Namen'!");
+  if(!rawNote && !isRandom) {
+    alert("Bitte gib einen Login-Benutzernamen an oder klicke auf '🎲 Random'!");
     const noteInp = document.getElementById("gen-note");
     if(noteInp) {
       noteInp.focus();
@@ -3042,7 +3061,7 @@ async function generateNewLicenses() {
     
     // Determine username per key (Random or specific name)
     let finalUserName = rawNote;
-    if (isRandomChecked) {
+    if (isRandom) {
       finalUserName = generateRandomUsername(rawNote, i, qty);
     } else if (qty > 1 && rawNote) {
       finalUserName = `${rawNote}_${i + 1}`;
@@ -3097,7 +3116,7 @@ async function generateNewLicenses() {
   try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
   filterLicenses();
   showToast(`${qty} neue(r) Key(s) sofort erstellt & in Tabelle eingefügt!`, "ok");
-  logAdminAction("KEY_CREATED", newKeys.join(", "), `${qty}x Key (${prodNames[prod]}, ${durLabels[dur]}) generiert für ${isRandomChecked ? 'Random Namen' : "'" + (rawNote || '---') + "'"}`);
+  logAdminAction("KEY_CREATED", newKeys.join(", "), `${qty}x Key (${prodNames[prod]}, ${durLabels[dur]}) generiert für ${isRandom ? 'Random Namen' : "'" + (rawNote || '---') + "'"}`);
 
   // 2. BACKGROUND CLOUD SYNC (Non-blocking parallel promises)
   const syncPromises = [saveLicenses(false)];
