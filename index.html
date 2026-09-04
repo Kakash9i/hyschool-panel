@@ -996,10 +996,10 @@
           <span style="color:#e5a93c;">⚡</span> NEUE LICENSE KEYS GENERIEREN
         </div>
         
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:12px;align-items:end;">
+        <div style="display:grid;grid-template-columns: 1.1fr 1.1fr 0.9fr 1.4fr 1.1fr;gap:12px;align-items:end;">
           <div>
-            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:5px;font-weight:700;">PRODUKT / CHEAT</label>
-            <select id="gen-product" style="width:100%;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:10px 12px;border-radius:6px;font-size:12px;outline:none;">
+            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:6px;font-weight:700;">PRODUKT / CHEAT</label>
+            <select id="gen-product" style="width:100%;height:38px;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:0 12px;border-radius:6px;font-size:12px;outline:none;">
               <option value="ALL">ALL CHEATS</option>
               <option value="valorant">VALORANT</option>
               <option value="apex">AI HYSCHOOL</option>
@@ -1010,8 +1010,8 @@
           </div>
 
           <div>
-            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:5px;font-weight:700;">LAUFZEIT (DAUER)</label>
-            <select id="gen-duration" style="width:100%;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:10px 12px;border-radius:6px;font-size:12px;outline:none;">
+            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:6px;font-weight:700;">LAUFZEIT (DAUER)</label>
+            <select id="gen-duration" style="width:100%;height:38px;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:0 12px;border-radius:6px;font-size:12px;outline:none;">
               <option value="1">1 Tag (Trial)</option>
               <option value="3">3 Tage</option>
               <option value="7">7 Tage (Woche)</option>
@@ -1024,8 +1024,8 @@
           </div>
 
           <div>
-            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:5px;font-weight:700;">ANZAHL KEYS</label>
-            <select id="gen-qty" style="width:100%;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:10px 12px;border-radius:6px;font-size:12px;outline:none;">
+            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:6px;font-weight:700;">ANZAHL KEYS</label>
+            <select id="gen-qty" style="width:100%;height:38px;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:0 12px;border-radius:6px;font-size:12px;outline:none;">
               <option value="1">1 Key</option>
               <option value="5">5 Keys</option>
               <option value="10">10 Keys</option>
@@ -1034,19 +1034,19 @@
             </select>
           </div>
 
-          <div style="min-width:220px;">
-            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:5px;font-weight:700;">LOGIN BENUTZERNAME</label>
-            <div style="display:flex;gap:6px;align-items:center;">
-              <input type="text" id="gen-note" placeholder="(Login-Name)" style="flex:1;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:10px 12px;border-radius:6px;font-size:12px;outline:none;height:38px;transition:border-color .2s;" />
-              <button type="button" id="btn-toggle-random" onclick="toggleRandomNameBtn()" style="background:#141724;border:1px solid #232a3e;color:#94a3b8;padding:0 12px;border-radius:6px;font-size:11px;font-weight:800;height:38px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .2s;" title="Klicken für automatische Zufallsnamen">
+          <div>
+            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:6px;font-weight:700;">LOGIN BENUTZERNAME</label>
+            <div style="position:relative;display:flex;align-items:center;">
+              <input type="text" id="gen-note" placeholder="(Login-Name)" style="width:100%;height:38px;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:0 82px 0 12px;border-radius:6px;font-size:12px;outline:none;transition:border-color .2s;" />
+              <button type="button" id="btn-toggle-random" onclick="toggleRandomNameBtn()" style="position:absolute;right:4px;top:4px;bottom:4px;background:#141724;border:1px solid #232a3e;color:#94a3b8;padding:0 10px;border-radius:4px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;" title="Klicken für automatische Zufallsnamen">
                 <span>🎲</span> <span id="btn-toggle-random-text">Random</span>
               </button>
             </div>
           </div>
 
           <div>
-            <button id="gen-keys-btn" onclick="generateNewLicenses()" style="width:100%;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:11px 16px;border-radius:6px;font-size:12px;font-weight:900;cursor:pointer;letter-spacing:1px;height:40px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">
-              ⚡ KEYS ERSTELLEN
+            <button id="gen-keys-btn" onclick="generateNewLicenses()" style="width:100%;height:38px;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:0 16px;border-radius:6px;font-size:12px;font-weight:900;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);display:flex;align-items:center;justify-content:center;gap:6px;">
+              <span>⚡</span> <span>KEYS ERSTELLEN</span>
             </button>
           </div>
         </div>
