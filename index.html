@@ -7909,8 +7909,8 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 
 // ==================== USER SEARCH & PROFILE MODAL SYSTEM ====================
-ALL_SEARCH_USERS = ALL_SEARCH_USERS || [];
-ACTIVE_VIEWED_USER = null;
+let ALL_SEARCH_USERS = [];
+let ACTIVE_VIEWED_USER = null;
 
 function renderCleanRoleBadges(roles) {
     if (!roles) roles = ['premium'];
@@ -7920,23 +7920,23 @@ function renderCleanRoleBadges(roles) {
     return roles.map(r => {
         const low = String(r).toLowerCase().trim();
         if (low === 'inhaber' || low === 'admin') {
-            return '<span class="badge badge-rank-inhaber"><i class="fas fa-crown"></i> INHABER</span>';
+            return '<span class="badge badge-rank-inhaber"><i class="fas fa-crown"></i> ðŸ‘‘ INHABER</span>';
         } else if (low === 'co-admin' || low === 'coadmin') {
-            return '<span class="badge badge-rank-coadmin"><i class="fas fa-shield-alt"></i> CO-ADMIN</span>';
+            return '<span class="badge badge-rank-coadmin"><i class="fas fa-shield-alt"></i> ðŸ›¡ï¸ CO-ADMIN</span>';
         } else if (low === 'developer' || low === 'dev') {
-            return '<span class="badge badge-rank-developer"><i class="fas fa-code"></i> DEVELOPER</span>';
+            return '<span class="badge badge-rank-developer"><i class="fas fa-code"></i> ðŸ’» DEVELOPER</span>';
         } else if (low === 'moderator' || low === 'mod') {
-            return '<span class="badge badge-rank-moderator"><i class="fas fa-gavel"></i> MODERATOR</span>';
+            return '<span class="badge badge-rank-moderator"><i class="fas fa-gavel"></i> ðŸ”¨ MODERATOR</span>';
         } else if (low === 'supporter' || low === 'support') {
-            return '<span class="badge badge-rank-supporter"><i class="fas fa-headset"></i> SUPPORTER</span>';
+            return '<span class="badge badge-rank-supporter"><i class="fas fa-headset"></i> ðŸŽ§ SUPPORTER</span>';
         } else if (low === 'donator') {
-            return '<span class="badge badge-rank-donator"><i class="fas fa-heart"></i> DONATOR</span>';
+            return '<span class="badge badge-rank-donator"><i class="fas fa-heart"></i> ðŸ’– DONATOR</span>';
         } else if (low === 'vip') {
-            return '<span class="badge badge-rank-vip"><i class="fas fa-star"></i> VIP</span>';
+            return '<span class="badge badge-rank-vip"><i class="fas fa-star"></i> â­ VIP</span>';
         } else if (low === 'elite') {
-            return '<span class="badge badge-rank-elite"><i class="fas fa-bolt"></i> ELITE</span>';
+            return '<span class="badge badge-rank-elite"><i class="fas fa-bolt"></i> âš¡ ELITE</span>';
         } else {
-            return '<span class="badge badge-rank-premium"><i class="fas fa-gem"></i> PREMIUM</span>';
+            return '<span class="badge badge-rank-premium"><i class="fas fa-gem"></i> ðŸ’Ž PREMIUM</span>';
         }
     }).join(' ');
 }
@@ -8220,15 +8220,15 @@ function openUserProfileView(username) {
     const isStaffOrAdmin = (typeof CURRENT_USER !== 'undefined') && (CURRENT_USER.is_admin || CURRENT_USER.is_staff);
 
     const allAvailableRoles = [
-        { id: 'inhaber', label: 'INHABER' },
-        { id: 'co-admin', label: 'CO-ADMIN' },
-        { id: 'developer', label: 'DEVELOPER' },
-        { id: 'moderator', label: 'MODERATOR' },
-        { id: 'supporter', label: 'SUPPORTER' },
-        { id: 'donator', label: 'DONATOR' },
-        { id: 'vip', label: 'VIP' },
-        { id: 'elite', label: 'ELITE' },
-        { id: 'premium', label: 'PREMIUM' }
+        { id: 'inhaber', label: 'ðŸ‘‘ INHABER' },
+        { id: 'co-admin', label: 'ðŸ›¡ï¸ CO-ADMIN' },
+        { id: 'developer', label: 'ðŸ’» DEVELOPER' },
+        { id: 'moderator', label: 'ðŸ”¨ MODERATOR' },
+        { id: 'supporter', label: 'ðŸŽ§ SUPPORTER' },
+        { id: 'donator', label: 'ðŸ’– DONATOR' },
+        { id: 'vip', label: 'â­ VIP' },
+        { id: 'elite', label: 'âš¡ ELITE' },
+        { id: 'premium', label: 'ðŸ’Ž PREMIUM' }
     ];
 
     let staffRoleManagerHtml = '';
@@ -8517,16 +8517,16 @@ async function submitModalGuestbook(targetUsername) {
                 <input type="text" id="modal-user-search-input" placeholder="User, Kunde, Lizenz-Key oder Bio suchen..." style="width:100%;padding:10px 14px 10px 38px;background:#090a0f;border:1px solid #1e2333;border-radius:8px;color:#fff;font-size:0.85rem;" oninput="filterModalUserSearch()">
             </div>
             <select id="modal-user-role-filter" onchange="filterModalUserSearch()" style="background:#090a0f;border:1px solid #1e2333;border-radius:8px;color:#cbd5e1;padding:10px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;min-width:160px;">
-                <option value="all">Alle Rollen</option>
-                <option value="inhaber">INHABER</option>
-                <option value="co-admin">CO-ADMIN</option>
-                <option value="developer">DEVELOPER</option>
-                <option value="moderator">MODERATOR</option>
-                <option value="supporter">SUPPORTER</option>
-                <option value="donator">DONATOR</option>
-                <option value="vip"> VIP</option>
-                <option value="elite">ELITE</option>
-                <option value="premium">PREMIUM</option>
+                <option value="all">ðŸŽ­ Alle Rollen</option>
+                <option value="inhaber">ðŸ‘‘ INHABER</option>
+                <option value="co-admin">ðŸ›¡ï¸ CO-ADMIN</option>
+                <option value="developer">ðŸ’» DEVELOPER</option>
+                <option value="moderator">ðŸ”¨ MODERATOR</option>
+                <option value="supporter">ðŸŽ§ SUPPORTER</option>
+                <option value="donator">ðŸ’– DONATOR</option>
+                <option value="vip">â­ VIP</option>
+                <option value="elite">âš¡ ELITE</option>
+                <option value="premium">ðŸ’Ž PREMIUM</option>
             </select>
         </div>
 
