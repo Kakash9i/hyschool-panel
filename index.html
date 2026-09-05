@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+<script>
+window.onerror = function(msg, url, line, col, error) {
+    var errDiv = document.createElement('div');
+    errDiv.style.position = 'fixed';
+    errDiv.style.top = '0';
+    errDiv.style.left = '0';
+    errDiv.style.width = '100%';
+    errDiv.style.background = 'red';
+    errDiv.style.color = 'white';
+    errDiv.style.zIndex = '999999';
+    errDiv.style.padding = '20px';
+    errDiv.style.fontSize = '20px';
+    errDiv.style.fontWeight = 'bold';
+    errDiv.innerHTML = 'JS ERROR: ' + msg + ' <br>LINE: ' + line + ' <br>COL: ' + col;
+    if (document.body) {
+        document.body.prepend(errDiv);
+    } else {
+        window.addEventListener('DOMContentLoaded', function() {
+            document.body.prepend(errDiv);
+        });
+    }
+};
+</script>
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -4126,7 +4149,7 @@ function getDefaultPermissionsForKey(key, lic) {
 }
 
 // PERMISSIONS
-let USER_PERMISSIONS = {};
+
 
 async function loadUserPermissions() {
   const tbody = document.getElementById("permissions-table-body");
@@ -5378,7 +5401,7 @@ async function deleteLicenseKey(key) {
 // ================================================================
 // MITARBEITER & TEAM VERWALTUNG (STAFF)
 // ================================================================
-let ALL_STAFF = [
+ALL_STAFF = [
   {
     name: "Sergen",
     password: "123",
@@ -7910,7 +7933,7 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 // ==================== USER SEARCH & PROFILE MODAL SYSTEM ====================
 ALL_SEARCH_USERS = ALL_SEARCH_USERS || [];
-let ACTIVE_VIEWED_USER = null;
+ACTIVE_VIEWED_USER = null;
 
 function renderCleanRoleBadges(roles) {
     if (!roles) roles = ['premium'];
@@ -8555,4 +8578,7 @@ async function submitModalGuestbook(targetUsername) {
 </div>
 </body>
 </html>
+
+
+
 
