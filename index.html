@@ -6133,25 +6133,7 @@ async function saveUserProfile() {
   } finally {
     if(saveBtn) {
       saveBtn.disabled = false;
-      saveBtn.textContent = "&#128190; EINSTELLUNGEN SPEICHERN";
-    }
-  }
-}
-
-let _activeProfileTarget = null;
-    const finalB64 = utf8_to_b64(fullJson);
-    await uploadFileToGitHub("profiles.json", finalB64, `Update Profile: ${CURRENT_USER.name}`);
-    showToast("Profil erfolgreich aktualisiert!", "ok");
-    closeSettingsModal();
-    if(document.getElementById("tc-6") && document.getElementById("tc-6").classList.contains("active")) renderChatMessages();
-    filterUserConfigs();
-  } catch(err) {
-    showToast("Lokal gespeichert: " + err.message, "err");
-    closeSettingsModal();
-  } finally {
-    if(saveBtn) {
-      saveBtn.disabled = false;
-      saveBtn.textContent = "&#128190; EINSTELLUNGEN SPEICHERN";
+      saveBtn.textContent = "💾 EINSTELLUNGEN SPEICHERN";
     }
   }
 }
@@ -7330,10 +7312,10 @@ async function uploadHighlightClip() {
       document.getElementById("hl-drop-label").textContent = "&#127916; Video hier ablegen oder klicken";
       document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (f&#252;r gr&#246;&#223;ere Clips bitte Link nutzen)";
       _uploadedHighlightFile = null;
-      toggleHighlightUploadCard();
+            toggleHighlightUploadCard();
     } catch(err) {
       console.error(err);
-      showToast("Fehler beim Ver&#246;ffentlichen: " + err.message, "err");
+      showToast("Fehler beim VerÃ¶ffentlichen: " + err.message, "err");
     } finally {
       setTimeout(() => {
         progWrap.style.display = "none";
@@ -7379,11 +7361,11 @@ async function deleteHighlight(highlightId) {
   const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
   if(!h) return;
 
-  if(!confirm("M&#246;chtest du das Highlight \"" + h.title + "\" wirklich l&#246;schen?")) return;
+  if(!confirm("MÃ¶chtest du das Highlight \"" + h.title + "\" wirklich lÃ¶schen?")) return;
 
   ALL_HIGHLIGHTS = ALL_HIGHLIGHTS.filter(item => item.id !== highlightId);
   filterHighlights();
-  showToast("Highlight gel&#246;scht!", "ok");
+  showToast("Highlight gelÃ¶scht!", "ok");
 
   try {
     const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
@@ -7394,7 +7376,48 @@ async function deleteHighlight(highlightId) {
   }
 }
 
+function openHighlightPlayer(highlightId) {
+  const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
+  if(!h) return;
+  _activePlayerHighlight = h;
 
+  const modal = document.getElementById("highlight-player-modal");
+  document.getElementById("hl-player-title").textContent = h.title;
+  document.getElementById("hl-player-desc").textContent = h.desc || "Keine Beschreibung";
+  document.getElementById("hl-player-like-count").textContent = h.likes || 0;
+
+  const authorDisplayName = h.isCensored ? "&#128274; [Zensiert / Anonym]" : formatNameUpper(h.author);
+  const authorAvatar = h.isCensored ? "https://api.dicebear.com/7.x/bottts/svg?seed=Incognito" : getAvatarUrl(h.author);
+
+  document.getElementById("hl-player-author-name").textContent = authorDisplayName;
+  document.getElementById("hl-player-author-avatar").src = authorAvatar;
+  document.getElementById("hl-player-rank-badge").innerHTML = h.isCensored ? '<span class="badge-rank badge-rank-vip">&#128274; Anonym</span>' : getRankBadge(h.author, h.rank);
+
+  const container = document.getElementById("hl-player-video-container");
+  if(h.videoType === "youtube") {
+    let ytId = "";
+    if(h.videoUrl.includes("v=")) ytId = h.videoUrl.split("v=")[1].split("&")[0];
+    else if(h.videoUrl.includes("youtu.be/")) ytId = h.videoUrl.split("youtu.be/")[1].split("?")[0];
+    container.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+  } else {
+    container.innerHTML = `
+      <video controls autoplay style="width:100%;height:100%;object-fit:contain;background:#000;">
+        <source src="${h.videoUrl}" type="video/mp4">
+        Dein Browser unterstÃ¼tzt dieses Videoformat nicht.
+      </video>
+    `;
+  }
+
+  if(modal) modal.style.display = "flex";
+}
+
+function closeHighlightPlayerModal() {
+  const modal = document.getElementById("highlight-player-modal");
+  const container = document.getElementById("hl-player-video-container");
+  if(container) container.innerHTML = "";
+  if(modal) modal.style.display = "none";
+  _activePlayerHighlight = null;
+}
 
 async function loadHighlights(silent = false, manualToast = false) {
   const container = document.getElementById("highlights-grid-container");
@@ -7538,56 +7561,8 @@ function filterHighlights() {
       </div>
     `;
   }).join("");
-async function toggleHighlightLike(highlightId) {
-  const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
-  if(!h) return;
-
-  if(!h.likedBy) h.likedBy = [];
-  const idx = h.likedBy.indexOf(CURRENT_USER.name);
-  if(idx > -1) {
-    h.likedBy.splice(idx, 1);
-    h.likes = Math.max(0, (h.likes || 1) - 1);
-  } else {
-    h.likedBy.push(CURRENT_USER.name);
-    h.likes = (h.likes || 0) + 1;
-  }
-
-  filterHighlights();
-
-  try {
-    const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
-    const finalB64 = utf8_to_b64(fullJson);
-    await uploadFileToGitHub("highlights.json", finalB64, "Like Highlight: " + h.title);
-  } catch(e) {
-    console.error("Like sync error:", e);
-  }
 }
 
-function toggleHighlightLikeFromModal() {
-  if(_activePlayerHighlight) {
-    toggleHighlightLike(_activePlayerHighlight.id);
-    document.getElementById("hl-player-like-count").textContent = _activePlayerHighlight.likes || 0;
-  }
-}
-
-async function deleteHighlight(highlightId) {
-  const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
-  if(!h) return;
-
-  if(!confirm("M&#246;chtest du das Highlight \"" + h.title + "\" wirklich l&#246;schen?")) return;
-
-  ALL_HIGHLIGHTS = ALL_HIGHLIGHTS.filter(item => item.id !== highlightId);
-  filterHighlights();
-  showToast("Highlight gel&#246;scht!", "ok");
-
-  try {
-    const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
-    const finalB64 = utf8_to_b64(fullJson);
-    await uploadFileToGitHub("highlights.json", finalB64, "Delete Highlight: " + h.title);
-  } catch(e) {
-    showToast("Cloud-Sync Fehler: " + e.message, "err");
-  }
-}
 
 // ==================== 1-ON-1 SUPPORT TICKETS (ADMIN / STAFF) ====================
 let _adminActiveTicketId = null;
