@@ -1244,16 +1244,14 @@
           <div style="font-size:10px;color:#94a3b8;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">&#9881;&#65039; ROLLEN VERWALTEN</div>
           <div style="display:flex;flex-wrap:wrap;gap:8px;">
             <style>
-              .role-pill { display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);padding:6px 12px;border-radius:20px;font-size:10px;color:#cbd5e1;font-weight:800;cursor:pointer;transition:all 0.2s ease;text-transform:uppercase; }
+              .role-pill { position:relative;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:20px;font-size:10px;color:#cbd5e1;font-weight:800;cursor:pointer;transition:all 0.2s ease;text-transform:uppercase;user-select:none; }
               .role-pill:hover { background:rgba(255,255,255,0.08);color:#fff; }
-              .role-pill input[type="checkbox"] { display:none; }
+              .role-pill input[type="checkbox"] { position:absolute;opacity:0;pointer-events:none;width:0;height:0; }
               .role-pill.active { background:rgba(229,169,60,0.15);border-color:rgba(229,169,60,0.5);color:#e5a93c;box-shadow:0 0 10px rgba(229,169,60,0.2); }
-            .hide-scrollbar::-webkit-scrollbar { display: none; }
-.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-</style>
+            </style>
             <label class="role-pill"><input type="checkbox" class="role-checkbox" value="admin" onchange="updateProfileRoles(this)"> INHABER</label>
             <label class="role-pill"><input type="checkbox" class="role-checkbox" value="co-admin" onchange="updateProfileRoles(this)"> CO-ADMIN</label>
-            <label class="role-dropdown-label role-pill"><input type="checkbox" class="role-checkbox" value="developer" onchange="updateProfileRoles(this)"> DEVELOPER</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="developer" onchange="updateProfileRoles(this)"> DEVELOPER</label>
             <label class="role-pill"><input type="checkbox" class="role-checkbox" value="moderator" onchange="updateProfileRoles(this)"> MODERATOR</label>
             <label class="role-pill"><input type="checkbox" class="role-checkbox" value="supporter" onchange="updateProfileRoles(this)"> SUPPORTER</label>
             <label class="role-pill"><input type="checkbox" class="role-checkbox" value="elite" onchange="updateProfileRoles(this)"> ELITE</label>
@@ -2064,6 +2062,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 
     <!-- TAB 7: USER CONFIG'S (CONFIG UPLOAD SYSTEM) -->
@@ -6209,7 +6208,7 @@ function openUserProfileModal(usernameOrKey) {
   if(modal) modal.style.display = "flex";
 }
 
-function updateProfileRoles(el) {
+async function updateProfileRoles(el) {
   if(!_activeProfileTarget) return;
   const checkboxes = document.querySelectorAll(".role-checkbox");
   let selected = [];
@@ -6238,13 +6237,25 @@ function updateProfileRoles(el) {
   
   if(_activeProfileTarget === "ADMIN" || _activeProfileTarget === CURRENT_USER.name) {
     localStorage.setItem("hyschool_admin_ranks", JSON.stringify(selected));
+    const userBadge = document.getElementById("user-badge");
+    if(userBadge) userBadge.innerHTML = getRankBadge("ADMIN", selected);
+    const dashRole = document.getElementById("cfg-dash-role-badge");
+    if(dashRole) dashRole.innerHTML = getRankBadge("ADMIN", selected);
   }
+  
+  try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
   
   const badgeEl = document.getElementById("profile-modal-badge-wrap");
   if(badgeEl) badgeEl.innerHTML = getRankBadge(_activeProfileTarget, selected);
   
   if(typeof renderStaffTable === "function") renderStaffTable();
   if(typeof filterUserConfigs === "function") filterUserConfigs();
+
+  try {
+    const fullJson = JSON.stringify(USER_PROFILES, null, 2);
+    const finalB64 = utf8_to_b64(fullJson);
+    await uploadFileToGitHub("profiles.json", finalB64, `Update roles for ${_activeProfileTarget}: ${selected.join(", ")}`);
+  } catch(_) {}
 }
 
 
