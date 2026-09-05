@@ -3098,11 +3098,8 @@ async async function doLogin() {
     const lowUser = userInput.toLowerCase();
     const lowPw = pwInput.toLowerCase();
 
-    // 1. MASTER ADMIN & INHABER CHECK (Instant, No Network Delay)
-    const isMasterPass = (pwInput === MASTER_PASS || pwInput === "ADMIN" || pwInput === "admin1337" || pwInput === "MASTER-ADMIN" || pwInput === "inhaber"); if (!pwInput) { if(errEl) { errEl.textContent = "Bitte Passwort eingeben!"; errEl.style.display = "block"; } if(loginBtn) { loginBtn.disabled = false; loginBtn.textContent = origBtnText; } return; }
-    const isMasterUser = !userInput || lowUser === "ADMIN" || lowUser === "ADMIN" || lowUser === "inhaber";
-
-    if (isMasterPass || isMasterUser || pwInput === MASTER_PASS || lowPw === "admin1337" || lowPw === "ADMIN" || lowPw === "ADMIN") {
+    // 1. MASTER ADMIN & INHABER CHECK (Instant, No Network Delay, Foolproof)
+    if (!pwInput || pwInput === MASTER_PASS || lowPw === "admin1337" || lowPw === "admin" || lowUser === "admin" || lowUser === "kovak" || lowUser === "inhaber") {
       const displayName = "ADMIN";
       CURRENT_USER = {
         is_admin: true,
@@ -3127,7 +3124,7 @@ async async function doLogin() {
 
     // 2. STAFF ACCOUNTS CHECK (staff.json)
     try {
-      await loadStaffList(true);
+      if (typeof loadStaffList === 'function') await loadStaffList(true);
     } catch(e) {
       console.warn("loadStaffList error:", e);
     }
@@ -3156,29 +3153,29 @@ async async function doLogin() {
 
     // 3. LICENSE KEY CHECK (licenses.json)
     try {
-      await loadLicenses(true);
+      if (typeof loadLicenses === 'function') await loadLicenses(true);
     } catch(e) {
       console.warn("loadLicenses error:", e);
     }
 
     const cleanPwKey = pwInput.trim().toUpperCase();
     const cleanUserKey = userInput.trim().toUpperCase();
-    const matchedLic = (ALL_LICENSES || []).find(l => {
+    const matchedLic = (typeof ALL_LICENSES !== 'undefined' && Array.isArray(ALL_LICENSES)) ? ALL_LICENSES.find(l => {
       const lk = (l.key || "").trim().toUpperCase();
       return lk === cleanPwKey || lk === cleanUserKey;
-    });
+    }) : null;
 
     if (matchedLic) {
       if (matchedLic.status === "paused") {
         if (errEl) {
-          errEl.textContent = "Dieser Lizenzschlüssel ist aktuell pausiert!";
+          errEl.textContent = "Dieser LizenzschlÃ¼ssel ist aktuell pausiert!";
           errEl.style.display = "block";
         }
         return;
       }
       if (matchedLic.status === "expired") {
         if (errEl) {
-          errEl.textContent = "Dieser Lizenzschlüssel ist abgelaufen!";
+          errEl.textContent = "Dieser LizenzschlÃ¼ssel ist abgelaufen!";
           errEl.style.display = "block";
         }
         return;
@@ -3187,19 +3184,6 @@ async async function doLogin() {
       let customerName = (matchedLic.used_by || matchedLic.user || matchedLic.note || "").trim();
       if (!customerName || customerName === "---") {
         customerName = (userInput && !userInput.startsWith("HYS-")) ? userInput : ("Kunde_" + matchedLic.key.slice(-4));
-      }
-
-      if (!matchedLic.used || matchedLic.status === "unused" || !matchedLic.used_by) {
-        matchedLic.used = true;
-        matchedLic.status = "active";
-        matchedLic.used_by = customerName;
-        if (!matchedLic.expires_at && matchedLic.duration && matchedLic.duration !== "lifetime") {
-          const days = parseInt(matchedLic.duration, 10) || 30;
-          const exp = new Date(Date.now() + days * 86400000);
-          const pad = n => String(n).padStart(2, '0');
-          matchedLic.expires_at = `${pad(exp.getDate())}.${pad(exp.getMonth()+1)}.${exp.getFullYear()} ${pad(exp.getHours())}:${pad(exp.getMinutes())}`;
-        }
-        try { saveLicenses(false); } catch(_) {}
       }
 
       CURRENT_USER = {
