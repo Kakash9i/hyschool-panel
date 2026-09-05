@@ -7756,56 +7756,61 @@ function renderActiveADMINTicketRoom(t) {
     if (!msgWrap) return;
 
     let html = '';
-    (t.messages || []).forEach(m => {
-        let cleanSender = m.sender;
-        if(cleanSender.includes(" (")) {
-          cleanSender = cleanSender.substring(0, cleanSender.indexOf(" (")).trim();
-        }
-        
-        const isStaff = m.role !== 'Kunde';
-        
-        let senderAvatar = getAvatarUrl(cleanSender);
-        let senderProf = getUserProfile(cleanSender) || {};
-        if(senderProf && senderProf.avatar) senderAvatar = senderProf.avatar;
-        
-        let badgeHtml = "";
-        if(isStaff) {
-           let r = senderProf.rank || ["inhaber"];
-           if(Array.isArray(r)) r = r[0]; 
-           badgeHtml = getRankBadge(cleanSender, [r]);
-        } else {
-           badgeHtml = `<span style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);color:#3b82f6;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;">KUNDE</span>`;
-        }
-        
-        const align = isStaff ? 'flex-end' : 'flex-start';
-        const flexDir = isStaff ? 'row-reverse' : 'row';
-        const bubbleBg = isStaff ? 'linear-gradient(135deg, rgba(229,169,60,0.18), rgba(198,137,36,0.1))' : 'linear-gradient(135deg, rgba(56,189,248,0.18), rgba(14,165,233,0.1))';
-        const borderCol = isStaff ? 'rgba(229,169,60,0.35)' : 'rgba(56,189,248,0.35)';
+    const msgs = t.messages || [];
+    if (msgs.length === 0) {
+        html = `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#64748b;font-size:12px;opacity:0.7;gap:12px;height:100%;margin-top:40px;"><div style="font-size:32px;">&#128172;</div><div>Keine Nachrichten vorhanden. Schreibe die erste Nachricht!</div></div>`;
+    } else {
+        msgs.forEach(m => {
+            let cleanSender = m.sender || "System";
+            if(cleanSender.includes(" (")) {
+              cleanSender = cleanSender.substring(0, cleanSender.indexOf(" (")).trim();
+            }
+            
+            const isStaff = (m.role && m.role !== 'Kunde') || cleanSender === 'System' || cleanSender === 'ADMIN' || cleanSender === CURRENT_USER.name;
+            
+            let senderAvatar = getAvatarUrl(cleanSender);
+            let senderProf = getUserProfile(cleanSender) || {};
+            if(senderProf && senderProf.avatar) senderAvatar = senderProf.avatar;
+            
+            let badgeHtml = "";
+            if(isStaff) {
+               let r = senderProf.rank || ["inhaber"];
+               if(Array.isArray(r)) r = r[0]; 
+               badgeHtml = getRankBadge(cleanSender, [r]);
+            } else {
+               badgeHtml = `<span style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);color:#3b82f6;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;">KUNDE</span>`;
+            }
+            
+            const align = isStaff ? 'flex-end' : 'flex-start';
+            const flexDir = isStaff ? 'row-reverse' : 'row';
+            const bubbleBg = isStaff ? 'linear-gradient(135deg, rgba(229,169,60,0.18), rgba(198,137,36,0.1))' : 'linear-gradient(135deg, rgba(56,189,248,0.18), rgba(14,165,233,0.1))';
+            const borderCol = isStaff ? 'rgba(229,169,60,0.35)' : 'rgba(56,189,248,0.35)';
 
-        html += `
-          <div style="display:flex;flex-direction:${flexDir};align-items:flex-end;gap:12px;margin-bottom:12px;width:100%;">
-            
-            <div onclick="openUserProfileModal('${escapeHtml(cleanSender)}')" style="cursor:pointer;width:34px;height:34px;border-radius:10px;border:2px solid ${isStaff ? '#e5a93c' : '#38bdf8'};overflow:hidden;flex-shrink:0;box-shadow:0 0 10px ${isStaff ? 'rgba(229,169,60,0.3)' : 'rgba(56,189,248,0.3)'};">
-              <img src="${senderAvatar}" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
-            </div>
-            
-            <div style="display:flex;flex-direction:column;align-items:${align};max-width:80%;">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-direction:${flexDir};">
-                <b onclick="openUserProfileModal('${escapeHtml(cleanSender)}')" style="cursor:pointer;color:#ffffff;font-size:12px;letter-spacing:0.5px;">${escapeHtml(cleanSender)}</b>
-                <div style="display:flex;align-items:center;transform:scale(0.85);margin-top:-2px;">
-                  ${badgeHtml}
+            html += `
+              <div style="display:flex;flex-direction:${flexDir};align-items:flex-end;gap:12px;margin-bottom:12px;width:100%;">
+                
+                <div onclick="openUserProfileModal('${escapeHtml(cleanSender)}')" style="cursor:pointer;width:34px;height:34px;border-radius:10px;border:2px solid ${isStaff ? '#e5a93c' : '#38bdf8'};overflow:hidden;flex-shrink:0;box-shadow:0 0 10px ${isStaff ? 'rgba(229,169,60,0.3)' : 'rgba(56,189,248,0.3)'};">
+                  <img src="${senderAvatar}" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
                 </div>
-                <span style="font-size:9.5px;color:#64748b;font-weight:600;">${m.time || ''}</span>
+                
+                <div style="display:flex;flex-direction:column;align-items:${align};max-width:80%;">
+                  <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-direction:${flexDir};">
+                    <b onclick="openUserProfileModal('${escapeHtml(cleanSender)}')" style="cursor:pointer;color:#ffffff;font-size:12px;letter-spacing:0.5px;">${escapeHtml(cleanSender)}</b>
+                    <div style="display:flex;align-items:center;transform:scale(0.85);margin-top:-2px;">
+                      ${badgeHtml}
+                    </div>
+                    <span style="font-size:9.5px;color:#64748b;font-weight:600;">${m.time || ''}</span>
+                  </div>
+                  
+                  <div style="background:${bubbleBg};border:1px solid ${borderCol};color:#f8fafc;padding:10px 14px;border-radius:12px;border-bottom-${isStaff ? 'right' : 'left'}-radius:2px;font-size:11.5px;line-height:1.5;word-break:break-word;box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+                    ${escapeHtml(m.text)}
+                  </div>
+                </div>
+                
               </div>
-              
-              <div style="background:${bubbleBg};border:1px solid ${borderCol};color:#f8fafc;padding:10px 14px;border-radius:12px;border-bottom-${isStaff ? 'right' : 'left'}-radius:2px;font-size:11.5px;line-height:1.5;word-break:break-word;box-shadow:0 4px 15px rgba(0,0,0,0.2);">
-                ${escapeHtml(m.text)}
-              </div>
-            </div>
-            
-          </div>
-        `;
-    });
+            `;
+        });
+    }
     msgWrap.innerHTML = html;
 }
 
@@ -7826,7 +7831,7 @@ function insertStaffMacro(type) {
     inp.focus();
 }
 
-async function claimCurrentTicket() {
+async async function claimCurrentTicket() {
     if (!_adminActiveTicketId) return;
     const t = _adminTicketsData.find(x => x.id === _adminActiveTicketId);
     if (!t) return;
@@ -7838,7 +7843,7 @@ async function claimCurrentTicket() {
     t.messages.push({
         sender: myName,
         role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-        text: `[Info: ${myName} hat das Support Ticket übernommen]`,
+        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben übernommen. Wie kann ich dir heute weiterhelfen? &#128640;`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now()
     });
@@ -7949,6 +7954,10 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
+
+
+
 
 
 
