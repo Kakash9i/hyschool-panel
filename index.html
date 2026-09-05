@@ -2374,7 +2374,7 @@ CHEATS.forEach(c => {
 });
 
 
-  async async function fetchGitHubRaw(path) {
+  async function fetchGitHubRaw(path) {
     const token = getToken();
     try {
       const res = await fetch(`${API_BASE}/${path}?nc=${Date.now()}_${Math.random()}`, {
@@ -2443,7 +2443,7 @@ async function showToast(msg, type="ok") {
   setTimeout(() => { el.className = ""; }, 4000);
 }
 
-async async function uploadFileToGitHub(path, contentB64, commitMsg) {
+async function uploadFileToGitHub(path, contentB64, commitMsg) {
   const token = getToken();
   let sha = "";
 
@@ -2500,7 +2500,7 @@ async async function uploadFileToGitHub(path, contentB64, commitMsg) {
   throw new Error("GitHub Synchronisierungs-Konflikt (Bitte erneut versuchen)");
 }
 
-async async function deleteFileFromGitHub(path, commitMsg) {
+async function deleteFileFromGitHub(path, commitMsg) {
   const token = getToken();
   let sha = "";
 
@@ -2559,7 +2559,7 @@ async async function deleteFileFromGitHub(path, commitMsg) {
 
 // LOGIN LOGIC
 // LOGIN LOGIC
-async async function doLogin() {
+async function doLogin() {
   const userEl = document.getElementById("user-input");
   const pwEl = document.getElementById("pw-input");
   const errEl = document.getElementById("login-error");
@@ -3191,7 +3191,7 @@ async function renderFileList(prefix) {
 }
 
 // GITHUB CHEATS SYNC
-async async function loadCheats() {
+async function loadCheats() {
   // 1. Instant load from local cache if available
   try {
     const cached = localStorage.getItem("hyschool_cheats_cache");
@@ -3272,7 +3272,7 @@ function applyCheatsDataToDOM(data) {
   checkRazerDllStatus();
 }
 
-async async function deleteCheatFile(prefix, key) {
+async function deleteCheatFile(prefix, key) {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
     alert("Keine Berechtigung zum Löschen von Cheat-Dateien!");
     return;
@@ -3319,7 +3319,7 @@ async async function deleteCheatFile(prefix, key) {
   }
 }
 
-async async function saveAllToGitHub() {
+async function saveAllToGitHub() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
     alert("Keine Berechtigung zum Ändern der Cheats!");
     return;
@@ -3349,7 +3349,7 @@ async async function saveAllToGitHub() {
 }
 
 // UPLOAD FUNCTION FOR CHEAT FILES
-async async function doUpload(prefix, key) {
+async function doUpload(prefix, key) {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
     alert("Keine Berechtigung zum Hochladen!");
     return;
@@ -3433,7 +3433,7 @@ async async function doUpload(prefix, key) {
 }
 
 // MAYA LOADER UPDATER
-async async function uploadMayaExe() {
+async function uploadMayaExe() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
     alert("Keine Berechtigung zum Updaten des Loaders!");
     return;
@@ -3519,7 +3519,7 @@ async function onRazerFileSelected(input) {
   if(btnEl) btnEl.disabled = false;
 }
 
-async async function checkRazerDllStatus() {
+async function checkRazerDllStatus() {
   const statusEl = document.getElementById("razer-active-status");
   const delBtn = document.getElementById("razer-del-btn");
   if(!statusEl) return;
@@ -3543,7 +3543,7 @@ async async function checkRazerDllStatus() {
   }
 }
 
-async async function deleteRazerDll() {
+async function deleteRazerDll() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
     alert("Keine Berechtigung zum Löschen von Dateien!");
     return;
@@ -3562,7 +3562,7 @@ async async function deleteRazerDll() {
   }
 }
 
-async async function uploadRazerDll() {
+async function uploadRazerDll() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
     alert("Keine Berechtigung zum Verwalten von Cheats/Dateien!");
     return;
@@ -3635,7 +3635,7 @@ async function initUserLogsCache() {
   }
 }
 
-async async function loadLiveLogs(silent=false) {
+async function loadLiveLogs(silent=false) {
   const tbody = document.getElementById("logs-table-body");
   if(!tbody) return;
 
@@ -3816,7 +3816,7 @@ function filterUserLogs() {
   }).join("");
 }
 
-async async function deleteUserGroupLogs(fileNames) {
+async function deleteUserGroupLogs(fileNames) {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
     alert("Keine Berechtigung zum Löschen!");
     return;
@@ -3850,7 +3850,7 @@ async async function deleteUserGroupLogs(fileNames) {
   loadLiveLogs();
 }
 
-async async function deleteAllUserLogs() {
+async function deleteAllUserLogs() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
     alert("Keine Berechtigung zum Löschen!");
     return;
@@ -3933,7 +3933,7 @@ function getDefaultPermissionsForKey(key, lic) {
 // PERMISSIONS
 let USER_PERMISSIONS = {};
 
-async async function loadUserPermissions() {
+async function loadUserPermissions() {
   const tbody = document.getElementById("permissions-table-body");
   if(!tbody) return;
 
@@ -4266,7 +4266,7 @@ async function generateLicenseString(prodCode, durationStr) {
   return `HYS-${pTag}-${dTag}-${makeRandomChunk(4)}-${makeRandomChunk(4)}`;
 }
 
-async async function loadLicenses(silent=false) {
+async function loadLicenses(silent=false) {
   const tbody = document.getElementById("licenses-table-body");
   
   // Instant load from localStorage cache if present
@@ -4300,7 +4300,7 @@ async async function loadLicenses(silent=false) {
   filterLicenses();
 }
 
-async async function saveLicenses(showNotification = true) {
+async function saveLicenses(showNotification = true) {
   try {
     const jsonStr = JSON.stringify(ALL_LICENSES, null, 2);
     try { localStorage.setItem("hyschool_licenses_cache", jsonStr); } catch(_) {}
@@ -5091,14 +5091,14 @@ async function closeHwidModal() {
   _activeModalKey = null;
 }
 
-async async function executeHwidResetFromModal() {
+async function executeHwidResetFromModal() {
   if(!_activeModalKey) return;
   const key = _activeModalKey;
   closeHwidModal();
   await resetLicenseHWID(key);
 }
 
-async async function togglePauseLicense(key) {
+async function togglePauseLicense(key) {
   if(!CURRENT_USER.is_admin && isADMINAccountKey(key)) {
     alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
     return;
@@ -5210,7 +5210,7 @@ let ALL_STAFF = [
 ];
 let _editingStaffIdx = -1;
 
-async async function loadStaffList(silent=false) {
+async function loadStaffList(silent=false) {
   const tbody = document.getElementById("staff-table-body");
   if(tbody && !silent && ALL_STAFF.length === 0) {
     tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#e5a93c;padding:24px;">Lade Mitarbeiter...</td></tr>`;
@@ -5454,7 +5454,7 @@ async function saveStaffModal() {
   await saveStaffToGitHub();
 }
 
-async async function deleteStaff(idx) {
+async function deleteStaff(idx) {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_staff) {
     alert("Keine Berechtigung!");
     return;
@@ -5470,7 +5470,7 @@ async async function deleteStaff(idx) {
   showToast(`Mitarbeiter '${s.name}' gelöscht!`, "ok");
 }
 
-async async function saveStaffToGitHub() {
+async function saveStaffToGitHub() {
   try {
     localStorage.setItem("hyschool_staff_cache", JSON.stringify(ALL_STAFF));
   } catch(_) {}
@@ -5493,7 +5493,7 @@ async async function saveStaffToGitHub() {
 // ================================================================
 let ALL_AUDIT_LOGS = [];
 
-async async function loadAuditLogs(silent=false) {
+async function loadAuditLogs(silent=false) {
   const tbody = document.getElementById("audit-table-body");
   if(tbody && !silent && ALL_AUDIT_LOGS.length === 0) {
     tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#e5a93c;padding:24px;">Lade Audit-Logs von GitHub...</td></tr>`;
@@ -5550,7 +5550,7 @@ async function filterAuditLogs() {
   }).join("");
 }
 
-async async function logADMINAction(action, target, details) {
+async function logADMINAction(action, target, details) {
   const now = new Date().toLocaleString("de-DE");
   const logItem = {
     time: now,
@@ -5586,7 +5586,7 @@ async async function logADMINAction(action, target, details) {
   } catch(_) {}
 }
 
-async async function clearAuditLogs() {
+async function clearAuditLogs() {
   if(!CURRENT_USER.is_admin) {
     alert("Nur der Haupt-ADMIN darf das Audit-Log leeren!");
     return;
@@ -5620,7 +5620,7 @@ async async function clearAuditLogs() {
 let ALL_CHAT_MESSAGES = [];
 let _chatPollInterval = null;
 
-async async function loadTeamChat(silent = false, manualToast = false) {
+async function loadTeamChat(silent = false, manualToast = false) {
   const wrap = document.getElementById("chat-messages-wrap");
   if(!wrap) return;
 
@@ -5830,7 +5830,7 @@ async function sendChatMessage() {
   }
 }
 
-async async function clearTeamChat() {
+async function clearTeamChat() {
   if(!CURRENT_USER.is_admin) {
     alert("Nur der Inhaber (ADMIN) darf den Chat leeren!");
     return;
@@ -5871,7 +5871,7 @@ const PRESET_AVATARS = [
   "https://api.dicebear.com/7.x/pixel-art/svg?seed=Gold"
 ];
 
-async async function loadProfiles() {
+async function loadProfiles() {
   try {
     const cached = localStorage.getItem("hyschool_profiles_cache");
     if(cached) USER_PROFILES = JSON.parse(cached);
@@ -6072,7 +6072,7 @@ let _activeProfileTarget = null;
 // USER SUCHEN & ROLE ASSIGNMENT SYSTEM
 let ALL_SEARCH_USERS = [];
 
-async async function loadUserSearchData(forceToast = false) {
+async function loadUserSearchData(forceToast = false) {
   const grid = document.getElementById("user-search-grid");
   if (!grid) return;
 
@@ -6254,7 +6254,7 @@ function filterUserSearchList() {
   }).join('');
 }
 
-async async function assignUserRole(username, newRole) {
+async function assignUserRole(username, newRole) {
   if (!CURRENT_USER.is_admin && !CURRENT_USER.is_staff && !(CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_staff)) {
     showToast("Keine Berechtigung zur Rollenvergabe!", "err");
     return;
@@ -6445,7 +6445,7 @@ async function submitGuestbookEntry() {
   }
 }
 
-async async function deleteGuestbookEntry(entryId) {
+async function deleteGuestbookEntry(entryId) {
   const targetProf = getUserProfile(_activeProfileTarget);
   if(!targetProf || !targetProf.guestbook) return;
 
@@ -6518,7 +6518,7 @@ async function formatBytes(bytes, decimals = 2) {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
-async async async function loadUserConfigs(silent = false, manualToast = false) {
+async function loadUserConfigs(silent = false, manualToast = false) {
   const tbody = document.getElementById("configs-table-body");
 
   // 1. Initial render from local cache
@@ -6748,7 +6748,7 @@ function filterUserConfigs() {
   }).join("");
 }
 
-async async async function loadUserConfigs(silent = false, manualToast = false) {
+async function loadUserConfigs(silent = false, manualToast = false) {
   const container = document.getElementById("configs-cards-container");
 
   // 1. Initial render from local cache
@@ -6933,7 +6933,7 @@ async function uploadUserConfig() {
   }
 }
 
-async async function toggleConfigLike(configId) {
+async function toggleConfigLike(configId) {
   const cfg = ALL_CONFIGS.find(c => c.id === configId);
   if (!cfg) return;
 
@@ -7129,7 +7129,7 @@ async function copyConfigPreviewContent() {
   }
 }
 
-async async function deleteUserConfig(configId) {
+async function deleteUserConfig(configId) {
   const cfg = ALL_CONFIGS.find(c => c.id === configId);
   if(!cfg) return;
 
@@ -7298,7 +7298,7 @@ async function uploadHighlightClip() {
     finishHighlightUpload();
   }
 
-  async async function finishHighlightUpload() {
+  async function finishHighlightUpload() {
     progFill.style.width = "75%";
     progLbl.textContent = "Lade in HySchool Cloud hoch...";
 
@@ -7351,7 +7351,7 @@ async function uploadHighlightClip() {
   }
 }
 
-async async function toggleHighlightLike(highlightId) {
+async function toggleHighlightLike(highlightId) {
   const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
   if(!h) return;
 
@@ -7376,14 +7376,14 @@ async async function toggleHighlightLike(highlightId) {
   }
 }
 
-async async function toggleHighlightLikeFromModal() {
+async function toggleHighlightLikeFromModal() {
   if(_activePlayerHighlight) {
     toggleHighlightLike(_activePlayerHighlight.id);
     document.getElementById("hl-player-like-count").textContent = _activePlayerHighlight.likes || 0;
   }
 }
 
-async async function deleteHighlight(highlightId) {
+async function deleteHighlight(highlightId) {
   const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
   if(!h) return;
 
@@ -7404,7 +7404,7 @@ async async function deleteHighlight(highlightId) {
 
 
 
-async async function loadHighlights(silent = false, manualToast = false) {
+async function loadHighlights(silent = false, manualToast = false) {
   const container = document.getElementById("highlights-grid-container");
   if(container && !silent && ALL_HIGHLIGHTS.length === 0) {
     container.innerHTML = `<div style="grid-column: 1/-1;text-align:center;color:#e5a93c;padding:40px;font-size:12px;">&#127916; Lade Highlight Clips...</div>`;
@@ -7645,7 +7645,7 @@ async function canDeleteTickets() {
     return role.includes('ADMIN') || role.includes('co-admin') || role.includes('moderator') || role.includes('inhaber');
 }
 
-async async function loadADMINSupportTickets(manualToast = false, silent = false) {
+async function loadADMINSupportTickets(manualToast = false, silent = false) {
     try {
         const raw = await fetchGitHubRaw('support_tickets.json');
         _adminTicketsData = Array.isArray(raw) ? raw : (raw.tickets || []);
@@ -7827,7 +7827,7 @@ function insertStaffMacro(type) {
     inp.focus();
 }
 
-async async function claimCurrentTicket() {
+async function claimCurrentTicket() {
     if (!_adminActiveTicketId) return;
     const t = _adminTicketsData.find(x => x.id === _adminActiveTicketId);
     if (!t) return;
@@ -7850,7 +7850,7 @@ async async function claimCurrentTicket() {
     showToast('Ticket ü&#252;bernommen!', 'ok');
 }
 
-async async function closeCurrentTicket() {
+async function closeCurrentTicket() {
     if (!_adminActiveTicketId) return;
     const t = _adminTicketsData.find(x => x.id === _adminActiveTicketId);
     if (!t) return;
@@ -7887,7 +7887,7 @@ async async function closeCurrentTicket() {
     renderADMINTicketsList();
 }
 
-async async function deleteCurrentTicket() {
+async function deleteCurrentTicket() {
     if (!canDeleteTickets()) {
         showToast('Nur ADMINs und Moderatoren dürfen Tickets löschen!', 'err');
         return;
@@ -7908,7 +7908,7 @@ async async function deleteCurrentTicket() {
     showToast('Support Ticket gelöscht!', 'ok');
 }
 
-async async function sendADMINTicketMsg() {
+async function sendADMINTicketMsg() {
     if (!_adminActiveTicketId) return;
     const inp = document.getElementById('admin-ticket-input');
     const txt = (inp.value || '').trim();
@@ -7936,7 +7936,7 @@ async async function sendADMINTicketMsg() {
     await saveADMINTicketsToGitHub(`Reply in ticket ${t.id} by ${myName}`);
 }
 
-async async function saveADMINTicketsToGitHub(commitMsg) {
+async function saveADMINTicketsToGitHub(commitMsg) {
     try {
         const fullJson = JSON.stringify(_adminTicketsData, null, 2);
         const finalB64 = utf8_to_b64(fullJson);
