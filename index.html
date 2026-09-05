@@ -1900,7 +1900,7 @@
           </div>
 
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-            <input type="text" id="cfg-search-input" placeholder="&#128269; Configs durchsuchen..." oninput="filterUserConfigs()" style="background:#0e121e;border:1px solid #1d253a;color:#f8fafc;padding:7px 12px;border-radius:6px;font-size:11px;outline:none;width:170px;" />
+            <input type="text" id="cfg-search-input" placeholder="&#128269; Configs suchen..." oninput="filterUserConfigs()" style="background:#0e121e;border:1px solid #1d253a;color:#f8fafc;padding:7px 12px;border-radius:6px;font-size:11px;outline:none;width:140px;" />
             <select id="cfg-filter-game" onchange="filterUserConfigs()" style="background:#0e121e;border:1px solid #1d253a;color:#e5a93c;padding:7px 10px;border-radius:6px;font-size:11px;font-weight:800;outline:none;">
               <option value="all">&#127918; Alle Spiele</option>
               <option value="valorant">VALORANT</option>
@@ -1909,23 +1909,30 @@
               <option value="naraka">NARAKA</option>
               <option value="coc">CLASH OF CLANS</option>
             </select>
+            <select id="cfg-sort-select" onchange="filterUserConfigs()" style="background:#0e121e;border:1px solid #1d253a;color:#cbd5e1;padding:7px 10px;border-radius:6px;font-size:11px;font-weight:800;outline:none;">
+              <option value="date_desc">&#128197; Neueste zuerst</option>
+              <option value="likes_desc">&#128293; Meiste Likes (Best)</option>
+              <option value="downloads_desc">&#11015; Meiste Downloads</option>
+              <option value="name_asc">&#128292; Name (A-Z)</option>
+            </select>
           </div>
         </div>
 
         <!-- TABLE WRAPPER -->
-        <div class="logs-table-wrap" style="max-height:480px;overflow-y:auto;">
-          <table class="logs-table">
+        <div class="logs-table-wrap" style="max-height:520px;overflow-y:auto;">
+          <table class="logs-table" style="width:100%;border-collapse:collapse;">
             <thead>
               <tr>
-                <th style="min-width:180px;color:#e5a93c;">PROFIL &amp; DATEI</th>
-                <th style="min-width:120px;color:#e5a93c;">SPIEL / CHEAT</th>
-                <th style="min-width:160px;color:#e5a93c;">BESCHREIBUNG</th>
-                <th style="min-width:140px;color:#e5a93c;">AUTOR / DATUM</th>
-                <th style="min-width:170px;text-align:right;color:#e5a93c;">AKTIONEN</th>
+                <th style="min-width:180px;color:#e5a93c;text-align:left;">PROFIL &amp; DATEI</th>
+                <th style="min-width:100px;color:#e5a93c;text-align:left;">SPIEL</th>
+                <th style="min-width:140px;color:#e5a93c;text-align:left;">BESCHREIBUNG</th>
+                <th style="min-width:110px;color:#e5a93c;text-align:center;">COMMUNITY</th>
+                <th style="min-width:130px;color:#e5a93c;text-align:left;">AUTOR / DATUM</th>
+                <th style="min-width:190px;text-align:right;color:#e5a93c;">AKTIONEN</th>
               </tr>
             </thead>
             <tbody id="configs-table-body">
-              <tr><td colspan="5" style="text-align:center;color:#64748b;padding:28px;">Lade Cloud-Configs...</td></tr>
+              <tr><td colspan="6" style="text-align:center;color:#64748b;padding:28px;">Lade Cloud-Configs...</td></tr>
             </tbody>
           </table>
         </div>
