@@ -2037,7 +2037,7 @@ async function submitModalGuestbook(targetUsername) {
     <div class="header">
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
       <h1 style="margin:0;font-size:18px;font-weight:900;letter-spacing:1px;color:#f8fafc;display:flex;align-items:center;gap:8px;"><span style="color:#e5a93c;">&#9889;</span> HYSCHOOL ADMIN PANEL</h1>
-      <span id="user-badge" style="background:rgba(229,169,60,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.45);padding:4px 10px;border-radius:4px;font-size:10.5px;font-weight:900;letter-spacing:0.5px;display:inline-flex;align-items:center;gap:6px;"><span style="color:#fbbf24;">&#128081;</span> INHABER ADMIN</span>
+      <span id="user-badge" style="background:rgba(229,169,60,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.45);padding:4px 10px;border-radius:4px;font-size:10.5px;font-weight:900;letter-spacing:0.5px;display:inline-flex;align-items:center;gap:6px;"><span style="color:#fbbf24;">ðŸ‘</span> INHABER ADMIN</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
       <div class="status-indicator" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10b981;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:6px;">
@@ -2605,7 +2605,7 @@ async function submitModalGuestbook(targetUsername) {
 
         <div>
           <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;display:flex;align-items:center;gap:4px;">&#127918; FREIGESCHALTETE CHEATS</div>
-          <div id="cfg-dash-cheats-wrap" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;"><span class="tag-product">&#128081; ALLE CHEATS</span></div>
+          <div id="cfg-dash-cheats-wrap" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;"><span class="tag-product">ðŸ‘ ALLE CHEATS</span></div>
         </div>
 
         <div>
@@ -3320,11 +3320,15 @@ function applyUserPermissions() {
   const savedAvatar = localStorage.getItem("hyschool_admin_avatar") || prof.avatar;
   if(dashImg) dashImg.src = savedAvatar || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN";
 
-  if(dashUser) dashUser.textContent = CURRENT_USER.is_admin ? "ADMIN" : CURRENT_USER.name;
+    if(dashUser) dashUser.textContent = CURRENT_USER.is_admin ? "ADMIN" : CURRENT_USER.name;
   if(dashRole) dashRole.innerHTML = getRankBadge(CURRENT_USER.name, CURRENT_USER.role);
   if(userBadge) {
     if(CURRENT_USER.is_admin) {
-      userBadge.innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px;"><span style="color:#fbbf24;">&#128081;</span> INHABER ADMIN</span>`;
+      userBadge.innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-crown" style="color:#fbbf24;"></i> INHABER ADMIN</span>`;
+    } else {
+      userBadge.innerHTML = `${getRankBadge(CURRENT_USER.name, CURRENT_USER.role)} ${escapeHtml(CURRENT_USER.name)}`;
+    }
+  }align-items:center;gap:6px;"><span style="color:#fbbf24;">ðŸ‘</span> INHABER ADMIN</span>`;
     } else {
       userBadge.innerHTML = `${getRankBadge(CURRENT_USER.name, CURRENT_USER.role)} ${escapeHtml(CURRENT_USER.name)}`;
     }
@@ -3340,7 +3344,7 @@ function applyUserPermissions() {
 
   if(dashCheats) {
     if(CURRENT_USER.is_admin) {
-      dashCheats.innerHTML = `<span class="tag-product">&#128081; ALLE CHEATS</span>`;
+      dashCheats.innerHTML = `<span class="tag-product">ðŸ‘ ALLE CHEATS</span>`;
     } else if(CURRENT_USER.key) {
       const defPerms = getDefaultPermissionsForKey(CURRENT_USER.key, CURRENT_USER.license);
       const curPerms = USER_PERMISSIONS[CURRENT_USER.key] || defPerms;
@@ -3362,7 +3366,7 @@ function applyUserPermissions() {
 
       dashCheats.innerHTML = gameBadges.length > 0 ? gameBadges.join(" ") : `<span style="color:#64748b;font-size:11px;">Keine Spiele freigeschaltet</span>`;
     } else {
-      dashCheats.innerHTML = `<span class="tag-product">&#128081; ALLE CHEATS</span>`;
+      dashCheats.innerHTML = `<span class="tag-product">ðŸ‘ ALLE CHEATS</span>`;
     }
   }
 
@@ -6235,7 +6239,7 @@ function renderChatMessages() {
 
     let userBadge = '';
     if (isADMIN) {
-      userBadge = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.4);padding:2px 8px;border-radius:4px;font-size:9px;font-weight:900;letter-spacing:0.5px;">&#128081; INHABER</span>`;
+      userBadge = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.4);padding:2px 8px;border-radius:4px;font-size:9px;font-weight:900;letter-spacing:0.5px;">ðŸ‘ INHABER</span>`;
     } else if (isCustomer) {
       userBadge = `<span style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.4);padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:0.5px;">&#127918; Kunde</span>`;
     } else {
@@ -6612,7 +6616,7 @@ function openUserProfileModal(usernameOrKey) {
   
   if(badgeEl) {
     if(isOwner) {
-      badgeEl.innerHTML = "&#128081; INHABER";
+      badgeEl.innerHTML = "ðŸ‘ INHABER";
       badgeEl.style.color = "#e5a93c";
       badgeEl.style.background = "rgba(229,169,60,0.15)";
       badgeEl.style.borderColor = "rgba(229,169,60,0.4)";
@@ -6984,7 +6988,7 @@ function filterUserConfigs() {
           <div class="clickable-user" onclick="openUserProfileModal('${escapeHtml(displayAuthor)}')" style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 20px; transition: all 0.2s ease;" onmouseover="this.style.borderColor='rgba(245,158,11,0.4)'; this.style.background='rgba(245,158,11,0.05)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.background='rgba(255,255,255,0.03)';">
             <img src="${authorAvatar}" style="width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid rgba(245,158,11,0.5); object-fit: cover;" alt="Avatar">
             <span style="font-weight: 900; color: #f8fafc; font-size: 11px; letter-spacing: 0.3px;">${escapeHtml(displayAuthor)}</span>
-            <span class="badge-rank badge-rank-admin" style="font-size: 8.5px; padding: 1.5px 6px; border-radius: 4px; background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.15)); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); font-weight: 900; letter-spacing: 0.3px; white-space: nowrap;">&#128081; INHABER</span>
+            <span class="badge-rank badge-rank-admin" style="font-size: 8.5px; padding: 1.5px 6px; border-radius: 4px; background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.15)); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); font-weight: 900; letter-spacing: 0.3px; white-space: nowrap;">ðŸ‘ INHABER</span>
           </div>
         </div>
 
