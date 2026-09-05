@@ -646,6 +646,12 @@
   }
   /* RANK BADGES SYSTEM */
   .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+    .badge-rank-inhaber { background: linear-gradient(135deg, rgba(229,169,60,0.25) 0%, rgba(245,158,11,0.15) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 0 10px rgba(229,169,60,0.3); }
+  .badge-rank-coadmin { background: rgba(255,51,102,0.18); color: #ff3366; border: 1px solid rgba(255,51,102,0.45); box-shadow: 0 0 10px rgba(255,51,102,0.25); }
+  .badge-rank-developer { background: rgba(0,229,255,0.18); color: #00e5ff; border: 1px solid rgba(0,229,255,0.45); box-shadow: 0 0 10px rgba(0,229,255,0.25); }
+  .badge-rank-moderator { background: rgba(0,230,118,0.18); color: #00e676; border: 1px solid rgba(0,230,118,0.45); box-shadow: 0 0 10px rgba(0,230,118,0.25); }
+  .badge-rank-supporter { background: rgba(41,121,255,0.18); color: #2979ff; border: 1px solid rgba(41,121,255,0.45); box-shadow: 0 0 10px rgba(41,121,255,0.25); }
+  .badge-rank-donator { background: rgba(255,64,129,0.18); color: #ff4081; border: 1px solid rgba(255,64,129,0.45); box-shadow: 0 0 10px rgba(255,64,129,0.25); }
   .badge-rank-admin { background: linear-gradient(135deg, rgba(229,169,60,0.25) 0%, rgba(245,158,11,0.15) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 0 10px rgba(229,169,60,0.3); }
   .badge-rank-staff { background: rgba(56,189,248,0.18); color: #38bdf8; border: 1px solid rgba(56,189,248,0.45); box-shadow: 0 0 10px rgba(56,189,248,0.25); }
   .badge-rank-vip { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.15) 100%); color: #e879f9; border: 1px solid rgba(217,70,239,0.5); box-shadow: 0 0 12px rgba(168,85,247,0.35); }
@@ -671,6 +677,12 @@
 
   /* RANK BADGES SYSTEM */
   .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 5px; font-size: 9.5px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+    .badge-rank-inhaber { background: linear-gradient(135deg, rgba(229,169,60,0.25) 0%, rgba(245,158,11,0.15) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 0 10px rgba(229,169,60,0.3); }
+  .badge-rank-coadmin { background: rgba(255,51,102,0.18); color: #ff3366; border: 1px solid rgba(255,51,102,0.45); box-shadow: 0 0 10px rgba(255,51,102,0.25); }
+  .badge-rank-developer { background: rgba(0,229,255,0.18); color: #00e5ff; border: 1px solid rgba(0,229,255,0.45); box-shadow: 0 0 10px rgba(0,229,255,0.25); }
+  .badge-rank-moderator { background: rgba(0,230,118,0.18); color: #00e676; border: 1px solid rgba(0,230,118,0.45); box-shadow: 0 0 10px rgba(0,230,118,0.25); }
+  .badge-rank-supporter { background: rgba(41,121,255,0.18); color: #2979ff; border: 1px solid rgba(41,121,255,0.45); box-shadow: 0 0 10px rgba(41,121,255,0.25); }
+  .badge-rank-donator { background: rgba(255,64,129,0.18); color: #ff4081; border: 1px solid rgba(255,64,129,0.45); box-shadow: 0 0 10px rgba(255,64,129,0.25); }
   .badge-rank-admin { background: linear-gradient(135deg, rgba(229,169,60,0.25) 0%, rgba(245,158,11,0.15) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 0 10px rgba(229,169,60,0.3); }
   .badge-rank-staff { background: rgba(56,189,248,0.18); color: #38bdf8; border: 1px solid rgba(56,189,248,0.45); box-shadow: 0 0 10px rgba(56,189,248,0.25); }
   .badge-rank-vip { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.15) 100%); color: #e879f9; border: 1px solid rgba(217,70,239,0.5); box-shadow: 0 0 12px rgba(168,85,247,0.35); }
@@ -6914,24 +6926,25 @@ function getRankBadge(username, userRank) {
   }
   
   if (r === "admin" || r === "inhaber" || r === "owner" || (username && (username.toLowerCase() === "admin" || username.toLowerCase() === "kovak"))) {
-    return '<span class="badge-rank badge-rank-inhaber"><span style="color:#000;"></span> INHABER</span>';
+    return '<span class="badge-rank badge-rank-admin" style="font-size:8.5px;padding:2px 7px;border-radius:4px;background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(217,119,6,0.15));color:#fbbf24;border:1px solid rgba(245,158,11,0.4);font-weight:900;letter-spacing:0.3px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;box-shadow:0 0 10px rgba(229,169,60,0.3);"><i class="fas fa-crown"></i> INHABER</span>';
   } else if (r === "co-admin" || r === "coadmin") {
-    return '<span class="badge-rank badge-rank-coadmin"><span style="color:#fff;"></span> CO-ADMIN</span>';
+    return '<span class="badge-rank badge-rank-coadmin" style="font-size:8.5px;padding:2px 7px;border-radius:4px;background:rgba(255,51,102,0.18);color:#ff3366;border:1px solid rgba(255,51,102,0.45);font-weight:900;letter-spacing:0.3px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;box-shadow:0 0 10px rgba(255,51,102,0.25);"><i class="fas fa-shield-alt"></i> CO-ADMIN</span>';
   } else if (r === "developer" || r === "dev") {
-    return '<span class="badge-rank badge-rank-developer"><span style="color:#fff;"></span> DEVELOPER</span>';
+    return '<span class="badge-rank badge-rank-developer" style="font-size:8.5px;padding:2px 7px;border-radius:4px;background:rgba(0,229,255,0.18);color:#00e5ff;border:1px solid rgba(0,229,255,0.45);font-weight:900;letter-spacing:0.3px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;box-shadow:0 0 10px rgba(0,229,255,0.25);"><i class="fas fa-code"></i> DEVELOPER</span>';
   } else if (r === "moderator" || r === "mod") {
-    return '<span class="badge-rank badge-rank-moderator"><span style="color:#fff;"></span> MODERATOR</span>';
+    return '<span class="badge-rank badge-rank-moderator" style="font-size:8.5px;padding:2px 7px;border-radius:4px;background:rgba(0,230,118,0.18);color:#00e676;border:1px solid rgba(0,230,118,0.45);font-weight:900;letter-spacing:0.3px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;box-shadow:0 0 10px rgba(0,230,118,0.25);"><i class="fas fa-gavel"></i> MODERATOR</span>';
   } else if (r === "supporter" || r === "support") {
-    return '<span class="badge-rank badge-rank-supporter"><span style="color:#fff;"></span> SUPPORTER</span>';
+    return '<span class="badge-rank badge-rank-supporter" style="font-size:8.5px;padding:2px 7px;border-radius:4px;background:rgba(41,121,255,0.18);color:#2979ff;border:1px solid rgba(41,121,255,0.45);font-weight:900;letter-spacing:0.3px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;box-shadow:0 0 10px rgba(41,121,255,0.25);"><i class="fas fa-headset"></i> SUPPORTER</span>';
   } else if (r === "donator") {
-    return '<span class="badge-rank badge-rank-donator"><span style="color:#fff;"></span> DONATOR</span>';
+    return '<span class="badge-rank badge-rank-donator" style="font-size:8.5px;padding:2px 7px;border-radius:4px;background:rgba(255,64,129,0.18);color:#ff4081;border:1px solid rgba(255,64,129,0.45);font-weight:900;letter-spacing:0.3px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;box-shadow:0 0 10px rgba(255,64,129,0.25);"><i class="fas fa-heart"></i> DONATOR</span>';
   } else if (r === "vip") {
-    return '<span class="badge-rank badge-rank-vip"><span style="color:#000;"></span> VIP</span>';
+    return '<span class="badge-rank badge-rank-vip" style="font-size:8.5px;padding:2px 7px;border-radius:4px;background:linear-gradient(135deg,rgba(168,85,247,0.25) 0%,rgba(217,70,239,0.15) 100%);color:#e879f9;border:1px solid rgba(217,70,239,0.5);font-weight:900;letter-spacing:0.3px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(168,85,247,0.35);"><i class="fas fa-star"></i> VIP</span>';
   } else if (r === "elite") {
-    return '<span class="badge-rank badge-rank-elite"><span style="color:#fff;"></span> ELITE</span>';
+    return '<span class="badge-rank badge-rank-elite" style="font-size:8.5px;padding:2px 7px;border-radius:4px;background:rgba(249,115,22,0.18);color:#fb923c;border:1px solid rgba(249,115,22,0.45);font-weight:900;letter-spacing:0.3px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;box-shadow:0 0 10px rgba(249,115,22,0.25);"><i class="fas fa-bolt"></i> ELITE</span>';
   } else {
-    return '<span class="badge-rank badge-rank-premium"><span style="color:#fff;"></span> PREMIUM</span>';
+    return '<span class="badge-rank badge-rank-premium" style="font-size:8.5px;padding:2px 7px;border-radius:4px;background:rgba(59,130,246,0.18);color:#60a5fa;border:1px solid rgba(59,130,246,0.45);font-weight:900;letter-spacing:0.3px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;box-shadow:0 0 10px rgba(59,130,246,0.25);"><i class="fas fa-gem"></i> PREMIUM</span>';
   }
+}
 }
 
 function toggleHighlightUploadCard() {
