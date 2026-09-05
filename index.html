@@ -6382,79 +6382,85 @@ function filterUserConfigs() {
     coc: `<span style="background:rgba(16,185,129,0.12);color:#10b981;border:1px solid rgba(16,185,129,0.4);border-radius:3px;font-size:9.5px;font-weight:800;padding:1px 6px;letter-spacing:0.5px;white-space:nowrap;">CLASH OF CLANS</span>`,
     all: `<span style="background:#111524;color:#94a3b8;border:1px solid #1c2438;border-radius:3px;font-size:9.5px;font-weight:800;padding:1px 6px;white-space:nowrap;">ALLGEMEIN</span>`
   };
-
   container.innerHTML = filtered.map(c => {
     const displayAuthor = formatNameUpper(c.author || c.user || "ADMIN");
     const isOwner = (c.user === CURRENT_USER.name) || (c.author === CURRENT_USER.name) || (CURRENT_USER.key && c.key === CURRENT_USER.key) || CURRENT_USER.is_admin;
-    const tagHtml = gameTags[c.game] || `<span style="background:#111524;color:#94a3b8;border:1px solid #1c2438;border-radius:3px;font-size:9.5px;font-weight:800;padding:1px 6px;white-space:nowrap;">${(c.game||'ALLE').toUpperCase()}</span>`;
+    const tagHtml = gameTags[c.game] || `<span style="background:rgba(255,255,255,0.06);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);border-radius:4px;font-size:9.5px;font-weight:800;padding:2px 7px;letter-spacing:0.5px;white-space:nowrap;">${(c.game||'ALLE').toUpperCase()}</span>`;
     const sizeStr = c.size ? formatBytes(c.size) : '';
     const authorAvatar = getAvatarUrl(displayAuthor);
     const ext = getFileExtension(c.filename || c.name);
     const isLiked = Array.isArray(c.likedBy) && c.likedBy.includes(CURRENT_USER.name);
 
     return `
-      <div style="background:#090c14;border:1px solid #171f2e;border-radius:6px;padding:9px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:all .15s ease;" onmouseover="this.style.borderColor='#e5a93c';this.style.background='#0d111a'" onmouseout="this.style.borderColor='#171f2e';this.style.background='#090c14'">
-        <!-- LEFT: Extension Badge + Two Clean Lines (Title line + Meta line) -->
-        <div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1;">
-          <!-- Extension Badge -->
-          <span style="background:rgba(14,165,233,0.12);border:1px solid rgba(14,165,233,0.35);color:#38bdf8;font-size:9.5px;font-weight:900;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;flex-shrink:0;">${escapeHtml(ext)}</span>
+      <div style="background: linear-gradient(90deg, #090c14 0%, #0c101b 100%); border: 1px solid #171f2e; border-radius: 8px; padding: 9px 14px; display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 6px; transition: all .15s ease;" onmouseover="this.style.borderColor='rgba(229,169,60,0.4)'; this.style.background='#0e1322'" onmouseout="this.style.borderColor='#171f2e'; this.style.background='linear-gradient(90deg, #090c14 0%, #0c101b 100%)'">
+        
+        <!-- LEFT: Extension Badge + Config Infos -->
+        <div style="display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;">
+          <!-- Sleek Extension Badge -->
+          <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.3); color: #38bdf8; font-size: 10px; font-weight: 900; font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; justify-content: center; text-transform: uppercase; flex-shrink: 0; letter-spacing: 0.5px;">
+            ${escapeHtml(ext)}
+          </div>
 
-          <div style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;">
-            <!-- Line 1: Name + Game Tag + Filename + Size -->
-            <div style="display:flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-              <span style="font-weight:900;color:#ffffff;font-size:13px;letter-spacing:0.2px;">${escapeHtml(c.name || c.filename)}</span>
+          <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1;">
+            <!-- Line 1: Config Name + Game Tag -->
+            <div style="display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              <span style="font-weight: 900; color: #ffffff; font-size: 13.5px; letter-spacing: 0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px;">
+                ${escapeHtml(c.name || c.filename)}
+              </span>
               ${tagHtml}
-              <span style="font-size:10.5px;color:#64748b;font-family:'JetBrains Mono',monospace;">${escapeHtml(c.filename || '')} ${sizeStr ? `(${sizeStr})` : ''}</span>
+              ${sizeStr ? `<span style="font-size: 10px; color: #64748b; font-family: 'JetBrains Mono', monospace; margin-left: 2px;">${sizeStr}</span>` : ''}
             </div>
 
             <!-- Line 2: Author + INHABER Badge + Date + Note -->
-            <div style="display:flex;align-items:center;gap:8px;font-size:10.5px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-              <div class="clickable-user" onclick="openUserProfileModal('${escapeHtml(displayAuthor)}')" style="display:inline-flex;align-items:center;gap:5px;flex-shrink:0;">
-                <img src="${authorAvatar}" style="width:14px;height:14px;border-radius:50%;object-fit:cover;" alt="Avatar">
-                <span style="font-weight:900;color:#ffffff;font-size:10.5px;">${escapeHtml(displayAuthor)}</span>
-                <span class="badge-rank badge-rank-admin" style="font-size:8.5px;padding:1px 5px;border-radius:3px;">&#128081; INHABER</span>
+            <div style="display: flex; align-items: center; gap: 7px; font-size: 10.5px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              <div class="clickable-user" onclick="openUserProfileModal('${escapeHtml(displayAuthor)}')" style="display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0; cursor: pointer;">
+                <img src="${authorAvatar}" style="width: 14px; height: 14px; border-radius: 3px; object-fit: cover;" alt="Avatar">
+                <span style="font-weight: 900; color: #ffffff; font-size: 10px; letter-spacing: 0.3px;">${escapeHtml(displayAuthor)}</span>
+                <span class="badge-rank badge-rank-admin" style="font-size: 8.5px; padding: 1px 5px; border-radius: 3px; background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.35); font-weight: 800;">&#128081; INHABER</span>
               </div>
-              <span style="color:#334155;">&#8226;</span>
-              <span style="color:#64748b;flex-shrink:0;">${c.date || ''}</span>
+              <span style="color: #334155;">&#8226;</span>
+              <span style="color: #64748b; flex-shrink: 0; font-size: 10px;">${c.date || 'Heute'}</span>
               ${c.desc ? `
-                <span style="color:#334155;">&#8226;</span>
-                <span style="color:#94a3b8;font-size:10.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(c.desc)}</span>
+                <span style="color: #334155;">&#8226;</span>
+                <span style="color: #94a3b8; font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px;" title="${escapeHtml(c.desc)}">${escapeHtml(c.desc)}</span>
               ` : ''}
             </div>
           </div>
         </div>
 
-        <!-- RIGHT: Like & DL + Action Buttons -->
-        <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;white-space:nowrap;">
-          <!-- Like Button -->
-          <button onclick="toggleConfigLike('${c.id}')" style="background:${isLiked ? 'rgba(244,63,94,0.18)' : '#0d111a'};border:1px solid ${isLiked ? '#f43f5e' : '#1c2436'};color:${isLiked ? '#f43f5e' : '#94a3b8'};padding:4px 7px;border-radius:4px;font-size:10px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:3px;transition:all .15s ease;" title="Like">
-            <span style="font-size:10.5px;">${isLiked ? '&#10084;&#65039;' : '&#9825;'}</span>
+        <!-- RIGHT: Round Like Pill, Round Download Pill, Action Buttons -->
+        <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0; white-space: nowrap;">
+          
+          <!-- Runder Like Pill Button -->
+          <button onclick="toggleConfigLike('${c.id}')" style="background: ${isLiked ? 'rgba(244,63,94,0.16)' : 'rgba(255,255,255,0.03)'}; border: 1px solid ${isLiked ? '#f43f5e' : 'rgba(255,255,255,0.08)'}; color: ${isLiked ? '#f43f5e' : '#94a3b8'}; height: 28px; padding: 0 9px; border-radius: 20px; font-size: 10.5px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all .15s ease;" title="Like">
+            <span style="font-size: 11px;">${isLiked ? '&#10084;&#65039;' : '&#9825;'}</span>
             <span>${c.likes || 0}</span>
           </button>
           
-          <!-- Download Counter -->
-          <div style="background:#0d111a;border:1px solid #1c2436;color:#94a3b8;padding:4px 6px;border-radius:4px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:3px;" title="Downloads">
-            <span style="color:#e5a93c;">&#11015;</span> ${c.downloads || 0}
+          <!-- Runder Download Pill Counter -->
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #94a3b8; height: 28px; padding: 0 9px; border-radius: 20px; font-size: 10.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;" title="Downloads">
+            <span style="color: #38bdf8; font-size: 11px;">&#11015;</span>
+            <span>${c.downloads || 0}</span>
           </div>
 
           <!-- Download Button -->
-          <button onclick="downloadConfig('${c.id}')" style="background:linear-gradient(135deg,#e5a93c,#c68924);border:none;color:#0b0c10;padding:5px 10px;border-radius:4px;font-size:10.5px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:3px;box-shadow:0 2px 6px rgba(229,169,60,0.25);" title="Download">
-            &#11015; Download
+          <button onclick="downloadConfig('${c.id}')" style="height: 28px; background: linear-gradient(135deg, #e5a93c, #c68924); border: none; color: #0b0c10; padding: 0 11px; border-radius: 6px; font-size: 10.5px; font-weight: 900; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(229,169,60,0.25); transition: all .15s ease;" onmouseover="this.style.filter='brightness(1.12)'" onmouseout="this.style.filter='none'" title="Download">
+            <span>&#11015;</span> Download
           </button>
 
           <!-- Preview Button -->
-          <button onclick="previewConfig('${c.id}')" style="background:#101420;border:1px solid #1f273a;color:#f8fafc;padding:5px 8px;border-radius:4px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:3px;" title="Vorschau">
-            &#128065; Vorschau
+          <button onclick="previewConfig('${c.id}')" style="height: 28px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #f8fafc; padding: 0 9px; border-radius: 6px; font-size: 10.5px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all .15s ease;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'" title="Vorschau">
+            <span>&#128065;</span> Vorschau
           </button>
 
           <!-- Edit Button -->
-          <button onclick="openConfigEditModal('${c.id}')" style="background:#101420;border:1px solid #1f273a;color:#fbbf24;padding:5px 7px;border-radius:4px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;" title="Editieren">
+          <button onclick="openConfigEditModal('${c.id}')" style="width: 28px; height: 28px; border-radius: 6px; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25); color: #38bdf8; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all .15s ease;" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='rgba(56,189,248,0.08)'" title="Editieren">
             &#9999;&#65039;
           </button>
 
           <!-- Delete Button -->
           ${isOwner ? `
-            <button onclick="deleteUserConfig('${c.id}')" class="action-btn action-btn-del" style="padding:5px 7px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;" title="LÃ¶schen">
+            <button onclick="deleteUserConfig('${c.id}')" style="width: 28px; height: 28px; border-radius: 6px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #f87171; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all .15s ease;" onmouseover="this.style.background='rgba(239,68,68,0.2)'" onmouseout="this.style.background='rgba(239,68,68,0.08)'" title="LÃ¶schen">
               &#128465;&#65039;
             </button>
           ` : ''}
