@@ -6278,10 +6278,10 @@ function renderGuestbookEntries(entries = []) {
               <b class="clickable-user" onclick="openUserProfileModal('${escapeHtml(entry.author)}')" style="color:#ffffff;font-size:12px;">${escapeHtml(entry.author)}</b>
               <span style="font-size:10px;color:#64748b;">${entry.time || ''}</span>
             </div>
-            ${(isMe || isOwner) ? `<button onclick="deleteGuestbookEntry('${entry.id}')" style="background:none;border:none;color:#f43f5e;font-size:10px;cursor:pointer;font-weight:700;">&#128465;&#65039; L&#246;schen</button>` : ''}
+            ${(isMe || isOwner) ? `<button onclick="deleteGuestbookEntry('${entry.id}')" style="background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.2);color:#f43f5e;font-size:9px;padding:4px 8px;border-radius:4px;cursor:pointer;font-weight:800;letter-spacing:0.5px;transition:all 0.2s ease;" onmouseover="this.style.background='rgba(244,63,94,0.2)';this.style.borderColor='rgba(244,63,94,0.4)';" onmouseout="this.style.background='rgba(244,63,94,0.1)';this.style.borderColor='rgba(244,63,94,0.2)';">L&Ouml;SCHEN</button>` : ''}
           </div>
           <div style="color:#cbd5e1;font-size:12px;line-height:1.4;word-break:break-word;">
-            ${escapeHtml(entry.text)}
+            ${escapeHtml(entry.content)}
           </div>
         </div>
       </div>
@@ -7866,6 +7866,8 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
+
 
 
 
