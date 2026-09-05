@@ -1,0 +1,32 @@
+﻿[
+  {
+    "id": "cfg_semi_immortal",
+    "key": "HYS-VAL-1D-HS9E-F0KL",
+    "user": "Admin",
+    "author": "Admin",
+    "role": "Inhaber",
+    "game": "valorant",
+    "name": "SEMI - IMMORTAL",
+    "desc": "Keine Beschreibung",
+    "filename": "semi.css",
+    "size": 2048,
+    "date": "05.09.2026",
+    "timestamp": 1788597000000,
+    "contentB64": "LyogSHlTY2hvb2wgU0VNSSAtIElNTU9SVEFMIFZhbG9yYW50IENvbmZpZyAqLwouYWltYm90LWZvdj17IDQuMCB9OwouYWltYm90LXNtb290aD17IDEyLjAgfTsKLmVzcC1ib3g9eyB0cnVlIH07Ci5lc3Atc2tlbGV0b249eyB0cnVlIH07Ci5yY3M9eyB0cnVlIH07"
+  },
+  {
+    "id": "cfg_immo",
+    "key": "HYS-VAL-1D-HS9E-F0KL",
+    "user": "Admin",
+    "author": "Admin",
+    "role": "Inhaber",
+    "game": "valorant",
+    "name": "Immo",
+    "desc": "Keine Beschreibung",
+    "filename": "default.css",
+    "size": 2048,
+    "date": "05.09.2026",
+    "timestamp": 1788596000000,
+    "contentB64": "LyogSHlTY2hvb2wgSW1tbyBWYWxvcmFudCBDb25maWcgKi8KLmFpbWJvdC1mb3Y9eyAzLjUgfTsKLmFpbWJvdC1zbW9vdGg9eyAxNS4wIH07Ci5lc3AtYm94PXsgdHJ1ZSB9OwouZXNwLXZpc2libGUtb25seT17IHRydWUgfTs="
+  }
+]
