@@ -7678,38 +7678,17 @@ function renderActiveADMINTicketRoom(t) {
     const badge = document.getElementById('admin-ticket-header-badge');
     if (badge) {
         if (t.status === 'closed') {
-            badge.textContent = 'GESCHLOSSEN';
-            badge.style.background = '#64748b22';
-            badge.style.color = '#94a3b8';
-        } else if (t.status === 'in_progress') {
-            badge.textContent = `IN BEARBEITUNG (${t.assignedTo || 'Team'})`;
-            badge.style.background = '#38bdf822';
-            badge.style.color = '#38bdf8';
-        } else {
-            badge.textContent = 'NEU / WARTET';
-            badge.style.background = '#e5a93c22';
-            badge.style.color = '#e5a93c';
-        }
-    }
-
-    const userLbl = document.getElementById('admin-ticket-user-label');
-    if (userLbl) {
-        userLbl.innerHTML = `Kunde: <b style="color:#e5a93c;">${escapeHtml(t.customerName || 'Kunde')}</b> ${t.customerKey ? `(${escapeHtml(t.customerKey)})` : ''}`;
-    }
-
-    const btnClaim = document.getElementById('btn-claim-ticket');
-    const btnClose = document.getElementById('btn-close-ticket');
-    const btnDel = document.getElementById('btn-delete-ticket');
-
-    if (btnClaim && btnClose) {
-        if (t.status === 'closed') {
             btnClaim.style.display = 'none';
-            btnClose.textContent = '🔓 Wieder öffnen';
-            btnClose.style.background = '#10b981';
+            btnClose.innerHTML = '&#128275; WIEDER &#214;FFNEN';
+            btnClose.style.background = 'rgba(16,185,129,0.15)';
+            btnClose.style.borderColor = 'rgba(16,185,129,0.4)';
+            btnClose.style.color = '#10b981';
         } else {
             btnClaim.style.display = t.assignedTo ? 'none' : 'inline-block';
-            btnClose.textContent = '🔒 Ticket Schließen';
-            btnClose.style.background = '#f43f5e';
+            btnClose.innerHTML = '&#128274; TICKET SCHLIE&#223;EN';
+            btnClose.style.background = 'rgba(244,63,94,0.15)';
+            btnClose.style.borderColor = 'rgba(244,63,94,0.4)';
+            btnClose.style.color = '#f43f5e';
         }
     }
 
@@ -7753,20 +7732,20 @@ function renderActiveADMINTicketRoom(t) {
         html += `
           <div style="display:flex;flex-direction:${flexDir};align-items:flex-end;gap:12px;margin-bottom:12px;width:100%;">
             
-            <div style="width:36px;height:36px;border-radius:10px;border:2px solid ${isStaff ? '#e5a93c' : '#38bdf8'};overflow:hidden;flex-shrink:0;box-shadow:0 0 10px ${isStaff ? 'rgba(229,169,60,0.3)' : 'rgba(56,189,248,0.3)'};">
+            <div onclick="openUserProfileModal('${escapeHtml(cleanSender)}')" style="cursor:pointer;width:34px;height:34px;border-radius:10px;border:2px solid ${isStaff ? '#e5a93c' : '#38bdf8'};overflow:hidden;flex-shrink:0;box-shadow:0 0 10px ${isStaff ? 'rgba(229,169,60,0.3)' : 'rgba(56,189,248,0.3)'};">
               <img src="${senderAvatar}" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
             </div>
             
-            <div style="display:flex;flex-direction:column;align-items:${align};max-width:75%;">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-direction:${flexDir};">
-                <b style="color:#ffffff;font-size:12px;letter-spacing:0.5px;">${escapeHtml(cleanSender)}</b>
-                <div style="display:flex;align-items:center;transform:scale(0.85);transform-origin:${isStaff ? 'right' : 'left'} center;">
+            <div style="display:flex;flex-direction:column;align-items:${align};max-width:80%;">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-direction:${flexDir};">
+                <b onclick="openUserProfileModal('${escapeHtml(cleanSender)}')" style="cursor:pointer;color:#ffffff;font-size:12px;letter-spacing:0.5px;">${escapeHtml(cleanSender)}</b>
+                <div style="display:flex;align-items:center;transform:scale(0.85);margin-top:-2px;">
                   ${badgeHtml}
                 </div>
                 <span style="font-size:9.5px;color:#64748b;font-weight:600;">${m.time || ''}</span>
               </div>
               
-              <div style="background:${bubbleBg};border:1px solid ${borderCol};color:#f8fafc;padding:12px 16px;border-radius:12px;border-bottom-${isStaff ? 'right' : 'left'}-radius:2px;font-size:11.5px;line-height:1.6;word-break:break-word;box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+              <div style="background:${bubbleBg};border:1px solid ${borderCol};color:#f8fafc;padding:10px 14px;border-radius:12px;border-bottom-${isStaff ? 'right' : 'left'}-radius:2px;font-size:11.5px;line-height:1.5;word-break:break-word;box-shadow:0 4px 15px rgba(0,0,0,0.2);">
                 ${escapeHtml(m.text)}
               </div>
             </div>
@@ -7918,6 +7897,8 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
+
 
 
 
