@@ -2040,12 +2040,12 @@
 
         <div>
           <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;display:flex;align-items:center;gap:4px;">&#127918; FREIGESCHALTETE CHEATS</div>
-          <div id="cfg-dash-cheats-wrap" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;"><span class="tag-product">ALLE CHEATS</span></div>
+          <div id="cfg-dash-cheats-wrap" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;"><span class="tag-product">&#128081; ALLE CHEATS</span></div>
         </div>
 
         <div>
           <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;display:flex;align-items:center;gap:4px;">&#9203; LAUFZEIT &amp; STATUS</div>
-          <div id="cfg-dash-expiry" style="color:#10b981;font-weight:800;font-size:12px;margin-top:4px;">Lifetime (Unbegrenzt)</div>
+          <div id="cfg-dash-expiry" style="color:#10b981;font-weight:800;font-size:12px;margin-top:4px;">&#8734; Lifetime (Unbegrenzt)</div>
         </div>
       </div>
     </div>
@@ -2765,17 +2765,17 @@ function applyUserPermissions() {
     }
   }
 
-    if(dashExpiry) {
+      if(dashExpiry) {
     if(CURRENT_USER.license && CURRENT_USER.license.expires_at && CURRENT_USER.license.duration !== "lifetime") {
       dashExpiry.innerHTML = `<span style="color:#e5a93c;font-weight:800;font-size:12px;">&#9203; Bis ${CURRENT_USER.license.expires_at}</span>`;
     } else {
-      dashExpiry.innerHTML = `<span style="color:#10b981;font-weight:800;font-size:12px;">Lifetime (Unbegrenzt)</span>`;
+      dashExpiry.innerHTML = `<span style="color:#10b981;font-weight:800;font-size:12px;">&#8734; Lifetime (Unbegrenzt)</span>`;
     }
   }
 
   if(dashCheats) {
     if(CURRENT_USER.is_admin) {
-      dashCheats.innerHTML = `<span class="tag-product">ALLE CHEATS</span>`;
+      dashCheats.innerHTML = `<span class="tag-product">&#128081; ALLE CHEATS</span>`;
     } else if(CURRENT_USER.key) {
       const defPerms = getDefaultPermissionsForKey(CURRENT_USER.key, CURRENT_USER.license);
       const curPerms = USER_PERMISSIONS[CURRENT_USER.key] || defPerms;
@@ -2797,7 +2797,7 @@ function applyUserPermissions() {
 
       dashCheats.innerHTML = gameBadges.length > 0 ? gameBadges.join(" ") : `<span style="color:#64748b;font-size:11px;">Keine Spiele freigeschaltet</span>`;
     } else {
-      dashCheats.innerHTML = `<span class="tag-product">ALLE CHEATS</span>`;
+      dashCheats.innerHTML = `<span class="tag-product">&#128081; ALLE CHEATS</span>`;
     }
   }
 
