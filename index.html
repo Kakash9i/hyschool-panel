@@ -6071,7 +6071,7 @@ async function saveUserProfile() {
     banner: bannerUrl,
     bio: bio,
     discord: discord,
-    rank: "inhaber",
+    rank: existing.rank || ["premium"],
     joined: existing.joined || "01.01.2026",
     guestbook: existing.guestbook || []
   };
@@ -6082,6 +6082,7 @@ async function saveUserProfile() {
 
   try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
   try { localStorage.setItem("hyschool_admin_avatar", avatarUrl); } catch(_) {}
+  try { localStorage.setItem("hyschool_admin_banner", bannerUrl); } catch(_) {}
   try { localStorage.setItem("hyschool_admin_bio", bio); } catch(_) {}
   try { localStorage.setItem("hyschool_admin_discord", discord); } catch(_) {}
 
@@ -6133,7 +6134,11 @@ function openUserProfileModal(usernameOrKey) {
   const isOwner = usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || CURRENT_USER.is_admin;
   
   if(bannerEl) {
-    bannerEl.style.backgroundImage = (prof.banner) ? `url(${prof.banner})` : `linear-gradient(45deg, #1e293b, #0f172a)`;
+    let bUrl = prof.banner;
+    if (isOwner && !bUrl) {
+      try { bUrl = localStorage.getItem("hyschool_admin_banner") || bUrl; } catch(e){}
+    }
+    bannerEl.style.backgroundImage = (bUrl) ? `url(${bUrl})` : `linear-gradient(45deg, #1e293b, #0f172a)`;
   }
   if(btnUploadBanner) {
     btnUploadBanner.style.display = isOwner ? "block" : "none";
@@ -7866,6 +7871,8 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
+
 
 
 
