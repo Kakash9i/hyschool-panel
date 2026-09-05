@@ -1230,20 +1230,22 @@
             <span id="profile-modal-badge-wrap"></span>
           </div>
           
-          <!-- SMART ROLE MANAGER -->
-          <div id="profile-role-manager" style="display:none;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:4px 8px;border-radius:8px;backdrop-filter:blur(4px);">
-            <span style="font-size:9px;color:#94a3b8;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;">&#9881;&#65039; EDIT ROLE</span>
-            <select id="profile-role-select" onchange="updateProfileRole()" style="background:transparent;border:none;color:#cbd5e1;font-size:11px;font-weight:800;outline:none;cursor:pointer;text-transform:uppercase;">
-              <option value="premium">PREMIUM</option>
-              <option value="donator">DONATOR</option>
-              <option value="vip">VIP</option>
-              <option value="elite">ELITE</option>
-              <option value="supporter">SUPPORTER</option>
-              <option value="moderator">MODERATOR</option>
-              <option value="developer">DEVELOPER</option>
-              <option value="coadmin">CO-ADMIN</option>
-              <option value="admin">INHABER</option>
-            </select>
+          <!-- MULTI-ROLE MANAGER -->
+          <div id="profile-role-manager" style="display:none;position:relative;">
+            <button onclick="document.getElementById('role-dropdown-menu').style.display = document.getElementById('role-dropdown-menu').style.display === 'none' ? 'block' : 'none';" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);padding:6px 12px;border-radius:8px;backdrop-filter:blur(4px);color:#94a3b8;font-size:9px;font-weight:900;letter-spacing:0.5px;cursor:pointer;text-transform:uppercase;">
+              &#9881;&#65039; EDIT ROLES
+            </button>
+            <div id="role-dropdown-menu" style="display:none;position:absolute;top:100%;right:0;margin-top:8px;background:#090b12;border:1px solid #222c44;padding:12px;border-radius:10px;z-index:100;min-width:160px;box-shadow:0 10px 40px rgba(0,0,0,0.8);display:flex;flex-direction:column;gap:8px;">
+              <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:#cbd5e1;font-weight:800;cursor:pointer;"><input type="checkbox" class="role-checkbox" value="premium" onchange="updateProfileRoles()"> PREMIUM</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:#cbd5e1;font-weight:800;cursor:pointer;"><input type="checkbox" class="role-checkbox" value="donator" onchange="updateProfileRoles()"> DONATOR</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:#cbd5e1;font-weight:800;cursor:pointer;"><input type="checkbox" class="role-checkbox" value="vip" onchange="updateProfileRoles()"> VIP</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:#cbd5e1;font-weight:800;cursor:pointer;"><input type="checkbox" class="role-checkbox" value="elite" onchange="updateProfileRoles()"> ELITE</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:#cbd5e1;font-weight:800;cursor:pointer;"><input type="checkbox" class="role-checkbox" value="supporter" onchange="updateProfileRoles()"> SUPPORTER</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:#cbd5e1;font-weight:800;cursor:pointer;"><input type="checkbox" class="role-checkbox" value="moderator" onchange="updateProfileRoles()"> MODERATOR</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:#cbd5e1;font-weight:800;cursor:pointer;"><input type="checkbox" class="role-checkbox" value="developer" onchange="updateProfileRoles()"> DEVELOPER</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:#cbd5e1;font-weight:800;cursor:pointer;"><input type="checkbox" class="role-checkbox" value="co-admin" onchange="updateProfileRoles()"> CO-ADMIN</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:#cbd5e1;font-weight:800;cursor:pointer;"><input type="checkbox" class="role-checkbox" value="admin" onchange="updateProfileRoles()"> INHABER</label>
+            </div>
           </div>
         </div>
         
@@ -6141,8 +6143,12 @@ function openUserProfileModal(usernameOrKey) {
   if(roleManager) {
     if(CURRENT_USER.is_admin || (CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_staff)) {
       roleManager.style.display = "flex";
-      const roleSelect = document.getElementById("profile-role-select");
-      if(roleSelect) roleSelect.value = (prof.rank || "premium").toLowerCase();
+      const checkboxes = document.querySelectorAll(".role-checkbox");
+      let currentRanks = prof.rank || ["premium"];
+      if(typeof currentRanks === "string") currentRanks = currentRanks.split(",").map(r => r.trim().toLowerCase());
+      checkboxes.forEach(cb => {
+        cb.checked = currentRanks.includes(cb.value.toLowerCase());
+      });
     } else {
       roleManager.style.display = "none";
     }
@@ -6158,24 +6164,37 @@ function openUserProfileModal(usernameOrKey) {
   if(modal) modal.style.display = "flex";
 }
 
-function updateProfileRole() {
-  const select = document.getElementById("profile-role-select");
-  if(!select || !_activeProfileTarget) return;
-  const newRole = select.value;
+function updateProfileRoles() {
+  if(!_activeProfileTarget) return;
+  const checkboxes = document.querySelectorAll(".role-checkbox");
+  let selected = [];
+  checkboxes.forEach(cb => {
+    if(cb.checked) selected.push(cb.value);
+  });
+  if(selected.length === 0) selected = ["premium"];
   
   if(!USER_PROFILES[_activeProfileTarget]) {
     USER_PROFILES[_activeProfileTarget] = { username: _activeProfileTarget };
   }
-  USER_PROFILES[_activeProfileTarget].rank = newRole;
+  USER_PROFILES[_activeProfileTarget].rank = selected;
   
   const badgeEl = document.getElementById("profile-modal-badge-wrap");
-  if(badgeEl) badgeEl.innerHTML = getRankBadge(_activeProfileTarget, newRole);
+  if(badgeEl) badgeEl.innerHTML = getRankBadge(_activeProfileTarget, selected);
   
   if(typeof renderStaffTable === "function") renderStaffTable();
   if(typeof filterUserConfigs === "function") filterUserConfigs();
-  
-  showToast("Rolle lokal aktualisiert (" + newRole.toUpperCase() + ")", "ok");
 }
+
+// Close dropdown if clicking outside
+document.addEventListener("click", function(e) {
+  const dropdown = document.getElementById("role-dropdown-menu");
+  const manager = document.getElementById("profile-role-manager");
+  if (dropdown && manager && dropdown.style.display === "flex" || dropdown.style.display === "block") {
+    if (!manager.contains(e.target)) {
+      dropdown.style.display = "none";
+    }
+  }
+});
 
 function handleBannerUpload(e) {
   const file = e.target.files[0];
@@ -7032,27 +7051,41 @@ let _activePlayerHighlight = null;
 
 function getRankBadge(username, userRank) {
   const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES[username]) ? USER_PROFILES[username] : {};
-  const r = (userRank || prof.rank || "kunde").toLowerCase();
+  let ranksInput = userRank || prof.rank || "premium";
+  let ranks = [];
   
-  if (r === "admin" || r === "inhaber") {
-    return '<span class="badge-rank badge-rank-admin">&#128081; INHABER</span>';
-  } else if (r === "co-admin" || r.includes("co-admin")) {
-    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; CO-ADMIN</span>';
-  } else if (r === "supporter" || r.includes("support")) {
-    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; SUPPORTER</span>';
-  } else if (r === "moderator" || r.includes("mod")) {
-    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; MODERATOR</span>';
-  } else if (r === "donator" || r.includes("donat")) {
-    return '<span class="badge-rank badge-rank-donator">&#128150; DONATOR</span>';
-  } else if (r === "vip") {
-    return '<span class="badge-rank badge-rank-vip">&#11088; VIP</span>';
-  } else if (r === "elite") {
-    return '<span class="badge-rank badge-rank-elite">&#9889; ELITE</span>';
-  } else if (r === "premium") {
-    return '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
-  } else {
-    return '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
+  if (Array.isArray(ranksInput)) {
+    ranks = ranksInput;
+  } else if (typeof ranksInput === "string") {
+    ranks = ranksInput.split(",").map(s => s.trim());
   }
+  
+  if (ranks.length === 0) ranks = ["premium"];
+  
+  let html = "";
+  for (let r of ranks) {
+    r = r.toLowerCase();
+    if (r === "admin" || r === "inhaber") {
+      html += '<span class="badge-rank badge-rank-admin" style="margin-right:4px;">&#128081; INHABER</span>';
+    } else if (r === "co-admin" || r.includes("co-admin") || r === "coadmin") {
+      html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;">&#128737;&#65039; CO-ADMIN</span>';
+    } else if (r === "supporter" || r.includes("support")) {
+      html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;">&#128737;&#65039; SUPPORTER</span>';
+    } else if (r === "moderator" || r.includes("mod")) {
+      html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;">&#128737;&#65039; MODERATOR</span>';
+    } else if (r === "developer" || r.includes("dev")) {
+      html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;">&#128737;&#65039; DEVELOPER</span>';
+    } else if (r === "donator" || r.includes("donat")) {
+      html += '<span class="badge-rank badge-rank-donator" style="margin-right:4px;">&#128150; DONATOR</span>';
+    } else if (r === "vip") {
+      html += '<span class="badge-rank badge-rank-vip" style="margin-right:4px;">&#11088; VIP</span>';
+    } else if (r === "elite") {
+      html += '<span class="badge-rank badge-rank-elite" style="margin-right:4px;">&#9889; ELITE</span>';
+    } else if (r === "premium") {
+      html += '<span class="badge-rank badge-rank-premium" style="margin-right:4px;">&#128142; PREMIUM</span>';
+    }
+  }
+  return html.trim() || '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
 }
 
 function toggleHighlightUploadCard() {
@@ -7796,6 +7829,9 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
+
+
 
 
 
