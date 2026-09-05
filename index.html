@@ -1988,8 +1988,8 @@
 <script>
 const MASTER_PASS = "admin1337";
 const REPO        = "Kakash9i/loader";
-const API_BASE    = `https://api.github.com/repos/${REPO}/contents`;
-const RAW_BASE    = `https://raw.githubusercontent.com/${REPO}/main`;
+const API_BASE    = "https://api.github.com/repos/" + REPO + "/contents";
+const RAW_BASE    = "https://raw.githubusercontent.com/" + REPO + "/main";
 
 const CHEATS = [
   { key:"valorant", label:"VALORANT", color:"#ffcc00", prefix:"val" },
@@ -1998,6 +1998,16 @@ const CHEATS = [
   { key:"naraka", label:"NARAKA BLADEPOINT", color:"#ffa200", prefix:"nar" },
   { key:"coc", label:"CLASH OF CLANS", color:"#ffcc00", prefix:"coc" }
 ];
+
+function formatNameUpper(n) {
+  if (!n) return 'ADMIN';
+  var s = String(n).trim();
+  var low = s.toLowerCase();
+  if (low === 'admin' || low === 'kovak') return 'ADMIN';
+  if (low === 'admin (inhaber)' || low === 'admin(inhaber)') return 'ADMIN INHABER';
+  return s;
+}
+
 let CURRENT_USER = {
   is_admin: true,
   name: "ADMIN",
@@ -2233,7 +2243,7 @@ async function doLogin() {
     const isMasterUser = !userInput || lowUser === "ADMIN" || lowUser === "ADMIN" || lowUser === "inhaber";
 
     if (isMasterPass || isMasterUser || pwInput === MASTER_PASS || lowPw === "admin1337" || lowPw === "ADMIN" || lowPw === "ADMIN") {
-      const displayName = (userInput && lowUser !== "ADMIN") ? userInput : "ADMIN";
+      const displayName = "ADMIN";
       CURRENT_USER = {
         is_admin: true,
         is_staff: false,
@@ -5183,7 +5193,7 @@ async function logADMINAction(action, target, details) {
   const now = new Date().toLocaleString("de-DE");
   const logItem = {
     time: now,
-    user: `${CURRENT_USER.name} (${CURRENT_USER.role})`,
+    user: CURRENT_USER.is_admin ? "ADMIN INHABER" : `${CURRENT_USER.name} (${CURRENT_USER.role})`,
     action: action,
     target: target || "---",
     details: details || "---"
@@ -5368,7 +5378,7 @@ function renderChatMessages() {
         ${avatar}
         <div style="display:flex;flex-direction:column;${isMe ? 'align-items:flex-end;' : 'align-items:flex-start;'}">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-            <span class="clickable-user" onclick="openUserProfileModal('${escapeHtml(msg.user)}')" style="font-size:12px;font-weight:900;color:${isADMIN ? '#e5a93c' : (isCustomer ? '#10b981' : '#f8fafc')};">${escapeHtml(msg.user)}</span>
+            <span class="clickable-user" onclick="openUserProfileModal('${escapeHtml(msg.user)}')" style="font-size:12px;font-weight:900;color:${isADMIN ? '#e5a93c' : (isCustomer ? '#10b981' : '#f8fafc')};">${escapeHtml(formatNameUpper(msg.user))}</span>
             ${userBadge}
             <span style="font-size:10px;color:#64748b;font-weight:600;">${msg.time || ''}</span>
           </div>
@@ -6593,7 +6603,7 @@ function filterHighlights() {
   }
 
   container.innerHTML = filtered.map(h => {
-    const authorDisplayName = h.isCensored ? "&#128274; [Zensiert / Anonym]" : h.author;
+    const authorDisplayName = h.isCensored ? "&#128274; [Zensiert / Anonym]" : formatNameUpper(h.author);
     const authorAvatar = h.isCensored ? "https://api.dicebear.com/7.x/bottts/svg?seed=Incognito" : getAvatarUrl(h.author);
     const hasLiked = h.likedBy && h.likedBy.includes(CURRENT_USER.name);
     const isOwn = CURRENT_USER.is_admin || (!h.isCensored && h.author === CURRENT_USER.name);
@@ -6666,7 +6676,7 @@ function openHighlightPlayer(highlightId) {
   document.getElementById("hl-player-desc").textContent = h.desc || "Keine Beschreibung";
   document.getElementById("hl-player-like-count").textContent = h.likes || 0;
 
-  const authorDisplayName = h.isCensored ? "&#128274; [Zensiert / Anonym]" : h.author;
+  const authorDisplayName = h.isCensored ? "&#128274; [Zensiert / Anonym]" : formatNameUpper(h.author);
   const authorAvatar = h.isCensored ? "https://api.dicebear.com/7.x/bottts/svg?seed=Incognito" : getAvatarUrl(h.author);
 
   document.getElementById("hl-player-author-name").textContent = authorDisplayName;
