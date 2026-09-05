@@ -7114,56 +7114,65 @@ let _uploadedHighlightFile = null;
 let _activePlayerHighlight = null;
 
 function getRankBadge(username, userRank) {
-  const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES[username]) ? USER_PROFILES[username] : {};
-  let ranksInput = userRank || prof.rank || "premium";
-  let ranks = [];
-  
-  if (Array.isArray(ranksInput)) {
-    ranks = ranksInput;
-  } else if (typeof ranksInput === "string") {
-    ranks = ranksInput.split(",").map(s => s.trim());
-  }
-  
-  if (ranks.length === 0) ranks = ["premium"];
-  
-  const rolePriority = {
-    "admin": 1, "inhaber": 1,
-    "co-admin": 2, "coadmin": 2,
-    "developer": 3,
-    "moderator": 4,
-    "supporter": 5,
-    "elite": 6,
-    "vip": 7,
-    "donator": 8,
-    "premium": 9
-  };
-  
-  ranks.sort((a, b) => (rolePriority[a.toLowerCase()] || 99) - (rolePriority[b.toLowerCase()] || 99));
-  
-  let html = "";
-  for (let r of ranks) {
-    r = r.toLowerCase();
-    if (r === "admin" || r === "inhaber") {
-      html += '<span class="badge-rank badge-rank-admin" style="margin-right:4px;box-shadow:0 0 10px rgba(229,169,60,0.25);border:1px solid rgba(229,169,60,0.5);">&#128081; INHABER</span>';
-    } else if (r === "co-admin" || r.includes("co-admin") || r === "coadmin") {
-      html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(239,68,68,0.25);border:1px solid rgba(239,68,68,0.5);">&#128737;&#65039; CO-ADMIN</span>';
-    } else if (r === "supporter" || r.includes("support")) {
-      html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(56,189,248,0.25);border:1px solid rgba(56,189,248,0.5);">&#128737;&#65039; SUPPORTER</span>';
-    } else if (r === "moderator" || r.includes("mod")) {
-      html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(168,85,247,0.25);border:1px solid rgba(168,85,247,0.5);">&#128737;&#65039; MODERATOR</span>';
-    } else if (r === "developer" || r.includes("dev")) {
-      html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(20,184,166,0.25);border:1px solid rgba(20,184,166,0.5);">&#128737;&#65039; DEVELOPER</span>';
-    } else if (r === "donator" || r.includes("donat")) {
-      html += '<span class="badge-rank badge-rank-donator" style="margin-right:4px;box-shadow:0 0 10px rgba(244,114,182,0.25);border:1px solid rgba(244,114,182,0.5);">&#128150; DONATOR</span>';
-    } else if (r === "vip") {
-      html += '<span class="badge-rank badge-rank-vip" style="margin-right:4px;box-shadow:0 0 10px rgba(250,204,21,0.25);border:1px solid rgba(250,204,21,0.5);">&#11088; VIP</span>';
-    } else if (r === "elite") {
-      html += '<span class="badge-rank badge-rank-elite" style="margin-right:4px;box-shadow:0 0 10px rgba(249,115,22,0.25);border:1px solid rgba(249,115,22,0.5);">&#9889; ELITE</span>';
-    } else if (r === "premium") {
-      html += '<span class="badge-rank badge-rank-premium" style="margin-right:4px;box-shadow:0 0 10px rgba(59,130,246,0.25);border:1px solid rgba(59,130,246,0.5);">&#128142; PREMIUM</span>';
+  try {
+    const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES && USER_PROFILES[username]) ? USER_PROFILES[username] : {};
+    let ranksInput = userRank || (prof && prof.rank) || "premium";
+    let ranks = [];
+    
+    if (Array.isArray(ranksInput)) {
+      ranks = ranksInput.filter(Boolean).map(String);
+    } else if (typeof ranksInput === "string") {
+      ranks = ranksInput.split(",").map(s => s.trim()).filter(Boolean);
     }
+    
+    if (!ranks || ranks.length === 0) ranks = ["premium"];
+    
+    const rolePriority = {
+      "admin": 1, "inhaber": 1,
+      "co-admin": 2, "coadmin": 2,
+      "developer": 3,
+      "moderator": 4,
+      "supporter": 5,
+      "elite": 6,
+      "vip": 7,
+      "donator": 8,
+      "premium": 9
+    };
+    
+    ranks.sort((a, b) => {
+      const sa = String(a || '').toLowerCase();
+      const sb = String(b || '').toLowerCase();
+      return (rolePriority[sa] || 99) - (rolePriority[sb] || 99);
+    });
+    
+    let html = "";
+    for (let r of ranks) {
+      if (!r) continue;
+      r = String(r).toLowerCase().trim();
+      if (r === "admin" || r === "inhaber") {
+        html += '<span class="badge-rank badge-rank-admin" style="margin-right:4px;box-shadow:0 0 10px rgba(229,169,60,0.25);border:1px solid rgba(229,169,60,0.5);">&#128081; INHABER</span>';
+      } else if (r === "co-admin" || r.includes("co-admin") || r === "coadmin") {
+        html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(239,68,68,0.25);border:1px solid rgba(239,68,68,0.5);">&#128737;&#65039; CO-ADMIN</span>';
+      } else if (r === "supporter" || r.includes("support")) {
+        html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(56,189,248,0.25);border:1px solid rgba(56,189,248,0.5);">&#128737;&#65039; SUPPORTER</span>';
+      } else if (r === "moderator" || r.includes("mod")) {
+        html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(168,85,247,0.25);border:1px solid rgba(168,85,247,0.5);">&#128737;&#65039; MODERATOR</span>';
+      } else if (r === "developer" || r.includes("dev")) {
+        html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(20,184,166,0.25);border:1px solid rgba(20,184,166,0.5);">&#128737;&#65039; DEVELOPER</span>';
+      } else if (r === "donator" || r.includes("donat")) {
+        html += '<span class="badge-rank badge-rank-donator" style="margin-right:4px;box-shadow:0 0 10px rgba(244,114,182,0.25);border:1px solid rgba(244,114,182,0.5);">&#128150; DONATOR</span>';
+      } else if (r === "vip") {
+        html += '<span class="badge-rank badge-rank-vip" style="margin-right:4px;box-shadow:0 0 10px rgba(250,204,21,0.25);border:1px solid rgba(250,204,21,0.5);">&#11088; VIP</span>';
+      } else if (r === "elite") {
+        html += '<span class="badge-rank badge-rank-elite" style="margin-right:4px;box-shadow:0 0 10px rgba(249,115,22,0.25);border:1px solid rgba(249,115,22,0.5);">&#9889; ELITE</span>';
+      } else if (r === "premium") {
+        html += '<span class="badge-rank badge-rank-premium" style="margin-right:4px;box-shadow:0 0 10px rgba(59,130,246,0.25);border:1px solid rgba(59,130,246,0.5);">&#128142; PREMIUM</span>';
+      }
+    }
+    return html.trim() || '<span class="badge-rank badge-rank-premium" style="box-shadow:0 0 10px rgba(59,130,246,0.25);border:1px solid rgba(59,130,246,0.5);">&#128142; PREMIUM</span>';
+  } catch(e) {
+    return '<span class="badge-rank badge-rank-premium" style="box-shadow:0 0 10px rgba(59,130,246,0.25);border:1px solid rgba(59,130,246,0.5);">&#128142; PREMIUM</span>';
   }
-  return html.trim() || '<span class="badge-rank badge-rank-premium" style="box-shadow:0 0 10px rgba(59,130,246,0.25);border:1px solid rgba(59,130,246,0.5);">&#128142; PREMIUM</span>';
 }
 
 function toggleHighlightUploadCard() {
@@ -7176,13 +7185,13 @@ function onHighlightFileSelected(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
     if(file.size > 28 * 1024 * 1024) {
-      alert("Video-Datei ist zu gro&#223; f&#252;r Direkt-Upload (Max 25MB). Bitte nutze einen YouTube/Medal/Streamable Link!");
+      alert("Video-Datei ist zu groß für Direkt-Upload (Max 25MB). Bitte nutze einen YouTube/Medal/Streamable Link!");
       input.value = "";
       return;
     }
     _uploadedHighlightFile = file;
-    document.getElementById("hl-drop-label").textContent = "&#127916; " + file.name;
-    document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB gew&#228;hlt";
+    document.getElementById("hl-drop-label").textContent = "🎥 " + file.name;
+    document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB gewählt";
     document.getElementById("hl-upload-url").value = "";
   }
 }
@@ -7193,11 +7202,11 @@ function handleHighlightFileDrop(e) {
   if (e.dataTransfer.files && e.dataTransfer.files[0]) {
     const file = e.dataTransfer.files[0];
     if(file.size > 28 * 1024 * 1024) {
-      alert("Video-Datei ist zu gro&#223; (Max 25MB)!");
+      alert("Video-Datei ist zu groß (Max 25MB)!");
       return;
     }
     _uploadedHighlightFile = file;
-    document.getElementById("hl-drop-label").textContent = "&#127916; " + file.name;
+    document.getElementById("hl-drop-label").textContent = "🎥 " + file.name;
     document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB abgelegt";
     document.getElementById("hl-upload-url").value = "";
   }
@@ -7206,8 +7215,8 @@ function handleHighlightFileDrop(e) {
 function onHighlightUrlChanged(val) {
   if(val && val.trim()) {
     _uploadedHighlightFile = null;
-    document.getElementById("hl-drop-label").textContent = "&#127916; Video hier ablegen oder klicken";
-    document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (f&#252;r gr&#246;&#223;ere Clips bitte Link nutzen)";
+    document.getElementById("hl-drop-label").textContent = "🎥 Video hier ablegen oder klicken";
+    document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (für größere Clips bitte Link nutzen)";
   }
 }
 
@@ -7219,8 +7228,8 @@ async function uploadHighlightClip() {
   const isCensored = document.getElementById("hl-censor-name-cb").checked;
   const file = _uploadedHighlightFile;
 
-  if(!title) { alert("Bitte gib einen Titel f&#252;r das Highlight ein!"); return; }
-  if(!urlInput && !file) { alert("Bitte gib einen Video-Link ein oder w&#228;hle eine Videodatei aus!"); return; }
+  if(!title) { alert("Bitte gib einen Titel für das Highlight ein!"); return; }
+  if(!urlInput && !file) { alert("Bitte gib einen Video-Link ein oder wähle eine Videodatei aus!"); return; }
 
   const btn = document.getElementById("hl-submit-btn");
   const progWrap = document.getElementById("hl-prog-wrap");
