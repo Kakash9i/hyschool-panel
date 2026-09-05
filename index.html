@@ -2297,6 +2297,15 @@
 </div>
 
 <script>
+var CURRENT_USER = { is_admin: true, name: "ADMIN", role: "Inhaber", permissions: { can_generate_keys: true, can_edit_keys: true, can_delete_keys: true, can_reset_hwid: true, can_pause_keys: true, can_manage_cheats: true, can_view_logs: true, can_manage_staff: true } };
+var ALL_STAFF = [];
+var ALL_LICENSES = [];
+var ALL_CONFIGS = [];
+var COMMUNITY_CLIPS = [];
+var USER_PERMISSIONS = {};
+var USER_PROFILES = {};
+var ALL_SEARCH_USERS = [];
+var ACTIVE_VIEWED_USER = null;
 const MASTER_PASS = "admin1337";
 const REPO        = "Kakash9i/loader";
 const API_BASE    = "https://api.github.com/repos/" + REPO + "/contents";
@@ -4109,7 +4118,7 @@ async function saveUserPermissions(fromDom = true) {
 }
 
 // LICENSES SYSTEM
-let ALL_LICENSES = [];
+ALL_LICENSES = ALL_LICENSES || [];
 let SELECTED_LIC_KEYS = new Set();
 let _activeModalKey = null;
 
@@ -5823,7 +5832,7 @@ async function clearTeamChat() {
 // ================================================================
 // PROFILES & GUESTBOOK DATA SYSTEM FOR ADMIN & MITARBEITER
 // ================================================================
-let USER_PROFILES = {};
+USER_PROFILES = USER_PROFILES || {};
 
 const PRESET_AVATARS = [
   "https://api.dicebear.com/7.x/bottts/svg?seed=Shadow",
@@ -6199,7 +6208,7 @@ async function deleteGuestbookEntry(entryId) {
 // ================================================================
 // CLOUD CONFIGS SYSTEM
 // ================================================================
-let ALL_CONFIGS = [];
+ALL_CONFIGS = ALL_CONFIGS || [];
 let _selectedConfigFile = null;
 
 function copyCurrentLicenseKey() {
@@ -7683,7 +7692,7 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 
 // ==================== USER SEARCH & PROFILE MODAL SYSTEM ====================
-let ALL_SEARCH_USERS = [];
+ALL_SEARCH_USERS = ALL_SEARCH_USERS || [];
 let ACTIVE_VIEWED_USER = null;
 
 function renderCleanRoleBadges(roles) {
