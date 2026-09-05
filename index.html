@@ -7,7 +7,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>HYSCHOOL ADMIN PANEL</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script>
 // ==================== USER SEARCH & PROFILE MODAL SYSTEM ====================
 let ALL_SEARCH_USERS = [];
 let ACTIVE_VIEWED_USER = null;
@@ -20,23 +20,23 @@ function renderCleanRoleBadges(roles) {
     return roles.map(r => {
         const low = String(r).toLowerCase().trim();
         if (low === 'inhaber' || low === 'admin') {
-            return '<span class="badge badge-rank-inhaber"><i class="fas fa-crown"></i> Ÿ‘‘ INHABER</span>';
+            return '<span class="badge badge-rank-inhaber"><i class="fas fa-crown"></i> INHABER</span>';
         } else if (low === 'co-admin' || low === 'coadmin') {
-            return '<span class="badge badge-rank-coadmin"><i class="fas fa-shield-alt"></i> Ÿ›¡ï¸ CO-ADMIN</span>';
+            return '<span class="badge badge-rank-coadmin"><i class="fas fa-shield-alt"></i> CO-ADMIN</span>';
         } else if (low === 'developer' || low === 'dev') {
-            return '<span class="badge badge-rank-developer"><i class="fas fa-code"></i> Ÿ’» DEVELOPER</span>';
+            return '<span class="badge badge-rank-developer"><i class="fas fa-code"></i> DEVELOPER</span>';
         } else if (low === 'moderator' || low === 'mod') {
-            return '<span class="badge badge-rank-moderator"><i class="fas fa-gavel"></i> Ÿ”¨ MODERATOR</span>';
+            return '<span class="badge badge-rank-moderator"><i class="fas fa-gavel"></i> MODERATOR</span>';
         } else if (low === 'supporter' || low === 'support') {
-            return '<span class="badge badge-rank-supporter"><i class="fas fa-headset"></i> ŸŽ§ SUPPORTER</span>';
+            return '<span class="badge badge-rank-supporter"><i class="fas fa-headset"></i> SUPPORTER</span>';
         } else if (low === 'donator') {
-            return '<span class="badge badge-rank-donator"><i class="fas fa-heart"></i> Ÿ’– DONATOR</span>';
+            return '<span class="badge badge-rank-donator"><i class="fas fa-heart"></i> DONATOR</span>';
         } else if (low === 'vip') {
-            return '<span class="badge badge-rank-vip"><i class="fas fa-star"></i>  VIP</span>';
+            return '<span class="badge badge-rank-vip"><i class="fas fa-star"></i> VIP</span>';
         } else if (low === 'elite') {
-            return '<span class="badge badge-rank-elite"><i class="fas fa-bolt"></i> š¡ ELITE</span>';
+            return '<span class="badge badge-rank-elite"><i class="fas fa-bolt"></i> ELITE</span>';
         } else {
-            return '<span class="badge badge-rank-premium"><i class="fas fa-gem"></i> Ÿ’Ž PREMIUM</span>';
+            return '<span class="badge badge-rank-premium"><i class="fas fa-gem"></i> PREMIUM</span>';
         }
     }).join(' ');
 }
@@ -320,15 +320,15 @@ function openUserProfileView(username) {
     const isStaffOrAdmin = (typeof CURRENT_USER !== 'undefined') && (CURRENT_USER.is_admin || CURRENT_USER.is_staff);
 
     const allAvailableRoles = [
-        { id: 'inhaber', label: 'Ÿ‘‘ INHABER' },
-        { id: 'co-admin', label: 'Ÿ›¡ï¸ CO-ADMIN' },
-        { id: 'developer', label: 'Ÿ’» DEVELOPER' },
-        { id: 'moderator', label: 'Ÿ”¨ MODERATOR' },
-        { id: 'supporter', label: 'ŸŽ§ SUPPORTER' },
-        { id: 'donator', label: 'Ÿ’– DONATOR' },
-        { id: 'vip', label: ' VIP' },
-        { id: 'elite', label: 'š¡ ELITE' },
-        { id: 'premium', label: 'Ÿ’Ž PREMIUM' }
+        { id: 'inhaber', label: 'INHABER' },
+        { id: 'co-admin', label: 'CO-ADMIN' },
+        { id: 'developer', label: 'DEVELOPER' },
+        { id: 'moderator', label: 'MODERATOR' },
+        { id: 'supporter', label: 'SUPPORTER' },
+        { id: 'donator', label: 'DONATOR' },
+        { id: 'vip', label: 'VIP' },
+        { id: 'elite', label: 'ELITE' },
+        { id: 'premium', label: 'PREMIUM' }
     ];
 
     let staffRoleManagerHtml = '';
@@ -7498,23 +7498,23 @@ function getRankBadge(username, userRank) {
   }
   
   if (r === "admin" || r === "inhaber" || r === "owner" || (username && (username.toLowerCase() === "admin" || username.toLowerCase() === "kovak"))) {
-    return '<span class="badge-rank badge-rank-inhaber"><span style="color:#000;">Ÿ‘‘</span> INHABER</span>';
+    return '<span class="badge-rank badge-rank-inhaber"><span style="color:#000;"></span> INHABER</span>';
   } else if (r === "co-admin" || r === "coadmin") {
-    return '<span class="badge-rank badge-rank-coadmin"><span style="color:#fff;">Ÿ›¡ï¸</span> CO-ADMIN</span>';
+    return '<span class="badge-rank badge-rank-coadmin"><span style="color:#fff;"></span> CO-ADMIN</span>';
   } else if (r === "developer" || r === "dev") {
-    return '<span class="badge-rank badge-rank-developer"><span style="color:#fff;">Ÿ’»</span> DEVELOPER</span>';
+    return '<span class="badge-rank badge-rank-developer"><span style="color:#fff;"></span> DEVELOPER</span>';
   } else if (r === "moderator" || r === "mod") {
-    return '<span class="badge-rank badge-rank-moderator"><span style="color:#fff;">Ÿ”¨</span> MODERATOR</span>';
+    return '<span class="badge-rank badge-rank-moderator"><span style="color:#fff;"></span> MODERATOR</span>';
   } else if (r === "supporter" || r === "support") {
-    return '<span class="badge-rank badge-rank-supporter"><span style="color:#fff;">ŸŽ§</span> SUPPORTER</span>';
+    return '<span class="badge-rank badge-rank-supporter"><span style="color:#fff;"></span> SUPPORTER</span>';
   } else if (r === "donator") {
-    return '<span class="badge-rank badge-rank-donator"><span style="color:#fff;">Ÿ’–</span> DONATOR</span>';
+    return '<span class="badge-rank badge-rank-donator"><span style="color:#fff;"></span> DONATOR</span>';
   } else if (r === "vip") {
     return '<span class="badge-rank badge-rank-vip"><span style="color:#000;"></span> VIP</span>';
   } else if (r === "elite") {
-    return '<span class="badge-rank badge-rank-elite"><span style="color:#fff;">š¡</span> ELITE</span>';
+    return '<span class="badge-rank badge-rank-elite"><span style="color:#fff;"></span> ELITE</span>';
   } else {
-    return '<span class="badge-rank badge-rank-premium"><span style="color:#fff;">Ÿ’Ž</span> PREMIUM</span>';
+    return '<span class="badge-rank badge-rank-premium"><span style="color:#fff;"></span> PREMIUM</span>';
   }
 }
 
@@ -8268,23 +8268,23 @@ function renderCleanRoleBadges(roles) {
     return roles.map(r => {
         const low = String(r).toLowerCase().trim();
         if (low === 'inhaber' || low === 'admin') {
-            return '<span class="badge badge-rank-inhaber"><i class="fas fa-crown"></i> Ÿ‘‘ INHABER</span>';
+            return '<span class="badge badge-rank-inhaber"><i class="fas fa-crown"></i> INHABER</span>';
         } else if (low === 'co-admin' || low === 'coadmin') {
-            return '<span class="badge badge-rank-coadmin"><i class="fas fa-shield-alt"></i> Ÿ›¡ï¸ CO-ADMIN</span>';
+            return '<span class="badge badge-rank-coadmin"><i class="fas fa-shield-alt"></i> CO-ADMIN</span>';
         } else if (low === 'developer' || low === 'dev') {
-            return '<span class="badge badge-rank-developer"><i class="fas fa-code"></i> Ÿ’» DEVELOPER</span>';
+            return '<span class="badge badge-rank-developer"><i class="fas fa-code"></i> DEVELOPER</span>';
         } else if (low === 'moderator' || low === 'mod') {
-            return '<span class="badge badge-rank-moderator"><i class="fas fa-gavel"></i> Ÿ”¨ MODERATOR</span>';
+            return '<span class="badge badge-rank-moderator"><i class="fas fa-gavel"></i> MODERATOR</span>';
         } else if (low === 'supporter' || low === 'support') {
-            return '<span class="badge badge-rank-supporter"><i class="fas fa-headset"></i> ŸŽ§ SUPPORTER</span>';
+            return '<span class="badge badge-rank-supporter"><i class="fas fa-headset"></i> SUPPORTER</span>';
         } else if (low === 'donator') {
-            return '<span class="badge badge-rank-donator"><i class="fas fa-heart"></i> Ÿ’– DONATOR</span>';
+            return '<span class="badge badge-rank-donator"><i class="fas fa-heart"></i> DONATOR</span>';
         } else if (low === 'vip') {
-            return '<span class="badge badge-rank-vip"><i class="fas fa-star"></i>  VIP</span>';
+            return '<span class="badge badge-rank-vip"><i class="fas fa-star"></i> VIP</span>';
         } else if (low === 'elite') {
-            return '<span class="badge badge-rank-elite"><i class="fas fa-bolt"></i> š¡ ELITE</span>';
+            return '<span class="badge badge-rank-elite"><i class="fas fa-bolt"></i> ELITE</span>';
         } else {
-            return '<span class="badge badge-rank-premium"><i class="fas fa-gem"></i> Ÿ’Ž PREMIUM</span>';
+            return '<span class="badge badge-rank-premium"><i class="fas fa-gem"></i> PREMIUM</span>';
         }
     }).join(' ');
 }
@@ -8568,15 +8568,15 @@ function openUserProfileView(username) {
     const isStaffOrAdmin = (typeof CURRENT_USER !== 'undefined') && (CURRENT_USER.is_admin || CURRENT_USER.is_staff);
 
     const allAvailableRoles = [
-        { id: 'inhaber', label: 'Ÿ‘‘ INHABER' },
-        { id: 'co-admin', label: 'Ÿ›¡ï¸ CO-ADMIN' },
-        { id: 'developer', label: 'Ÿ’» DEVELOPER' },
-        { id: 'moderator', label: 'Ÿ”¨ MODERATOR' },
-        { id: 'supporter', label: 'ŸŽ§ SUPPORTER' },
-        { id: 'donator', label: 'Ÿ’– DONATOR' },
-        { id: 'vip', label: ' VIP' },
-        { id: 'elite', label: 'š¡ ELITE' },
-        { id: 'premium', label: 'Ÿ’Ž PREMIUM' }
+        { id: 'inhaber', label: 'INHABER' },
+        { id: 'co-admin', label: 'CO-ADMIN' },
+        { id: 'developer', label: 'DEVELOPER' },
+        { id: 'moderator', label: 'MODERATOR' },
+        { id: 'supporter', label: 'SUPPORTER' },
+        { id: 'donator', label: 'DONATOR' },
+        { id: 'vip', label: 'VIP' },
+        { id: 'elite', label: 'ELITE' },
+        { id: 'premium', label: 'PREMIUM' }
     ];
 
     let staffRoleManagerHtml = '';
@@ -8867,13 +8867,13 @@ async function submitModalGuestbook(targetUsername) {
             <select id="modal-user-role-filter" onchange="filterModalUserSearch()" style="background:#090a0f;border:1px solid #1e2333;border-radius:8px;color:#cbd5e1;padding:10px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;min-width:160px;">
                 <option value="all">ŸŽ­ Alle Rollen</option>
                 <option value="inhaber">Ÿ‘‘ INHABER</option>
-                <option value="co-admin">Ÿ›¡ï¸ CO-ADMIN</option>
-                <option value="developer">Ÿ’» DEVELOPER</option>
-                <option value="moderator">Ÿ”¨ MODERATOR</option>
-                <option value="supporter">ŸŽ§ SUPPORTER</option>
+                <option value="co-admin">Ÿ› CO-ADMIN</option>
+                <option value="developer">Ÿ’ DEVELOPER</option>
+                <option value="moderator">Ÿ” MODERATOR</option>
+                <option value="supporter">ŸŽ SUPPORTER</option>
                 <option value="donator">Ÿ’– DONATOR</option>
                 <option value="vip"> VIP</option>
-                <option value="elite">š¡ ELITE</option>
+                <option value="elite">š ELITE</option>
                 <option value="premium">Ÿ’Ž PREMIUM</option>
             </select>
         </div>
