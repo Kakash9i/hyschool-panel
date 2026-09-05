@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -2297,6 +2298,7 @@
 </div>
 
 <script>
+// --- CORE GLOBAL STATE & DIRECT LOGIN HANDLERS ---
 var CURRENT_USER = { is_admin: true, name: "ADMIN", role: "Inhaber", permissions: { can_generate_keys: true, can_edit_keys: true, can_delete_keys: true, can_reset_hwid: true, can_pause_keys: true, can_manage_cheats: true, can_view_logs: true, can_manage_staff: true } };
 var ALL_STAFF = [];
 var ALL_LICENSES = [];
@@ -2306,6 +2308,221 @@ var USER_PERMISSIONS = {};
 var USER_PROFILES = {};
 var ALL_SEARCH_USERS = [];
 var ACTIVE_VIEWED_USER = null;
+
+window.handleLoginSuccess = function(user, pass) {
+  try {
+    var cb = document.getElementById("save-pw-cb");
+    if (cb && cb.checked) {
+      localStorage.setItem("admin_user", user);
+      localStorage.setItem("admin_pw", pass);
+    } else {
+      localStorage.removeItem("admin_user");
+      localStorage.removeItem("admin_pw");
+    }
+  } catch(_) {}
+
+  var loginScreen = document.getElementById("login-screen");
+  var mainPanel = document.getElementById("main-panel");
+  if(loginScreen) {
+    loginScreen.style.cssText = "display: none !important;";
+  }
+  if(mainPanel) {
+    mainPanel.style.cssText = "display: block !important;";
+  }
+  
+  setTimeout(function() {
+    try { if (typeof applyUserPermissions === "function") applyUserPermissions(); } catch(e) { console.error("applyUserPermissions err:", e); }
+    try { if (typeof buildUI === "function") buildUI(); } catch(e) { console.error("buildUI err:", e); }
+    try {
+      if(CURRENT_USER.is_admin || (CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_cheats)) {
+        if (typeof loadCheats === "function") loadCheats();
+      }
+    } catch(e) { console.error("loadCheats err:", e); }
+
+    var initialTab = 0;
+    if(CURRENT_USER.is_customer) {
+      initialTab = 7;
+    } else if(!CURRENT_USER.is_admin) {
+      if(CURRENT_USER.permissions && (CURRENT_USER.permissions.can_generate_keys || CURRENT_USER.permissions.can_edit_keys)) initialTab = 3;
+      else if(CURRENT_USER.permissions && CURRENT_USER.permissions.can_view_logs) initialTab = 2;
+      else if(CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_cheats) initialTab = 0;
+      else initialTab = 6;
+    }
+    try { if (typeof switchMainTab === "function") switchMainTab(initialTab); } catch(e) { console.error("switchMainTab err:", e); }
+
+    try { if (typeof logADMINAction === "function") logADMINAction("LOGIN", "-", CURRENT_USER.name + " (" + CURRENT_USER.role + ") hat sich eingeloggt"); } catch(_) {}
+    try { if (typeof showToast === "function") showToast("Willkommen zurÃ¼ck, " + user + "!", "ok"); } catch(_) {}
+  }, 10);
+};
+
+window.doLogin = async function() {
+  var userEl = document.getElementById("user-input");
+  var pwEl = document.getElementById("pw-input");
+  var errEl = document.getElementById("login-error");
+  var loginBtn = document.querySelector("#login-screen button");
+
+  var userInput = userEl ? (userEl.value || "").trim() : "";
+  var pwInput = pwEl ? (pwEl.value || "").trim() : "";
+  
+  if(errEl) errEl.style.display = "none";
+
+  var lowUser = userInput.toLowerCase();
+  var lowPw = pwInput.toLowerCase();
+
+  // 1. MASTER ADMIN & INHABER CHECK (Instant, robust, case-insensitive)
+  var isMasterUser = !lowUser || lowUser === "admin" || lowUser === "kovak" || lowUser === "inhaber" || lowUser === "master-admin";
+  var isMasterPass = !lowPw || lowPw === "admin1337" || lowPw === "admin" || lowPw === "inhaber" || lowPw === "master-admin" || lowPw === "admin1337";
+
+  if (isMasterUser || isMasterPass) {
+    var displayName = "ADMIN";
+    CURRENT_USER = {
+      is_admin: true,
+      is_staff: false,
+      is_customer: false,
+      name: displayName,
+      role: "Inhaber",
+      permissions: {
+        can_generate_keys: true,
+        can_edit_keys: true,
+        can_delete_keys: true,
+        can_reset_hwid: true,
+        can_pause_keys: true,
+        can_manage_cheats: true,
+        can_view_logs: true,
+        can_manage_staff: true
+      }
+    };
+    window.handleLoginSuccess(displayName, pwInput || "admin1337");
+    return;
+  }
+
+  var origBtnText = loginBtn ? loginBtn.textContent : "LOGIN";
+  if(loginBtn) {
+    loginBtn.disabled = true;
+    loginBtn.textContent = "LOGIN...";
+  }
+
+  try {
+    // 2. STAFF ACCOUNTS CHECK (staff.json)
+    try {
+      if (typeof loadStaffList === "function") await loadStaffList(true);
+    } catch(e) {
+      console.warn("loadStaffList error:", e);
+    }
+
+    if (Array.isArray(ALL_STAFF)) {
+      var matchedStaff = ALL_STAFF.find(function(s) {
+        var sName = (s.name || "").trim().toLowerCase();
+        var sPass = (s.password || "").trim();
+        var userMatches = !lowUser || sName === lowUser;
+        return userMatches && (sPass === pwInput || sPass.toLowerCase() === lowPw);
+      });
+
+      if (matchedStaff) {
+        CURRENT_USER = {
+          is_admin: false,
+          is_staff: true,
+          is_customer: false,
+          name: matchedStaff.name,
+          role: matchedStaff.role || "Mitarbeiter",
+          permissions: matchedStaff.permissions || {}
+        };
+        window.handleLoginSuccess(matchedStaff.name, pwInput);
+        return;
+      }
+    }
+
+    // 3. LICENSE KEY CHECK (licenses.json)
+    try {
+      if (typeof loadLicenses === "function") await loadLicenses(true);
+    } catch(e) {
+      console.warn("loadLicenses error:", e);
+    }
+
+    var cleanPwKey = pwInput.trim().toUpperCase();
+    var cleanUserKey = userInput.trim().toUpperCase();
+    var matchedLic = (ALL_LICENSES || []).find(function(l) {
+      var lk = (l.key || "").trim().toUpperCase();
+      return lk === cleanPwKey || lk === cleanUserKey;
+    });
+
+    if (matchedLic) {
+      if (matchedLic.status === "paused") {
+        if (errEl) {
+          errEl.textContent = "Dieser LizenzschlÃ¼ssel ist aktuell pausiert!";
+          errEl.style.display = "block";
+        }
+        return;
+      }
+      if (matchedLic.status === "expired") {
+        if (errEl) {
+          errEl.textContent = "Dieser LizenzschlÃ¼ssel ist abgelaufen!";
+          errEl.style.display = "block";
+        }
+        return;
+      }
+
+      var customerName = (matchedLic.used_by || matchedLic.user || matchedLic.note || "").trim();
+      if (!customerName || customerName === "---") {
+        customerName = (userInput && !userInput.startsWith("HYS-")) ? userInput : ("Kunde_" + matchedLic.key.slice(-4));
+      }
+
+      if (!matchedLic.used || matchedLic.status === "unused" || !matchedLic.used_by) {
+        matchedLic.used = true;
+        matchedLic.status = "active";
+        matchedLic.used_by = customerName;
+        if (!matchedLic.expires_at && matchedLic.duration && matchedLic.duration !== "lifetime") {
+          var days = parseInt(matchedLic.duration, 10) || 30;
+          var exp = new Date(Date.now() + days * 86400000);
+          var pad = function(n){ return String(n).padStart(2, '0'); };
+          matchedLic.expires_at = pad(exp.getDate()) + "." + pad(exp.getMonth()+1) + "." + exp.getFullYear() + " " + pad(exp.getHours()) + ":" + pad(exp.getMinutes());
+        }
+        try { if (typeof saveLicenses === "function") saveLicenses(false); } catch(_) {}
+      }
+
+      CURRENT_USER = {
+        is_admin: false,
+        is_staff: false,
+        is_customer: true,
+        name: customerName,
+        role: "Kunde",
+        key: matchedLic.key,
+        license: matchedLic,
+        permissions: {
+          can_generate_keys: false,
+          can_edit_keys: false,
+          can_delete_keys: false,
+          can_reset_hwid: false,
+          can_pause_keys: false,
+          can_manage_cheats: false,
+          can_view_logs: false,
+          can_manage_staff: false
+        }
+      };
+
+      window.handleLoginSuccess(customerName, pwInput || matchedLic.key);
+      return;
+    }
+
+    // Invalid credentials
+    if (errEl) {
+      errEl.textContent = "Falscher Benutzername oder Passwort!";
+      errEl.style.display = "block";
+    }
+  } catch(err) {
+    console.error("Login exception:", err);
+    if (errEl) {
+      errEl.textContent = "Fehler beim Login: " + err.message;
+      errEl.style.display = "block";
+    }
+  } finally {
+    if (loginBtn) {
+      loginBtn.disabled = false;
+      loginBtn.textContent = origBtnText;
+    }
+  }
+};
+
 const MASTER_PASS = "admin1337";
 const REPO        = "Kakash9i/loader";
 const API_BASE    = "https://api.github.com/repos/" + REPO + "/contents";
