@@ -7446,25 +7446,32 @@ let _uploadedHighlightFile = null;
 let _activePlayerHighlight = null;
 
 function getRankBadge(username, userRank) {
-  const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES[username]) ? USER_PROFILES[username] : {};
-  const r = (userRank || prof.rank || "kunde").toLowerCase();
+  let r = "premium";
+  if (userRank && typeof userRank === "string") {
+    r = userRank.toLowerCase().trim();
+  } else if (username && typeof username === "string") {
+    const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES[username]) ? USER_PROFILES[username] : {};
+    r = (prof.role || prof.rank || username).toLowerCase().trim();
+  }
   
-  if (r === "ADMIN" || r === "inhaber" || (username && (username.toLowerCase() === "ADMIN" || username.toLowerCase() === "ADMIN"))) {
-    return '<span class="badge-rank badge-rank-admin">&#128081; INHABER</span>';
-  } else if (r === "co-admin" || r.includes("co-admin")) {
-    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; CO-ADMIN</span>';
-  } else if (r === "supporter" || r.includes("support")) {
-    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; SUPPORTER</span>';
-  } else if (r === "moderator" || r.includes("mod")) {
-    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; MODERATOR</span>';
+  if (r === "admin" || r === "inhaber" || r === "owner" || (username && (username.toLowerCase() === "admin" || username.toLowerCase() === "kovak"))) {
+    return '<span class="badge-rank badge-rank-inhaber"><span style="color:#000;">ðŸ‘‘</span> INHABER</span>';
+  } else if (r === "co-admin" || r === "coadmin") {
+    return '<span class="badge-rank badge-rank-coadmin"><span style="color:#fff;">ðŸ›¡ï¸</span> CO-ADMIN</span>';
+  } else if (r === "developer" || r === "dev") {
+    return '<span class="badge-rank badge-rank-developer"><span style="color:#fff;">ðŸ’»</span> DEVELOPER</span>';
+  } else if (r === "moderator" || r === "mod") {
+    return '<span class="badge-rank badge-rank-moderator"><span style="color:#fff;">ðŸ”¨</span> MODERATOR</span>';
+  } else if (r === "supporter" || r === "support") {
+    return '<span class="badge-rank badge-rank-supporter"><span style="color:#fff;">ðŸŽ§</span> SUPPORTER</span>';
+  } else if (r === "donator") {
+    return '<span class="badge-rank badge-rank-donator"><span style="color:#fff;">ðŸ’–</span> DONATOR</span>';
   } else if (r === "vip") {
-    return '<span class="badge-rank badge-rank-vip">&#11088; VIP</span>';
+    return '<span class="badge-rank badge-rank-vip"><span style="color:#000;">â­</span> VIP</span>';
   } else if (r === "elite") {
-    return '<span class="badge-rank badge-rank-elite">&#9889; ELITE</span>';
-  } else if (r === "premium") {
-    return '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
+    return '<span class="badge-rank badge-rank-elite"><span style="color:#fff;">âš¡</span> ELITE</span>';
   } else {
-    return '<span class="badge-rank badge-rank-kunde">&#128100; KUNDE</span>';
+    return '<span class="badge-rank badge-rank-premium"><span style="color:#fff;">ðŸ’Ž</span> PREMIUM</span>';
   }
 }
 
