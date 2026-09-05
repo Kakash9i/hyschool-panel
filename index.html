@@ -1230,34 +1230,35 @@
             <div id="profile-modal-badge-wrap" style="display:flex;gap:6px;align-items:center;"></div>
           </div>
           
-          <!-- MULTI-ROLE MANAGER -->
-          <div id="profile-role-manager" style="display:none;position:relative;">
-            <button onclick="document.getElementById('role-dropdown-menu').style.display = document.getElementById('role-dropdown-menu').style.display === 'none' ? 'flex' : 'none';" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;backdrop-filter:blur(8px);color:#cbd5e1;font-size:16px;cursor:pointer;transition:all 0.2s ease;box-shadow:0 4px 15px rgba(0,0,0,0.5);">
-              &#9881;&#65039;
-            </button>
-            <div id="role-dropdown-menu" style="display:none;position:absolute;top:100%;right:0;margin-top:8px;background:rgba(9,11,18,0.95);border:1px solid #222c44;padding:8px;border-radius:12px;z-index:100;min-width:180px;box-shadow:0 15px 50px rgba(0,0,0,0.9);flex-direction:column;gap:2px;backdrop-filter:blur(10px);">
-              <style>
-                .role-dropdown-label { display:flex;align-items:center;gap:10px;font-size:11px;color:#cbd5e1;font-weight:800;cursor:pointer;padding:8px 10px;border-radius:8px;transition:all 0.2s ease; }
-                .role-dropdown-label:hover { background:rgba(255,255,255,0.05); color:#fff; }
-                .role-checkbox { accent-color:#e5a93c; width:14px; height:14px; cursor:pointer; }
-              </style>
-              <label class="role-dropdown-label"><input type="checkbox" class="role-checkbox" value="admin" onchange="updateProfileRoles()"> <span style="color:#e5a93c;">INHABER</span></label>
-              <label class="role-dropdown-label"><input type="checkbox" class="role-checkbox" value="co-admin" onchange="updateProfileRoles()"> CO-ADMIN</label>
-              <label class="role-dropdown-label"><input type="checkbox" class="role-checkbox" value="developer" onchange="updateProfileRoles()"> DEVELOPER</label>
-              <label class="role-dropdown-label"><input type="checkbox" class="role-checkbox" value="moderator" onchange="updateProfileRoles()"> MODERATOR</label>
-              <label class="role-dropdown-label"><input type="checkbox" class="role-checkbox" value="supporter" onchange="updateProfileRoles()"> SUPPORTER</label>
-              <label class="role-dropdown-label"><input type="checkbox" class="role-checkbox" value="elite" onchange="updateProfileRoles()"> ELITE</label>
-              <label class="role-dropdown-label"><input type="checkbox" class="role-checkbox" value="vip" onchange="updateProfileRoles()"> VIP</label>
-              <label class="role-dropdown-label"><input type="checkbox" class="role-checkbox" value="donator" onchange="updateProfileRoles()"> DONATOR</label>
-              <label class="role-dropdown-label"><input type="checkbox" class="role-checkbox" value="premium" onchange="updateProfileRoles()"> PREMIUM</label>
-            </div>
-          </div>
+
         </div>
         </div>
         
         <p id="profile-modal-bio" style="font-size:13px;color:#e2e8f0;margin-top:16px;line-height:1.6;background:rgba(255,255,255,0.03);padding:14px 18px;border-radius:10px;border:1px solid rgba(255,255,255,0.05);border-left:4px solid #e5a93c;box-shadow:inset 0 0 20px rgba(0,0,0,0.5);">
           Keine Profilbeschreibung hinterlegt.
         </p>
+
+        <!-- STATIC MULTI-ROLE MANAGER (UNDER BIO) -->
+        <div id="profile-role-manager" style="display:none;margin-top:16px;background:rgba(9,11,18,0.6);border:1px solid #1a2234;padding:16px;border-radius:10px;box-shadow:inset 0 0 10px rgba(0,0,0,0.5);">
+          <div style="font-size:10px;color:#94a3b8;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">&#9881;&#65039; ROLLEN VERWALTEN</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <style>
+              .role-pill { display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);padding:6px 12px;border-radius:20px;font-size:10px;color:#cbd5e1;font-weight:800;cursor:pointer;transition:all 0.2s ease;text-transform:uppercase; }
+              .role-pill:hover { background:rgba(255,255,255,0.08);color:#fff; }
+              .role-pill input[type="checkbox"] { display:none; }
+              .role-pill.active { background:rgba(229,169,60,0.15);border-color:rgba(229,169,60,0.5);color:#e5a93c;box-shadow:0 0 10px rgba(229,169,60,0.2); }
+            </style>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="admin" onchange="updateProfileRoles(this)"> INHABER</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="co-admin" onchange="updateProfileRoles(this)"> CO-ADMIN</label>
+            <label class="role-dropdown-label role-pill"><input type="checkbox" class="role-checkbox" value="developer" onchange="updateProfileRoles(this)"> DEVELOPER</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="moderator" onchange="updateProfileRoles(this)"> MODERATOR</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="supporter" onchange="updateProfileRoles(this)"> SUPPORTER</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="elite" onchange="updateProfileRoles(this)"> ELITE</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="vip" onchange="updateProfileRoles(this)"> VIP</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="donator" onchange="updateProfileRoles(this)"> DONATOR</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="premium" onchange="updateProfileRoles(this)"> PREMIUM</label>
+          </div>
+        </div>
 
         <div style="display:flex;align-items:center;gap:16px;margin-top:14px;font-size:11px;color:#64748b;flex-wrap:wrap;background:rgba(0,0,0,0.2);padding:10px 14px;border-radius:8px;border:1px solid #1a2234;">
           <div style="display:flex;align-items:center;gap:6px;"><span>&#128197;</span> <span style="color:#94a3b8;">Mitglied seit:</span> <b id="profile-modal-joined" style="color:#f8fafc;">-</b></div>
@@ -6151,9 +6152,18 @@ function openUserProfileModal(usernameOrKey) {
       roleManager.style.display = "flex";
       const checkboxes = document.querySelectorAll(".role-checkbox");
       let currentRanks = prof.rank || ["premium"];
+      if (_activeProfileTarget === "ADMIN" || _activeProfileTarget === CURRENT_USER.name) {
+        try {
+          const saved = localStorage.getItem("hyschool_admin_ranks");
+          if(saved) currentRanks = JSON.parse(saved);
+        } catch(e){}
+      }
       if(typeof currentRanks === "string") currentRanks = currentRanks.split(",").map(r => r.trim().toLowerCase());
+      
       checkboxes.forEach(cb => {
         cb.checked = currentRanks.includes(cb.value.toLowerCase());
+        if(cb.checked) cb.parentElement.classList.add("active");
+        else cb.parentElement.classList.remove("active");
       });
     } else {
       roleManager.style.display = "none";
@@ -6170,19 +6180,36 @@ function openUserProfileModal(usernameOrKey) {
   if(modal) modal.style.display = "flex";
 }
 
-function updateProfileRoles() {
+function updateProfileRoles(el) {
   if(!_activeProfileTarget) return;
   const checkboxes = document.querySelectorAll(".role-checkbox");
   let selected = [];
   checkboxes.forEach(cb => {
-    if(cb.checked) selected.push(cb.value);
+    if(cb.checked) {
+      selected.push(cb.value);
+      cb.parentElement.classList.add("active");
+    } else {
+      cb.parentElement.classList.remove("active");
+    }
   });
-  if(selected.length === 0) selected = ["premium"];
+  if(selected.length === 0) {
+    selected = ["premium"];
+    checkboxes.forEach(cb => {
+      if(cb.value === "premium") {
+        cb.checked = true;
+        cb.parentElement.classList.add("active");
+      }
+    });
+  }
   
   if(!USER_PROFILES[_activeProfileTarget]) {
     USER_PROFILES[_activeProfileTarget] = { username: _activeProfileTarget };
   }
   USER_PROFILES[_activeProfileTarget].rank = selected;
+  
+  if(_activeProfileTarget === "ADMIN" || _activeProfileTarget === CURRENT_USER.name) {
+    localStorage.setItem("hyschool_admin_ranks", JSON.stringify(selected));
+  }
   
   const badgeEl = document.getElementById("profile-modal-badge-wrap");
   if(badgeEl) badgeEl.innerHTML = getRankBadge(_activeProfileTarget, selected);
@@ -6191,16 +6218,7 @@ function updateProfileRoles() {
   if(typeof filterUserConfigs === "function") filterUserConfigs();
 }
 
-// Close dropdown if clicking outside
-document.addEventListener("click", function(e) {
-  const dropdown = document.getElementById("role-dropdown-menu");
-  const manager = document.getElementById("profile-role-manager");
-  if (dropdown && manager && dropdown.style.display === "flex" || dropdown.style.display === "block") {
-    if (!manager.contains(e.target)) {
-      dropdown.style.display = "none";
-    }
-  }
-});
+
 
 function handleBannerUpload(e) {
   const file = e.target.files[0];
@@ -7849,6 +7867,8 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
+
 
 
 
