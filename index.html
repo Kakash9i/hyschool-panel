@@ -2037,28 +2037,27 @@
             </div>
           </div>
 
-          <!-- STAFF QUICK MACROS -->
-          <div class="hide-scrollbar" style="background:#090b12;padding:10px 14px;border-bottom:1px solid #1a2234;display:flex;align-items:center;gap:10px;overflow-x:auto;">
-            <span style="font-size:9px;font-weight:900;color:#e5a93c;letter-spacing:1px;white-space:nowrap;text-transform:uppercase;">Schnell-Antworten:</span>
-            <style>
-              .macro-btn { background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:#cbd5e1;padding:5px 12px;border-radius:20px;font-size:10px;font-weight:800;cursor:pointer;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:6px; }
-              .macro-btn:hover { background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.2); }
-            .hide-scrollbar::-webkit-scrollbar { display: none; }
-.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-</style>
-            <button type="button" class="macro-btn" onclick="insertStaffMacro('freigeschaltet')"><span style="color:#10b981;">&#9989;</span> HWID Freigeschaltet</button>
-            <button type="button" class="macro-btn" onclick="insertStaffMacro('hwid')"><span style="color:#3b82f6;">&#128260;</span> Bitte HWID Reset Button nutzen</button>
-            <button type="button" class="macro-btn" onclick="insertStaffMacro('antivirus')"><span style="color:#f59e0b;">&#128737;&#65039;</span> Antivirus & Defender deaktivieren</button>
-            <button type="button" class="macro-btn" onclick="insertStaffMacro('config')"><span style="color:#8b5cf6;">&#128193;</span> Config in den Ordner packen</button>
-            <button type="button" class="macro-btn" onclick="insertStaffMacro('solved')"><span style="color:#f43f5e;">&#128077;</span> Problem Gel&#246;st (Wird geschlossen)</button>
-          </div>
-
           <!-- TICKET MESSAGES WRAP -->
+
           <div id="admin-ticket-messages-wrap" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:radial-gradient(ellipse at top, #111420 0%, #0a0c13 100%);min-height:260px;">
           </div>
 
           <!-- BOTTOM REPLY BAR -->
-          <div style="padding:12px 16px;background:#0d1017;border-top:1px solid #1c2235;display:flex;gap:10px;align-items:center;">
+          <div style="padding:10px 16px 8px 16px;background:#0d1017;border-top:1px solid #1c2235;display:flex;flex-direction:column;gap:8px;">
+            <!-- INLINE MACROS -->
+            <div class="hide-scrollbar" style="display:flex;align-items:center;gap:8px;overflow-x:auto;padding-bottom:2px;">
+              <style>
+                .macro-chip { background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;padding:6px 12px;border-radius:6px;font-size:10.5px;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:6px; }
+                .macro-chip:hover { background:rgba(255,255,255,0.08);color:#fff;border-color:rgba(255,255,255,0.15);transform:translateY(-1px); }
+              </style>
+              <button type="button" class="macro-chip" onclick="insertStaffMacro('freigeschaltet')"><span style="color:#10b981;">&#9989;</span> Freigeschaltet</button>
+              <button type="button" class="macro-chip" onclick="insertStaffMacro('hwid')"><span style="color:#3b82f6;">&#128260;</span> HWID Reset</button>
+              <button type="button" class="macro-chip" onclick="insertStaffMacro('antivirus')"><span style="color:#f59e0b;">&#128737;&#65039;</span> Defender Info</button>
+              <button type="button" class="macro-chip" onclick="insertStaffMacro('config')"><span style="color:#8b5cf6;">&#128193;</span> Config Info</button>
+              <button type="button" class="macro-chip" onclick="insertStaffMacro('solved')"><span style="color:#f43f5e;">&#128077;</span> Gel&#246;st</button>
+            </div>
+            
+            <div style="display:flex;gap:10px;align-items:center;">
             <input type="text" id="admin-ticket-input" placeholder="Antwort an Kunden schreiben... (Enter zum Senden)" onkeydown="if(event.key==='Enter')sendADMINTicketMsg()" style="flex:1;background:#131722;border:1px solid #232b40;color:#f8fafc;padding:10px 16px;border-radius:6px;font-size:11.5px;outline:none;" />
             <button onclick="sendADMINTicketMsg()" style="background:linear-gradient(135deg,#e5a93c,#c68924);border:none;color:#0b0c10;padding:10px 20px;border-radius:6px;font-size:11.5px;font-weight:900;cursor:pointer;">Senden</button>
           </div>
@@ -7695,6 +7694,31 @@ function renderActiveADMINTicketRoom(t) {
     const badge = document.getElementById('admin-ticket-header-badge');
     if (badge) {
         if (t.status === 'closed') {
+            badge.textContent = 'GESCHLOSSEN';
+            badge.style.background = '#64748b22';
+            badge.style.color = '#94a3b8';
+        } else if (t.status === 'in_progress' || t.status === 'in-progress') {
+            badge.textContent = `IN BEARBEITUNG (${t.assignedTo || 'Team'})`;
+            badge.style.background = '#38bdf822';
+            badge.style.color = '#38bdf8';
+        } else {
+            badge.textContent = 'NEU / WARTET';
+            badge.style.background = '#e5a93c22';
+            badge.style.color = '#e5a93c';
+        }
+    }
+
+    const userLbl = document.getElementById('admin-ticket-user-label');
+    if (userLbl) {
+        userLbl.innerHTML = `Kunde: <b style="color:#e5a93c;">${escapeHtml(t.customerName || 'Kunde')}</b> ${t.customerKey ? `(${escapeHtml(t.customerKey)})` : ''}`;
+    }
+
+    const btnClaim = document.getElementById('btn-claim-ticket');
+    const btnClose = document.getElementById('btn-close-ticket');
+    const btnDel = document.getElementById('btn-delete-ticket');
+
+    if (btnClaim && btnClose) {
+        if (t.status === 'closed') {
             btnClaim.style.display = 'none';
             btnClose.innerHTML = '&#128275; WIEDER &#214;FFNEN';
             btnClose.style.background = 'rgba(16,185,129,0.15)';
@@ -7718,7 +7742,6 @@ function renderActiveADMINTicketRoom(t) {
 
     let html = '';
     (t.messages || []).forEach(m => {
-        // Strip "(Inhaber)" from older ticket formats
         let cleanSender = m.sender;
         if(cleanSender.includes(" (")) {
           cleanSender = cleanSender.substring(0, cleanSender.indexOf(" (")).trim();
@@ -7726,12 +7749,10 @@ function renderActiveADMINTicketRoom(t) {
         
         const isStaff = m.role !== 'Kunde';
         
-        // Avatar logic
         let senderAvatar = getAvatarUrl(cleanSender);
         let senderProf = getUserProfile(cleanSender) || {};
         if(senderProf && senderProf.avatar) senderAvatar = senderProf.avatar;
         
-        // Badge logic
         let badgeHtml = "";
         if(isStaff) {
            let r = senderProf.rank || ["inhaber"];
@@ -7771,7 +7792,6 @@ function renderActiveADMINTicketRoom(t) {
         `;
     });
     msgWrap.innerHTML = html;
-    setTimeout(() => { msgWrap.scrollTop = msgWrap.scrollHeight; }, 50);
 }
 
 function insertStaffMacro(type) {
@@ -7914,6 +7934,8 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
+
 
 
 
