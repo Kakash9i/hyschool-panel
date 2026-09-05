@@ -3300,11 +3300,11 @@ function applyUserPermissions() {
   const userBadge = document.getElementById("user-badge");
   const dashImg = document.getElementById("dash-avatar-img");
 
-  const prof = getUserProfile(CURRENT_USER.name) || getUserProfile("ADMIN") || {};
+  const prof = (typeof getUserProfile === 'function' ? (getUserProfile(CURRENT_USER.name) || getUserProfile("ADMIN")) : {}) || {};
   const savedAvatar = localStorage.getItem("hyschool_admin_avatar") || prof.avatar;
   if(dashImg) dashImg.src = savedAvatar || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN";
 
-    if(dashUser) dashUser.textContent = CURRENT_USER.is_admin ? "ADMIN" : CURRENT_USER.name;
+  if(dashUser) dashUser.textContent = CURRENT_USER.is_admin ? "ADMIN" : CURRENT_USER.name;
   if(dashRole) dashRole.innerHTML = getRankBadge(CURRENT_USER.name, CURRENT_USER.role);
   if(userBadge) {
     if(CURRENT_USER.is_admin) {
@@ -3312,13 +3312,9 @@ function applyUserPermissions() {
     } else {
       userBadge.innerHTML = `${getRankBadge(CURRENT_USER.name, CURRENT_USER.role)} ${escapeHtml(CURRENT_USER.name)}`;
     }
-  }align-items:center;gap:6px;"><span style="color:#fbbf24;">ðŸ‘</span> INHABER ADMIN</span>`;
-    } else {
-      userBadge.innerHTML = `${getRankBadge(CURRENT_USER.name, CURRENT_USER.role)} ${escapeHtml(CURRENT_USER.name)}`;
-    }
   }
 
-      if(dashExpiry) {
+  if(dashExpiry) {
     if(CURRENT_USER.license && CURRENT_USER.license.expires_at && CURRENT_USER.license.duration !== "lifetime") {
       dashExpiry.innerHTML = `<span style="color:#e5a93c;font-weight:800;font-size:12px;">&#9203; Bis ${CURRENT_USER.license.expires_at}</span>`;
     } else {
@@ -3328,10 +3324,10 @@ function applyUserPermissions() {
 
   if(dashCheats) {
     if(CURRENT_USER.is_admin) {
-      dashCheats.innerHTML = `<span class="tag-product">ðŸ‘ ALLE CHEATS</span>`;
+      dashCheats.innerHTML = `<span class="tag-product">&#128081; ALLE CHEATS</span>`;
     } else if(CURRENT_USER.key) {
-      const defPerms = getDefaultPermissionsForKey(CURRENT_USER.key, CURRENT_USER.license);
-      const curPerms = USER_PERMISSIONS[CURRENT_USER.key] || defPerms;
+      const defPerms = typeof getDefaultPermissionsForKey === 'function' ? getDefaultPermissionsForKey(CURRENT_USER.key, CURRENT_USER.license) : {};
+      const curPerms = (typeof USER_PERMISSIONS !== 'undefined' && USER_PERMISSIONS[CURRENT_USER.key]) ? USER_PERMISSIONS[CURRENT_USER.key] : defPerms;
       const gameBadges = [];
       const prodColors = {
         valorant: { label: "VALORANT", color: "#f43f5e", bg: "rgba(244,63,94,0.12)", border: "rgba(244,63,94,0.3)" },
@@ -3342,7 +3338,7 @@ function applyUserPermissions() {
       };
 
       Object.keys(prodColors).forEach(k => {
-        if(curPerms[k] === true) {
+        if(curPerms && curPerms[k] === true) {
           const info = prodColors[k];
           gameBadges.push(`<span style="background:${info.bg};color:${info.color};border:1px solid ${info.border};padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;">${info.label}</span>`);
         }
@@ -3350,7 +3346,7 @@ function applyUserPermissions() {
 
       dashCheats.innerHTML = gameBadges.length > 0 ? gameBadges.join(" ") : `<span style="color:#64748b;font-size:11px;">Keine Spiele freigeschaltet</span>`;
     } else {
-      dashCheats.innerHTML = `<span class="tag-product">ðŸ‘ ALLE CHEATS</span>`;
+      dashCheats.innerHTML = `<span class="tag-product">&#128081; ALLE CHEATS</span>`;
     }
   }
 
@@ -3362,7 +3358,7 @@ function applyUserPermissions() {
   const mtab3 = document.getElementById("mtab-3");
   const mtab4 = document.getElementById("mtab-4");
   const mtab5 = document.getElementById("mtab-5");
-    const mtab6 = document.getElementById("mtab-6");
+  const mtab6 = document.getElementById("mtab-6");
   const mtab7 = document.getElementById("mtab-7");
   const mtab8 = document.getElementById("mtab-8");
 
@@ -3388,7 +3384,6 @@ function applyUserPermissions() {
     if(mtab8) mtab8.style.display = "inline-flex";
   }
 
-  // Cheat Permissions subtab button: visible for ADMIN OR Staff with Cheat-Product edit permission
   const btnSubPerm = document.getElementById("btn-sub-perm");
   if(btnSubPerm) btnSubPerm.style.display = (CURRENT_USER.is_admin || (p.can_edit_keys && p.edit_allow_product)) ? "inline-block" : "none";
 
