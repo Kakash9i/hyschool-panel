@@ -1951,7 +1951,7 @@
             <span>&#128172;</span> Community Chat
         </button>
         <button id="admin-chat-subtab-supp" onclick="switchADMINChatSubtab('support')" style="background:#111622;color:#94a3b8;border:1px solid #232b40;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.2s;">
-            <span>&#127915;</span> 1-on-1 Support Tickets <span id="admin-open-tickets-badge" style="background:#f43f5e;color:#fff;padding:1px 6px;border-radius:10px;font-size:10px;margin-left:4px;display:none;">0</span>
+            <span>&#127915;</span> Support Tickets <span id="admin-open-tickets-badge" style="background:#f43f5e;color:#fff;padding:1px 6px;border-radius:10px;font-size:10px;margin-left:4px;display:none;">0</span>
         </button>
     </div>
 
@@ -2006,7 +2006,7 @@
       </div>
 
       <!-- RIGHT PANEL: ACTIVE TICKET DETAIL ROOM -->
-      <div style="flex:1;background:#0a0c13;border:1px solid #1c2235;border-radius:12px;display:flex;flex-direction:column;overflow:hidden;position:relative;">
+      <div style="flex:1;background:#0a0c13;border:1px solid #1c2235;border-radius:12px;display:flex;flex-direction:column;overflow:hidden;position:relative;min-height:0;">
         <!-- NO TICKET SELECTED PLACEHOLDER -->
         <div id="admin-no-ticket-selected" style="display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;color:#64748b;gap:12px;padding:30px;text-align:center;">
           <div style="font-size:42px;color:#28344e;">&#127915;</div>
@@ -2015,7 +2015,7 @@
         </div>
 
         <!-- ACTIVE TICKET ROOM -->
-        <div id="admin-ticket-active-room" style="display:none;flex:1;flex-direction:column;">
+        <div id="admin-ticket-active-room" style="display:none;flex:1;flex-direction:column;min-height:0;overflow:hidden;">
           <!-- TICKET TOP BAR -->
           <div style="padding:12px 18px;background:#0e111a;border-bottom:1px solid #1c2235;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
             <div>
@@ -2027,19 +2027,24 @@
             </div>
 
             <div style="display:flex;gap:8px;align-items:center;">
-              <button id="btn-claim-ticket" onclick="claimCurrentTicket()" style="background:#10b981;border:none;color:#0b0c10;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;">&#9989; Ticket &#220;bernehmen</button>
-              <button id="btn-close-ticket" onclick="closeCurrentTicket()" style="background:#f43f5e;border:none;color:#fff;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;">&#128274; Ticket Schlie&#223;en</button>
+              <button id="btn-claim-ticket" onclick="claimCurrentTicket()" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#10b981;padding:6px 14px;border-radius:6px;font-size:10.5px;font-weight:900;cursor:pointer;transition:all 0.2s;">&#9989; TICKET &#220;BERNEHMEN</button>
+              <button id="btn-close-ticket" onclick="closeCurrentTicket()" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.4);color:#f43f5e;padding:6px 14px;border-radius:6px;font-size:10.5px;font-weight:900;cursor:pointer;transition:all 0.2s;">&#128274; TICKET SCHLIE&#223;EN</button>
+              <button id="btn-delete-ticket" onclick="deleteCurrentTicket()" style="display:none;background:rgba(255,0,0,0.1);border:1px solid rgba(255,0,0,0.3);color:#ff3333;padding:6px 14px;border-radius:6px;font-size:10.5px;font-weight:900;cursor:pointer;transition:all 0.2s;">&#128465;&#65039; L&#214;SCHEN</button>
             </div>
           </div>
 
           <!-- STAFF QUICK MACROS -->
-          <div style="background:#111522;padding:6px 14px;border-bottom:1px solid #1a2234;display:flex;align-items:center;gap:6px;overflow-x:auto;">
-            <span style="font-size:9.5px;font-weight:800;color:#64748b;letter-spacing:0.5px;white-space:nowrap;">MACROS:</span>
-            <button type="button" class="quick-pill-btn" onclick="insertStaffMacro('freigeschaltet')" style="padding:3px 8px;font-size:10px;">&#9989; Freigeschaltet</button>
-            <button type="button" class="quick-pill-btn" onclick="insertStaffMacro('hwid')" style="padding:3px 8px;font-size:10px;">&#128260; HWID Reset</button>
-            <button type="button" class="quick-pill-btn" onclick="insertStaffMacro('antivirus')" style="padding:3px 8px;font-size:10px;">&#128737;&#65039; Antivirus / Defender</button>
-            <button type="button" class="quick-pill-btn" onclick="insertStaffMacro('config')" style="padding:3px 8px;font-size:10px;">&#128193; Config Hilfe</button>
-            <button type="button" class="quick-pill-btn" onclick="insertStaffMacro('solved')" style="padding:3px 8px;font-size:10px;">&#128077; Gel&#246;st</button>
+          <div style="background:#090b12;padding:10px 14px;border-bottom:1px solid #1a2234;display:flex;align-items:center;gap:10px;overflow-x:auto;">
+            <span style="font-size:9px;font-weight:900;color:#e5a93c;letter-spacing:1px;white-space:nowrap;text-transform:uppercase;">Schnell-Antworten:</span>
+            <style>
+              .macro-btn { background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:#cbd5e1;padding:5px 12px;border-radius:20px;font-size:10px;font-weight:800;cursor:pointer;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:6px; }
+              .macro-btn:hover { background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.2); }
+            </style>
+            <button type="button" class="macro-btn" onclick="insertStaffMacro('freigeschaltet')"><span style="color:#10b981;">&#9989;</span> HWID Freigeschaltet</button>
+            <button type="button" class="macro-btn" onclick="insertStaffMacro('hwid')"><span style="color:#3b82f6;">&#128260;</span> Bitte HWID Reset Button nutzen</button>
+            <button type="button" class="macro-btn" onclick="insertStaffMacro('antivirus')"><span style="color:#f59e0b;">&#128737;&#65039;</span> Antivirus & Defender deaktivieren</button>
+            <button type="button" class="macro-btn" onclick="insertStaffMacro('config')"><span style="color:#8b5cf6;">&#128193;</span> Config in den Ordner packen</button>
+            <button type="button" class="macro-btn" onclick="insertStaffMacro('solved')"><span style="color:#f43f5e;">&#128077;</span> Problem Gel&#246;st (Wird geschlossen)</button>
           </div>
 
           <!-- TICKET MESSAGES WRAP -->
@@ -7760,7 +7765,7 @@ async function claimCurrentTicket() {
     t.messages.push({
         sender: myName,
         role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-        text: `[Info: ${myName} hat das Support Ticket ü&#252;bernommen]`,
+        text: `[Info: ${myName} hat das Support Ticket übernommen]`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now()
     });
@@ -7768,7 +7773,7 @@ async function claimCurrentTicket() {
     await saveADMINTicketsToGitHub(`Claim ticket ${t.id} by ${myName}`);
     renderActiveADMINTicketRoom(t);
     renderADMINTicketsList();
-    showToast('Ticket ü&#252;bernommen!', 'ok');
+    showToast('Ticket übernommen!', 'ok');
 }
 
 async function closeCurrentTicket() {
@@ -7871,6 +7876,10 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
+
+
+
 
 
 
