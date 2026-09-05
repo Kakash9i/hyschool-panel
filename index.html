@@ -12,35 +12,37 @@
 let ALL_SEARCH_USERS = [];
 let ACTIVE_VIEWED_USER = null;
 
-function getRankBadge(roles) {
-    if (!roles) roles = ['premium'];
-    if (typeof roles === 'string') {
-        roles = roles.split(',').map(r => r.trim()).filter(Boolean);
+function getRankBadge(arg1, arg2) {
+    let roles = [];
+    if (arg2 !== undefined && typeof arg2 === 'string') {
+        roles = [arg2];
+    } else if (Array.isArray(arg1)) {
+        roles = arg1;
+    } else if (typeof arg1 === 'string') {
+        roles = arg1.split(',').map(r => r.trim()).filter(Boolean);
     }
-    if (!Array.isArray(roles) || roles.length === 0) roles = ['premium'];
+    if (roles.length === 0) roles = ['premium'];
 
     return roles.map(role => {
-        const r = role.toLowerCase().trim();
-        if (r === 'inhaber' || r === 'owner') {
-            return '<span class="badge badge-rank-inhaber"><i class="fas fa-crown"></i> ðŸ‘‘ INHABER</span>';
-        } else if (r === 'admin') {
-            return '<span class="badge badge-rank-admin"><i class="fas fa-user-shield"></i> ðŸ‘‘ INHABER</span>';
+        const r = String(role).toLowerCase().trim();
+        if (r === 'inhaber' || r === 'owner' || r === 'admin') {
+            return '<span class="badge badge-rank-inhaber" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;box-shadow:0 0 10px rgba(255,215,0,0.5);"><i class="fas fa-crown"></i> ðŸ‘‘ INHABER</span>';
         } else if (r === 'co-admin' || r === 'coadmin') {
-            return '<span class="badge badge-rank-coadmin"><i class="fas fa-shield-alt"></i> ðŸ›¡ï¸ CO-ADMIN</span>';
+            return '<span class="badge badge-rank-coadmin" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(244,63,94,0.5);"><i class="fas fa-shield-alt"></i> ðŸ›¡ï¸ CO-ADMIN</span>';
         } else if (r === 'developer' || r === 'dev') {
-            return '<span class="badge badge-rank-developer"><i class="fas fa-code"></i> ðŸ’» DEVELOPER</span>';
+            return '<span class="badge badge-rank-developer" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(6,182,212,0.5);"><i class="fas fa-code"></i> ðŸ’» DEVELOPER</span>';
         } else if (r === 'moderator' || r === 'mod') {
-            return '<span class="badge badge-rank-moderator"><i class="fas fa-gavel"></i> ðŸ”¨ MODERATOR</span>';
+            return '<span class="badge badge-rank-moderator" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(16,185,129,0.5);"><i class="fas fa-gavel"></i> ðŸ”¨ MODERATOR</span>';
         } else if (r === 'supporter' || r === 'support') {
-            return '<span class="badge badge-rank-supporter"><i class="fas fa-headset"></i> ðŸŽ§ SUPPORTER</span>';
+            return '<span class="badge badge-rank-supporter" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(59,130,246,0.5);"><i class="fas fa-headset"></i> ðŸŽ§ SUPPORTER</span>';
         } else if (r === 'donator') {
-            return '<span class="badge badge-rank-donator"><i class="fas fa-heart"></i> ðŸ’– DONATOR</span>';
+            return '<span class="badge badge-rank-donator" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(236,72,153,0.5);"><i class="fas fa-heart"></i> ðŸ’– DONATOR</span>';
         } else if (r === 'vip') {
-            return '<span class="badge badge-rank-vip"><i class="fas fa-star"></i> â­ VIP</span>';
+            return '<span class="badge badge-rank-vip" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;box-shadow:0 0 10px rgba(234,179,8,0.5);"><i class="fas fa-star"></i> â­ VIP</span>';
         } else if (r === 'elite') {
-            return '<span class="badge badge-rank-elite"><i class="fas fa-bolt"></i> âš¡ ELITE</span>';
+            return '<span class="badge badge-rank-elite" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(139,92,246,0.5);"><i class="fas fa-bolt"></i> âš¡ ELITE</span>';
         } else {
-            return '<span class="badge badge-rank-premium"><i class="fas fa-gem"></i> ðŸ’Ž PREMIUM</span>';
+            return '<span class="badge badge-rank-premium" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(56,189,248,0.5);"><i class="fas fa-gem"></i> ðŸ’Ž PREMIUM</span>';
         }
     }).join(' ');
 }
@@ -7431,27 +7433,39 @@ let ALL_HIGHLIGHTS = [];
 let _uploadedHighlightFile = null;
 let _activePlayerHighlight = null;
 
-function getRankBadge(username, userRank) {
-  const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES[username]) ? USER_PROFILES[username] : {};
-  const r = (userRank || prof.rank || "kunde").toLowerCase();
-  
-  if (r === "ADMIN" || r === "inhaber" || (username && (username.toLowerCase() === "ADMIN" || username.toLowerCase() === "ADMIN"))) {
-    return '<span class="badge-rank badge-rank-admin">&#128081; INHABER</span>';
-  } else if (r === "co-admin" || r.includes("co-admin")) {
-    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; CO-ADMIN</span>';
-  } else if (r === "supporter" || r.includes("support")) {
-    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; SUPPORTER</span>';
-  } else if (r === "moderator" || r.includes("mod")) {
-    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; MODERATOR</span>';
-  } else if (r === "vip") {
-    return '<span class="badge-rank badge-rank-vip">&#11088; VIP</span>';
-  } else if (r === "elite") {
-    return '<span class="badge-rank badge-rank-elite">&#9889; ELITE</span>';
-  } else if (r === "premium") {
-    return '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
-  } else {
-    return '<span class="badge-rank badge-rank-kunde">&#128100; KUNDE</span>';
-  }
+function getRankBadge(arg1, arg2) {
+    let roles = [];
+    if (arg2 !== undefined && typeof arg2 === 'string') {
+        roles = [arg2];
+    } else if (Array.isArray(arg1)) {
+        roles = arg1;
+    } else if (typeof arg1 === 'string') {
+        roles = arg1.split(',').map(r => r.trim()).filter(Boolean);
+    }
+    if (roles.length === 0) roles = ['premium'];
+
+    return roles.map(role => {
+        const r = String(role).toLowerCase().trim();
+        if (r === 'inhaber' || r === 'owner' || r === 'admin') {
+            return '<span class="badge badge-rank-inhaber" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;box-shadow:0 0 10px rgba(255,215,0,0.5);"><i class="fas fa-crown"></i> ðŸ‘‘ INHABER</span>';
+        } else if (r === 'co-admin' || r === 'coadmin') {
+            return '<span class="badge badge-rank-coadmin" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(244,63,94,0.5);"><i class="fas fa-shield-alt"></i> ðŸ›¡ï¸ CO-ADMIN</span>';
+        } else if (r === 'developer' || r === 'dev') {
+            return '<span class="badge badge-rank-developer" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(6,182,212,0.5);"><i class="fas fa-code"></i> ðŸ’» DEVELOPER</span>';
+        } else if (r === 'moderator' || r === 'mod') {
+            return '<span class="badge badge-rank-moderator" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(16,185,129,0.5);"><i class="fas fa-gavel"></i> ðŸ”¨ MODERATOR</span>';
+        } else if (r === 'supporter' || r === 'support') {
+            return '<span class="badge badge-rank-supporter" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(59,130,246,0.5);"><i class="fas fa-headset"></i> ðŸŽ§ SUPPORTER</span>';
+        } else if (r === 'donator') {
+            return '<span class="badge badge-rank-donator" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(236,72,153,0.5);"><i class="fas fa-heart"></i> ðŸ’– DONATOR</span>';
+        } else if (r === 'vip') {
+            return '<span class="badge badge-rank-vip" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;box-shadow:0 0 10px rgba(234,179,8,0.5);"><i class="fas fa-star"></i> â­ VIP</span>';
+        } else if (r === 'elite') {
+            return '<span class="badge badge-rank-elite" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(139,92,246,0.5);"><i class="fas fa-bolt"></i> âš¡ ELITE</span>';
+        } else {
+            return '<span class="badge badge-rank-premium" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(56,189,248,0.5);"><i class="fas fa-gem"></i> ðŸ’Ž PREMIUM</span>';
+        }
+    }).join(' ');
 }
 
 function toggleHighlightUploadCard() {
@@ -8196,35 +8210,37 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 let ALL_SEARCH_USERS = [];
 let ACTIVE_VIEWED_USER = null;
 
-function getRankBadge(roles) {
-    if (!roles) roles = ['premium'];
-    if (typeof roles === 'string') {
-        roles = roles.split(',').map(r => r.trim()).filter(Boolean);
+function getRankBadge(arg1, arg2) {
+    let roles = [];
+    if (arg2 !== undefined && typeof arg2 === 'string') {
+        roles = [arg2];
+    } else if (Array.isArray(arg1)) {
+        roles = arg1;
+    } else if (typeof arg1 === 'string') {
+        roles = arg1.split(',').map(r => r.trim()).filter(Boolean);
     }
-    if (!Array.isArray(roles) || roles.length === 0) roles = ['premium'];
+    if (roles.length === 0) roles = ['premium'];
 
     return roles.map(role => {
-        const r = role.toLowerCase().trim();
-        if (r === 'inhaber' || r === 'owner') {
-            return '<span class="badge badge-rank-inhaber"><i class="fas fa-crown"></i> ðŸ‘‘ INHABER</span>';
-        } else if (r === 'admin') {
-            return '<span class="badge badge-rank-admin"><i class="fas fa-user-shield"></i> ðŸ‘‘ INHABER</span>';
+        const r = String(role).toLowerCase().trim();
+        if (r === 'inhaber' || r === 'owner' || r === 'admin') {
+            return '<span class="badge badge-rank-inhaber" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;box-shadow:0 0 10px rgba(255,215,0,0.5);"><i class="fas fa-crown"></i> ðŸ‘‘ INHABER</span>';
         } else if (r === 'co-admin' || r === 'coadmin') {
-            return '<span class="badge badge-rank-coadmin"><i class="fas fa-shield-alt"></i> ðŸ›¡ï¸ CO-ADMIN</span>';
+            return '<span class="badge badge-rank-coadmin" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(244,63,94,0.5);"><i class="fas fa-shield-alt"></i> ðŸ›¡ï¸ CO-ADMIN</span>';
         } else if (r === 'developer' || r === 'dev') {
-            return '<span class="badge badge-rank-developer"><i class="fas fa-code"></i> ðŸ’» DEVELOPER</span>';
+            return '<span class="badge badge-rank-developer" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(6,182,212,0.5);"><i class="fas fa-code"></i> ðŸ’» DEVELOPER</span>';
         } else if (r === 'moderator' || r === 'mod') {
-            return '<span class="badge badge-rank-moderator"><i class="fas fa-gavel"></i> ðŸ”¨ MODERATOR</span>';
+            return '<span class="badge badge-rank-moderator" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(16,185,129,0.5);"><i class="fas fa-gavel"></i> ðŸ”¨ MODERATOR</span>';
         } else if (r === 'supporter' || r === 'support') {
-            return '<span class="badge badge-rank-supporter"><i class="fas fa-headset"></i> ðŸŽ§ SUPPORTER</span>';
+            return '<span class="badge badge-rank-supporter" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(59,130,246,0.5);"><i class="fas fa-headset"></i> ðŸŽ§ SUPPORTER</span>';
         } else if (r === 'donator') {
-            return '<span class="badge badge-rank-donator"><i class="fas fa-heart"></i> ðŸ’– DONATOR</span>';
+            return '<span class="badge badge-rank-donator" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(236,72,153,0.5);"><i class="fas fa-heart"></i> ðŸ’– DONATOR</span>';
         } else if (r === 'vip') {
-            return '<span class="badge badge-rank-vip"><i class="fas fa-star"></i> â­ VIP</span>';
+            return '<span class="badge badge-rank-vip" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;box-shadow:0 0 10px rgba(234,179,8,0.5);"><i class="fas fa-star"></i> â­ VIP</span>';
         } else if (r === 'elite') {
-            return '<span class="badge badge-rank-elite"><i class="fas fa-bolt"></i> âš¡ ELITE</span>';
+            return '<span class="badge badge-rank-elite" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(139,92,246,0.5);"><i class="fas fa-bolt"></i> âš¡ ELITE</span>';
         } else {
-            return '<span class="badge badge-rank-premium"><i class="fas fa-gem"></i> ðŸ’Ž PREMIUM</span>';
+            return '<span class="badge badge-rank-premium" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(56,189,248,0.5);"><i class="fas fa-gem"></i> ðŸ’Ž PREMIUM</span>';
         }
     }).join(' ');
 }
