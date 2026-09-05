@@ -37,30 +37,48 @@ function backToUserSearchModal() {
 async function loadUserSearchData() {
     const listEl = document.getElementById('modal-user-search-list');
     if (listEl) {
-        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#94a3b8;"><i class="fas fa-spinner fa-spin fa-2x" style="color:#7c3aed;margin-bottom:12px;"></i><br>Lade alle Benutzer & Kunden...</div>';
+        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#94a3b8;"><span style="color:#7c3aed;font-size:24px;">&#8987;</span><br>Lade alle Benutzer & Kunden...</div>';
     }
 
     try {
-        const [licRes, staffRes, profRes, confRes, highRes] = await Promise.all([
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/licenses.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/staff.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/profiles.json?t=' + Date.now()).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/configs.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/highlights.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => [])
-        ]);
+        // Parallel fetch from GitHub with fallback to memory
+        let licRes = (typeof ALL_LICENSES !== 'undefined' && Array.isArray(ALL_LICENSES) && ALL_LICENSES.length > 0) ? ALL_LICENSES : [];
+        let staffRes = (typeof ALL_STAFF !== 'undefined' && Array.isArray(ALL_STAFF) && ALL_STAFF.length > 0) ? ALL_STAFF : [];
+        let profRes = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES) ? USER_PROFILES : {};
+        let confRes = (typeof ALL_CONFIGS !== 'undefined' && Array.isArray(ALL_CONFIGS)) ? ALL_CONFIGS : [];
+        let highRes = [];
+
+        try {
+            const [l, s, p, c, h] = await Promise.all([
+                fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/licenses.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
+                fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/staff.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
+                fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/profiles.json?t=' + Date.now()).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+                fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/configs.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
+                fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/highlights.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => [])
+            ]);
+            if (Array.isArray(l) && l.length > 0) licRes = l;
+            if (Array.isArray(s) && s.length > 0) staffRes = s;
+            if (p && typeof p === 'object' && Object.keys(p).length > 0) profRes = p;
+            if (Array.isArray(c) && c.length > 0) confRes = c;
+            if (Array.isArray(h)) highRes = h;
+        } catch(_) {}
 
         const userMap = new Map();
 
-        // Licenses
+        // 1. Licenses / Customers
         if (Array.isArray(licRes)) {
             licRes.forEach(lic => {
-                const uname = (lic.used_by && lic.used_by.trim() !== '') ? lic.used_by.trim() : (lic.key || 'Unbekannt');
+                const uname = (lic.used_by && lic.used_by.trim() !== '' && lic.used_by !== '---') ? lic.used_by.trim() : (lic.key || 'Kunde');
                 const lower = uname.toLowerCase();
                 if (!userMap.has(lower)) {
                     userMap.set(lower, {
                         username: uname,
                         key: lic.key || '',
+                        status: lic.status || 'active',
+                        created_at: lic.created_at || '',
+                        expires_at: lic.expires_at || '',
                         roles: ['premium'],
+                        isCustomer: true,
                         bio: '',
                         avatar: '',
                         guestbook: [],
@@ -68,12 +86,14 @@ async function loadUserSearchData() {
                         highlights: []
                     });
                 } else {
-                    userMap.get(lower).key = lic.key;
+                    const u = userMap.get(lower);
+                    u.key = u.key || lic.key;
+                    u.isCustomer = true;
                 }
             });
         }
 
-        // Staff
+        // 2. Staff
         if (Array.isArray(staffRes)) {
             staffRes.forEach(st => {
                 const sname = (st.name || st.username || '').trim();
@@ -84,6 +104,7 @@ async function loadUserSearchData() {
                         userMap.set(lower, {
                             username: sname,
                             roles: [sRole],
+                            isStaff: true,
                             bio: '',
                             avatar: '',
                             guestbook: [],
@@ -93,12 +114,13 @@ async function loadUserSearchData() {
                     } else {
                         const u = userMap.get(lower);
                         if (!u.roles.includes(sRole)) u.roles.push(sRole);
+                        u.isStaff = true;
                     }
                 }
             });
         }
 
-        // Profiles
+        // 3. Profiles
         if (profRes && typeof profRes === 'object') {
             Object.keys(profRes).forEach(k => {
                 const lower = k.toLowerCase();
@@ -128,7 +150,7 @@ async function loadUserSearchData() {
             });
         }
 
-        // Configs
+        // 4. Configs
         if (Array.isArray(confRes)) {
             confRes.forEach(c => {
                 const author = (c.author || c.creator || c.user || '').trim();
@@ -151,7 +173,7 @@ async function loadUserSearchData() {
             });
         }
 
-        // Highlights
+        // 5. Highlights
         if (Array.isArray(highRes)) {
             highRes.forEach(h => {
                 const uploader = (h.user || h.uploader || h.author || '').trim();
@@ -174,10 +196,27 @@ async function loadUserSearchData() {
             });
         }
 
+        // Always ensure current user is in search list
+        const curUser = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER.name) ? CURRENT_USER.name : 'ADMIN';
+        if (!userMap.has(curUser.toLowerCase())) {
+            userMap.set(curUser.toLowerCase(), {
+                username: curUser,
+                roles: ['inhaber'],
+                bio: '',
+                avatar: '',
+                guestbook: [],
+                configs: [],
+                highlights: []
+            });
+        }
+
         ALL_SEARCH_USERS = Array.from(userMap.values());
         filterModalUserSearch();
     } catch (e) {
         console.error('Error loadUserSearchData:', e);
+        if (listEl) {
+            listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:#f43f5e;">Fehler beim Laden der Benutzer.</div>';
+        }
     }
 }
 
@@ -199,22 +238,22 @@ function renderModalUserSearch(users) {
     if (!listEl) return;
 
     if (!users || users.length === 0) {
-        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px 20px;color:#94a3b8;"><i class="fas fa-users-slash fa-3x" style="margin-bottom:14px;opacity:0.5;"></i><br><span style="font-size:1.05rem;font-weight:600;">Keine Benutzer gefunden</span></div>';
+        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px 20px;color:#94a3b8;"><span style="font-size:32px;opacity:0.5;">&#128101;</span><br><span style="font-size:1.05rem;font-weight:600;">Keine Benutzer gefunden</span></div>';
         return;
     }
 
     listEl.innerHTML = users.map(u => {
         const badges = (u.roles || ['premium']).map(r => {
             const low = r.toLowerCase();
-            if (low === 'inhaber' || low === 'admin') return '<span class="badge" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;">ðŸ‘‘ INHABER</span>';
-            if (low === 'co-admin') return '<span class="badge" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;">ðŸ›¡ï¸ CO-ADMIN</span>';
-            if (low === 'developer') return '<span class="badge" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;">ðŸ’» DEVELOPER</span>';
-            if (low === 'moderator') return '<span class="badge" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;">ðŸ”¨ MODERATOR</span>';
-            if (low === 'supporter') return '<span class="badge" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;">ðŸŽ§ SUPPORTER</span>';
-            if (low === 'donator') return '<span class="badge" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;">ðŸ’– DONATOR</span>';
-            if (low === 'vip') return '<span class="badge" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;">â­ VIP</span>';
-            if (low === 'elite') return '<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;">âš¡ ELITE</span>';
-            return '<span class="badge" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;">ðŸ’Ž PREMIUM</span>';
+            if (low === 'inhaber' || low === 'admin') return '<span class="badge" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸ‘‘ INHABER</span>';
+            if (low === 'co-admin') return '<span class="badge" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸ›¡ï¸ CO-ADMIN</span>';
+            if (low === 'developer') return '<span class="badge" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸ’» DEVELOPER</span>';
+            if (low === 'moderator') return '<span class="badge" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸ”¨ MODERATOR</span>';
+            if (low === 'supporter') return '<span class="badge" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸŽ§ SUPPORTER</span>';
+            if (low === 'donator') return '<span class="badge" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸ’– DONATOR</span>';
+            if (low === 'vip') return '<span class="badge" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">â­ VIP</span>';
+            if (low === 'elite') return '<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">âš¡ ELITE</span>';
+            return '<span class="badge" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸ’Ž PREMIUM</span>';
         }).join(' ');
 
         const avatarSrc = u.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(u.username);
@@ -236,9 +275,9 @@ function renderModalUserSearch(users) {
                 ${u.bio ? `<div style="font-size:0.75rem;color:#94a3b8;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">"${escapeHtml(u.bio)}"</div>` : ''}
 
                 <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.72rem;color:#94a3b8;">
-                    <span><i class="fas fa-video" style="color:#06b6d4;"></i> ${clipCount} Clips</span>
-                    <span><i class="fas fa-sliders-h" style="color:#e5a93c;"></i> ${configCount} Configs</span>
-                    <span style="color:#7c3aed;font-weight:600;"><i class="fas fa-external-link-alt"></i> Profil</span>
+                    <span>&#127916; ${clipCount} Clips</span>
+                    <span>&#128193; ${configCount} Configs</span>
+                    <span style="color:#7c3aed;font-weight:600;">&#10132; Profil</span>
                 </div>
             </div>
         `;
@@ -259,15 +298,15 @@ function openUserProfileView(username) {
 
     const badges = (user.roles || ['premium']).map(r => {
         const low = r.toLowerCase();
-        if (low === 'inhaber' || low === 'admin') return '<span class="badge" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;">ðŸ‘‘ INHABER</span>';
-        if (low === 'co-admin') return '<span class="badge" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;">ðŸ›¡ï¸ CO-ADMIN</span>';
-        if (low === 'developer') return '<span class="badge" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;">ðŸ’» DEVELOPER</span>';
-        if (low === 'moderator') return '<span class="badge" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;">ðŸ”¨ MODERATOR</span>';
-        if (low === 'supporter') return '<span class="badge" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;">ðŸŽ§ SUPPORTER</span>';
-        if (low === 'donator') return '<span class="badge" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;">ðŸ’– DONATOR</span>';
-        if (low === 'vip') return '<span class="badge" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;">â­ VIP</span>';
-        if (low === 'elite') return '<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;">âš¡ ELITE</span>';
-        return '<span class="badge" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;">ðŸ’Ž PREMIUM</span>';
+        if (low === 'inhaber' || low === 'admin') return '<span class="badge" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸ‘‘ INHABER</span>';
+        if (low === 'co-admin') return '<span class="badge" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸ›¡ï¸ CO-ADMIN</span>';
+        if (low === 'developer') return '<span class="badge" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸ’» DEVELOPER</span>';
+        if (low === 'moderator') return '<span class="badge" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸ”¨ MODERATOR</span>';
+        if (low === 'supporter') return '<span class="badge" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸŽ§ SUPPORTER</span>';
+        if (low === 'donator') return '<span class="badge" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸ’– DONATOR</span>';
+        if (low === 'vip') return '<span class="badge" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">â­ VIP</span>';
+        if (low === 'elite') return '<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">âš¡ ELITE</span>';
+        return '<span class="badge" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸ’Ž PREMIUM</span>';
     }).join(' ');
 
     const avatarSrc = user.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(user.username);
@@ -8242,30 +8281,48 @@ function backToUserSearchModal() {
 async function loadUserSearchData() {
     const listEl = document.getElementById('modal-user-search-list');
     if (listEl) {
-        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#94a3b8;"><i class="fas fa-spinner fa-spin fa-2x" style="color:#7c3aed;margin-bottom:12px;"></i><br>Lade alle Benutzer & Kunden...</div>';
+        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#94a3b8;"><span style="color:#7c3aed;font-size:24px;">&#8987;</span><br>Lade alle Benutzer & Kunden...</div>';
     }
 
     try {
-        const [licRes, staffRes, profRes, confRes, highRes] = await Promise.all([
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/licenses.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/staff.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/profiles.json?t=' + Date.now()).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/configs.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/highlights.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => [])
-        ]);
+        // Parallel fetch from GitHub with fallback to memory
+        let licRes = (typeof ALL_LICENSES !== 'undefined' && Array.isArray(ALL_LICENSES) && ALL_LICENSES.length > 0) ? ALL_LICENSES : [];
+        let staffRes = (typeof ALL_STAFF !== 'undefined' && Array.isArray(ALL_STAFF) && ALL_STAFF.length > 0) ? ALL_STAFF : [];
+        let profRes = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES) ? USER_PROFILES : {};
+        let confRes = (typeof ALL_CONFIGS !== 'undefined' && Array.isArray(ALL_CONFIGS)) ? ALL_CONFIGS : [];
+        let highRes = [];
+
+        try {
+            const [l, s, p, c, h] = await Promise.all([
+                fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/licenses.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
+                fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/staff.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
+                fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/profiles.json?t=' + Date.now()).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+                fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/configs.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
+                fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/highlights.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => [])
+            ]);
+            if (Array.isArray(l) && l.length > 0) licRes = l;
+            if (Array.isArray(s) && s.length > 0) staffRes = s;
+            if (p && typeof p === 'object' && Object.keys(p).length > 0) profRes = p;
+            if (Array.isArray(c) && c.length > 0) confRes = c;
+            if (Array.isArray(h)) highRes = h;
+        } catch(_) {}
 
         const userMap = new Map();
 
-        // Licenses
+        // 1. Licenses / Customers
         if (Array.isArray(licRes)) {
             licRes.forEach(lic => {
-                const uname = (lic.used_by && lic.used_by.trim() !== '') ? lic.used_by.trim() : (lic.key || 'Unbekannt');
+                const uname = (lic.used_by && lic.used_by.trim() !== '' && lic.used_by !== '---') ? lic.used_by.trim() : (lic.key || 'Kunde');
                 const lower = uname.toLowerCase();
                 if (!userMap.has(lower)) {
                     userMap.set(lower, {
                         username: uname,
                         key: lic.key || '',
+                        status: lic.status || 'active',
+                        created_at: lic.created_at || '',
+                        expires_at: lic.expires_at || '',
                         roles: ['premium'],
+                        isCustomer: true,
                         bio: '',
                         avatar: '',
                         guestbook: [],
@@ -8273,12 +8330,14 @@ async function loadUserSearchData() {
                         highlights: []
                     });
                 } else {
-                    userMap.get(lower).key = lic.key;
+                    const u = userMap.get(lower);
+                    u.key = u.key || lic.key;
+                    u.isCustomer = true;
                 }
             });
         }
 
-        // Staff
+        // 2. Staff
         if (Array.isArray(staffRes)) {
             staffRes.forEach(st => {
                 const sname = (st.name || st.username || '').trim();
@@ -8289,6 +8348,7 @@ async function loadUserSearchData() {
                         userMap.set(lower, {
                             username: sname,
                             roles: [sRole],
+                            isStaff: true,
                             bio: '',
                             avatar: '',
                             guestbook: [],
@@ -8298,12 +8358,13 @@ async function loadUserSearchData() {
                     } else {
                         const u = userMap.get(lower);
                         if (!u.roles.includes(sRole)) u.roles.push(sRole);
+                        u.isStaff = true;
                     }
                 }
             });
         }
 
-        // Profiles
+        // 3. Profiles
         if (profRes && typeof profRes === 'object') {
             Object.keys(profRes).forEach(k => {
                 const lower = k.toLowerCase();
@@ -8333,7 +8394,7 @@ async function loadUserSearchData() {
             });
         }
 
-        // Configs
+        // 4. Configs
         if (Array.isArray(confRes)) {
             confRes.forEach(c => {
                 const author = (c.author || c.creator || c.user || '').trim();
@@ -8356,7 +8417,7 @@ async function loadUserSearchData() {
             });
         }
 
-        // Highlights
+        // 5. Highlights
         if (Array.isArray(highRes)) {
             highRes.forEach(h => {
                 const uploader = (h.user || h.uploader || h.author || '').trim();
@@ -8379,10 +8440,27 @@ async function loadUserSearchData() {
             });
         }
 
+        // Always ensure current user is in search list
+        const curUser = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER.name) ? CURRENT_USER.name : 'ADMIN';
+        if (!userMap.has(curUser.toLowerCase())) {
+            userMap.set(curUser.toLowerCase(), {
+                username: curUser,
+                roles: ['inhaber'],
+                bio: '',
+                avatar: '',
+                guestbook: [],
+                configs: [],
+                highlights: []
+            });
+        }
+
         ALL_SEARCH_USERS = Array.from(userMap.values());
         filterModalUserSearch();
     } catch (e) {
         console.error('Error loadUserSearchData:', e);
+        if (listEl) {
+            listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:#f43f5e;">Fehler beim Laden der Benutzer.</div>';
+        }
     }
 }
 
@@ -8404,22 +8482,22 @@ function renderModalUserSearch(users) {
     if (!listEl) return;
 
     if (!users || users.length === 0) {
-        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px 20px;color:#94a3b8;"><i class="fas fa-users-slash fa-3x" style="margin-bottom:14px;opacity:0.5;"></i><br><span style="font-size:1.05rem;font-weight:600;">Keine Benutzer gefunden</span></div>';
+        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px 20px;color:#94a3b8;"><span style="font-size:32px;opacity:0.5;">&#128101;</span><br><span style="font-size:1.05rem;font-weight:600;">Keine Benutzer gefunden</span></div>';
         return;
     }
 
     listEl.innerHTML = users.map(u => {
         const badges = (u.roles || ['premium']).map(r => {
             const low = r.toLowerCase();
-            if (low === 'inhaber' || low === 'admin') return '<span class="badge" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;">ðŸ‘‘ INHABER</span>';
-            if (low === 'co-admin') return '<span class="badge" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;">ðŸ›¡ï¸ CO-ADMIN</span>';
-            if (low === 'developer') return '<span class="badge" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;">ðŸ’» DEVELOPER</span>';
-            if (low === 'moderator') return '<span class="badge" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;">ðŸ”¨ MODERATOR</span>';
-            if (low === 'supporter') return '<span class="badge" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;">ðŸŽ§ SUPPORTER</span>';
-            if (low === 'donator') return '<span class="badge" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;">ðŸ’– DONATOR</span>';
-            if (low === 'vip') return '<span class="badge" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;">â­ VIP</span>';
-            if (low === 'elite') return '<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;">âš¡ ELITE</span>';
-            return '<span class="badge" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;">ðŸ’Ž PREMIUM</span>';
+            if (low === 'inhaber' || low === 'admin') return '<span class="badge" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸ‘‘ INHABER</span>';
+            if (low === 'co-admin') return '<span class="badge" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸ›¡ï¸ CO-ADMIN</span>';
+            if (low === 'developer') return '<span class="badge" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸ’» DEVELOPER</span>';
+            if (low === 'moderator') return '<span class="badge" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸ”¨ MODERATOR</span>';
+            if (low === 'supporter') return '<span class="badge" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸŽ§ SUPPORTER</span>';
+            if (low === 'donator') return '<span class="badge" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸ’– DONATOR</span>';
+            if (low === 'vip') return '<span class="badge" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">â­ VIP</span>';
+            if (low === 'elite') return '<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">âš¡ ELITE</span>';
+            return '<span class="badge" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;padding:2px 6px;border-radius:4px;font-size:10px;">ðŸ’Ž PREMIUM</span>';
         }).join(' ');
 
         const avatarSrc = u.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(u.username);
@@ -8441,9 +8519,9 @@ function renderModalUserSearch(users) {
                 ${u.bio ? `<div style="font-size:0.75rem;color:#94a3b8;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">"${escapeHtml(u.bio)}"</div>` : ''}
 
                 <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.72rem;color:#94a3b8;">
-                    <span><i class="fas fa-video" style="color:#06b6d4;"></i> ${clipCount} Clips</span>
-                    <span><i class="fas fa-sliders-h" style="color:#e5a93c;"></i> ${configCount} Configs</span>
-                    <span style="color:#7c3aed;font-weight:600;"><i class="fas fa-external-link-alt"></i> Profil</span>
+                    <span>&#127916; ${clipCount} Clips</span>
+                    <span>&#128193; ${configCount} Configs</span>
+                    <span style="color:#7c3aed;font-weight:600;">&#10132; Profil</span>
                 </div>
             </div>
         `;
@@ -8464,15 +8542,15 @@ function openUserProfileView(username) {
 
     const badges = (user.roles || ['premium']).map(r => {
         const low = r.toLowerCase();
-        if (low === 'inhaber' || low === 'admin') return '<span class="badge" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;">ðŸ‘‘ INHABER</span>';
-        if (low === 'co-admin') return '<span class="badge" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;">ðŸ›¡ï¸ CO-ADMIN</span>';
-        if (low === 'developer') return '<span class="badge" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;">ðŸ’» DEVELOPER</span>';
-        if (low === 'moderator') return '<span class="badge" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;">ðŸ”¨ MODERATOR</span>';
-        if (low === 'supporter') return '<span class="badge" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;">ðŸŽ§ SUPPORTER</span>';
-        if (low === 'donator') return '<span class="badge" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;">ðŸ’– DONATOR</span>';
-        if (low === 'vip') return '<span class="badge" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;">â­ VIP</span>';
-        if (low === 'elite') return '<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;">âš¡ ELITE</span>';
-        return '<span class="badge" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;">ðŸ’Ž PREMIUM</span>';
+        if (low === 'inhaber' || low === 'admin') return '<span class="badge" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸ‘‘ INHABER</span>';
+        if (low === 'co-admin') return '<span class="badge" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸ›¡ï¸ CO-ADMIN</span>';
+        if (low === 'developer') return '<span class="badge" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸ’» DEVELOPER</span>';
+        if (low === 'moderator') return '<span class="badge" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸ”¨ MODERATOR</span>';
+        if (low === 'supporter') return '<span class="badge" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸŽ§ SUPPORTER</span>';
+        if (low === 'donator') return '<span class="badge" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸ’– DONATOR</span>';
+        if (low === 'vip') return '<span class="badge" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">â­ VIP</span>';
+        if (low === 'elite') return '<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">âš¡ ELITE</span>';
+        return '<span class="badge" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;padding:3px 8px;border-radius:4px;font-size:11px;">ðŸ’Ž PREMIUM</span>';
     }).join(' ');
 
     const avatarSrc = user.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(user.username);
@@ -8758,25 +8836,28 @@ async function submitModalGuestbook(targetUsername) {
 <!-- USER SEARCH MODAL -->
 <div id="user-search-modal" class="modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:99999;align-items:center;justify-content:center;padding:20px;">
     <div style="background:#10121a;border:1px solid rgba(124,58,237,0.3);box-shadow:0 12px 40px rgba(0,0,0,0.7),0 0 25px rgba(124,58,237,0.2);border-radius:14px;width:100%;max-width:850px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;">
+        <!-- Header -->
         <div style="padding:16px 22px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;background:rgba(124,58,237,0.08);">
-            <div style="display:flex;align-items:center;gap:10px;">
-                <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg, #7c3aed, #3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;">
-                    <i class="fas fa-users fa-lg"></i>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg, #7c3aed, #3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;">
+                    &#128101;
                 </div>
                 <div>
-                    <h2 style="margin:0;font-size:1.15rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.5px;">COMMUNITY & USER SUCHEN</h2>
-                    <p style="margin:2px 0 0;font-size:0.75rem;color:#94a3b8;">Finde alle registrierten Kunden, Mitarbeiter & Profile der Community</p>
+                    <h2 style="margin:0;font-size:1.15rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.5px;">COMMUNITY &amp; USER SUCHEN</h2>
+                    <p style="margin:2px 0 0;font-size:0.75rem;color:#94a3b8;">Finde alle registrierten Kunden, Mitarbeiter &amp; Profile der Community</p>
                 </div>
             </div>
-            <button onclick="closeUserSearchModal()" style="background:transparent;border:none;color:#94a3b8;font-size:1.3rem;cursor:pointer;padding:4px 8px;"><i class="fas fa-times"></i></button>
+            <button onclick="closeUserSearchModal()" style="background:#1e2333;border:1px solid rgba(255,255,255,0.15);color:#cbd5e1;font-size:1.1rem;font-weight:900;cursor:pointer;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:0.2s;" onmouseover="this.style.background='#f43f5e';this.style.color='#fff';" onmouseout="this.style.background='#1e2333';this.style.color='#cbd5e1;'>&#10005;</button>
         </div>
+
+        <!-- Filter Bar -->
         <div style="padding:14px 22px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;gap:12px;background:rgba(0,0,0,0.2);">
             <div style="position:relative;flex:1;">
-                <i class="fas fa-search" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#7c3aed;font-size:0.9rem;"></i>
-                <input type="text" id="modal-user-search-input" placeholder="User, Kunde, Lizenz-Key oder Bio suchen..." style="width:100%;padding:10px 14px 10px 38px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-size:0.85rem;" oninput="filterModalUserSearch()">
+                <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#7c3aed;font-size:14px;">&#128269;</span>
+                <input type="text" id="modal-user-search-input" placeholder="User, Kunde, Lizenz-Key oder Bio suchen..." style="width:100%;padding:10px 14px 10px 38px;background:#090a0f;border:1px solid #1e2333;border-radius:8px;color:#fff;font-size:0.85rem;" oninput="filterModalUserSearch()">
             </div>
-            <select id="modal-user-role-filter" onchange="filterModalUserSearch()" style="background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#cbd5e1;padding:0 14px;font-size:0.85rem;font-weight:600;cursor:pointer;">
-                <option value="all">ðŸŽ­ Alle Rollen</option>
+            <select id="modal-user-role-filter" onchange="filterModalUserSearch()" style="background:#090a0f;border:1px solid #1e2333;border-radius:8px;color:#cbd5e1;padding:0 14px;font-size:0.85rem;font-weight:600;cursor:pointer;">
+                <option value="all">Alle Rollen</option>
                 <option value="inhaber">ðŸ‘‘ INHABER</option>
                 <option value="co-admin">ðŸ›¡ï¸ CO-ADMIN</option>
                 <option value="developer">ðŸ’» DEVELOPER</option>
@@ -8788,21 +8869,28 @@ async function submitModalGuestbook(targetUsername) {
                 <option value="premium">ðŸ’Ž PREMIUM</option>
             </select>
         </div>
-        <div id="modal-user-search-list" style="padding:18px 22px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:14px;flex:1;"></div>
+
+        <!-- User List -->
+        <div id="modal-user-search-list" style="padding:18px 22px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:14px;flex:1;">
+        </div>
     </div>
 </div>
 
 <!-- USER DETAIL PROFILE MODAL -->
 <div id="user-profile-view-modal" class="modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:100000;align-items:center;justify-content:center;padding:20px;">
     <div style="background:#10121a;border:1px solid rgba(124,58,237,0.3);box-shadow:0 12px 40px rgba(0,0,0,0.7),0 0 30px rgba(124,58,237,0.25);border-radius:14px;width:100%;max-width:750px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;">
+        <!-- Header -->
         <div style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;background:rgba(124,58,237,0.08);">
             <div style="display:flex;align-items:center;gap:10px;">
                 <button onclick="backToUserSearchModal()" class="btn btn-outline" style="padding:4px 10px;font-size:0.75rem;"><i class="fas fa-arrow-left"></i> ZURÃœCK</button>
-                <span style="font-weight:700;color:#fff;font-size:0.95rem;text-transform:uppercase;"><i class="fas fa-user-circle" style="color:#7c3aed;margin-right:6px;"></i> BENUTZERPROFIL</span>
+                <span style="font-weight:700;color:#fff;font-size:0.95rem;text-transform:uppercase;"><span style="color:#7c3aed;margin-right:6px;">&#128100;</span> BENUTZERPROFIL</span>
             </div>
-            <button onclick="closeUserProfileViewModal()" style="background:transparent;border:none;color:#94a3b8;font-size:1.3rem;cursor:pointer;padding:4px 8px;"><i class="fas fa-times"></i></button>
+            <button onclick="closeUserProfileViewModal()" style="background:#1e2333;border:1px solid rgba(255,255,255,0.15);color:#cbd5e1;font-size:1.1rem;font-weight:900;cursor:pointer;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:0.2s;" onmouseover="this.style.background='#f43f5e';this.style.color='#fff';" onmouseout="this.style.background='#1e2333';this.style.color='#cbd5e1;'>&#10005;</button>
         </div>
-        <div id="user-profile-view-body" style="padding:20px;overflow-y:auto;flex:1;"></div>
+
+        <!-- Body Content -->
+        <div id="user-profile-view-body" style="padding:20px;overflow-y:auto;flex:1;">
+        </div>
     </div>
 </div>
 </body>
