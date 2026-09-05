@@ -5284,12 +5284,13 @@ async function loadStaffList(silent=false) {
   if(tbody) renderStaffTable();
 }
 
+
 function renderStaffTable() {
   const tbody = document.getElementById("staff-table-body");
   if(!tbody) return;
 
   if(ALL_STAFF.length === 0) {
-    tbody.innerHTML = <tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px;">Keine Mitarbeiter angelegt. Klicke oben auf '&#10133; NEUEN MITARBEITER ANLEGEN'!</td></tr>;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px;">Keine Mitarbeiter angelegt. Klicke oben auf '&#10133; NEUEN MITARBEITER ANLEGEN'!</td></tr>`;
     return;
   }
 
@@ -5302,40 +5303,40 @@ function renderStaffTable() {
     const permBadges = [];
     if(perms.can_generate_keys) {
       const maxD = perms.max_duration ? (durTextMap[perms.max_duration] || perms.max_duration) : "Alle";
-      permBadges.push(<span class="tag-duration" style="color:#e5a93c;">&#128273; Keys ( + maxD + )</span>);
+      permBadges.push(`<span class="tag-duration" style="color:#e5a93c;">&#128273; Keys (` + maxD + `)</span>`);
     }
     if(perms.can_edit_keys) {
       const editD = perms.edit_max_duration ? (durTextMap[perms.edit_max_duration] || perms.edit_max_duration) : "Alle";
-      permBadges.push(<span class="tag-duration" style="color:#60a5fa;">&#9999;&#65039; Edit ( + editD + )</span>);
+      permBadges.push(`<span class="tag-duration" style="color:#60a5fa;">&#9999;&#65039; Edit (` + editD + `)</span>`);
     }
     if(perms.can_pause_keys) {
       const pauseD = perms.max_pause_duration ? (durTextMap[perms.max_pause_duration] || perms.max_pause_duration) : "Alle";
-      permBadges.push(<span class="tag-duration" style="color:#a78bfa;">&#9208;&#65039; Pause ( + pauseD + )</span>);
+      permBadges.push(`<span class="tag-duration" style="color:#a78bfa;">&#9208;&#65039; Pause (` + pauseD + `)</span>`);
     }
-    if(perms.can_reset_hwid) permBadges.push(<span class="tag-duration">&#128260; HWID Reset</span>);
-    if(perms.can_delete_keys) permBadges.push(<span class="tag-duration" style="color:#f43f5e;">&#128683; Delete</span>);
-    if(perms.can_manage_cheats) permBadges.push(<span class="tag-duration">&#128187; Cheats</span>);
-    if(perms.can_view_logs) permBadges.push(<span class="tag-duration">&#128202; Logs</span>);
-    if(perms.can_manage_staff) permBadges.push(<span class="tag-duration">&#128101; Team</span>);
+    if(perms.can_reset_hwid) permBadges.push(`<span class="tag-duration">&#128260; HWID Reset</span>`);
+    if(perms.can_delete_keys) permBadges.push(`<span class="tag-duration" style="color:#f43f5e;">&#128683; Delete</span>`);
+    if(perms.can_manage_cheats) permBadges.push(`<span class="tag-duration">&#128187; Cheats</span>`);
+    if(perms.can_view_logs) permBadges.push(`<span class="tag-duration">&#128202; Logs</span>`);
+    if(perms.can_manage_staff) permBadges.push(`<span class="tag-duration">&#128101; Team</span>`);
 
-    return 
+    return `
       <tr>
-        <td style="font-weight:800;color:#f8fafc;"><span style="color:#e5a93c;margin-right:6px;">&#128104;&#8205;&#128187;</span>  + s.name + </td>
-        <td> + getRankBadge(s.name, s.role || 'Supporter') + </td>
-        <td style="font-family:'JetBrains Mono',monospace;color:#64748b;"> + (s.password ? '••••••••' : '---') + </td>
+        <td style="font-weight:800;color:#f8fafc;"><span style="color:#e5a93c;margin-right:6px;">&#128104;&#8205;&#128187;</span> ` + s.name + `</td>
+        <td>` + getRankBadge(s.name, s.role || 'Supporter') + `</td>
+        <td style="font-family:'JetBrains Mono',monospace;color:#64748b;">` + (s.password ? '••••••••' : '---') + `</td>
         <td>
           <div style="display:flex;gap:4px;flex-wrap:wrap;">
-             + (permBadges.length > 0 ? permBadges.join("") : '<span style="color:#64748b;font-size:11px;">Keine Rechte</span>') + 
+            ` + (permBadges.length > 0 ? permBadges.join("") : '<span style="color:#64748b;font-size:11px;">Keine Rechte</span>') + `
           </div>
         </td>
         <td style="text-align:right;">
           <div style="display:flex;gap:6px;justify-content:flex-end;">
-            <button onclick="openStaffModal( + idx + )" style="background:#141724;border:1px solid #232a3e;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#9999;&#65039; Edit</button>
-            <button onclick="deleteStaff( + idx + )" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128461;&#65039;</button>
+            <button onclick="openStaffModal(` + idx + `)" style="background:#141724;border:1px solid #232a3e;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#9999;&#65039; Edit</button>
+            <button onclick="deleteStaff(` + idx + `)" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128461;&#65039;</button>
           </div>
         </td>
       </tr>
-    ;
+    `;
   }).join("");
 }
 function openStaffModal(idx = -1) {
@@ -7985,6 +7986,7 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
 
 
 
