@@ -2680,7 +2680,11 @@ async function doLogin() {
     if (loginBtn) {
       loginBtn.disabled = false;
       loginBtn.textContent = origBtnText;
-        }\n  }\n}\n\nfunction handleLoginSuccess(user, pass) {
+        }
+  }
+}
+
+function handleLoginSuccess(user, pass) {
   try {
     const cb = document.getElementById("save-pw-cb");
     if (cb && cb.checked) {
