@@ -3287,6 +3287,29 @@ function renderLicensesTable(list) {
     const noteText = lic.note && lic.note !== '---' ? `<div style="color:#64748b;font-size:11px;margin-top:3px;display:flex;align-items:center;gap:4px;"><span>📝</span> ${lic.note}</div>` : '';
     const cbDisabled = (!CURRENT_USER.is_admin && isProtectedAdmin) ? 'disabled' : '';
 
+    let displayedDuration = lic.duration_label || lic.duration;
+    if (lic.duration === 'lifetime' || (lic.expires_at && lic.expires_at.toUpperCase() === 'LIFETIME')) {
+      displayedDuration = 'Lifetime';
+    } else if (lic.expires_at) {
+      const parsedExp = parseGermanDate(lic.expires_at);
+      if (parsedExp) {
+        let baseDate = new Date();
+        if (lic.first_used_at) {
+          const parsedFirst = parseGermanDate(lic.first_used_at);
+          if (parsedFirst) baseDate = parsedFirst;
+        }
+        const totalDiffDays = Math.max(1, Math.round((parsedExp.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24)));
+        if (totalDiffDays === 1) displayedDuration = "1 Tag (Trial)";
+        else if (totalDiffDays === 3) displayedDuration = "3 Tage";
+        else if (totalDiffDays === 7) displayedDuration = "7 Tage (Woche)";
+        else if (totalDiffDays === 14) displayedDuration = "14 Tage";
+        else if (totalDiffDays >= 28 && totalDiffDays <= 31) displayedDuration = "30 Tage (1 Monat)";
+        else if (totalDiffDays >= 88 && totalDiffDays <= 93) displayedDuration = "90 Tage (3 Monate)";
+        else if (totalDiffDays >= 360 && totalDiffDays <= 366) displayedDuration = "365 Tage (1 Jahr)";
+        else displayedDuration = `${totalDiffDays} Tage`;
+      }
+    }
+
     return `
       <tr style="${isChecked ? 'background:rgba(229,169,60,0.06);' : ''}">
         <td style="text-align:center;">
@@ -3303,7 +3326,7 @@ function renderLicensesTable(list) {
           </div>
           <div style="display:flex;gap:6px;margin-top:6px;align-items:center;">
             <span class="tag-product">${lic.product_name}</span>
-            <span class="tag-duration">${lic.duration_label || lic.duration}</span>
+            <span class="tag-duration">${displayedDuration}</span>
           </div>
         </td>
 
@@ -3493,6 +3516,35 @@ function addDaysToModalExpiry(days) {
 
   const stSelect = document.getElementById("edit-lic-status");
   if(stSelect && stSelect.value === "unused") stSelect.value = "active";
+
+  // Sync duration dropdown if possible
+  syncModalDurationFromExpiry();
+}
+
+function syncModalDurationFromExpiry() {
+  const expInput = document.getElementById("edit-lic-expires");
+  const durSelect = document.getElementById("edit-lic-duration");
+  if(!expInput || !durSelect) return;
+  const expVal = expInput.value.trim();
+  if(expVal === "LIFETIME") {
+    durSelect.value = "lifetime";
+    return;
+  }
+  const parsedExp = parseGermanDate(expVal);
+  if(!parsedExp) return;
+
+  let baseDate = new Date();
+  if(_editingLicKey) {
+    const lic = ALL_LICENSES.find(l => l.key === _editingLicKey);
+    if(lic && lic.first_used_at) {
+      const parsedFirst = parseGermanDate(lic.first_used_at);
+      if(parsedFirst) baseDate = parsedFirst;
+    }
+  }
+  const diffDays = Math.max(1, Math.round((parsedExp.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24)));
+  if([1, 3, 7, 14, 30, 90, 365].includes(diffDays)) {
+    durSelect.value = String(diffDays);
+  }
 }
 
 function setModalExpiryLifetime() {
@@ -3564,10 +3616,41 @@ async function saveEditLicModal() {
     lic.product = prod;
     lic.product_name = prodNames[prod] || prod;
   }
+
   if(isAdmin || perms.edit_allow_duration !== false) {
-    lic.duration = dur;
-    lic.duration_label = durLabels[dur] || dur;
     lic.expires_at = exp;
+
+    if(exp === "LIFETIME") {
+      lic.duration = "lifetime";
+      lic.duration_label = "Lifetime";
+    } else if(exp) {
+      const parsedExp = parseGermanDate(exp);
+      if(parsedExp) {
+        let baseDate = new Date();
+        if(lic.first_used_at) {
+          const parsedFirst = parseGermanDate(lic.first_used_at);
+          if(parsedFirst) baseDate = parsedFirst;
+        }
+        const totalDiffDays = Math.max(1, Math.round((parsedExp.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24)));
+        if(totalDiffDays === 1) { lic.duration = "1"; lic.duration_label = "1 Tag (Trial)"; }
+        else if(totalDiffDays === 3) { lic.duration = "3"; lic.duration_label = "3 Tage"; }
+        else if(totalDiffDays === 7) { lic.duration = "7"; lic.duration_label = "7 Tage (Woche)"; }
+        else if(totalDiffDays === 14) { lic.duration = "14"; lic.duration_label = "14 Tage"; }
+        else if(totalDiffDays >= 28 && totalDiffDays <= 31) { lic.duration = "30"; lic.duration_label = "30 Tage (1 Monat)"; }
+        else if(totalDiffDays >= 88 && totalDiffDays <= 93) { lic.duration = "90"; lic.duration_label = "90 Tage (3 Monate)"; }
+        else if(totalDiffDays >= 360 && totalDiffDays <= 366) { lic.duration = "365"; lic.duration_label = "365 Tage (1 Jahr)"; }
+        else {
+          lic.duration = String(totalDiffDays);
+          lic.duration_label = `${totalDiffDays} Tage`;
+        }
+      } else {
+        lic.duration = dur;
+        lic.duration_label = durLabels[dur] || `${dur} Tage`;
+      }
+    } else {
+      lic.duration = dur;
+      lic.duration_label = durLabels[dur] || `${dur} Tage`;
+    }
   }
   if(isAdmin || perms.edit_allow_note !== false) {
     lic.used_by = usr;
