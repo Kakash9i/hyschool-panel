@@ -645,13 +645,16 @@
     box-shadow: 0 4px 14px rgba(0,0,0,0.4);
   }
   /* RANK BADGES SYSTEM */
-  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
-  .badge-rank-admin { background: linear-gradient(135deg, rgba(229,169,60,0.25) 0%, rgba(245,158,11,0.15) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 0 10px rgba(229,169,60,0.3); }
-  .badge-rank-staff { background: rgba(56,189,248,0.18); color: #38bdf8; border: 1px solid rgba(56,189,248,0.45); box-shadow: 0 0 10px rgba(56,189,248,0.25); }
-  .badge-rank-vip { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.15) 100%); color: #e879f9; border: 1px solid rgba(217,70,239,0.5); box-shadow: 0 0 12px rgba(168,85,247,0.35); }
-  .badge-rank-elite { background: rgba(249,115,22,0.18); color: #fb923c; border: 1px solid rgba(249,115,22,0.45); box-shadow: 0 0 10px rgba(249,115,22,0.25); }
-  .badge-rank-premium { background: rgba(59,130,246,0.18); color: #60a5fa; border: 1px solid rgba(59,130,246,0.45); box-shadow: 0 0 10px rgba(59,130,246,0.25); }
-  .badge-rank-kunde { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.35); }
+  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2.5px 8px; border-radius: 4px; font-size: 9.5px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; transition: all 0.2s ease; }
+  .badge-rank-admin, .badge-rank-inhaber { background: linear-gradient(135deg, rgba(245,158,11,0.25) 0%, rgba(217,119,6,0.18) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.55); box-shadow: 0 0 10px rgba(245,158,11,0.3); }
+  .badge-rank-coadmin { background: linear-gradient(135deg, rgba(244,63,94,0.25) 0%, rgba(225,29,72,0.18) 100%); color: #fb7185; border: 1px solid rgba(244,63,94,0.55); box-shadow: 0 0 10px rgba(244,63,94,0.3); }
+  .badge-rank-dev, .badge-rank-developer { background: linear-gradient(135deg, rgba(14,165,233,0.25) 0%, rgba(2,132,199,0.18) 100%); color: #38bdf8; border: 1px solid rgba(14,165,233,0.55); box-shadow: 0 0 10px rgba(14,165,233,0.3); }
+  .badge-rank-mod, .badge-rank-moderator { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(147,51,234,0.18) 100%); color: #c084fc; border: 1px solid rgba(168,85,247,0.55); box-shadow: 0 0 10px rgba(168,85,247,0.3); }
+  .badge-rank-supporter, .badge-rank-support, .badge-rank-staff { background: linear-gradient(135deg, rgba(16,185,129,0.25) 0%, rgba(5,150,105,0.18) 100%); color: #34d399; border: 1px solid rgba(16,185,129,0.55); box-shadow: 0 0 10px rgba(16,185,129,0.3); }
+  .badge-rank-vip { background: linear-gradient(135deg, rgba(236,72,153,0.25) 0%, rgba(219,39,119,0.18) 100%); color: #f472b6; border: 1px solid rgba(236,72,153,0.55); box-shadow: 0 0 12px rgba(236,72,153,0.3); }
+  .badge-rank-elite { background: linear-gradient(135deg, rgba(249,115,22,0.25) 0%, rgba(234,88,12,0.18) 100%); color: #fb923c; border: 1px solid rgba(249,115,22,0.55); box-shadow: 0 0 10px rgba(249,115,22,0.3); }
+  .badge-rank-premium { background: linear-gradient(135deg, rgba(99,102,241,0.25) 0%, rgba(79,70,229,0.18) 100%); color: #818cf8; border: 1px solid rgba(99,102,241,0.55); box-shadow: 0 0 10px rgba(99,102,241,0.3); }
+  .badge-rank-kunde { background: linear-gradient(135deg, rgba(100,116,139,0.2) 0%, rgba(71,85,105,0.15) 100%); color: #cbd5e1; border: 1px solid rgba(100,116,139,0.45); box-shadow: 0 0 8px rgba(100,116,139,0.2); }
 
   /* HIGHLIGHTS / CLIPS GRID & CARDS */
   .highlights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
@@ -670,13 +673,16 @@
   .main-tab.active { background: linear-gradient(135deg, #182034 0%, #0e121d 100%); color: #ffffff; border-color: #e5a93c; box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(229,169,60,0.35); }
 
   /* RANK BADGES SYSTEM */
-  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 5px; font-size: 9.5px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
-  .badge-rank-admin { background: linear-gradient(135deg, rgba(229,169,60,0.25) 0%, rgba(245,158,11,0.15) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 0 10px rgba(229,169,60,0.3); }
-  .badge-rank-staff { background: rgba(56,189,248,0.18); color: #38bdf8; border: 1px solid rgba(56,189,248,0.45); box-shadow: 0 0 10px rgba(56,189,248,0.25); }
-  .badge-rank-vip { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.15) 100%); color: #e879f9; border: 1px solid rgba(217,70,239,0.5); box-shadow: 0 0 12px rgba(168,85,247,0.35); }
-  .badge-rank-elite { background: rgba(249,115,22,0.18); color: #fb923c; border: 1px solid rgba(249,115,22,0.45); box-shadow: 0 0 10px rgba(249,115,22,0.25); }
-  .badge-rank-premium { background: rgba(59,130,246,0.18); color: #60a5fa; border: 1px solid rgba(59,130,246,0.45); box-shadow: 0 0 10px rgba(59,130,246,0.25); }
-  .badge-rank-kunde { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.35); }
+  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2.5px 8px; border-radius: 4px; font-size: 9.5px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; transition: all 0.2s ease; }
+  .badge-rank-admin, .badge-rank-inhaber { background: linear-gradient(135deg, rgba(245,158,11,0.25) 0%, rgba(217,119,6,0.18) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.55); box-shadow: 0 0 10px rgba(245,158,11,0.3); }
+  .badge-rank-coadmin { background: linear-gradient(135deg, rgba(244,63,94,0.25) 0%, rgba(225,29,72,0.18) 100%); color: #fb7185; border: 1px solid rgba(244,63,94,0.55); box-shadow: 0 0 10px rgba(244,63,94,0.3); }
+  .badge-rank-dev, .badge-rank-developer { background: linear-gradient(135deg, rgba(14,165,233,0.25) 0%, rgba(2,132,199,0.18) 100%); color: #38bdf8; border: 1px solid rgba(14,165,233,0.55); box-shadow: 0 0 10px rgba(14,165,233,0.3); }
+  .badge-rank-mod, .badge-rank-moderator { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(147,51,234,0.18) 100%); color: #c084fc; border: 1px solid rgba(168,85,247,0.55); box-shadow: 0 0 10px rgba(168,85,247,0.3); }
+  .badge-rank-supporter, .badge-rank-support, .badge-rank-staff { background: linear-gradient(135deg, rgba(16,185,129,0.25) 0%, rgba(5,150,105,0.18) 100%); color: #34d399; border: 1px solid rgba(16,185,129,0.55); box-shadow: 0 0 10px rgba(16,185,129,0.3); }
+  .badge-rank-vip { background: linear-gradient(135deg, rgba(236,72,153,0.25) 0%, rgba(219,39,119,0.18) 100%); color: #f472b6; border: 1px solid rgba(236,72,153,0.55); box-shadow: 0 0 12px rgba(236,72,153,0.3); }
+  .badge-rank-elite { background: linear-gradient(135deg, rgba(249,115,22,0.25) 0%, rgba(234,88,12,0.18) 100%); color: #fb923c; border: 1px solid rgba(249,115,22,0.55); box-shadow: 0 0 10px rgba(249,115,22,0.3); }
+  .badge-rank-premium { background: linear-gradient(135deg, rgba(99,102,241,0.25) 0%, rgba(79,70,229,0.18) 100%); color: #818cf8; border: 1px solid rgba(99,102,241,0.55); box-shadow: 0 0 10px rgba(99,102,241,0.3); }
+  .badge-rank-kunde { background: linear-gradient(135deg, rgba(100,116,139,0.2) 0%, rgba(71,85,105,0.15) 100%); color: #cbd5e1; border: 1px solid rgba(100,116,139,0.45); box-shadow: 0 0 8px rgba(100,116,139,0.2); }
 
     /* EXTENSION BADGES */
   .badge-ext-box {
@@ -5255,7 +5261,7 @@ function renderStaffTable() {
     return `
       <tr>
         <td style="font-weight:800;color:#f8fafc;"><span style="color:#e5a93c;margin-right:6px;">👤</span> ${s.name}</td>
-        <td><span class="tag-product">${s.role || 'Supporter'}</span></td>
+        <td>${getRankBadge(s.name, s.role || 'Supporter')}</td>
         <td style="font-family:'JetBrains Mono',monospace;color:#64748b;">${s.password ? '••••••••' : '---'}</td>
         <td>
           <div style="display:flex;gap:4px;flex-wrap:wrap;">
@@ -6902,16 +6908,18 @@ let _activePlayerHighlight = null;
 
 function getRankBadge(username, userRank) {
   const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES[username]) ? USER_PROFILES[username] : {};
-  const r = (userRank || prof.rank || "kunde").toLowerCase();
+  const r = (userRank || prof.rank || "kunde").toLowerCase().trim();
   
-  if (r === "ADMIN" || r === "inhaber" || (username && (username.toLowerCase() === "ADMIN" || username.toLowerCase() === "ADMIN"))) {
+  if (r === "admin" || r === "inhaber" || (username && (username.toLowerCase() === "admin" || username.toLowerCase() === "inhaber"))) {
     return '<span class="badge-rank badge-rank-admin">&#128081; INHABER</span>';
-  } else if (r === "co-admin" || r.includes("co-admin")) {
-    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; CO-ADMIN</span>';
-  } else if (r === "supporter" || r.includes("support")) {
-    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; SUPPORTER</span>';
-  } else if (r === "moderator" || r.includes("mod")) {
-    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; MODERATOR</span>';
+  } else if (r === "co-admin" || r.includes("co-admin") || r.includes("coadmin")) {
+    return '<span class="badge-rank badge-rank-coadmin">&#128737;&#65039; CO-ADMIN</span>';
+  } else if (r === "developer" || r === "dev" || r.includes("dev") || r.includes("entwickler")) {
+    return '<span class="badge-rank badge-rank-dev">&#128187; DEVELOPER</span>';
+  } else if (r === "moderator" || r === "mod" || r.includes("mod")) {
+    return '<span class="badge-rank badge-rank-mod">&#128296; MODERATOR</span>';
+  } else if (r === "supporter" || r === "support" || r.includes("support")) {
+    return '<span class="badge-rank badge-rank-supporter">&#127911; SUPPORTER</span>';
   } else if (r === "vip") {
     return '<span class="badge-rank badge-rank-vip">&#11088; VIP</span>';
   } else if (r === "elite") {
@@ -6921,6 +6929,7 @@ function getRankBadge(username, userRank) {
   } else {
     return '<span class="badge-rank badge-rank-kunde">&#128100; KUNDE</span>';
   }
+}
 }
 
 function toggleHighlightUploadCard() {
