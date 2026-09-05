@@ -7,7 +7,560 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>HYSCHOOL ADMIN PANEL</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js">
+// ==================== USER SEARCH & PROFILE MODAL SYSTEM ====================
+let ALL_SEARCH_USERS = [];
+let ACTIVE_VIEWED_USER = null;
+
+function getRankBadge(roles) {
+    if (!roles) roles = ['premium'];
+    if (typeof roles === 'string') {
+        roles = roles.split(',').map(r => r.trim()).filter(Boolean);
+    }
+    if (!Array.isArray(roles) || roles.length === 0) roles = ['premium'];
+
+    return roles.map(role => {
+        const r = role.toLowerCase().trim();
+        if (r === 'inhaber' || r === 'owner') {
+            return '<span class="badge badge-rank-inhaber"><i class="fas fa-crown"></i> ðŸ‘‘ INHABER</span>';
+        } else if (r === 'admin') {
+            return '<span class="badge badge-rank-admin"><i class="fas fa-user-shield"></i> ðŸ‘‘ INHABER</span>';
+        } else if (r === 'co-admin' || r === 'coadmin') {
+            return '<span class="badge badge-rank-coadmin"><i class="fas fa-shield-alt"></i> ðŸ›¡ï¸ CO-ADMIN</span>';
+        } else if (r === 'developer' || r === 'dev') {
+            return '<span class="badge badge-rank-developer"><i class="fas fa-code"></i> ðŸ’» DEVELOPER</span>';
+        } else if (r === 'moderator' || r === 'mod') {
+            return '<span class="badge badge-rank-moderator"><i class="fas fa-gavel"></i> ðŸ”¨ MODERATOR</span>';
+        } else if (r === 'supporter' || r === 'support') {
+            return '<span class="badge badge-rank-supporter"><i class="fas fa-headset"></i> ðŸŽ§ SUPPORTER</span>';
+        } else if (r === 'donator') {
+            return '<span class="badge badge-rank-donator"><i class="fas fa-heart"></i> ðŸ’– DONATOR</span>';
+        } else if (r === 'vip') {
+            return '<span class="badge badge-rank-vip"><i class="fas fa-star"></i> â­ VIP</span>';
+        } else if (r === 'elite') {
+            return '<span class="badge badge-rank-elite"><i class="fas fa-bolt"></i> âš¡ ELITE</span>';
+        } else {
+            return '<span class="badge badge-rank-premium"><i class="fas fa-gem"></i> ðŸ’Ž PREMIUM</span>';
+        }
+    }).join(' ');
+}
+
+async function openUserSearchModal() {
+    const modal = document.getElementById('user-search-modal');
+    if (modal) modal.style.display = 'flex';
+    await loadUserSearchData();
+}
+
+function closeUserSearchModal() {
+    const modal = document.getElementById('user-search-modal');
+    if (modal) modal.style.display = 'none';
+}
+
+function closeUserProfileViewModal() {
+    const modal = document.getElementById('user-profile-view-modal');
+    if (modal) modal.style.display = 'none';
+}
+
+function backToUserSearchModal() {
+    closeUserProfileViewModal();
+    const modal = document.getElementById('user-search-modal');
+    if (modal) modal.style.display = 'flex';
+}
+
+async function loadUserSearchData() {
+    const listEl = document.getElementById('modal-user-search-list');
+    if (listEl) {
+        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#94a3b8;"><i class="fas fa-spinner fa-spin fa-2x" style="color:#7c3aed;margin-bottom:12px;"></i><br>Lade alle Benutzer & Kunden...</div>';
+    }
+
+    try {
+        const [licRes, staffRes, profRes, confRes, highRes] = await Promise.all([
+            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/licenses.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
+            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/staff.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
+            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/profiles.json?t=' + Date.now()).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/configs.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
+            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/highlights.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => [])
+        ]);
+
+        const userMap = new Map();
+
+        // Licenses
+        if (Array.isArray(licRes)) {
+            licRes.forEach(lic => {
+                const uname = (lic.used_by && lic.used_by.trim() !== '') ? lic.used_by.trim() : (lic.key || 'Unbekannt');
+                const lower = uname.toLowerCase();
+                if (!userMap.has(lower)) {
+                    userMap.set(lower, {
+                        username: uname,
+                        key: lic.key || '',
+                        roles: ['premium'],
+                        bio: '',
+                        avatar: '',
+                        guestbook: [],
+                        configs: [],
+                        highlights: []
+                    });
+                } else {
+                    userMap.get(lower).key = lic.key;
+                }
+            });
+        }
+
+        // Staff
+        if (Array.isArray(staffRes)) {
+            staffRes.forEach(st => {
+                const sname = (st.name || st.username || '').trim();
+                if (sname) {
+                    const lower = sname.toLowerCase();
+                    const sRole = (st.role || 'supporter').toLowerCase();
+                    if (!userMap.has(lower)) {
+                        userMap.set(lower, {
+                            username: sname,
+                            roles: [sRole],
+                            bio: '',
+                            avatar: '',
+                            guestbook: [],
+                            configs: [],
+                            highlights: []
+                        });
+                    } else {
+                        const u = userMap.get(lower);
+                        if (!u.roles.includes(sRole)) u.roles.push(sRole);
+                    }
+                }
+            });
+        }
+
+        // Profiles
+        if (profRes && typeof profRes === 'object') {
+            Object.keys(profRes).forEach(k => {
+                const lower = k.toLowerCase();
+                const p = profRes[k];
+                let pRoles = [];
+                if (Array.isArray(p.roles)) pRoles = p.roles;
+                else if (p.role) pRoles = p.role.split(',').map(r => r.trim()).filter(Boolean);
+                if (pRoles.length === 0) pRoles = ['premium'];
+
+                if (!userMap.has(lower)) {
+                    userMap.set(lower, {
+                        username: k,
+                        roles: pRoles,
+                        bio: p.bio || '',
+                        avatar: p.avatar || '',
+                        guestbook: Array.isArray(p.guestbook) ? p.guestbook : [],
+                        configs: [],
+                        highlights: []
+                    });
+                } else {
+                    const u = userMap.get(lower);
+                    pRoles.forEach(r => { if (!u.roles.includes(r.toLowerCase())) u.roles.push(r.toLowerCase()); });
+                    if (p.bio) u.bio = p.bio;
+                    if (p.avatar) u.avatar = p.avatar;
+                    if (Array.isArray(p.guestbook)) u.guestbook = p.guestbook;
+                }
+            });
+        }
+
+        // Configs
+        if (Array.isArray(confRes)) {
+            confRes.forEach(c => {
+                const author = (c.author || c.creator || c.user || '').trim();
+                if (author) {
+                    const lower = author.toLowerCase();
+                    if (!userMap.has(lower)) {
+                        userMap.set(lower, {
+                            username: author,
+                            roles: ['premium'],
+                            bio: '',
+                            avatar: '',
+                            guestbook: [],
+                            configs: [c],
+                            highlights: []
+                        });
+                    } else {
+                        userMap.get(lower).configs.push(c);
+                    }
+                }
+            });
+        }
+
+        // Highlights
+        if (Array.isArray(highRes)) {
+            highRes.forEach(h => {
+                const uploader = (h.user || h.uploader || h.author || '').trim();
+                if (uploader) {
+                    const lower = uploader.toLowerCase();
+                    if (!userMap.has(lower)) {
+                        userMap.set(lower, {
+                            username: uploader,
+                            roles: ['premium'],
+                            bio: '',
+                            avatar: '',
+                            guestbook: [],
+                            configs: [],
+                            highlights: [h]
+                        });
+                    } else {
+                        userMap.get(lower).highlights.push(h);
+                    }
+                }
+            });
+        }
+
+        ALL_SEARCH_USERS = Array.from(userMap.values());
+        filterModalUserSearch();
+    } catch (e) {
+        console.error('Error loadUserSearchData:', e);
+    }
+}
+
+function filterModalUserSearch() {
+    const q = (document.getElementById('modal-user-search-input')?.value || '').toLowerCase().trim();
+    const roleFilter = (document.getElementById('modal-user-role-filter')?.value || 'all').toLowerCase().trim();
+
+    const filtered = ALL_SEARCH_USERS.filter(u => {
+        const matchName = u.username.toLowerCase().includes(q) || (u.key && u.key.toLowerCase().includes(q)) || (u.bio && u.bio.toLowerCase().includes(q));
+        const matchRole = (roleFilter === 'all') || (u.roles && u.roles.some(r => r.toLowerCase() === roleFilter));
+        return matchName && matchRole;
+    });
+
+    renderModalUserSearch(filtered);
+}
+
+function renderModalUserSearch(users) {
+    const listEl = document.getElementById('modal-user-search-list');
+    if (!listEl) return;
+
+    if (!users || users.length === 0) {
+        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px 20px;color:#94a3b8;"><i class="fas fa-users-slash fa-3x" style="margin-bottom:14px;opacity:0.5;"></i><br><span style="font-size:1.05rem;font-weight:600;">Keine Benutzer gefunden</span></div>';
+        return;
+    }
+
+    listEl.innerHTML = users.map(u => {
+        const badges = getRankBadge(u.roles || ['premium']);
+        const avatarSrc = u.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(u.username);
+        const clipCount = (u.highlights && Array.isArray(u.highlights)) ? u.highlights.length : 0;
+        const configCount = (u.configs && Array.isArray(u.configs)) ? u.configs.length : 0;
+
+        return `
+            <div onclick="openUserProfileView('${escapeHtml(u.username)}')" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;justify-content:space-between;gap:10px;" onmouseover="this.style.borderColor='#7c3aed';this.style.background='rgba(124,58,237,0.08)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='rgba(255,255,255,0.02)';">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <img src="${avatarSrc}" alt="${escapeHtml(u.username)}" style="width:46px;height:46px;border-radius:50%;border:2px solid #7c3aed;object-fit:cover;background:rgba(0,0,0,0.3);flex-shrink:0;">
+                    <div style="overflow:hidden;">
+                        <h4 style="margin:0;font-size:0.95rem;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(u.username)}</h4>
+                        <div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:4px;">
+                            ${badges}
+                        </div>
+                    </div>
+                </div>
+
+                ${u.bio ? `<div style="font-size:0.75rem;color:#94a3b8;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">"${escapeHtml(u.bio)}"</div>` : ''}
+
+                <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.72rem;color:#94a3b8;">
+                    <span><i class="fas fa-video" style="color:#06b6d4;"></i> ${clipCount} Clips</span>
+                    <span><i class="fas fa-sliders-h" style="color:#e5a93c;"></i> ${configCount} Configs</span>
+                    <span style="color:#7c3aed;font-weight:600;"><i class="fas fa-external-link-alt"></i> Profil</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function openUserProfileView(username) {
+    const user = ALL_SEARCH_USERS.find(u => u.username.toLowerCase() === username.toLowerCase());
+    if (!user) return;
+    ACTIVE_VIEWED_USER = user;
+
+    closeUserSearchModal();
+    const modal = document.getElementById('user-profile-view-modal');
+    const body = document.getElementById('user-profile-view-body');
+    if (!modal || !body) return;
+
+    modal.style.display = 'flex';
+
+    const badges = getRankBadge(user.roles || ['premium']);
+    const avatarSrc = user.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(user.username);
+    const clips = user.highlights || [];
+    const guestbook = user.guestbook || [];
+
+    const isStaffOrAdmin = (typeof CURRENT_USER !== 'undefined') && (CURRENT_USER.is_admin || CURRENT_USER.is_staff);
+
+    const allAvailableRoles = [
+        { id: 'inhaber', label: 'ðŸ‘‘ INHABER' },
+        { id: 'co-admin', label: 'ðŸ›¡ï¸ CO-ADMIN' },
+        { id: 'developer', label: 'ðŸ’» DEVELOPER' },
+        { id: 'moderator', label: 'ðŸ”¨ MODERATOR' },
+        { id: 'supporter', label: 'ðŸŽ§ SUPPORTER' },
+        { id: 'donator', label: 'ðŸ’– DONATOR' },
+        { id: 'vip', label: 'â­ VIP' },
+        { id: 'elite', label: 'âš¡ ELITE' },
+        { id: 'premium', label: 'ðŸ’Ž PREMIUM' }
+    ];
+
+    let staffRoleManagerHtml = '';
+    if (isStaffOrAdmin) {
+        staffRoleManagerHtml = `
+            <div style="background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.25);border-radius:10px;padding:16px;margin-bottom:18px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                    <span style="font-size:0.85rem;font-weight:700;color:#a855f7;text-transform:uppercase;letter-spacing:0.5px;"><i class="fas fa-user-tag"></i> Rollen-Vergabe (Mitarbeiter & Admin)</span>
+                    <button onclick="saveUserMultiRoles('${escapeHtml(user.username)}')" class="btn btn-primary" style="padding:4px 12px;font-size:0.78rem;"><i class="fas fa-save"></i> Rollen Speichern</button>
+                </div>
+                <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:10px;">User dÃ¼rfen mehrere Rollen gleichzeitig besitzen:</div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:8px;">
+                    ${allAvailableRoles.map(r => {
+                        const isChecked = (user.roles || []).map(x => x.toLowerCase()).includes(r.id);
+                        return `
+                            <label style="display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);padding:6px 10px;border-radius:6px;font-size:0.78rem;color:#fff;cursor:pointer;">
+                                <input type="checkbox" id="role-cb-${r.id}" value="${r.id}" ${isChecked ? 'checked' : ''} style="cursor:pointer;accent-color:#7c3aed;">
+                                <span>${r.label}</span>
+                            </label>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    let clipsSectionHtml = '';
+    if (clips.length > 0) {
+        clipsSectionHtml = `
+            <div style="margin-bottom:18px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px;">
+                <h4 style="margin:0 0 12px;font-size:0.88rem;font-weight:700;color:#06b6d4;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-video"></i> Gepostete Highlight Clips (${clips.length})
+                </h4>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                    ${clips.map(c => `
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.07);border-radius:8px;">
+                            <div style="display:flex;align-items:center;gap:10px;overflow:hidden;">
+                                <div style="width:34px;height:34px;border-radius:6px;background:rgba(124,58,237,0.2);display:flex;align-items:center;justify-content:center;color:#7c3aed;flex-shrink:0;">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div style="overflow:hidden;">
+                                    <div style="font-size:0.85rem;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(c.title || 'Gameplay Clip')}</div>
+                                    <div style="font-size:0.72rem;color:#94a3b8;">${escapeHtml(c.game || 'Game')} &bull; ${escapeHtml(c.date || '')}</div>
+                                </div>
+                            </div>
+                            <button onclick="viewClipAndJump('${c.id || ''}')" class="btn btn-primary" style="padding:6px 14px;font-size:0.78rem;font-weight:700;letter-spacing:0.5px;white-space:nowrap;display:flex;align-items:center;gap:6px;box-shadow:0 0 10px rgba(124,58,237,0.3);">
+                                <i class="fas fa-play-circle"></i> CLIP'S ANSCHAUEN
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    } else {
+        clipsSectionHtml = `
+            <div style="margin-bottom:18px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px;text-align:center;color:#94a3b8;font-size:0.8rem;">
+                <i class="fas fa-video-slash" style="margin-bottom:6px;opacity:0.5;"></i><br>Dieser User hat noch keine Clips hochgeladen.
+            </div>
+        `;
+    }
+
+    let guestbookHtml = `
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px;">
+            <h4 style="margin:0 0 12px;font-size:0.88rem;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:8px;">
+                <i class="fas fa-book-open"></i> GÃ¤stebuch (${guestbook.length})
+            </h4>
+
+            <!-- Write guestbook entry -->
+            <div style="display:flex;gap:8px;margin-bottom:14px;">
+                <input type="text" id="modal-gb-input" placeholder="Hinterlasse einen Eintrag im GÃ¤stebuch..." style="flex:1;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.12);color:#fff;border-radius:8px;padding:8px 12px;font-size:0.82rem;" onkeydown="if(event.key==='Enter') submitModalGuestbook('${escapeHtml(user.username)}')">
+                <button onclick="submitModalGuestbook('${escapeHtml(user.username)}')" class="btn btn-primary" style="padding:8px 16px;font-size:0.82rem;"><i class="fas fa-paper-plane"></i> Senden</button>
+            </div>
+
+            <!-- Guestbook Entries List -->
+            <div id="modal-gb-list" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;">
+                ${guestbook.length === 0 ? '<div style="text-align:center;padding:14px;color:#94a3b8;font-size:0.78rem;">Noch keine EintrÃ¤ge vorhanden.</div>' : 
+                    guestbook.slice().reverse().map(g => `
+                        <div style="background:rgba(0,0,0,0.3);border-left:3px solid #7c3aed;border-radius:0 6px 6px 0;padding:8px 12px;font-size:0.8rem;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                                <strong style="color:#f8fafc;">${escapeHtml(g.author || 'Anonym')}</strong>
+                                <span style="font-size:0.7rem;color:#94a3b8;">${escapeHtml(g.date || '')}</span>
+                            </div>
+                            <div style="color:#94a3b8;line-height:1.4;">${escapeHtml(g.text || '')}</div>
+                        </div>
+                    `).join('')
+                }
+            </div>
+        </div>
+    `;
+
+    body.innerHTML = `
+        <!-- Profile Header -->
+        <div style="display:flex;align-items:center;gap:18px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:18px;">
+            <img src="${avatarSrc}" alt="${escapeHtml(user.username)}" style="width:72px;height:72px;border-radius:50%;border:3px solid #7c3aed;object-fit:cover;background:rgba(0,0,0,0.4);box-shadow:0 0 20px rgba(124,58,237,0.3);">
+            <div style="flex:1;">
+                <h2 style="margin:0;font-size:1.35rem;font-weight:800;color:#fff;">${escapeHtml(user.username)}</h2>
+                <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;">
+                    ${badges}
+                </div>
+                ${user.bio ? `<div style="margin-top:8px;font-size:0.85rem;color:#94a3b8;font-style:italic;background:rgba(255,255,255,0.03);padding:6px 12px;border-radius:6px;">"${escapeHtml(user.bio)}"</div>` : ''}
+            </div>
+        </div>
+
+        ${staffRoleManagerHtml}
+        ${clipsSectionHtml}
+        ${guestbookHtml}
+    `;
+}
+
+function viewClipAndJump(clipId) {
+    closeUserProfileViewModal();
+    closeUserSearchModal();
+    if (typeof switchMainTab === 'function') {
+        switchMainTab(8);
+    }
+    setTimeout(() => {
+        if (typeof playHighlightVideo === 'function' && clipId) {
+            playHighlightVideo(clipId);
+        }
+        const item = document.getElementById('hl-item-' + clipId);
+        if (item) {
+            item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            item.style.border = '2px solid #7c3aed';
+            setTimeout(() => { item.style.border = ''; }, 3000);
+        }
+    }, 400);
+}
+
+async function saveUserMultiRoles(username) {
+    const allAvailableRoles = ['inhaber', 'co-admin', 'developer', 'moderator', 'supporter', 'donator', 'vip', 'elite', 'premium'];
+    const selectedRoles = [];
+
+    allAvailableRoles.forEach(r => {
+        const cb = document.getElementById('role-cb-' + r);
+        if (cb && cb.checked) {
+            selectedRoles.push(r);
+        }
+    });
+
+    if (selectedRoles.length === 0) {
+        selectedRoles.push('premium');
+    }
+
+    showToast('Speichere Rollen...', 'ok');
+    try {
+        const ghToken = getToken();
+        const getRes = await fetch('https://api.github.com/repos/Kakash9i/loader/contents/profiles.json', {
+            headers: { 'Authorization': 'token ' + ghToken, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        
+        let profiles = {};
+        let sha = '';
+        if (getRes.ok) {
+            const data = await getRes.json();
+            sha = data.sha;
+            try {
+                profiles = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\s/g, '')))));
+            } catch(e) { profiles = {}; }
+        }
+
+        if (!profiles[username]) {
+            profiles[username] = { roles: selectedRoles, bio: '', avatar: '', guestbook: [] };
+        } else {
+            profiles[username].roles = selectedRoles;
+            delete profiles[username].role;
+        }
+
+        const putRes = await fetch('https://api.github.com/repos/Kakash9i/loader/contents/profiles.json', {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'token ' + ghToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: 'Update multi-roles for ' + username + ' (' + selectedRoles.join(',') + ')',
+                content: btoa(unescape(encodeURIComponent(JSON.stringify(profiles, null, 2)))),
+                sha: sha || undefined
+            })
+        });
+
+        if (putRes.ok) {
+            showToast('Rollen aktualisiert!', 'ok');
+            const found = ALL_SEARCH_USERS.find(u => u.username.toLowerCase() === username.toLowerCase());
+            if (found) found.roles = selectedRoles;
+            openUserProfileView(username);
+        } else {
+            showToast('Fehler beim Speichern.', 'err');
+        }
+    } catch (e) {
+        console.error('saveUserMultiRoles error:', e);
+        showToast('Fehler: ' + e.message, 'err');
+    }
+}
+
+async function submitModalGuestbook(targetUsername) {
+    const input = document.getElementById('modal-gb-input');
+    if (!input || !input.value.trim()) {
+        showToast('Bitte Text eingeben!', 'err');
+        return;
+    }
+    const text = input.value.trim();
+    const author = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER.name) ? CURRENT_USER.name : 'Anonym';
+
+    showToast('Speichere GÃ¤stebuch...', 'ok');
+    try {
+        const ghToken = getToken();
+        const getRes = await fetch('https://api.github.com/repos/Kakash9i/loader/contents/profiles.json', {
+            headers: { 'Authorization': 'token ' + ghToken, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        
+        let profiles = {};
+        let sha = '';
+        if (getRes.ok) {
+            const data = await getRes.json();
+            sha = data.sha;
+            try {
+                profiles = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\s/g, '')))));
+            } catch(e) { profiles = {}; }
+        }
+
+        if (!profiles[targetUsername]) {
+            profiles[targetUsername] = { roles: ['premium'], bio: '', avatar: '', guestbook: [] };
+        }
+        if (!Array.isArray(profiles[targetUsername].guestbook)) {
+            profiles[targetUsername].guestbook = [];
+        }
+
+        const newEntry = {
+            id: 'gb_' + Date.now(),
+            author: author,
+            text: text,
+            date: new Date().toLocaleDateString('de-DE') + ' ' + new Date().toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'})
+        };
+
+        profiles[targetUsername].guestbook.push(newEntry);
+
+        const putRes = await fetch('https://api.github.com/repos/Kakash9i/loader/contents/profiles.json', {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'token ' + ghToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: 'Guestbook entry on ' + targetUsername + ' by ' + author,
+                content: btoa(unescape(encodeURIComponent(JSON.stringify(profiles, null, 2)))),
+                sha: sha || undefined
+            })
+        });
+
+        if (putRes.ok) {
+            showToast('Eintrag gespeichert!', 'ok');
+            const found = ALL_SEARCH_USERS.find(u => u.username.toLowerCase() === targetUsername.toLowerCase());
+            if (found) {
+                if (!Array.isArray(found.guestbook)) found.guestbook = [];
+                found.guestbook.push(newEntry);
+            }
+            openUserProfileView(targetUsername);
+        } else {
+            showToast('Fehler beim Speichern.', 'err');
+        }
+    } catch (e) {
+        console.error('submitModalGuestbook error:', e);
+        showToast('Fehler: ' + e.message, 'err');
+    }
+}
+</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -644,17 +1197,14 @@
     transform: translateY(-1px);
     box-shadow: 0 4px 14px rgba(0,0,0,0.4);
   }
-  /* RANK BADGES SYSTEM (ALL DISTINCT LUXURY GLOW) */
-  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2.5px 8px; border-radius: 4px; font-size: 9.5px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; transition: all 0.2s ease; }
-  .badge-rank-admin, .badge-rank-inhaber { background: linear-gradient(135deg, rgba(245,158,11,0.25) 0%, rgba(217,119,6,0.18) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.55); box-shadow: 0 0 10px rgba(245,158,11,0.3); }
-  .badge-rank-coadmin { background: linear-gradient(135deg, rgba(244,63,94,0.25) 0%, rgba(225,29,72,0.18) 100%); color: #fb7185; border: 1px solid rgba(244,63,94,0.55); box-shadow: 0 0 10px rgba(244,63,94,0.3); }
-  .badge-rank-dev, .badge-rank-developer { background: linear-gradient(135deg, rgba(14,165,233,0.25) 0%, rgba(2,132,199,0.18) 100%); color: #38bdf8; border: 1px solid rgba(14,165,233,0.55); box-shadow: 0 0 10px rgba(14,165,233,0.3); }
-  .badge-rank-mod, .badge-rank-moderator { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(147,51,234,0.18) 100%); color: #c084fc; border: 1px solid rgba(168,85,247,0.55); box-shadow: 0 0 10px rgba(168,85,247,0.3); }
-  .badge-rank-supporter, .badge-rank-support, .badge-rank-staff { background: linear-gradient(135deg, rgba(16,185,129,0.25) 0%, rgba(5,150,105,0.18) 100%); color: #34d399; border: 1px solid rgba(16,185,129,0.55); box-shadow: 0 0 10px rgba(16,185,129,0.3); }
-  .badge-rank-donator { background: linear-gradient(135deg, rgba(251,113,133,0.25) 0%, rgba(244,63,94,0.18) 100%); color: #fb7185; border: 1px solid rgba(251,113,133,0.55); box-shadow: 0 0 12px rgba(251,113,133,0.35); }
-  .badge-rank-vip { background: linear-gradient(135deg, rgba(236,72,153,0.25) 0%, rgba(219,39,119,0.18) 100%); color: #f472b6; border: 1px solid rgba(236,72,153,0.55); box-shadow: 0 0 12px rgba(236,72,153,0.3); }
-  .badge-rank-elite { background: linear-gradient(135deg, rgba(249,115,22,0.25) 0%, rgba(234,88,12,0.18) 100%); color: #fb923c; border: 1px solid rgba(249,115,22,0.55); box-shadow: 0 0 10px rgba(249,115,22,0.3); }
-  .badge-rank-premium, .badge-rank-kunde { background: linear-gradient(135deg, rgba(99,102,241,0.25) 0%, rgba(79,70,229,0.18) 100%); color: #818cf8; border: 1px solid rgba(99,102,241,0.55); box-shadow: 0 0 10px rgba(99,102,241,0.3); }
+  /* RANK BADGES SYSTEM */
+  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+  .badge-rank-admin { background: linear-gradient(135deg, rgba(229,169,60,0.25) 0%, rgba(245,158,11,0.15) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 0 10px rgba(229,169,60,0.3); }
+  .badge-rank-staff { background: rgba(56,189,248,0.18); color: #38bdf8; border: 1px solid rgba(56,189,248,0.45); box-shadow: 0 0 10px rgba(56,189,248,0.25); }
+  .badge-rank-vip { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.15) 100%); color: #e879f9; border: 1px solid rgba(217,70,239,0.5); box-shadow: 0 0 12px rgba(168,85,247,0.35); }
+  .badge-rank-elite { background: rgba(249,115,22,0.18); color: #fb923c; border: 1px solid rgba(249,115,22,0.45); box-shadow: 0 0 10px rgba(249,115,22,0.25); }
+  .badge-rank-premium { background: rgba(59,130,246,0.18); color: #60a5fa; border: 1px solid rgba(59,130,246,0.45); box-shadow: 0 0 10px rgba(59,130,246,0.25); }
+  .badge-rank-kunde { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.35); }
 
   /* HIGHLIGHTS / CLIPS GRID & CARDS */
   .highlights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
@@ -672,17 +1222,14 @@
   .main-tab:hover { color: #f8fafc; background: #161c2c; border-color: #2a3754; transform: translateY(-1px); }
   .main-tab.active { background: linear-gradient(135deg, #182034 0%, #0e121d 100%); color: #ffffff; border-color: #e5a93c; box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(229,169,60,0.35); }
 
-  /* RANK BADGES SYSTEM (ALL DISTINCT LUXURY GLOW) */
-  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2.5px 8px; border-radius: 4px; font-size: 9.5px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; transition: all 0.2s ease; }
-  .badge-rank-admin, .badge-rank-inhaber { background: linear-gradient(135deg, rgba(245,158,11,0.25) 0%, rgba(217,119,6,0.18) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.55); box-shadow: 0 0 10px rgba(245,158,11,0.3); }
-  .badge-rank-coadmin { background: linear-gradient(135deg, rgba(244,63,94,0.25) 0%, rgba(225,29,72,0.18) 100%); color: #fb7185; border: 1px solid rgba(244,63,94,0.55); box-shadow: 0 0 10px rgba(244,63,94,0.3); }
-  .badge-rank-dev, .badge-rank-developer { background: linear-gradient(135deg, rgba(14,165,233,0.25) 0%, rgba(2,132,199,0.18) 100%); color: #38bdf8; border: 1px solid rgba(14,165,233,0.55); box-shadow: 0 0 10px rgba(14,165,233,0.3); }
-  .badge-rank-mod, .badge-rank-moderator { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(147,51,234,0.18) 100%); color: #c084fc; border: 1px solid rgba(168,85,247,0.55); box-shadow: 0 0 10px rgba(168,85,247,0.3); }
-  .badge-rank-supporter, .badge-rank-support, .badge-rank-staff { background: linear-gradient(135deg, rgba(16,185,129,0.25) 0%, rgba(5,150,105,0.18) 100%); color: #34d399; border: 1px solid rgba(16,185,129,0.55); box-shadow: 0 0 10px rgba(16,185,129,0.3); }
-  .badge-rank-donator { background: linear-gradient(135deg, rgba(251,113,133,0.25) 0%, rgba(244,63,94,0.18) 100%); color: #fb7185; border: 1px solid rgba(251,113,133,0.55); box-shadow: 0 0 12px rgba(251,113,133,0.35); }
-  .badge-rank-vip { background: linear-gradient(135deg, rgba(236,72,153,0.25) 0%, rgba(219,39,119,0.18) 100%); color: #f472b6; border: 1px solid rgba(236,72,153,0.55); box-shadow: 0 0 12px rgba(236,72,153,0.3); }
-  .badge-rank-elite { background: linear-gradient(135deg, rgba(249,115,22,0.25) 0%, rgba(234,88,12,0.18) 100%); color: #fb923c; border: 1px solid rgba(249,115,22,0.55); box-shadow: 0 0 10px rgba(249,115,22,0.3); }
-  .badge-rank-premium, .badge-rank-kunde { background: linear-gradient(135deg, rgba(99,102,241,0.25) 0%, rgba(79,70,229,0.18) 100%); color: #818cf8; border: 1px solid rgba(99,102,241,0.55); box-shadow: 0 0 10px rgba(99,102,241,0.3); }
+  /* RANK BADGES SYSTEM */
+  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 5px; font-size: 9.5px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+  .badge-rank-admin { background: linear-gradient(135deg, rgba(229,169,60,0.25) 0%, rgba(245,158,11,0.15) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 0 10px rgba(229,169,60,0.3); }
+  .badge-rank-staff { background: rgba(56,189,248,0.18); color: #38bdf8; border: 1px solid rgba(56,189,248,0.45); box-shadow: 0 0 10px rgba(56,189,248,0.25); }
+  .badge-rank-vip { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.15) 100%); color: #e879f9; border: 1px solid rgba(217,70,239,0.5); box-shadow: 0 0 12px rgba(168,85,247,0.35); }
+  .badge-rank-elite { background: rgba(249,115,22,0.18); color: #fb923c; border: 1px solid rgba(249,115,22,0.45); box-shadow: 0 0 10px rgba(249,115,22,0.25); }
+  .badge-rank-premium { background: rgba(59,130,246,0.18); color: #60a5fa; border: 1px solid rgba(59,130,246,0.45); box-shadow: 0 0 10px rgba(59,130,246,0.25); }
+  .badge-rank-kunde { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.35); }
 
     /* EXTENSION BADGES */
   .badge-ext-box {
@@ -970,6 +1517,16 @@
   .clip-body { padding: 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
   .clip-title { font-size: 13px; font-weight: 900; color: #f8fafc; line-height: 1.3; }
   .clip-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid #141928; margin-top: auto; }
+    .badge-rank-inhaber { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; font-weight: 800; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+    .badge-rank-admin { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; font-weight: 800; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+    .badge-rank-coadmin { background: linear-gradient(135deg, #f43f5e, #be123c); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(244,63,94,0.5); }
+    .badge-rank-developer { background: linear-gradient(135deg, #06b6d4, #0284c7); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(6,182,212,0.5); }
+    .badge-rank-moderator { background: linear-gradient(135deg, #10b981, #047857); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(16,185,129,0.5); }
+    .badge-rank-supporter { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(59,130,246,0.5); }
+    .badge-rank-donator { background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(236,72,153,0.5); }
+    .badge-rank-vip { background: linear-gradient(135deg, #eab308, #ca8a04); color: #000; font-weight: 800; box-shadow: 0 0 10px rgba(234,179,8,0.5); }
+    .badge-rank-elite { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(139,92,246,0.5); }
+    .badge-rank-premium { background: linear-gradient(135deg, #38bdf8, #0284c7); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(56,189,248,0.5); }
 </style>
 </head>
 <body>
@@ -1490,10 +2047,6 @@
         <span style="color:#a855f7;">&#128100;</span> MEIN PROFIL
       </button>
 
-      <button onclick="switchMainTab(9)" class="btn-nav-action" style="background:#121624;border:1px solid rgba(56,189,248,0.4);color:#38bdf8;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-        <span style="color:#38bdf8;">&#128269;</span> USER SUCHEN
-      </button>
-
       <button onclick="openSettingsModal()" class="btn-nav-action" style="background:#121624;border:1px solid rgba(229,169,60,0.4);color:#e5a93c;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
         <span>&#9881;</span> EINSTELLUNGEN
       </button>
@@ -1531,9 +2084,6 @@
     </div>
     <div class="main-tab" onclick="switchMainTab(8)" id="mtab-8">
       <span style="font-size:13px;color:#e879f9;">&#127916;</span> HIGHLIGHTS
-    </div>
-    <div class="main-tab" onclick="switchMainTab(9)" id="mtab-9">
-      <span style="font-size:13px;color:#38bdf8;">&#128269;</span> USER SUCHEN
     </div>
   </div>
 
@@ -2157,47 +2707,6 @@
         </div>
       </div>
 
-    </div>
-  </div>
-
-    <!-- TAB 9: USER SUCHEN & COMMUNITY HUB -->
-  <div class="tab-content" id="tc-9">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
-      <div>
-        <div class="section-title" style="margin-bottom:4px;font-size:14px;color:#f8fafc;display:flex;align-items:center;gap:8px;font-weight:900;">
-          <span style="color:#38bdf8;">&#128269;</span> USER SUCHEN &amp; COMMUNITY HUB
-        </div>
-        <p style="font-size:11.5px;color:#94a3b8;margin:0;line-height:1.4;">
-          Finde aktive Community-Mitglieder, sieh dir ihre geteilten Highlight-Clips an, schreibe in ihr G&#228;stebuch oder passe als Team-Mitglied Rollen an.
-        </p>
-      </div>
-    </div>
-
-    <!-- SEARCH & FILTER BAR -->
-    <div style="background:#090b12;border:1px solid #1a2032;border-radius:10px;padding:16px 20px;margin-bottom:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-      <div style="flex:1;min-width:240px;position:relative;">
-        <input type="text" id="user-search-input" placeholder="&#128269; User suchen nach Name, Key oder Rang..." oninput="filterUserSearchList()" style="width:100%;background:#0e121e;border:1px solid #1d253a;color:#f8fafc;padding:10px 14px;border-radius:6px;font-size:12px;outline:none;" />
-      </div>
-      <select id="user-search-rank-filter" onchange="filterUserSearchList()" style="background:#0e121e;border:1px solid #1d253a;color:#e5a93c;padding:10px 14px;border-radius:6px;font-size:12px;font-weight:800;outline:none;">
-        <option value="ALL">&#128100; Alle Rollen</option>
-        <option value="inhaber">&#128081; Inhaber</option>
-        <option value="co-admin">&#128737; Co-Admin</option>
-        <option value="developer">&#128187; Developer</option>
-        <option value="moderator">&#128296; Moderator</option>
-        <option value="supporter">&#127911; Supporter</option>
-        <option value="donator">&#128150; Donator</option>
-        <option value="vip">&#11088; VIP</option>
-        <option value="elite">&#9889; Elite</option>
-        <option value="premium">&#128142; Premium</option>
-      </select>
-      <button onclick="loadUserSearchData(true)" class="btn-nav-action" style="padding:10px 16px;">
-        <span>&#128260;</span> Aktualisieren
-      </button>
-    </div>
-
-    <!-- USERS GRID -->
-    <div id="user-search-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(360px, 1fr));gap:16px;">
-      <div style="text-align:center;color:#64748b;padding:40px;grid-column:1/-1;">Lade Benutzer-Community...</div>
     </div>
   </div>
 
@@ -3076,561 +3585,6 @@ function buildCheatsUI() {
   `).join("");
 }
 
-
-
-// ==================== USER SEARCH & PROFILE MODAL SYSTEM ====================
-let ALL_SEARCH_USERS = [];
-let ACTIVE_VIEWED_USER = null;
-
-async function openUserSearchModal() {
-    const modal = document.getElementById('user-search-modal');
-    if (modal) {
-        modal.style.display = 'flex';
-    }
-    await loadUserSearchData();
-}
-
-function closeUserSearchModal() {
-    const modal = document.getElementById('user-search-modal');
-    if (modal) modal.style.display = 'none';
-}
-
-function closeUserProfileViewModal() {
-    const modal = document.getElementById('user-profile-view-modal');
-    if (modal) modal.style.display = 'none';
-}
-
-function backToUserSearchModal() {
-    closeUserProfileViewModal();
-    const modal = document.getElementById('user-search-modal');
-    if (modal) modal.style.display = 'flex';
-}
-
-async function loadUserSearchData() {
-    const listEl = document.getElementById('modal-user-search-list');
-    if (listEl) {
-        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--primary);margin-bottom:12px;"></i><br>Lade alle Benutzer & Kunden...</div>';
-    }
-
-    try {
-        const [licRes, staffRes, profRes, confRes, highRes] = await Promise.all([
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/licenses.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/staff.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/profiles.json?t=' + Date.now()).then(r => r.ok ? r.json() : {}).catch(() => ({})),
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/configs.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
-            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/highlights.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => [])
-        ]);
-
-        const userMap = new Map();
-
-        // 1. Licenses (All Customers / Keys)
-        if (Array.isArray(licRes)) {
-            licRes.forEach(lic => {
-                const uname = (lic.used_by && lic.used_by.trim() !== '') ? lic.used_by.trim() : (lic.key || 'Unbekannt');
-                const lower = uname.toLowerCase();
-                if (!userMap.has(lower)) {
-                    userMap.set(lower, {
-                        username: uname,
-                        key: lic.key || '',
-                        status: lic.status || 'active',
-                        created_at: lic.created_at || '',
-                        expires_at: lic.expires_at || '',
-                        roles: ['premium'],
-                        isCustomer: true,
-                        bio: '',
-                        avatar: '',
-                        guestbook: [],
-                        configs: [],
-                        highlights: []
-                    });
-                } else {
-                    const u = userMap.get(lower);
-                    u.key = u.key || lic.key;
-                    u.isCustomer = true;
-                }
-            });
-        }
-
-        // 2. Staff
-        if (Array.isArray(staffRes)) {
-            staffRes.forEach(st => {
-                const sname = (st.name || st.username || '').trim();
-                if (sname) {
-                    const lower = sname.toLowerCase();
-                    const sRole = (st.role || 'supporter').toLowerCase();
-                    if (!userMap.has(lower)) {
-                        userMap.set(lower, {
-                            username: sname,
-                            roles: [sRole],
-                            isStaff: true,
-                            bio: '',
-                            avatar: '',
-                            guestbook: [],
-                            configs: [],
-                            highlights: []
-                        });
-                    } else {
-                        const u = userMap.get(lower);
-                        if (!u.roles.includes(sRole)) u.roles.push(sRole);
-                        u.isStaff = true;
-                    }
-                }
-            });
-        }
-
-        // 3. Profiles
-        if (profRes && typeof profRes === 'object') {
-            Object.keys(profRes).forEach(k => {
-                const lower = k.toLowerCase();
-                const p = profRes[k];
-                let pRoles = [];
-                if (Array.isArray(p.roles)) {
-                    pRoles = p.roles;
-                } else if (p.role) {
-                    pRoles = p.role.split(',').map(r => r.trim()).filter(Boolean);
-                }
-                if (pRoles.length === 0) pRoles = ['premium'];
-
-                if (!userMap.has(lower)) {
-                    userMap.set(lower, {
-                        username: k,
-                        roles: pRoles,
-                        bio: p.bio || '',
-                        avatar: p.avatar || '',
-                        guestbook: Array.isArray(p.guestbook) ? p.guestbook : [],
-                        configs: [],
-                        highlights: []
-                    });
-                } else {
-                    const u = userMap.get(lower);
-                    pRoles.forEach(r => {
-                        if (!u.roles.includes(r.toLowerCase())) u.roles.push(r.toLowerCase());
-                    });
-                    if (p.bio) u.bio = p.bio;
-                    if (p.avatar) u.avatar = p.avatar;
-                    if (Array.isArray(p.guestbook)) u.guestbook = p.guestbook;
-                }
-            });
-        }
-
-        // 4. Configs
-        if (Array.isArray(confRes)) {
-            confRes.forEach(c => {
-                const author = (c.author || c.creator || c.user || '').trim();
-                if (author) {
-                    const lower = author.toLowerCase();
-                    if (!userMap.has(lower)) {
-                        userMap.set(lower, {
-                            username: author,
-                            roles: ['premium'],
-                            bio: '',
-                            avatar: '',
-                            guestbook: [],
-                            configs: [c],
-                            highlights: []
-                        });
-                    } else {
-                        userMap.get(lower).configs.push(c);
-                    }
-                }
-            });
-        }
-
-        // 5. Highlights
-        if (Array.isArray(highRes)) {
-            highRes.forEach(h => {
-                const uploader = (h.user || h.uploader || h.author || '').trim();
-                if (uploader) {
-                    const lower = uploader.toLowerCase();
-                    if (!userMap.has(lower)) {
-                        userMap.set(lower, {
-                            username: uploader,
-                            roles: ['premium'],
-                            bio: '',
-                            avatar: '',
-                            guestbook: [],
-                            configs: [],
-                            highlights: [h]
-                        });
-                    } else {
-                        userMap.get(lower).highlights.push(h);
-                    }
-                }
-            });
-        }
-
-        // Ensure current user is in map
-        const curUser = (typeof CURRENT_LOGGED_IN_USER !== 'undefined' && CURRENT_LOGGED_IN_USER) ? CURRENT_LOGGED_IN_USER : 'Admin';
-        if (!userMap.has(curUser.toLowerCase())) {
-            const curR = (typeof CURRENT_USER_ROLE !== 'undefined' && CURRENT_USER_ROLE) ? CURRENT_USER_ROLE.toLowerCase() : 'inhaber';
-            userMap.set(curUser.toLowerCase(), {
-                username: curUser,
-                roles: [curR],
-                bio: '',
-                avatar: '',
-                guestbook: [],
-                configs: [],
-                highlights: []
-            });
-        }
-
-        ALL_SEARCH_USERS = Array.from(userMap.values());
-        filterModalUserSearch();
-    } catch (e) {
-        console.error('Error loadUserSearchData:', e);
-        if (listEl) {
-            listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--danger);">Fehler beim Laden der Benutzerdaten.</div>';
-        }
-    }
-}
-
-function filterModalUserSearch() {
-    const q = (document.getElementById('modal-user-search-input')?.value || '').toLowerCase().trim();
-    const roleFilter = (document.getElementById('modal-user-role-filter')?.value || 'all').toLowerCase().trim();
-
-    const filtered = ALL_SEARCH_USERS.filter(u => {
-        const matchName = u.username.toLowerCase().includes(q) || (u.key && u.key.toLowerCase().includes(q)) || (u.bio && u.bio.toLowerCase().includes(q));
-        const matchRole = (roleFilter === 'all') || (u.roles && u.roles.some(r => r.toLowerCase() === roleFilter));
-        return matchName && matchRole;
-    });
-
-    renderModalUserSearch(filtered);
-}
-
-function renderModalUserSearch(users) {
-    const listEl = document.getElementById('modal-user-search-list');
-    if (!listEl) return;
-
-    if (!users || users.length === 0) {
-        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px 20px;color:var(--text-muted);"><i class="fas fa-users-slash fa-3x" style="margin-bottom:14px;opacity:0.5;"></i><br><span style="font-size:1.05rem;font-weight:600;">Keine Benutzer oder Kunden gefunden</span></div>';
-        return;
-    }
-
-    listEl.innerHTML = users.map(u => {
-        const badges = getRankBadge(u.roles || ['premium']);
-        const avatarSrc = u.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(u.username);
-        const clipCount = (u.highlights && Array.isArray(u.highlights)) ? u.highlights.length : 0;
-        const configCount = (u.configs && Array.isArray(u.configs)) ? u.configs.length : 0;
-
-        return `
-            <div onclick="openUserProfileView('${escapeHtml(u.username)}')" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;justify-content:space-between;gap:10px;" onmouseover="this.style.borderColor='var(--primary)';this.style.background='rgba(124,58,237,0.08)';this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='rgba(255,255,255,0.02)';this.style.transform='none';">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <img src="${avatarSrc}" alt="${escapeHtml(u.username)}" style="width:46px;height:46px;border-radius:50%;border:2px solid var(--primary);object-fit:cover;background:rgba(0,0,0,0.3);flex-shrink:0;">
-                    <div style="overflow:hidden;">
-                        <h4 style="margin:0;font-size:0.95rem;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(u.username)}</h4>
-                        <div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:4px;">
-                            ${badges}
-                        </div>
-                    </div>
-                </div>
-
-                ${u.bio ? `<div style="font-size:0.75rem;color:var(--text-muted);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">"${escapeHtml(u.bio)}"</div>` : ''}
-
-                <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.72rem;color:var(--text-muted);">
-                    <span><i class="fas fa-video" style="color:var(--secondary);"></i> ${clipCount} Clips</span>
-                    <span><i class="fas fa-sliders-h" style="color:var(--accent);"></i> ${configCount} Configs</span>
-                    <span style="color:var(--primary);font-weight:600;"><i class="fas fa-external-link-alt"></i> Profil</span>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-function openUserProfileView(username) {
-    const user = ALL_SEARCH_USERS.find(u => u.username.toLowerCase() === username.toLowerCase());
-    if (!user) return;
-    ACTIVE_VIEWED_USER = user;
-
-    closeUserSearchModal();
-    const modal = document.getElementById('user-profile-view-modal');
-    const body = document.getElementById('user-profile-view-body');
-    if (!modal || !body) return;
-
-    modal.style.display = 'flex';
-
-    const badges = getRankBadge(user.roles || ['premium']);
-    const avatarSrc = user.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(user.username);
-    const clips = user.highlights || [];
-    const guestbook = user.guestbook || [];
-
-    const isStaffOrAdmin = (typeof CURRENT_USER_ROLE !== 'undefined') && ['inhaber', 'admin', 'co-admin', 'developer', 'moderator', 'supporter'].includes(CURRENT_USER_ROLE.toLowerCase());
-
-    const allAvailableRoles = [
-        { id: 'inhaber', label: 'ðŸ‘‘ INHABER' },
-        { id: 'co-admin', label: 'ðŸ›¡ï¸ CO-ADMIN' },
-        { id: 'developer', label: 'ðŸ’» DEVELOPER' },
-        { id: 'moderator', label: 'ðŸ”¨ MODERATOR' },
-        { id: 'supporter', label: 'ðŸŽ§ SUPPORTER' },
-        { id: 'donator', label: 'ðŸ’– DONATOR' },
-        { id: 'vip', label: 'â­ VIP' },
-        { id: 'elite', label: 'âš¡ ELITE' },
-        { id: 'premium', label: 'ðŸ’Ž PREMIUM' }
-    ];
-
-    let staffRoleManagerHtml = '';
-    if (isStaffOrAdmin) {
-        staffRoleManagerHtml = `
-            <div style="background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.25);border-radius:10px;padding:16px;margin-bottom:18px;">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                    <span style="font-size:0.85rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.5px;"><i class="fas fa-user-tag"></i> Rollen-Vergabe (Mitarbeiter & Admin)</span>
-                    <button onclick="saveUserMultiRoles('${escapeHtml(user.username)}')" class="btn btn-primary" style="padding:4px 12px;font-size:0.78rem;"><i class="fas fa-save"></i> Rollen Speichern</button>
-                </div>
-                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:10px;">User dÃ¼rfen mehrere Rollen gleichzeitig besitzen (einfach anhaken):</div>
-                <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:8px;">
-                    ${allAvailableRoles.map(r => {
-                        const isChecked = (user.roles || []).map(x => x.toLowerCase()).includes(r.id);
-                        return `
-                            <label style="display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);padding:6px 10px;border-radius:6px;font-size:0.78rem;color:#fff;cursor:pointer;">
-                                <input type="checkbox" id="role-cb-${r.id}" value="${r.id}" ${isChecked ? 'checked' : ''} style="cursor:pointer;accent-color:var(--primary);">
-                                <span>${r.label}</span>
-                            </label>
-                        `;
-                    }).join('')}
-                </div>
-            </div>
-        `;
-    }
-
-    let clipsSectionHtml = '';
-    if (clips.length > 0) {
-        clipsSectionHtml = `
-            <div style="margin-bottom:18px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px;">
-                <h4 style="margin:0 0 12px;font-size:0.88rem;font-weight:700;color:var(--secondary);text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:8px;">
-                    <i class="fas fa-video"></i> Gepostete Highlight Clips (${clips.length})
-                </h4>
-                <div style="display:flex;flex-direction:column;gap:8px;">
-                    ${clips.map(c => `
-                        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.07);border-radius:8px;">
-                            <div style="display:flex;align-items:center;gap:10px;overflow:hidden;">
-                                <div style="width:34px;height:34px;border-radius:6px;background:rgba(124,58,237,0.2);display:flex;align-items:center;justify-content:center;color:var(--primary);flex-shrink:0;">
-                                    <i class="fas fa-play"></i>
-                                </div>
-                                <div style="overflow:hidden;">
-                                    <div style="font-size:0.85rem;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(c.title || 'Gameplay Clip')}</div>
-                                    <div style="font-size:0.72rem;color:var(--text-muted);">${escapeHtml(c.game || 'Game')} &bull; ${escapeHtml(c.date || '')}</div>
-                                </div>
-                            </div>
-                            <button onclick="viewClipAndJump('${c.id || ''}')" class="btn btn-primary" style="padding:6px 14px;font-size:0.78rem;font-weight:700;letter-spacing:0.5px;white-space:nowrap;display:flex;align-items:center;gap:6px;box-shadow:0 0 10px rgba(124,58,237,0.3);">
-                                <i class="fas fa-play-circle"></i> CLIP'S ANSCHAUEN
-                            </button>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-    } else {
-        clipsSectionHtml = `
-            <div style="margin-bottom:18px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px;text-align:center;color:var(--text-muted);font-size:0.8rem;">
-                <i class="fas fa-video-slash" style="margin-bottom:6px;opacity:0.5;"></i><br>Dieser User hat noch keine Clips hochgeladen.
-            </div>
-        `;
-    }
-
-    let guestbookHtml = `
-        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px;">
-            <h4 style="margin:0 0 12px;font-size:0.88rem;font-weight:700;color:var(--warning);text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:8px;">
-                <i class="fas fa-book-open"></i> GÃ¤stebuch (${guestbook.length})
-            </h4>
-
-            <!-- Write guestbook entry -->
-            <div style="display:flex;gap:8px;margin-bottom:14px;">
-                <input type="text" id="modal-gb-input" placeholder="Hinterlasse einen Eintrag im GÃ¤stebuch..." style="flex:1;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.12);color:#fff;border-radius:8px;padding:8px 12px;font-size:0.82rem;" onkeydown="if(event.key==='Enter') submitModalGuestbook('${escapeHtml(user.username)}')">
-                <button onclick="submitModalGuestbook('${escapeHtml(user.username)}')" class="btn btn-primary" style="padding:8px 16px;font-size:0.82rem;"><i class="fas fa-paper-plane"></i> Senden</button>
-            </div>
-
-            <!-- Guestbook Entries List -->
-            <div id="modal-gb-list" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;">
-                ${guestbook.length === 0 ? '<div style="text-align:center;padding:14px;color:var(--text-muted);font-size:0.78rem;">Noch keine GÃ¤stebuch-EintrÃ¤ge vorhanden. Sei der Erste!</div>' : 
-                    guestbook.slice().reverse().map(g => `
-                        <div style="background:rgba(0,0,0,0.3);border-left:3px solid var(--primary);border-radius:0 6px 6px 0;padding:8px 12px;font-size:0.8rem;">
-                            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-                                <strong style="color:var(--text);">${escapeHtml(g.author || 'Anonym')}</strong>
-                                <span style="font-size:0.7rem;color:var(--text-muted);">${escapeHtml(g.date || '')}</span>
-                            </div>
-                            <div style="color:var(--text-muted);line-height:1.4;">${escapeHtml(g.text || '')}</div>
-                        </div>
-                    `).join('')
-                }
-            </div>
-        </div>
-    `;
-
-    body.innerHTML = `
-        <!-- Profile Header -->
-        <div style="display:flex;align-items:center;gap:18px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:18px;">
-            <img src="${avatarSrc}" alt="${escapeHtml(user.username)}" style="width:72px;height:72px;border-radius:50%;border:3px solid var(--primary);object-fit:cover;background:rgba(0,0,0,0.4);box-shadow:0 0 20px rgba(124,58,237,0.3);">
-            <div style="flex:1;">
-                <h2 style="margin:0;font-size:1.35rem;font-weight:800;color:#fff;">${escapeHtml(user.username)}</h2>
-                <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;">
-                    ${badges}
-                </div>
-                ${user.bio ? `<div style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);font-style:italic;background:rgba(255,255,255,0.03);padding:6px 12px;border-radius:6px;">"${escapeHtml(user.bio)}"</div>` : ''}
-            </div>
-        </div>
-
-        ${staffRoleManagerHtml}
-        ${clipsSectionHtml}
-        ${guestbookHtml}
-    `;
-}
-
-function viewClipAndJump(clipId) {
-    closeUserProfileViewModal();
-    closeUserSearchModal();
-    if (typeof switchMainTab === 'function') {
-        switchMainTab(8);
-    }
-    setTimeout(() => {
-        if (typeof playHighlightVideo === 'function' && clipId) {
-            playHighlightVideo(clipId);
-        }
-        const item = document.getElementById('hl-item-' + clipId);
-        if (item) {
-            item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            item.style.border = '2px solid var(--primary)';
-            setTimeout(() => { item.style.border = ''; }, 3000);
-        }
-    }, 400);
-}
-
-async function saveUserMultiRoles(username) {
-    const allAvailableRoles = ['inhaber', 'co-admin', 'developer', 'moderator', 'supporter', 'donator', 'vip', 'elite', 'premium'];
-    const selectedRoles = [];
-
-    allAvailableRoles.forEach(r => {
-        const cb = document.getElementById('role-cb-' + r);
-        if (cb && cb.checked) {
-            selectedRoles.push(r);
-        }
-    });
-
-    if (selectedRoles.length === 0) {
-        selectedRoles.push('premium');
-    }
-
-    showToast('Speichere Rollen fÃ¼r ' + username + '...', 'info');
-    try {
-        const ghToken = GITHUB_TOKEN || window.GITHUB_TOKEN || (typeof GITHUB_TOKEN !== 'undefined' ? GITHUB_TOKEN : ['ghp','_cpFey2IaLI4T3YnPw','J3QUnDX1LuYvq4PLXcL'].join(''));
-        const getRes = await fetch('https://api.github.com/repos/Kakash9i/loader/contents/profiles.json', {
-            headers: { 'Authorization': 'token ' + ghToken, 'Accept': 'application/vnd.github.v3+json' }
-        });
-        
-        let profiles = {};
-        let sha = '';
-        if (getRes.ok) {
-            const data = await getRes.json();
-            sha = data.sha;
-            try {
-                profiles = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\s/g, '')))));
-            } catch(e) { profiles = {}; }
-        }
-
-        if (!profiles[username]) {
-            profiles[username] = { roles: selectedRoles, bio: '', avatar: '', guestbook: [] };
-        } else {
-            profiles[username].roles = selectedRoles;
-            delete profiles[username].role;
-        }
-
-        const putRes = await fetch('https://api.github.com/repos/Kakash9i/loader/contents/profiles.json', {
-            method: 'PUT',
-            headers: {
-                'Authorization': 'token ' + ghToken,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: 'Update multi-roles for ' + username + ' (' + selectedRoles.join(',') + ')',
-                content: btoa(unescape(encodeURIComponent(JSON.stringify(profiles, null, 2)))),
-                sha: sha || undefined
-            })
-        });
-
-        if (putRes.ok) {
-            showToast('Rollen fÃ¼r ' + username + ' erfolgreich aktualisiert!', 'success');
-            const found = ALL_SEARCH_USERS.find(u => u.username.toLowerCase() === username.toLowerCase());
-            if (found) found.roles = selectedRoles;
-            openUserProfileView(username);
-        } else {
-            showToast('Fehler beim Speichern der Rollen auf GitHub.', 'error');
-        }
-    } catch (e) {
-        console.error('saveUserMultiRoles error:', e);
-        showToast('Fehler: ' + e.message, 'error');
-    }
-}
-
-async function submitModalGuestbook(targetUsername) {
-    const input = document.getElementById('modal-gb-input');
-    if (!input || !input.value.trim()) {
-        showToast('Bitte einen Text eingeben!', 'warning');
-        return;
-    }
-    const text = input.value.trim();
-    const author = (typeof CURRENT_LOGGED_IN_USER !== 'undefined' && CURRENT_LOGGED_IN_USER) ? CURRENT_LOGGED_IN_USER : 'Anonym';
-
-    showToast('GÃ¤stebuch-Eintrag wird gespeichert...', 'info');
-    try {
-        const ghToken = GITHUB_TOKEN || window.GITHUB_TOKEN || (typeof GITHUB_TOKEN !== 'undefined' ? GITHUB_TOKEN : ['ghp','_cpFey2IaLI4T3YnPw','J3QUnDX1LuYvq4PLXcL'].join(''));
-        const getRes = await fetch('https://api.github.com/repos/Kakash9i/loader/contents/profiles.json', {
-            headers: { 'Authorization': 'token ' + ghToken, 'Accept': 'application/vnd.github.v3+json' }
-        });
-        
-        let profiles = {};
-        let sha = '';
-        if (getRes.ok) {
-            const data = await getRes.json();
-            sha = data.sha;
-            try {
-                profiles = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\s/g, '')))));
-            } catch(e) { profiles = {}; }
-        }
-
-        if (!profiles[targetUsername]) {
-            profiles[targetUsername] = { roles: ['premium'], bio: '', avatar: '', guestbook: [] };
-        }
-        if (!Array.isArray(profiles[targetUsername].guestbook)) {
-            profiles[targetUsername].guestbook = [];
-        }
-
-        const newEntry = {
-            id: 'gb_' + Date.now(),
-            author: author,
-            text: text,
-            date: new Date().toLocaleDateString('de-DE') + ' ' + new Date().toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'})
-        };
-
-        profiles[targetUsername].guestbook.push(newEntry);
-
-        const putRes = await fetch('https://api.github.com/repos/Kakash9i/loader/contents/profiles.json', {
-            method: 'PUT',
-            headers: {
-                'Authorization': 'token ' + ghToken,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: 'Guestbook entry on ' + targetUsername + ' by ' + author,
-                content: btoa(unescape(encodeURIComponent(JSON.stringify(profiles, null, 2)))),
-                sha: sha || undefined
-            })
-        });
-
-        if (putRes.ok) {
-            showToast('Eintrag im GÃ¤stebuch gespeichert!', 'success');
-            const found = ALL_SEARCH_USERS.find(u => u.username.toLowerCase() === targetUsername.toLowerCase());
-            if (found) {
-                if (!Array.isArray(found.guestbook)) found.guestbook = [];
-                found.guestbook.push(newEntry);
-            }
-            openUserProfileView(targetUsername);
-        } else {
-            showToast('Fehler beim Speichern des Eintrags.', 'error');
-        }
-    } catch (e) {
-        console.error('submitModalGuestbook error:', e);
-        showToast('Fehler: ' + e.message, 'error');
-    }
-}
-
 function switchMainTab(idx) {
   document.querySelectorAll(".main-tab").forEach((t, i) => t.classList.toggle("active", i === idx));
   document.querySelectorAll(".tab-content").forEach((t, i) => t.classList.toggle("active", i === idx));
@@ -3724,24 +3678,24 @@ function handleDrop(ev, prefix) {
   addToList(prefix, Array.from(ev.dataTransfer.files));
 }
 
-async function addFiles(inp, prefix) {
+function addFiles(inp, prefix) {
   addToList(prefix, Array.from(inp.files));
   inp.value = "";
 }
 
-async function addToList(prefix, newFiles) {
+function addToList(prefix, newFiles) {
   newFiles.forEach(f => {
     if(!state[prefix].files.find(x => x.name === f.name)) state[prefix].files.push(f);
   });
   renderFileList(prefix);
 }
 
-async function removeFile(prefix, name) {
+function removeFile(prefix, name) {
   state[prefix].files = state[prefix].files.filter(f => f.name !== name);
   renderFileList(prefix);
 }
 
-async function renderFileList(prefix) {
+function renderFileList(prefix) {
   const el = document.getElementById("fl-"+prefix);
   if(!el) return;
   el.innerHTML = state[prefix].files.map(f => `
@@ -4072,7 +4026,7 @@ async function uploadMayaExe() {
 // RAZER.DLL MANAGER
 let _selectedRazerFile = null;
 
-async function onRazerFileSelected(input) {
+function onRazerFileSelected(input) {
   if(!input.files || input.files.length === 0) return;
   _selectedRazerFile = input.files[0];
   const nameEl = document.getElementById("razer-file-name");
@@ -4186,7 +4140,7 @@ async function uploadRazerDll() {
 let ALL_USER_LOGS = [];
 let LOG_ENTRIES_CACHE = {};
 
-async function initUserLogsCache() {
+function initUserLogsCache() {
   try {
     const raw = localStorage.getItem("hyschool_userlogs_cache");
     if(raw) {
@@ -4813,7 +4767,7 @@ function makeRandomChunk(len) {
   return str;
 }
 
-async function generateLicenseString(prodCode, durationStr) {
+function generateLicenseString(prodCode, durationStr) {
   const pTag = prodCode.toUpperCase().substring(0, 3);
   let dTag = "30D";
   if(durationStr === "1") dTag = "1D";
@@ -5632,7 +5586,7 @@ async function saveEditLicModal() {
 }
 
 // HWID MODAL HANDLERS
-async function openHwidModal(key, hwid, user) {
+function openHwidModal(key, hwid, user) {
   if(!CURRENT_USER.is_admin && isADMINAccountKey(key)) {
     alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
     return;
@@ -5648,7 +5602,7 @@ async function openHwidModal(key, hwid, user) {
   document.getElementById("hwid-modal").style.display = "flex";
 }
 
-async function closeHwidModal() {
+function closeHwidModal() {
   document.getElementById("hwid-modal").style.display = "none";
   _activeModalKey = null;
 }
@@ -5864,7 +5818,7 @@ function renderStaffTable() {
     return `
       <tr>
         <td style="font-weight:800;color:#f8fafc;"><span style="color:#e5a93c;margin-right:6px;">👤</span> ${s.name}</td>
-        <td>${getRankBadge(s.name, s.role || 'Supporter')}</td>
+        <td><span class="tag-product">${s.role || 'Supporter'}</span></td>
         <td style="font-family:'JetBrains Mono',monospace;color:#64748b;">${s.password ? '••••••••' : '---'}</td>
         <td>
           <div style="display:flex;gap:4px;flex-wrap:wrap;">
@@ -6079,7 +6033,7 @@ async function loadAuditLogs(silent=false) {
   filterAuditLogs();
 }
 
-async function filterAuditLogs() {
+function filterAuditLogs() {
   const tbody = document.getElementById("audit-table-body");
   if(!tbody) return;
 
@@ -6631,242 +6585,6 @@ async function saveUserProfile() {
 
 let _activeProfileTarget = null;
 
-// USER SUCHEN & ROLE ASSIGNMENT SYSTEM
-let ALL_SEARCH_USERS = [];
-
-async function loadUserSearchData(forceToast = false) {
-  const grid = document.getElementById("user-search-grid");
-  if (!grid) return;
-
-  // Gather unique users from PROFILES, KEYAUTH, STAFF, HIGHLIGHTS, CONFIGS
-  await loadProfiles();
-  const userMap = {};
-
-  // 1. Add ADMIN profile
-  userMap["ADMIN"] = {
-    name: "ADMIN",
-    rank: "inhaber",
-    avatar: getUserProfile("ADMIN")?.avatar || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN",
-    bio: getUserProfile("ADMIN")?.bio || "HySchool Founder & Master Admin",
-    guestbook: getUserProfile("ADMIN")?.guestbook || []
-  };
-
-  // 2. Add from USER_PROFILES
-  Object.keys(USER_PROFILES).forEach(k => {
-    const p = USER_PROFILES[k];
-    const uName = (p.name || k).trim();
-    if (!uName) return;
-    if (!userMap[uName]) {
-      userMap[uName] = {
-        name: uName,
-        rank: p.rank || "premium",
-        avatar: p.avatar || getAvatarUrl(uName),
-        bio: p.bio || "HySchool Premium Member",
-        guestbook: p.guestbook || []
-      };
-    } else {
-      userMap[uName].rank = p.rank || userMap[uName].rank || "premium";
-      if (p.avatar) userMap[uName].avatar = p.avatar;
-      if (p.guestbook) userMap[uName].guestbook = p.guestbook;
-    }
-  });
-
-  // 3. Add from LICENSES (KeyAuth)
-  if (Array.isArray(LICENSES)) {
-    LICENSES.forEach(lic => {
-      const uName = (lic.user || lic.key || '').trim();
-      if (!uName) return;
-      if (!userMap[uName]) {
-        userMap[uName] = {
-          name: uName,
-          rank: lic.rank || "premium",
-          avatar: getAvatarUrl(uName),
-          bio: lic.duration === "lifetime" ? "Lifetime Member" : "Active Member",
-          guestbook: []
-        };
-      }
-    });
-  }
-
-  // 4. Add from STAFF
-  if (Array.isArray(ALL_STAFF)) {
-    ALL_STAFF.forEach(st => {
-      const uName = (st.name || '').trim();
-      if (!uName) return;
-      if (!userMap[uName]) {
-        userMap[uName] = {
-          name: uName,
-          rank: st.role || "supporter",
-          avatar: getAvatarUrl(uName),
-          bio: "HySchool Team Member",
-          guestbook: []
-        };
-      } else {
-        userMap[uName].rank = st.role || userMap[uName].rank;
-      }
-    });
-  }
-
-  ALL_SEARCH_USERS = Object.values(userMap);
-  filterUserSearchList();
-  if (forceToast) showToast("User-Liste aktualisiert!", "ok");
-}
-
-function filterUserSearchList() {
-  const grid = document.getElementById("user-search-grid");
-  if (!grid) return;
-  const search = (document.getElementById("user-search-input")?.value || "").toLowerCase().trim();
-  const rankFilter = document.getElementById("user-search-rank-filter")?.value || "ALL";
-
-  let filtered = ALL_SEARCH_USERS.filter(u => {
-    const matchSearch = !search || u.name.toLowerCase().includes(search) || (u.rank && u.rank.toLowerCase().includes(search));
-    const matchRank = rankFilter === "ALL" || (u.rank && u.rank.toLowerCase().includes(rankFilter));
-    return matchSearch && matchRank;
-  });
-
-  if (filtered.length === 0) {
-    grid.innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;color:#64748b;padding:40px;background:#090b12;border:1px dashed #1a2032;border-radius:10px;">
-        <div style="font-size:28px;margin-bottom:6px;">ðŸ”</div>
-        <div style="font-size:13px;font-weight:800;color:#94a3b8;">Keine Benutzer gefunden</div>
-        <div style="font-size:11px;color:#475569;margin-top:2px;">Versuche einen anderen Suchbegriff oder passe den Rollen-Filter an.</div>
-      </div>
-    `;
-    return;
-  }
-
-  const canAssignRoles = CURRENT_USER.is_admin || CURRENT_USER.is_staff || (CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_staff);
-
-  grid.innerHTML = filtered.map(u => {
-    const prof = getUserProfile(u.name) || u;
-    const gbCount = (prof.guestbook || []).length;
-    
-    // Check if user has uploaded clips in HIGHLIGHTS
-    const userClips = (Array.isArray(ALL_HIGHLIGHTS) ? ALL_HIGHLIGHTS : []).filter(h => (h.user || '').toLowerCase() === u.name.toLowerCase());
-    
-    return `
-      <div style="background:linear-gradient(135deg, #090c14 0%, #0d121f 100%);border:1px solid #1a2236;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px;box-shadow:0 6px 20px rgba(0,0,0,0.35);transition:all .2s ease;" onmouseover="this.style.borderColor='rgba(56,189,248,0.4)';this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='#1a2236';this.style.transform='translateY(0)';">
-        
-        <!-- HEADER: Avatar + Name + Rank Badge + Actions -->
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <img src="${u.avatar}" style="width:42px;height:42px;border-radius:50%;border:2px solid rgba(56,189,248,0.4);object-fit:cover;box-shadow:0 0 10px rgba(56,189,248,0.2);" alt="Avatar">
-            <div style="display:flex;flex-direction:column;gap:3px;">
-              <div style="font-weight:900;color:#ffffff;font-size:14px;letter-spacing:0.3px;display:flex;align-items:center;gap:6px;">
-                ${escapeHtml(u.name)}
-              </div>
-              <div id="user-card-badge-${escapeHtml(u.name)}">
-                ${getRankBadge(u.name, u.rank)}
-              </div>
-            </div>
-          </div>
-
-          <!-- Open Profile / Guestbook Button -->
-          <button onclick="openUserProfileModal('${escapeHtml(u.name)}')" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:#38bdf8;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:.15s;" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='rgba(56,189,248,0.1)'">
-            <span>ðŸ’¬</span> GÃ¤stebuch (${gbCount})
-          </button>
-        </div>
-
-        <!-- BIO / STATUS -->
-        <div style="font-size:11px;color:#94a3b8;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);padding:8px 12px;border-radius:6px;line-height:1.4;">
-          ${escapeHtml(prof.bio || "HySchool Premium Member")}
-        </div>
-
-        <!-- CLIPS SECTION (Jumps to HIGHLIGHTS) -->
-        <div style="border-top:1px solid #161c2c;padding-top:10px;display:flex;flex-direction:column;gap:6px;">
-          <div style="font-size:10.5px;color:#64748b;font-weight:800;letter-spacing:0.5px;display:flex;align-items:center;justify-content:space-between;">
-            <span>ðŸŽ¬ GEROSTETE CLIPS (${userClips.length})</span>
-            ${userClips.length > 0 ? `<span onclick="jumpToUserHighlight('${escapeHtml(userClips[0].id)}')" style="color:#e879f9;cursor:pointer;font-size:10px;">Alle anzeigen â†’</span>` : ''}
-          </div>
-          
-          ${userClips.length > 0 ? `
-            <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;">
-              ${userClips.slice(0, 3).map(c => `
-                <div onclick="jumpToUserHighlight('${escapeHtml(c.id)}')" style="background:#0e1322;border:1px solid rgba(232,121,249,0.3);border-radius:6px;padding:6px 10px;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:10.5px;color:#f8fafc;white-space:nowrap;transition:.15s;" onmouseover="this.style.background='rgba(232,121,249,0.15)'" onmouseout="this.style.background='#0e1322'">
-                  <span style="color:#e879f9;">â–¶</span>
-                  <span style="font-weight:800;max-width:110px;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(c.title || 'Highlight Clip')}</span>
-                </div>
-              `).join('')}
-            </div>
-          ` : `
-            <div style="font-size:10.5px;color:#475569;font-style:italic;">Noch keine Clips hochgeladen.</div>
-          `}
-        </div>
-
-        <!-- STAFF ROLE ASSIGNMENT BAR -->
-        ${canAssignRoles ? `
-          <div style="border-top:1px solid #161c2c;padding-top:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
-            <span style="font-size:10px;color:#e5a93c;font-weight:800;">ðŸ‘‘ ROLLE VERGEBEN:</span>
-            <select onchange="assignUserRole('${escapeHtml(u.name)}', this.value)" style="background:#111624;border:1px solid rgba(229,169,60,0.4);color:#fbbf24;font-weight:800;font-size:10.5px;padding:4px 8px;border-radius:4px;outline:none;cursor:pointer;">
-              <option value="premium" ${(u.rank||'').toLowerCase()==='premium'?'selected':''}>ðŸ’Ž Premium (Standard)</option>
-              <option value="donator" ${(u.rank||'').toLowerCase()==='donator'?'selected':''}>ðŸ’– Donator</option>
-              <option value="vip" ${(u.rank||'').toLowerCase()==='vip'?'selected':''}>â­ VIP</option>
-              <option value="elite" ${(u.rank||'').toLowerCase()==='elite'?'selected':''}>âš¡ Elite</option>
-              <option value="supporter" ${(u.rank||'').toLowerCase()==='supporter'?'selected':''}>ðŸŽ§ Supporter</option>
-              <option value="moderator" ${(u.rank||'').toLowerCase()==='moderator'?'selected':''}>ðŸ”¨ Moderator</option>
-              <option value="developer" ${(u.rank||'').toLowerCase()==='developer'?'selected':''}>ðŸ’» Developer</option>
-              <option value="co-admin" ${(u.rank||'').toLowerCase()==='co-admin'?'selected':''}>ðŸ›¡ï¸ Co-Admin</option>
-              <option value="inhaber" ${(u.rank||'').toLowerCase()==='inhaber'?'selected':''}>ðŸ‘‘ Inhaber</option>
-            </select>
-          </div>
-        ` : ''}
-
-      </div>
-    `;
-  }).join('');
-}
-
-async function assignUserRole(username, newRole) {
-  if (!CURRENT_USER.is_admin && !CURRENT_USER.is_staff && !(CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_staff)) {
-    showToast("Keine Berechtigung zur Rollenvergabe!", "err");
-    return;
-  }
-
-  await loadProfiles();
-  if (!USER_PROFILES[username]) {
-    USER_PROFILES[username] = {
-      name: username,
-      avatar: getAvatarUrl(username),
-      bio: "HySchool Member",
-      rank: newRole,
-      guestbook: []
-    };
-  } else {
-    USER_PROFILES[username].rank = newRole;
-  }
-
-  // Save to cache
-  try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
-
-  // Update in search list
-  const target = ALL_SEARCH_USERS.find(u => u.name.toLowerCase() === username.toLowerCase());
-  if (target) target.rank = newRole;
-
-  // Sync to GitHub
-  try {
-    const fullJson = JSON.stringify(USER_PROFILES, null, 2);
-    const finalB64 = btoa(unescape(encodeURIComponent(fullJson)));
-    await uploadFileToGitHub("profiles.json", finalB64, `Assign role ${newRole} to ${username} by ${CURRENT_USER.name}`);
-    showToast(`Rolle von ${username} erfolgreich auf ${newRole.toUpperCase()} geÃ¤ndert!`, "ok");
-  } catch(e) {
-    console.error("Role assign GitHub sync error:", e);
-    showToast(`Rolle lokal aktualisiert (${newRole.toUpperCase()})`, "ok");
-  }
-
-  // Update UI badge directly
-  const badgeEl = document.getElementById(`user-card-badge-${username}`);
-  if (badgeEl) badgeEl.innerHTML = getRankBadge(username, newRole);
-}
-
-function jumpToUserHighlight(highlightId) {
-  switchMainTab(8);
-  setTimeout(() => {
-    if (typeof playHighlightVideo === "function") {
-      playHighlightVideo(highlightId);
-    }
-  }, 200);
-}
-
 function openOwnProfileModal() {
   openUserProfileModal("ADMIN");
 }
@@ -7071,7 +6789,7 @@ function handleConfigDrop(e) {
   }
 }
 
-async function formatBytes(bytes, decimals = 2) {
+function formatBytes(bytes, decimals = 2) {
   if (!+bytes) return '0 Bytes';
   const k = 1024;
   const dm = decimals < 0 ? 0 : decimals;
@@ -7521,7 +7239,7 @@ async function toggleConfigLike(configId) {
   }
 }
 
-async function openConfigEditModal(configId) {
+function openConfigEditModal(configId) {
   const cfg = ALL_CONFIGS.find(c => c.id === configId);
   if (!cfg) {
     alert("Config nicht gefunden!");
@@ -7683,7 +7401,7 @@ function closeConfigPreviewModal() {
   if(modal) modal.style.display = "none";
 }
 
-async function copyConfigPreviewContent() {
+function copyConfigPreviewContent() {
   const content = document.getElementById("cfg-preview-content");
   if(content && content.value) {
     navigator.clipboard.writeText(content.value);
@@ -7745,37 +7463,27 @@ let ALL_HIGHLIGHTS = [];
 let _uploadedHighlightFile = null;
 let _activePlayerHighlight = null;
 
-function getRankBadge(roles) {
-    if (!roles) roles = ['premium'];
-    if (typeof roles === 'string') {
-        roles = roles.split(',').map(r => r.trim()).filter(Boolean);
-    }
-    if (!Array.isArray(roles) || roles.length === 0) roles = ['premium'];
-
-    return roles.map(role => {
-        const r = role.toLowerCase().trim();
-        if (r === 'inhaber' || r === 'owner') {
-            return '<span class="badge badge-rank-inhaber"><i class="fas fa-crown"></i> ðŸ‘‘ INHABER</span>';
-        } else if (r === 'admin') {
-            return '<span class="badge badge-rank-admin"><i class="fas fa-user-shield"></i> ðŸ‘‘ INHABER</span>';
-        } else if (r === 'co-admin' || r === 'coadmin') {
-            return '<span class="badge badge-rank-coadmin"><i class="fas fa-shield-alt"></i> ðŸ›¡ï¸ CO-ADMIN</span>';
-        } else if (r === 'developer' || r === 'dev') {
-            return '<span class="badge badge-rank-developer"><i class="fas fa-code"></i> ðŸ’» DEVELOPER</span>';
-        } else if (r === 'moderator' || r === 'mod') {
-            return '<span class="badge badge-rank-moderator"><i class="fas fa-gavel"></i> ðŸ”¨ MODERATOR</span>';
-        } else if (r === 'supporter' || r === 'support') {
-            return '<span class="badge badge-rank-supporter"><i class="fas fa-headset"></i> ðŸŽ§ SUPPORTER</span>';
-        } else if (r === 'donator') {
-            return '<span class="badge badge-rank-donator"><i class="fas fa-heart"></i> ðŸ’– DONATOR</span>';
-        } else if (r === 'vip') {
-            return '<span class="badge badge-rank-vip"><i class="fas fa-star"></i> â­ VIP</span>';
-        } else if (r === 'elite') {
-            return '<span class="badge badge-rank-elite"><i class="fas fa-bolt"></i> âš¡ ELITE</span>';
-        } else {
-            return '<span class="badge badge-rank-premium"><i class="fas fa-gem"></i> ðŸ’Ž PREMIUM</span>';
-        }
-    }).join(' ');
+function getRankBadge(username, userRank) {
+  const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES[username]) ? USER_PROFILES[username] : {};
+  const r = (userRank || prof.rank || "kunde").toLowerCase();
+  
+  if (r === "ADMIN" || r === "inhaber" || (username && (username.toLowerCase() === "ADMIN" || username.toLowerCase() === "ADMIN"))) {
+    return '<span class="badge-rank badge-rank-admin">&#128081; INHABER</span>';
+  } else if (r === "co-admin" || r.includes("co-admin")) {
+    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; CO-ADMIN</span>';
+  } else if (r === "supporter" || r.includes("support")) {
+    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; SUPPORTER</span>';
+  } else if (r === "moderator" || r.includes("mod")) {
+    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; MODERATOR</span>';
+  } else if (r === "vip") {
+    return '<span class="badge-rank badge-rank-vip">&#11088; VIP</span>';
+  } else if (r === "elite") {
+    return '<span class="badge-rank badge-rank-elite">&#9889; ELITE</span>';
+  } else if (r === "premium") {
+    return '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
+  } else {
+    return '<span class="badge-rank badge-rank-kunde">&#128100; KUNDE</span>';
+  }
 }
 
 function toggleHighlightUploadCard() {
@@ -7945,7 +7653,7 @@ async function toggleHighlightLike(highlightId) {
   }
 }
 
-async function toggleHighlightLikeFromModal() {
+function toggleHighlightLikeFromModal() {
   if(_activePlayerHighlight) {
     toggleHighlightLike(_activePlayerHighlight.id);
     document.getElementById("hl-player-like-count").textContent = _activePlayerHighlight.likes || 0;
@@ -8207,7 +7915,7 @@ function filterADMINTickets(mode) {
     renderADMINTicketsList();
 }
 
-async function canDeleteTickets() {
+function canDeleteTickets() {
     if (typeof CURRENT_USER === 'undefined' || !CURRENT_USER) return false;
     if (CURRENT_USER.is_admin) return true;
     const role = (CURRENT_USER.role || '').toLowerCase();
@@ -8515,32 +8223,585 @@ async function saveADMINTicketsToGitHub(commitMsg) {
     }
 }
 
+
+// ==================== USER SEARCH & PROFILE MODAL SYSTEM ====================
+let ALL_SEARCH_USERS = [];
+let ACTIVE_VIEWED_USER = null;
+
+function getRankBadge(roles) {
+    if (!roles) roles = ['premium'];
+    if (typeof roles === 'string') {
+        roles = roles.split(',').map(r => r.trim()).filter(Boolean);
+    }
+    if (!Array.isArray(roles) || roles.length === 0) roles = ['premium'];
+
+    return roles.map(role => {
+        const r = role.toLowerCase().trim();
+        if (r === 'inhaber' || r === 'owner') {
+            return '<span class="badge badge-rank-inhaber"><i class="fas fa-crown"></i> ðŸ‘‘ INHABER</span>';
+        } else if (r === 'admin') {
+            return '<span class="badge badge-rank-admin"><i class="fas fa-user-shield"></i> ðŸ‘‘ INHABER</span>';
+        } else if (r === 'co-admin' || r === 'coadmin') {
+            return '<span class="badge badge-rank-coadmin"><i class="fas fa-shield-alt"></i> ðŸ›¡ï¸ CO-ADMIN</span>';
+        } else if (r === 'developer' || r === 'dev') {
+            return '<span class="badge badge-rank-developer"><i class="fas fa-code"></i> ðŸ’» DEVELOPER</span>';
+        } else if (r === 'moderator' || r === 'mod') {
+            return '<span class="badge badge-rank-moderator"><i class="fas fa-gavel"></i> ðŸ”¨ MODERATOR</span>';
+        } else if (r === 'supporter' || r === 'support') {
+            return '<span class="badge badge-rank-supporter"><i class="fas fa-headset"></i> ðŸŽ§ SUPPORTER</span>';
+        } else if (r === 'donator') {
+            return '<span class="badge badge-rank-donator"><i class="fas fa-heart"></i> ðŸ’– DONATOR</span>';
+        } else if (r === 'vip') {
+            return '<span class="badge badge-rank-vip"><i class="fas fa-star"></i> â­ VIP</span>';
+        } else if (r === 'elite') {
+            return '<span class="badge badge-rank-elite"><i class="fas fa-bolt"></i> âš¡ ELITE</span>';
+        } else {
+            return '<span class="badge badge-rank-premium"><i class="fas fa-gem"></i> ðŸ’Ž PREMIUM</span>';
+        }
+    }).join(' ');
+}
+
+async function openUserSearchModal() {
+    const modal = document.getElementById('user-search-modal');
+    if (modal) modal.style.display = 'flex';
+    await loadUserSearchData();
+}
+
+function closeUserSearchModal() {
+    const modal = document.getElementById('user-search-modal');
+    if (modal) modal.style.display = 'none';
+}
+
+function closeUserProfileViewModal() {
+    const modal = document.getElementById('user-profile-view-modal');
+    if (modal) modal.style.display = 'none';
+}
+
+function backToUserSearchModal() {
+    closeUserProfileViewModal();
+    const modal = document.getElementById('user-search-modal');
+    if (modal) modal.style.display = 'flex';
+}
+
+async function loadUserSearchData() {
+    const listEl = document.getElementById('modal-user-search-list');
+    if (listEl) {
+        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#94a3b8;"><i class="fas fa-spinner fa-spin fa-2x" style="color:#7c3aed;margin-bottom:12px;"></i><br>Lade alle Benutzer & Kunden...</div>';
+    }
+
+    try {
+        const [licRes, staffRes, profRes, confRes, highRes] = await Promise.all([
+            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/licenses.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
+            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/staff.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
+            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/profiles.json?t=' + Date.now()).then(r => r.ok ? r.json() : {}).catch(() => ({})),
+            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/configs.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => []),
+            fetch('https://raw.githubusercontent.com/Kakash9i/loader/main/highlights.json?t=' + Date.now()).then(r => r.ok ? r.json() : []).catch(() => [])
+        ]);
+
+        const userMap = new Map();
+
+        // Licenses
+        if (Array.isArray(licRes)) {
+            licRes.forEach(lic => {
+                const uname = (lic.used_by && lic.used_by.trim() !== '') ? lic.used_by.trim() : (lic.key || 'Unbekannt');
+                const lower = uname.toLowerCase();
+                if (!userMap.has(lower)) {
+                    userMap.set(lower, {
+                        username: uname,
+                        key: lic.key || '',
+                        roles: ['premium'],
+                        bio: '',
+                        avatar: '',
+                        guestbook: [],
+                        configs: [],
+                        highlights: []
+                    });
+                } else {
+                    userMap.get(lower).key = lic.key;
+                }
+            });
+        }
+
+        // Staff
+        if (Array.isArray(staffRes)) {
+            staffRes.forEach(st => {
+                const sname = (st.name || st.username || '').trim();
+                if (sname) {
+                    const lower = sname.toLowerCase();
+                    const sRole = (st.role || 'supporter').toLowerCase();
+                    if (!userMap.has(lower)) {
+                        userMap.set(lower, {
+                            username: sname,
+                            roles: [sRole],
+                            bio: '',
+                            avatar: '',
+                            guestbook: [],
+                            configs: [],
+                            highlights: []
+                        });
+                    } else {
+                        const u = userMap.get(lower);
+                        if (!u.roles.includes(sRole)) u.roles.push(sRole);
+                    }
+                }
+            });
+        }
+
+        // Profiles
+        if (profRes && typeof profRes === 'object') {
+            Object.keys(profRes).forEach(k => {
+                const lower = k.toLowerCase();
+                const p = profRes[k];
+                let pRoles = [];
+                if (Array.isArray(p.roles)) pRoles = p.roles;
+                else if (p.role) pRoles = p.role.split(',').map(r => r.trim()).filter(Boolean);
+                if (pRoles.length === 0) pRoles = ['premium'];
+
+                if (!userMap.has(lower)) {
+                    userMap.set(lower, {
+                        username: k,
+                        roles: pRoles,
+                        bio: p.bio || '',
+                        avatar: p.avatar || '',
+                        guestbook: Array.isArray(p.guestbook) ? p.guestbook : [],
+                        configs: [],
+                        highlights: []
+                    });
+                } else {
+                    const u = userMap.get(lower);
+                    pRoles.forEach(r => { if (!u.roles.includes(r.toLowerCase())) u.roles.push(r.toLowerCase()); });
+                    if (p.bio) u.bio = p.bio;
+                    if (p.avatar) u.avatar = p.avatar;
+                    if (Array.isArray(p.guestbook)) u.guestbook = p.guestbook;
+                }
+            });
+        }
+
+        // Configs
+        if (Array.isArray(confRes)) {
+            confRes.forEach(c => {
+                const author = (c.author || c.creator || c.user || '').trim();
+                if (author) {
+                    const lower = author.toLowerCase();
+                    if (!userMap.has(lower)) {
+                        userMap.set(lower, {
+                            username: author,
+                            roles: ['premium'],
+                            bio: '',
+                            avatar: '',
+                            guestbook: [],
+                            configs: [c],
+                            highlights: []
+                        });
+                    } else {
+                        userMap.get(lower).configs.push(c);
+                    }
+                }
+            });
+        }
+
+        // Highlights
+        if (Array.isArray(highRes)) {
+            highRes.forEach(h => {
+                const uploader = (h.user || h.uploader || h.author || '').trim();
+                if (uploader) {
+                    const lower = uploader.toLowerCase();
+                    if (!userMap.has(lower)) {
+                        userMap.set(lower, {
+                            username: uploader,
+                            roles: ['premium'],
+                            bio: '',
+                            avatar: '',
+                            guestbook: [],
+                            configs: [],
+                            highlights: [h]
+                        });
+                    } else {
+                        userMap.get(lower).highlights.push(h);
+                    }
+                }
+            });
+        }
+
+        ALL_SEARCH_USERS = Array.from(userMap.values());
+        filterModalUserSearch();
+    } catch (e) {
+        console.error('Error loadUserSearchData:', e);
+    }
+}
+
+function filterModalUserSearch() {
+    const q = (document.getElementById('modal-user-search-input')?.value || '').toLowerCase().trim();
+    const roleFilter = (document.getElementById('modal-user-role-filter')?.value || 'all').toLowerCase().trim();
+
+    const filtered = ALL_SEARCH_USERS.filter(u => {
+        const matchName = u.username.toLowerCase().includes(q) || (u.key && u.key.toLowerCase().includes(q)) || (u.bio && u.bio.toLowerCase().includes(q));
+        const matchRole = (roleFilter === 'all') || (u.roles && u.roles.some(r => r.toLowerCase() === roleFilter));
+        return matchName && matchRole;
+    });
+
+    renderModalUserSearch(filtered);
+}
+
+function renderModalUserSearch(users) {
+    const listEl = document.getElementById('modal-user-search-list');
+    if (!listEl) return;
+
+    if (!users || users.length === 0) {
+        listEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px 20px;color:#94a3b8;"><i class="fas fa-users-slash fa-3x" style="margin-bottom:14px;opacity:0.5;"></i><br><span style="font-size:1.05rem;font-weight:600;">Keine Benutzer gefunden</span></div>';
+        return;
+    }
+
+    listEl.innerHTML = users.map(u => {
+        const badges = getRankBadge(u.roles || ['premium']);
+        const avatarSrc = u.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(u.username);
+        const clipCount = (u.highlights && Array.isArray(u.highlights)) ? u.highlights.length : 0;
+        const configCount = (u.configs && Array.isArray(u.configs)) ? u.configs.length : 0;
+
+        return `
+            <div onclick="openUserProfileView('${escapeHtml(u.username)}')" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;justify-content:space-between;gap:10px;" onmouseover="this.style.borderColor='#7c3aed';this.style.background='rgba(124,58,237,0.08)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='rgba(255,255,255,0.02)';">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <img src="${avatarSrc}" alt="${escapeHtml(u.username)}" style="width:46px;height:46px;border-radius:50%;border:2px solid #7c3aed;object-fit:cover;background:rgba(0,0,0,0.3);flex-shrink:0;">
+                    <div style="overflow:hidden;">
+                        <h4 style="margin:0;font-size:0.95rem;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(u.username)}</h4>
+                        <div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:4px;">
+                            ${badges}
+                        </div>
+                    </div>
+                </div>
+
+                ${u.bio ? `<div style="font-size:0.75rem;color:#94a3b8;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">"${escapeHtml(u.bio)}"</div>` : ''}
+
+                <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.72rem;color:#94a3b8;">
+                    <span><i class="fas fa-video" style="color:#06b6d4;"></i> ${clipCount} Clips</span>
+                    <span><i class="fas fa-sliders-h" style="color:#e5a93c;"></i> ${configCount} Configs</span>
+                    <span style="color:#7c3aed;font-weight:600;"><i class="fas fa-external-link-alt"></i> Profil</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function openUserProfileView(username) {
+    const user = ALL_SEARCH_USERS.find(u => u.username.toLowerCase() === username.toLowerCase());
+    if (!user) return;
+    ACTIVE_VIEWED_USER = user;
+
+    closeUserSearchModal();
+    const modal = document.getElementById('user-profile-view-modal');
+    const body = document.getElementById('user-profile-view-body');
+    if (!modal || !body) return;
+
+    modal.style.display = 'flex';
+
+    const badges = getRankBadge(user.roles || ['premium']);
+    const avatarSrc = user.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(user.username);
+    const clips = user.highlights || [];
+    const guestbook = user.guestbook || [];
+
+    const isStaffOrAdmin = (typeof CURRENT_USER !== 'undefined') && (CURRENT_USER.is_admin || CURRENT_USER.is_staff);
+
+    const allAvailableRoles = [
+        { id: 'inhaber', label: 'ðŸ‘‘ INHABER' },
+        { id: 'co-admin', label: 'ðŸ›¡ï¸ CO-ADMIN' },
+        { id: 'developer', label: 'ðŸ’» DEVELOPER' },
+        { id: 'moderator', label: 'ðŸ”¨ MODERATOR' },
+        { id: 'supporter', label: 'ðŸŽ§ SUPPORTER' },
+        { id: 'donator', label: 'ðŸ’– DONATOR' },
+        { id: 'vip', label: 'â­ VIP' },
+        { id: 'elite', label: 'âš¡ ELITE' },
+        { id: 'premium', label: 'ðŸ’Ž PREMIUM' }
+    ];
+
+    let staffRoleManagerHtml = '';
+    if (isStaffOrAdmin) {
+        staffRoleManagerHtml = `
+            <div style="background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.25);border-radius:10px;padding:16px;margin-bottom:18px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                    <span style="font-size:0.85rem;font-weight:700;color:#a855f7;text-transform:uppercase;letter-spacing:0.5px;"><i class="fas fa-user-tag"></i> Rollen-Vergabe (Mitarbeiter & Admin)</span>
+                    <button onclick="saveUserMultiRoles('${escapeHtml(user.username)}')" class="btn btn-primary" style="padding:4px 12px;font-size:0.78rem;"><i class="fas fa-save"></i> Rollen Speichern</button>
+                </div>
+                <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:10px;">User dÃ¼rfen mehrere Rollen gleichzeitig besitzen:</div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:8px;">
+                    ${allAvailableRoles.map(r => {
+                        const isChecked = (user.roles || []).map(x => x.toLowerCase()).includes(r.id);
+                        return `
+                            <label style="display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);padding:6px 10px;border-radius:6px;font-size:0.78rem;color:#fff;cursor:pointer;">
+                                <input type="checkbox" id="role-cb-${r.id}" value="${r.id}" ${isChecked ? 'checked' : ''} style="cursor:pointer;accent-color:#7c3aed;">
+                                <span>${r.label}</span>
+                            </label>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    let clipsSectionHtml = '';
+    if (clips.length > 0) {
+        clipsSectionHtml = `
+            <div style="margin-bottom:18px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px;">
+                <h4 style="margin:0 0 12px;font-size:0.88rem;font-weight:700;color:#06b6d4;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-video"></i> Gepostete Highlight Clips (${clips.length})
+                </h4>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                    ${clips.map(c => `
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.07);border-radius:8px;">
+                            <div style="display:flex;align-items:center;gap:10px;overflow:hidden;">
+                                <div style="width:34px;height:34px;border-radius:6px;background:rgba(124,58,237,0.2);display:flex;align-items:center;justify-content:center;color:#7c3aed;flex-shrink:0;">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div style="overflow:hidden;">
+                                    <div style="font-size:0.85rem;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(c.title || 'Gameplay Clip')}</div>
+                                    <div style="font-size:0.72rem;color:#94a3b8;">${escapeHtml(c.game || 'Game')} &bull; ${escapeHtml(c.date || '')}</div>
+                                </div>
+                            </div>
+                            <button onclick="viewClipAndJump('${c.id || ''}')" class="btn btn-primary" style="padding:6px 14px;font-size:0.78rem;font-weight:700;letter-spacing:0.5px;white-space:nowrap;display:flex;align-items:center;gap:6px;box-shadow:0 0 10px rgba(124,58,237,0.3);">
+                                <i class="fas fa-play-circle"></i> CLIP'S ANSCHAUEN
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    } else {
+        clipsSectionHtml = `
+            <div style="margin-bottom:18px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px;text-align:center;color:#94a3b8;font-size:0.8rem;">
+                <i class="fas fa-video-slash" style="margin-bottom:6px;opacity:0.5;"></i><br>Dieser User hat noch keine Clips hochgeladen.
+            </div>
+        `;
+    }
+
+    let guestbookHtml = `
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px;">
+            <h4 style="margin:0 0 12px;font-size:0.88rem;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:8px;">
+                <i class="fas fa-book-open"></i> GÃ¤stebuch (${guestbook.length})
+            </h4>
+
+            <!-- Write guestbook entry -->
+            <div style="display:flex;gap:8px;margin-bottom:14px;">
+                <input type="text" id="modal-gb-input" placeholder="Hinterlasse einen Eintrag im GÃ¤stebuch..." style="flex:1;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.12);color:#fff;border-radius:8px;padding:8px 12px;font-size:0.82rem;" onkeydown="if(event.key==='Enter') submitModalGuestbook('${escapeHtml(user.username)}')">
+                <button onclick="submitModalGuestbook('${escapeHtml(user.username)}')" class="btn btn-primary" style="padding:8px 16px;font-size:0.82rem;"><i class="fas fa-paper-plane"></i> Senden</button>
+            </div>
+
+            <!-- Guestbook Entries List -->
+            <div id="modal-gb-list" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;">
+                ${guestbook.length === 0 ? '<div style="text-align:center;padding:14px;color:#94a3b8;font-size:0.78rem;">Noch keine EintrÃ¤ge vorhanden.</div>' : 
+                    guestbook.slice().reverse().map(g => `
+                        <div style="background:rgba(0,0,0,0.3);border-left:3px solid #7c3aed;border-radius:0 6px 6px 0;padding:8px 12px;font-size:0.8rem;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                                <strong style="color:#f8fafc;">${escapeHtml(g.author || 'Anonym')}</strong>
+                                <span style="font-size:0.7rem;color:#94a3b8;">${escapeHtml(g.date || '')}</span>
+                            </div>
+                            <div style="color:#94a3b8;line-height:1.4;">${escapeHtml(g.text || '')}</div>
+                        </div>
+                    `).join('')
+                }
+            </div>
+        </div>
+    `;
+
+    body.innerHTML = `
+        <!-- Profile Header -->
+        <div style="display:flex;align-items:center;gap:18px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:18px;">
+            <img src="${avatarSrc}" alt="${escapeHtml(user.username)}" style="width:72px;height:72px;border-radius:50%;border:3px solid #7c3aed;object-fit:cover;background:rgba(0,0,0,0.4);box-shadow:0 0 20px rgba(124,58,237,0.3);">
+            <div style="flex:1;">
+                <h2 style="margin:0;font-size:1.35rem;font-weight:800;color:#fff;">${escapeHtml(user.username)}</h2>
+                <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;">
+                    ${badges}
+                </div>
+                ${user.bio ? `<div style="margin-top:8px;font-size:0.85rem;color:#94a3b8;font-style:italic;background:rgba(255,255,255,0.03);padding:6px 12px;border-radius:6px;">"${escapeHtml(user.bio)}"</div>` : ''}
+            </div>
+        </div>
+
+        ${staffRoleManagerHtml}
+        ${clipsSectionHtml}
+        ${guestbookHtml}
+    `;
+}
+
+function viewClipAndJump(clipId) {
+    closeUserProfileViewModal();
+    closeUserSearchModal();
+    if (typeof switchMainTab === 'function') {
+        switchMainTab(8);
+    }
+    setTimeout(() => {
+        if (typeof playHighlightVideo === 'function' && clipId) {
+            playHighlightVideo(clipId);
+        }
+        const item = document.getElementById('hl-item-' + clipId);
+        if (item) {
+            item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            item.style.border = '2px solid #7c3aed';
+            setTimeout(() => { item.style.border = ''; }, 3000);
+        }
+    }, 400);
+}
+
+async function saveUserMultiRoles(username) {
+    const allAvailableRoles = ['inhaber', 'co-admin', 'developer', 'moderator', 'supporter', 'donator', 'vip', 'elite', 'premium'];
+    const selectedRoles = [];
+
+    allAvailableRoles.forEach(r => {
+        const cb = document.getElementById('role-cb-' + r);
+        if (cb && cb.checked) {
+            selectedRoles.push(r);
+        }
+    });
+
+    if (selectedRoles.length === 0) {
+        selectedRoles.push('premium');
+    }
+
+    showToast('Speichere Rollen...', 'ok');
+    try {
+        const ghToken = getToken();
+        const getRes = await fetch('https://api.github.com/repos/Kakash9i/loader/contents/profiles.json', {
+            headers: { 'Authorization': 'token ' + ghToken, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        
+        let profiles = {};
+        let sha = '';
+        if (getRes.ok) {
+            const data = await getRes.json();
+            sha = data.sha;
+            try {
+                profiles = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\s/g, '')))));
+            } catch(e) { profiles = {}; }
+        }
+
+        if (!profiles[username]) {
+            profiles[username] = { roles: selectedRoles, bio: '', avatar: '', guestbook: [] };
+        } else {
+            profiles[username].roles = selectedRoles;
+            delete profiles[username].role;
+        }
+
+        const putRes = await fetch('https://api.github.com/repos/Kakash9i/loader/contents/profiles.json', {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'token ' + ghToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: 'Update multi-roles for ' + username + ' (' + selectedRoles.join(',') + ')',
+                content: btoa(unescape(encodeURIComponent(JSON.stringify(profiles, null, 2)))),
+                sha: sha || undefined
+            })
+        });
+
+        if (putRes.ok) {
+            showToast('Rollen aktualisiert!', 'ok');
+            const found = ALL_SEARCH_USERS.find(u => u.username.toLowerCase() === username.toLowerCase());
+            if (found) found.roles = selectedRoles;
+            openUserProfileView(username);
+        } else {
+            showToast('Fehler beim Speichern.', 'err');
+        }
+    } catch (e) {
+        console.error('saveUserMultiRoles error:', e);
+        showToast('Fehler: ' + e.message, 'err');
+    }
+}
+
+async function submitModalGuestbook(targetUsername) {
+    const input = document.getElementById('modal-gb-input');
+    if (!input || !input.value.trim()) {
+        showToast('Bitte Text eingeben!', 'err');
+        return;
+    }
+    const text = input.value.trim();
+    const author = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER.name) ? CURRENT_USER.name : 'Anonym';
+
+    showToast('Speichere GÃ¤stebuch...', 'ok');
+    try {
+        const ghToken = getToken();
+        const getRes = await fetch('https://api.github.com/repos/Kakash9i/loader/contents/profiles.json', {
+            headers: { 'Authorization': 'token ' + ghToken, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        
+        let profiles = {};
+        let sha = '';
+        if (getRes.ok) {
+            const data = await getRes.json();
+            sha = data.sha;
+            try {
+                profiles = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\s/g, '')))));
+            } catch(e) { profiles = {}; }
+        }
+
+        if (!profiles[targetUsername]) {
+            profiles[targetUsername] = { roles: ['premium'], bio: '', avatar: '', guestbook: [] };
+        }
+        if (!Array.isArray(profiles[targetUsername].guestbook)) {
+            profiles[targetUsername].guestbook = [];
+        }
+
+        const newEntry = {
+            id: 'gb_' + Date.now(),
+            author: author,
+            text: text,
+            date: new Date().toLocaleDateString('de-DE') + ' ' + new Date().toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'})
+        };
+
+        profiles[targetUsername].guestbook.push(newEntry);
+
+        const putRes = await fetch('https://api.github.com/repos/Kakash9i/loader/contents/profiles.json', {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'token ' + ghToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: 'Guestbook entry on ' + targetUsername + ' by ' + author,
+                content: btoa(unescape(encodeURIComponent(JSON.stringify(profiles, null, 2)))),
+                sha: sha || undefined
+            })
+        });
+
+        if (putRes.ok) {
+            showToast('Eintrag gespeichert!', 'ok');
+            const found = ALL_SEARCH_USERS.find(u => u.username.toLowerCase() === targetUsername.toLowerCase());
+            if (found) {
+                if (!Array.isArray(found.guestbook)) found.guestbook = [];
+                found.guestbook.push(newEntry);
+            }
+            openUserProfileView(targetUsername);
+        } else {
+            showToast('Fehler beim Speichern.', 'err');
+        }
+    } catch (e) {
+        console.error('submitModalGuestbook error:', e);
+        showToast('Fehler: ' + e.message, 'err');
+    }
+}
 </script>
 
 <!-- USER SEARCH MODAL -->
 <div id="user-search-modal" class="modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:99999;align-items:center;justify-content:center;padding:20px;">
-    <div style="background:var(--bg-card);border:1px solid rgba(124,58,237,0.3);box-shadow:0 12px 40px rgba(0,0,0,0.7),0 0 25px rgba(124,58,237,0.2);border-radius:14px;width:100%;max-width:850px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;animation:modalFadeIn 0.25s ease;">
+    <div style="background:#12131c;border:1px solid rgba(124,58,237,0.3);box-shadow:0 12px 40px rgba(0,0,0,0.7),0 0 25px rgba(124,58,237,0.2);border-radius:14px;width:100%;max-width:850px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;">
         <!-- Header -->
         <div style="padding:16px 22px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;background:rgba(124,58,237,0.08);">
             <div style="display:flex;align-items:center;gap:10px;">
-                <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--primary),#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;">
+                <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg, #7c3aed, #3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;">
                     <i class="fas fa-users fa-lg"></i>
                 </div>
                 <div>
                     <h2 style="margin:0;font-size:1.15rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.5px;">COMMUNITY & USER SUCHEN</h2>
-                    <p style="margin:2px 0 0;font-size:0.75rem;color:var(--text-muted);">Finde alle registrierten Kunden, Mitarbeiter & Profile der Community</p>
+                    <p style="margin:2px 0 0;font-size:0.75rem;color:#94a3b8;">Finde alle registrierten Kunden, Mitarbeiter & Profile der Community</p>
                 </div>
             </div>
-            <button onclick="closeUserSearchModal()" style="background:transparent;border:none;color:var(--text-muted);font-size:1.3rem;cursor:pointer;padding:4px 8px;border-radius:6px;transition:0.2s;" onmouseover="this.style.color='#fff';" onmouseout="this.style.color='var(--text-muted)';"><i class="fas fa-times"></i></button>
+            <button onclick="closeUserSearchModal()" style="background:transparent;border:none;color:#94a3b8;font-size:1.3rem;cursor:pointer;padding:4px 8px;"><i class="fas fa-times"></i></button>
         </div>
 
         <!-- Search / Filter Bar -->
         <div style="padding:14px 22px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;gap:12px;background:rgba(0,0,0,0.2);">
             <div style="position:relative;flex:1;">
-                <i class="fas fa-search" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--primary);font-size:0.9rem;"></i>
+                <i class="fas fa-search" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#7c3aed;font-size:0.9rem;"></i>
                 <input type="text" id="modal-user-search-input" placeholder="User, Kunde, Lizenz-Key oder Bio suchen..." style="width:100%;padding:10px 14px 10px 38px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-size:0.85rem;" oninput="filterModalUserSearch()">
             </div>
-            <select id="modal-user-role-filter" onchange="filterModalUserSearch()" style="background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:var(--text);padding:0 14px;font-size:0.85rem;font-weight:600;cursor:pointer;">
+            <select id="modal-user-role-filter" onchange="filterModalUserSearch()" style="background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#cbd5e1;padding:0 14px;font-size:0.85rem;font-weight:600;cursor:pointer;">
                 <option value="all">ðŸŽ­ Alle Rollen</option>
                 <option value="inhaber">ðŸ‘‘ INHABER</option>
                 <option value="co-admin">ðŸ›¡ï¸ CO-ADMIN</option>
@@ -8556,24 +8817,24 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
         <!-- User Grid List -->
         <div id="modal-user-search-list" style="padding:18px 22px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:14px;flex:1;">
-            <!-- Rendered by JS -->
+            <!-- Injected by JS -->
         </div>
     </div>
 </div>
 
 <!-- USER DETAIL PROFILE MODAL -->
 <div id="user-profile-view-modal" class="modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:100000;align-items:center;justify-content:center;padding:20px;">
-    <div style="background:var(--bg-card);border:1px solid rgba(124,58,237,0.3);box-shadow:0 12px 40px rgba(0,0,0,0.7),0 0 30px rgba(124,58,237,0.25);border-radius:14px;width:100%;max-width:750px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;animation:modalFadeIn 0.25s ease;">
+    <div style="background:#12131c;border:1px solid rgba(124,58,237,0.3);box-shadow:0 12px 40px rgba(0,0,0,0.7),0 0 30px rgba(124,58,237,0.25);border-radius:14px;width:100%;max-width:750px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;">
         <!-- Header -->
         <div style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;background:rgba(124,58,237,0.08);">
             <div style="display:flex;align-items:center;gap:10px;">
                 <button onclick="backToUserSearchModal()" class="btn btn-outline" style="padding:4px 10px;font-size:0.75rem;"><i class="fas fa-arrow-left"></i> ZURÃœCK</button>
-                <span style="font-weight:700;color:#fff;font-size:0.95rem;text-transform:uppercase;"><i class="fas fa-user-circle" style="color:var(--primary);margin-right:6px;"></i> BENUTZERPROFIL</span>
+                <span style="font-weight:700;color:#fff;font-size:0.95rem;text-transform:uppercase;"><i class="fas fa-user-circle" style="color:#7c3aed;margin-right:6px;"></i> BENUTZERPROFIL</span>
             </div>
-            <button onclick="closeUserProfileViewModal()" style="background:transparent;border:none;color:var(--text-muted);font-size:1.3rem;cursor:pointer;padding:4px 8px;"><i class="fas fa-times"></i></button>
+            <button onclick="closeUserProfileViewModal()" style="background:transparent;border:none;color:#94a3b8;font-size:1.3rem;cursor:pointer;padding:4px 8px;"><i class="fas fa-times"></i></button>
         </div>
 
-        <!-- Body Content (Scrollable) -->
+        <!-- Body Content -->
         <div id="user-profile-view-body" style="padding:20px;overflow-y:auto;flex:1;">
             <!-- Injected via JS -->
         </div>
