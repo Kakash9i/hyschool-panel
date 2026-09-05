@@ -1152,14 +1152,33 @@
       <div class="avatar-preset-grid" id="avatar-preset-container"></div>
     </div>
 
+    <!-- BANNER SELECTION -->
+    <div style="margin-bottom: 20px;">
+      <label style="display:block;font-size:11px;color:#cbd5e1;font-weight:800;letter-spacing:0.5px;margin-bottom:8px;">
+        2. PROFIL-BANNER AUSWÄHLEN (Optional)
+      </label>
+      <div style="display:flex;align-items:center;gap:18px;background:#090b12;border:1px solid #1a2030;padding:16px;border-radius:12px;">
+        <div id="settings-banner-preview-wrap" style="width:120px;height:45px;border-radius:8px;border:1px solid #e5a93c;overflow:hidden;background:#151a28;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(229,169,60,0.25);flex-shrink:0;">
+          <div id="settings-banner-preview" style="width:100%;height:100%;background-size:cover;background-position:center;background-image:linear-gradient(45deg, #1e293b, #0f172a);"></div>
+        </div>
+        <div style="flex:1;">
+          <input type="text" id="settings-banner-url" placeholder="Bild-URL oder Datei hochladen..." oninput="updateSettingsBannerPreview(this.value)" style="width:100%;background:#0f131f;border:1px solid #232c42;color:#f8fafc;padding:9px 12px;border-radius:6px;font-size:11.5px;outline:none;margin-bottom:8px;">
+          <label style="background:#151c2e;border:1px solid #24304c;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+            &#128193; Banner hochladen
+            <input type="file" id="settings-banner-file" accept="image/*" style="display:none;" onchange="handleBannerFileUpload(this)">
+          </label>
+        </div>
+      </div>
+    </div>
+
     <!-- PROFILE BIO & STATUS -->
     <div class="modal-field-group">
-      <label>2. STATUS &amp; PROFIL BESCHREIBUNG</label>
+      <label>3. STATUS &amp; PROFIL BESCHREIBUNG</label>
       <textarea id="settings-bio" rows="3" placeholder="Schreibe eine coole Beschreibung..." style="width:100%;background:#090a0f;border:1px solid #1e2333;color:#f8fafc;padding:10px 12px;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
     </div>
 
     <div class="modal-field-group">
-      <label>3. DISCORD TAG / KONTAKT (OPTIONAL)</label>
+      <label>4. DISCORD TAG / KONTAKT (OPTIONAL)</label>
       <input type="text" id="settings-discord" placeholder="z.B. @ADMIN oder Discord Server" />
     </div>
 
@@ -5945,6 +5964,28 @@ function generateRandomAvatar() {
   selectPresetAvatar(url);
 }
 
+function handleBannerFileUpload(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      document.getElementById("settings-banner-url").value = e.target.result;
+      updateSettingsBannerPreview(e.target.result);
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function updateSettingsBannerPreview(url) {
+  const preview = document.getElementById("settings-banner-preview");
+  if(preview) {
+    if(url && url.trim().length > 0) {
+      preview.style.backgroundImage = `url(${url})`;
+    } else {
+      preview.style.backgroundImage = `linear-gradient(45deg, #1e293b, #0f172a)`;
+    }
+  }
+}
+
 function handleAvatarFileUpload(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
@@ -5971,7 +6012,10 @@ function openSettingsModal() {
 
   document.getElementById("settings-avatar-url").value = savedAvatar;
   document.getElementById("settings-bio").value = savedBio;
+  const savedBanner = localStorage.getItem("hyschool_admin_banner") || prof.banner || "";
   document.getElementById("settings-discord").value = savedDiscord;
+  document.getElementById("settings-banner-url").value = savedBanner;
+  updateSettingsBannerPreview(savedBanner);
   updateSettingsAvatarPreview(savedAvatar);
   buildPresetAvatarGrid();
 
@@ -5991,6 +6035,7 @@ async function saveUserProfile() {
   }
 
   const avatarUrl = (document.getElementById("settings-avatar-url").value || "").trim() || `https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN`;
+  const bannerUrl = (document.getElementById("settings-banner-url").value || "").trim();
   const bio = (document.getElementById("settings-bio").value || "").trim() || "HySchool Owner & Lead Developer.";
   const discord = (document.getElementById("settings-discord").value || "").trim();
 
@@ -6002,6 +6047,7 @@ async function saveUserProfile() {
     username: CURRENT_USER.name || "ADMIN",
     key: CURRENT_USER.key || "ADMIN",
     avatar: avatarUrl,
+    banner: bannerUrl,
     bio: bio,
     discord: discord,
     rank: "inhaber",
@@ -7737,6 +7783,8 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
+
 
 
 
