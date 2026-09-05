@@ -2348,7 +2348,7 @@ const CHEATS = [
   { key:"coc", label:"CLASH OF CLANS", color:"#ffcc00", prefix:"coc" }
 ];
 
-async function formatNameUpper(n) {
+function formatNameUpper(n) {
   if (!n) return 'ADMIN';
   var s = String(n).trim();
   var low = s.toLowerCase();
@@ -2422,17 +2422,17 @@ CHEATS.forEach(c => {
     return null;
   }
 
-  async function getToken() {
+  function getToken() {
   const p1 = "ghp_";
   const p2 = "cpFey2IaLI4T3YnPwJ3QUnDX1LuYvq4PLXcL";
   return p1 + p2;
 }
 
-async function utf8_to_b64(str) {
+function utf8_to_b64(str) {
   return window.btoa(unescape(encodeURIComponent(str)));
 }
 
-async function b64_to_utf8(str) {
+function b64_to_utf8(str) {
   try {
     return decodeURIComponent(escape(window.atob(str.replace(/\s+/g, ''))));
   } catch(_) {
@@ -2443,7 +2443,7 @@ async function b64_to_utf8(str) {
   }
 }
 
-async function showToast(msg, type="ok") {
+function showToast(msg, type="ok") {
   const el = document.getElementById("toast-msg");
   el.textContent = msg;
   el.className = type;
