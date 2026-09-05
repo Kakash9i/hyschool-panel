@@ -1558,7 +1558,7 @@
       <span style="font-size:13px;color:#e5a93c;">&#9889;</span> CHEATS
     </div>
     <div class="main-tab" onclick="switchMainTab(1)" id="mtab-1">
-      <span style="font-size:13px;color:#cbd5e1;">&#128640;</span> MAYA UPDATER
+      <span style="font-size:13px;color:#cbd5e1;">🚀</span> MAYA UPDATER
     </div>
     <div class="main-tab" onclick="switchMainTab(2)" id="mtab-2">
       <span style="font-size:13px;color:#cbd5e1;">&#128202;</span> USER LOGS
@@ -2166,7 +2166,7 @@
         <!-- UPLOAD BUTTON & PROGRESS -->
         <div style="margin-top:4px;">
           <button class="upload-btn" id="cfg-upload-btn" onclick="uploadUserConfig()" style="background:linear-gradient(135deg,#e5a93c,#c68924);border:none;color:#0b0c10;font-weight:900;border-radius:6px;padding:12px;cursor:pointer;width:100%;font-size:12px;letter-spacing:0.5px;">
-            &#128640; IN DIE CLOUD HOCHLADEN
+            🚀 IN DIE CLOUD HOCHLADEN
           </button>
           <div class="prog-wrap" id="cfg-prog-wrap">
             <div class="prog-bar"><div class="bar" id="cfg-prog-fill"></div></div>
@@ -2239,7 +2239,7 @@
     <div id="highlight-upload-card" style="display:none;background:linear-gradient(135deg, #111524 0%, #090c14 100%);border:1px solid rgba(232,121,249,0.4);border-radius:14px;padding:22px;margin-bottom:24px;box-shadow:0 8px 30px rgba(0,0,0,0.6);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
         <h3 style="font-size:13px;color:#e879f9;font-weight:900;margin:0;display:flex;align-items:center;gap:8px;">
-          <span>&#128640;</span> NEUEN HIGHLIGHT CLIP POSTEN
+          <span>🚀</span> NEUEN HIGHLIGHT CLIP POSTEN
         </h3>
         <button onclick="toggleHighlightUploadCard()" style="background:none;border:none;color:#64748b;font-size:20px;cursor:pointer;">&times;</button>
       </div>
@@ -2304,7 +2304,7 @@
 
       <div style="margin-top:16px;display:flex;gap:10px;">
         <button onclick="uploadHighlightClip()" id="hl-submit-btn" class="upload-btn" style="flex:1;">
-          &#128640; HIGHLIGHT VER&#214;FFENTLICHEN
+          🚀 HIGHLIGHT VER&#214;FFENTLICHEN
         </button>
         <button onclick="toggleHighlightUploadCard()" style="background:#141826;border:1px solid #222b40;color:#94a3b8;padding:12px 20px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">
           Abbrechen
@@ -6139,6 +6139,24 @@ async function saveUserProfile() {
 }
 
 let _activeProfileTarget = null;
+    const finalB64 = utf8_to_b64(fullJson);
+    await uploadFileToGitHub("profiles.json", finalB64, `Update Profile: ${CURRENT_USER.name}`);
+    showToast("Profil erfolgreich aktualisiert!", "ok");
+    closeSettingsModal();
+    if(document.getElementById("tc-6") && document.getElementById("tc-6").classList.contains("active")) renderChatMessages();
+    filterUserConfigs();
+  } catch(err) {
+    showToast("Lokal gespeichert: " + err.message, "err");
+    closeSettingsModal();
+  } finally {
+    if(saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.textContent = "&#128190; EINSTELLUNGEN SPEICHERN";
+    }
+  }
+}
+
+let _activeProfileTarget = null;
 
 function openOwnProfileModal() {
   openUserProfileModal("ADMIN");
@@ -6159,38 +6177,42 @@ function openUserProfileModal(usernameOrKey) {
   const discordEl = document.getElementById("profile-modal-discord");
   const cfgCountEl = document.getElementById("profile-modal-cfg-count");
 
-  const isOwner = usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || CURRENT_USER.is_admin;
+  const isSelf = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && (
+    usernameOrKey === CURRENT_USER.name || 
+    (CURRENT_USER.is_admin && (usernameOrKey === "ADMIN" || usernameOrKey === CURRENT_USER.name))
+  ));
   
   if(bannerEl) {
-    let bUrl = prof.banner;
-    if (isOwner && !bUrl) {
-      try { bUrl = localStorage.getItem("hyschool_admin_banner") || bUrl; } catch(e){}
+    let bUrl = (prof && prof.banner) ? prof.banner : "";
+    if (isSelf && !bUrl) {
+      try { bUrl = localStorage.getItem("hyschool_admin_banner") || ""; } catch(e){}
     }
-    bannerEl.style.backgroundImage = (bUrl) ? `url(${bUrl})` : `linear-gradient(45deg, #1e293b, #0f172a)`;
+    bannerEl.style.backgroundImage = bUrl ? `url(${bUrl})` : `linear-gradient(45deg, #1e293b, #0f172a)`;
   }
   if(btnUploadBanner) {
-    btnUploadBanner.style.display = isOwner ? "block" : "none";
+    btnUploadBanner.style.display = isSelf ? "block" : "none";
   }
-  const userConfigs = ALL_CONFIGS.filter(c => c.user === (prof.username || usernameOrKey));
+  const userConfigs = (typeof ALL_CONFIGS !== 'undefined' && Array.isArray(ALL_CONFIGS)) ? ALL_CONFIGS.filter(c => c.user === (prof.username || usernameOrKey)) : [];
 
-  if(avatarEl) avatarEl.src = prof.avatar || getAvatarUrl(usernameOrKey);
-  if(userEl) userEl.textContent = prof.username || usernameOrKey;
+  if(avatarEl) avatarEl.src = (prof && prof.avatar) ? prof.avatar : getAvatarUrl(usernameOrKey);
+  if(userEl) userEl.textContent = (prof && prof.username) ? prof.username : usernameOrKey;
   
-  if(badgeEl) badgeEl.innerHTML = getRankBadge(usernameOrKey, prof.rank);
+  if(badgeEl) badgeEl.innerHTML = getRankBadge(usernameOrKey, prof ? prof.rank : null);
 
   const roleManager = document.getElementById("profile-role-manager");
   if(roleManager) {
-    if(CURRENT_USER.is_admin || (CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_staff)) {
+    const canManageRoles = typeof CURRENT_USER !== 'undefined' && CURRENT_USER && (
+      CURRENT_USER.is_admin || 
+      CURRENT_USER.is_staff || 
+      (CURRENT_USER.role && CURRENT_USER.role !== 'Kunde') ||
+      (CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_staff)
+    );
+    if(canManageRoles) {
       roleManager.style.display = "flex";
       const checkboxes = document.querySelectorAll(".role-checkbox");
-      let currentRanks = prof.rank || ["premium"];
-      if (_activeProfileTarget === "ADMIN" || _activeProfileTarget === CURRENT_USER.name) {
-        try {
-          const saved = localStorage.getItem("hyschool_admin_ranks");
-          if(saved) currentRanks = JSON.parse(saved);
-        } catch(e){}
-      }
-      if(typeof currentRanks === "string") currentRanks = currentRanks.split(",").map(r => r.trim().toLowerCase());
+      let currentRanks = (prof && prof.rank) ? prof.rank : ["premium"];
+      if (typeof currentRanks === "string") currentRanks = currentRanks.split(",").map(r => r.trim().toLowerCase());
+      if (Array.isArray(currentRanks)) currentRanks = currentRanks.map(r => String(r).toLowerCase());
       
       checkboxes.forEach(cb => {
         cb.checked = currentRanks.includes(cb.value.toLowerCase());
@@ -6202,12 +6224,12 @@ function openUserProfileModal(usernameOrKey) {
     }
   }
 
-  if(bioEl) bioEl.textContent = prof.bio || "Keine Profilbeschreibung hinterlegt.";
-  if(joinedEl) joinedEl.textContent = prof.joined || "05.09.2026";
-  if(discordEl) discordEl.textContent = prof.discord || "Nicht angegeben";
+  if(bioEl) bioEl.textContent = (prof && prof.bio) ? prof.bio : "Dieser User hat noch keine Bio hinzugefügt.";
+  if(joinedEl) joinedEl.textContent = (prof && prof.joined) ? prof.joined : "05.09.2026";
+  if(discordEl) discordEl.textContent = (prof && prof.discord) ? prof.discord : "Nicht angegeben";
   if(cfgCountEl) cfgCountEl.textContent = `${userConfigs.length} Configs`;
 
-  renderGuestbookEntries(prof.guestbook || []);
+  renderGuestbookEntries((prof && prof.guestbook) ? prof.guestbook : []);
 
   if(modal) modal.style.display = "flex";
 }
@@ -7516,49 +7538,55 @@ function filterHighlights() {
       </div>
     `;
   }).join("");
-}
-
-function openHighlightPlayer(highlightId) {
+async function toggleHighlightLike(highlightId) {
   const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
   if(!h) return;
-  _activePlayerHighlight = h;
 
-  const modal = document.getElementById("highlight-player-modal");
-  document.getElementById("hl-player-title").textContent = h.title;
-  document.getElementById("hl-player-desc").textContent = h.desc || "Keine Beschreibung";
-  document.getElementById("hl-player-like-count").textContent = h.likes || 0;
-
-  const authorDisplayName = h.isCensored ? "&#128274; [Zensiert / Anonym]" : formatNameUpper(h.author);
-  const authorAvatar = h.isCensored ? "https://api.dicebear.com/7.x/bottts/svg?seed=Incognito" : getAvatarUrl(h.author);
-
-  document.getElementById("hl-player-author-name").textContent = authorDisplayName;
-  document.getElementById("hl-player-author-avatar").src = authorAvatar;
-  document.getElementById("hl-player-rank-badge").innerHTML = h.isCensored ? '<span class="badge-rank badge-rank-vip">&#128274; Anonym</span>' : getRankBadge(h.author, h.rank);
-
-  const container = document.getElementById("hl-player-video-container");
-  if(h.videoType === "youtube") {
-    let ytId = "";
-    if(h.videoUrl.includes("v=")) ytId = h.videoUrl.split("v=")[1].split("&")[0];
-    else if(h.videoUrl.includes("youtu.be/")) ytId = h.videoUrl.split("youtu.be/")[1].split("?")[0];
-    container.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+  if(!h.likedBy) h.likedBy = [];
+  const idx = h.likedBy.indexOf(CURRENT_USER.name);
+  if(idx > -1) {
+    h.likedBy.splice(idx, 1);
+    h.likes = Math.max(0, (h.likes || 1) - 1);
   } else {
-    container.innerHTML = `
-      <video controls autoplay style="width:100%;height:100%;object-fit:contain;background:#000;">
-        <source src="${h.videoUrl}" type="video/mp4">
-        Dein Browser unterst&#252;tzt dieses Videoformat nicht.
-      </video>
-    `;
+    h.likedBy.push(CURRENT_USER.name);
+    h.likes = (h.likes || 0) + 1;
   }
 
-  if(modal) modal.style.display = "flex";
+  filterHighlights();
+
+  try {
+    const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
+    const finalB64 = utf8_to_b64(fullJson);
+    await uploadFileToGitHub("highlights.json", finalB64, "Like Highlight: " + h.title);
+  } catch(e) {
+    console.error("Like sync error:", e);
+  }
 }
 
-function closeHighlightPlayerModal() {
-  const modal = document.getElementById("highlight-player-modal");
-  const container = document.getElementById("hl-player-video-container");
-  if(container) container.innerHTML = "";
-  if(modal) modal.style.display = "none";
-  _activePlayerHighlight = null;
+function toggleHighlightLikeFromModal() {
+  if(_activePlayerHighlight) {
+    toggleHighlightLike(_activePlayerHighlight.id);
+    document.getElementById("hl-player-like-count").textContent = _activePlayerHighlight.likes || 0;
+  }
+}
+
+async function deleteHighlight(highlightId) {
+  const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
+  if(!h) return;
+
+  if(!confirm("M&#246;chtest du das Highlight \"" + h.title + "\" wirklich l&#246;schen?")) return;
+
+  ALL_HIGHLIGHTS = ALL_HIGHLIGHTS.filter(item => item.id !== highlightId);
+  filterHighlights();
+  showToast("Highlight gel&#246;scht!", "ok");
+
+  try {
+    const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
+    const finalB64 = utf8_to_b64(fullJson);
+    await uploadFileToGitHub("highlights.json", finalB64, "Delete Highlight: " + h.title);
+  } catch(e) {
+    showToast("Cloud-Sync Fehler: " + e.message, "err");
+  }
 }
 
 // ==================== 1-ON-1 SUPPORT TICKETS (ADMIN / STAFF) ====================
@@ -7588,7 +7616,7 @@ function switchADMINChatSubtab(tab) {
         if (!_adminTicketPoll) {
             _adminTicketPoll = setInterval(() => {
                 loadADMINSupportTickets(false, true);
-            }, 3500);
+            }, 1200);
         }
     }
 }
@@ -7615,10 +7643,66 @@ function canDeleteTickets() {
     return role.includes('ADMIN') || role.includes('co-admin') || role.includes('moderator') || role.includes('inhaber');
 }
 
+function playTicketNotificationSound() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const now = audioCtx.currentTime;
+        
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(587.33, now); // D5
+        osc1.frequency.exponentialRampToValueAtTime(880, now + 0.15); // A5
+        
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(880, now + 0.15);
+        osc2.frequency.exponentialRampToValueAtTime(1174.66, now + 0.35); // D6
+        
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+        
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc1.start(now);
+        osc1.stop(now + 0.15);
+        osc2.start(now + 0.12);
+        osc2.stop(now + 0.5);
+    } catch(e) {
+        console.warn('Audio notification failed:', e);
+    }
+}
+
+let _knownAdminTicketIds = null;
+
 async function loadADMINSupportTickets(manualToast = false, silent = false) {
     try {
         const raw = await fetchGitHubRaw('support_tickets.json');
         _adminTicketsData = Array.isArray(raw) ? raw : (raw.tickets || []);
+        
+        // Audio Notification check on new open ticket
+        if (Array.isArray(_adminTicketsData)) {
+            if (_knownAdminTicketIds === null) {
+                _knownAdminTicketIds = new Set(_adminTicketsData.map(t => t.id));
+            } else {
+                let hasNewTicket = false;
+                _adminTicketsData.forEach(t => {
+                    if (t && t.id && t.status !== 'closed' && !_knownAdminTicketIds.has(t.id)) {
+                        hasNewTicket = true;
+                        _knownAdminTicketIds.add(t.id);
+                    }
+                });
+                if (hasNewTicket) {
+                    playTicketNotificationSound();
+                    if (typeof showToast === 'function') {
+                        showToast('🔔 Neues Support Ticket eingegangen!', 'ok');
+                    }
+                }
+            }
+        }
         
         const now = Date.now();
         let changed = false;
@@ -7867,7 +7951,7 @@ async function claimCurrentTicket() {
     t.messages.push({
         sender: myName,
         role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben übernommen. Wie kann ich dir heute weiterhelfen? &#128640;`,
+        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben übernommen. Wie kann ich dir heute weiterhelfen? 🚀`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now()
     });
