@@ -651,7 +651,7 @@
   .badge-rank-vip { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.15) 100%); color: #e879f9; border: 1px solid rgba(217,70,239,0.5); box-shadow: 0 0 12px rgba(168,85,247,0.35); }
   .badge-rank-elite { background: rgba(249,115,22,0.18); color: #fb923c; border: 1px solid rgba(249,115,22,0.45); box-shadow: 0 0 10px rgba(249,115,22,0.25); }
   .badge-rank-premium { background: rgba(59,130,246,0.18); color: #60a5fa; border: 1px solid rgba(59,130,246,0.45); box-shadow: 0 0 10px rgba(59,130,246,0.25); }
-  .badge-rank-kunde { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.35); }
+  .badge-rank-donator { background: linear-gradient(135deg, rgba(236,72,153,0.25) 0%, rgba(244,63,94,0.15) 100%); color: #f43f5e; border: 1px solid rgba(244,63,94,0.5); box-shadow: 0 0 12px rgba(236,72,153,0.35); }
 
   /* HIGHLIGHTS / CLIPS GRID & CARDS */
   .highlights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
@@ -676,7 +676,7 @@
   .badge-rank-vip { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.15) 100%); color: #e879f9; border: 1px solid rgba(217,70,239,0.5); box-shadow: 0 0 12px rgba(168,85,247,0.35); }
   .badge-rank-elite { background: rgba(249,115,22,0.18); color: #fb923c; border: 1px solid rgba(249,115,22,0.45); box-shadow: 0 0 10px rgba(249,115,22,0.25); }
   .badge-rank-premium { background: rgba(59,130,246,0.18); color: #60a5fa; border: 1px solid rgba(59,130,246,0.45); box-shadow: 0 0 10px rgba(59,130,246,0.25); }
-  .badge-rank-kunde { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.35); }
+  .badge-rank-donator { background: linear-gradient(135deg, rgba(236,72,153,0.25) 0%, rgba(244,63,94,0.15) 100%); color: #f43f5e; border: 1px solid rgba(244,63,94,0.5); box-shadow: 0 0 12px rgba(236,72,153,0.35); }
 
     /* EXTENSION BADGES */
   .badge-ext-box {
@@ -6033,7 +6033,18 @@ function openUserProfileModal(usernameOrKey) {
 
   const avatarEl = document.getElementById("profile-modal-avatar");
   const userEl = document.getElementById("profile-modal-username");
-    const badgeEl = document.getElementById("profile-modal-badge-wrap");
+      const badgeEl = document.getElementById("profile-modal-badge-wrap");
+  const bioEl = document.getElementById("profile-modal-bio");
+  const joinedEl = document.getElementById("profile-modal-joined");
+  const discordEl = document.getElementById("profile-modal-discord");
+  const cfgCountEl = document.getElementById("profile-modal-cfg-count");
+
+  const isOwner = usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || CURRENT_USER.is_admin;
+  const userConfigs = ALL_CONFIGS.filter(c => c.user === (prof.username || usernameOrKey));
+
+  if(avatarEl) avatarEl.src = prof.avatar || getAvatarUrl(usernameOrKey);
+  if(userEl) userEl.textContent = prof.username || usernameOrKey;
+  
   if(badgeEl) badgeEl.innerHTML = getRankBadge(usernameOrKey, prof.rank);
 
   const roleManager = document.getElementById("profile-role-manager");
@@ -6046,7 +6057,6 @@ function openUserProfileModal(usernameOrKey) {
       roleManager.style.display = "none";
     }
   }
-
   if(bioEl) bioEl.textContent = prof.bio || "Keine Profilbeschreibung hinterlegt.";
   if(joinedEl) joinedEl.textContent = prof.joined || "05.09.2026";
   if(discordEl) discordEl.textContent = prof.discord || "Nicht angegeben";
@@ -6055,163 +6065,6 @@ function openUserProfileModal(usernameOrKey) {
   renderGuestbookEntries(prof.guestbook || []);
 
   if(modal) modal.style.display = "flex";
-}
-
-function updateProfileRole() {
-  const select = document.getElementById("profile-role-select");
-  if(!select || !_activeProfileTarget) return;
-  const newRole = select.value;
-  
-  if(!USER_PROFILES[_activeProfileTarget]) {
-    USER_PROFILES[_activeProfileTarget] = { username: _activeProfileTarget };
-  }
-  USER_PROFILES[_activeProfileTarget].rank = newRole;
-  
-  const badgeEl = document.getElementById("profile-modal-badge-wrap");
-  if(badgeEl) badgeEl.innerHTML = getRankBadge(_activeProfileTarget, newRole);
-  
-  if(typeof renderStaffTable === "function") renderStaffTable();
-  if(typeof filterUserConfigs === "function") filterUserConfigs();
-  
-  showToast("Rolle lokal aktualisiert (" + newRole.toUpperCase() + ")", "ok");
-}
-
-function closeProfileModal() {
-  const modal = document.getElementById("user-profile-modal");
-  if(modal) modal.style.display = "none";
-}
-
-function renderGuestbookEntries(entries = []) {
-  const list = document.getElementById("profile-guestbook-list");
-  const countBadge = document.getElementById("profile-guestbook-count");
-  if(!list) return;
-
-  if(countBadge) countBadge.textContent = `${entries.length} Eintrag${entries.length === 1 ? '' : 'e'}`;
-
-  if(entries.length === 0) {
-    list.innerHTML = `
-      <div style="text-align:center;color:#64748b;padding:30px;font-size:11.5px;">
-        Noch keine G&#228;stebucheintr&#228;ge vorhanden. Hinterlasse als Erster einen Kommentar!
-      </div>
-    `;
-    return;
-  }
-
-  list.innerHTML = entries.slice().reverse().map((entry) => {
-    const isMe = entry.author === CURRENT_USER.name;
-    const isOwner = CURRENT_USER.is_admin || _activeProfileTarget === CURRENT_USER.name;
-    const authorAvatar = getAvatarUrl(entry.author);
-
-    return `
-      <div style="background:#0e121d;border:1px solid #1a2234;border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;">
-        <div style="width:36px;height:36px;border-radius:8px;overflow:hidden;border:1px solid #28344e;flex-shrink:0;">
-          <img src="${authorAvatar}" style="width:100%;height:100%;object-fit:cover;" alt="${escapeHtml(entry.author)}">
-        </div>
-        <div style="flex:1;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <b class="clickable-user" onclick="openUserProfileModal('${escapeHtml(entry.author)}')" style="color:#ffffff;font-size:12px;">${escapeHtml(entry.author)}</b>
-              <span style="font-size:10px;color:#64748b;">${entry.time || ''}</span>
-            </div>
-            ${(isMe || isOwner) ? `<button onclick="deleteGuestbookEntry('${entry.id}')" style="background:none;border:none;color:#f43f5e;font-size:10px;cursor:pointer;font-weight:700;">&#128465;&#65039; L&#246;schen</button>` : ''}
-          </div>
-          <div style="color:#cbd5e1;font-size:12px;line-height:1.4;word-break:break-word;">
-            ${escapeHtml(entry.text)}
-          </div>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-async function submitGuestbookEntry() {
-  const input = document.getElementById("guestbook-input");
-  const sendBtn = document.getElementById("guestbook-send-btn");
-  if(!input) return;
-  const text = input.value.trim();
-  if(!text) return;
-
-  if(sendBtn) sendBtn.disabled = true;
-
-  const targetProf = getUserProfile(_activeProfileTarget);
-  if(!targetProf.guestbook) targetProf.guestbook = [];
-
-  const now = new Date();
-  const pad = n => String(n).padStart(2, '0');
-  const timeStr = `${pad(now.getDate())}.${pad(now.getMonth()+1)}.${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
-
-  const newEntry = {
-    id: "gb_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4),
-    author: CURRENT_USER.name || "ADMIN",
-    author_key: CURRENT_USER.key || "",
-    text: text,
-    time: timeStr,
-    timestamp: Date.now()
-  };
-
-  targetProf.guestbook.push(newEntry);
-  USER_PROFILES[_activeProfileTarget] = targetProf;
-  if(targetProf.key) USER_PROFILES[targetProf.key] = targetProf;
-
-  input.value = "";
-  renderGuestbookEntries(targetProf.guestbook);
-  try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
-  showToast("G&#228;stebuch-Eintrag hinzugef&#252;gt!", "ok");
-
-  try {
-    const fullJson = JSON.stringify(USER_PROFILES, null, 2);
-    const finalB64 = utf8_to_b64(fullJson);
-    await uploadFileToGitHub("profiles.json", finalB64, `Guestbook entry for ${_activeProfileTarget} by ${CURRENT_USER.name}`);
-  } catch(err) {
-    console.error("Guestbook GitHub sync error:", err);
-  } finally {
-    if(sendBtn) sendBtn.disabled = false;
-  }
-}
-
-async function deleteGuestbookEntry(entryId) {
-  const targetProf = getUserProfile(_activeProfileTarget);
-  if(!targetProf || !targetProf.guestbook) return;
-
-  targetProf.guestbook = targetProf.guestbook.filter(e => e.id !== entryId);
-  USER_PROFILES[_activeProfileTarget] = targetProf;
-  if(targetProf.key) USER_PROFILES[targetProf.key] = targetProf;
-
-  renderGuestbookEntries(targetProf.guestbook);
-  try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
-  showToast("Eintrag gel&#246;scht!", "ok");
-
-  try {
-    const fullJson = JSON.stringify(USER_PROFILES, null, 2);
-    const finalB64 = utf8_to_b64(fullJson);
-    await uploadFileToGitHub("profiles.json", finalB64, `Delete guestbook entry from ${_activeProfileTarget}`);
-  } catch(_) {}
-}
-// ================================================================
-// CLOUD CONFIGS SYSTEM
-// ================================================================
-let ALL_CONFIGS = [];
-let _selectedConfigFile = null;
-
-function copyCurrentLicenseKey() {
-  const key = CURRENT_USER.key || (CURRENT_USER.license && CURRENT_USER.license.key) || "MASTER-ADMIN";
-  navigator.clipboard.writeText(key);
-  showToast("Lizenzschlüssel kopiert!", "ok");
-}
-
-function onConfigFileSelected(input) {
-  if (input.files && input.files[0]) {
-    _selectedConfigFile = input.files[0];
-    const lbl = document.getElementById("cfg-drop-label");
-    const sublbl = document.getElementById("cfg-drop-sublabel");
-    const nameInp = document.getElementById("cfg-upload-name");
-    
-    if (lbl) lbl.textContent = `Ausgewählt: ${_selectedConfigFile.name}`;
-    if (sublbl) sublbl.textContent = `Größe: ${formatBytes(_selectedConfigFile.size)}`;
-    if (nameInp && !nameInp.value) {
-      nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
-    }
-  }
 }
 
 function handleConfigDrop(e) {
@@ -7673,5 +7526,10 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
+
+
+
+
 
 
