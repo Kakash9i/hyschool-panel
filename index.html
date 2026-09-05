@@ -2454,6 +2454,11 @@ function applyUserPermissions() {
   const dashUser = document.getElementById("cfg-dash-username");
   const dashRole = document.getElementById("cfg-dash-role-badge");
   const userBadge = document.getElementById("user-badge");
+  const dashImg = document.getElementById("dash-avatar-img");
+
+  const prof = getUserProfile(CURRENT_USER.name) || getUserProfile("ADMIN") || {};
+  const savedAvatar = localStorage.getItem("hyschool_admin_avatar") || prof.avatar;
+  if(dashImg) dashImg.src = savedAvatar || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN";
 
   if(dashUser) dashUser.textContent = CURRENT_USER.is_admin ? "ADMIN" : CURRENT_USER.name;
   if(dashRole) dashRole.innerHTML = getRankBadge(CURRENT_USER.name, CURRENT_USER.role);
@@ -5633,12 +5638,15 @@ function handleAvatarFileUpload(input) {
 
 function openSettingsModal() {
   const modal = document.getElementById("settings-modal");
-  const prof = getUserProfile(CURRENT_USER.name) || {};
+  const prof = getUserProfile(CURRENT_USER.name) || getUserProfile("ADMIN") || {};
+  const savedAvatar = localStorage.getItem("hyschool_admin_avatar") || prof.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN`;
+  const savedBio = localStorage.getItem("hyschool_admin_bio") || prof.bio || "HySchool Owner & Lead Developer.";
+  const savedDiscord = localStorage.getItem("hyschool_admin_discord") || prof.discord || "";
 
-  document.getElementById("settings-avatar-url").value = prof.avatar || "";
-  document.getElementById("settings-bio").value = prof.bio || "";
-  document.getElementById("settings-discord").value = prof.discord || "";
-  updateSettingsAvatarPreview(prof.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${CURRENT_USER.name}`);
+  document.getElementById("settings-avatar-url").value = savedAvatar;
+  document.getElementById("settings-bio").value = savedBio;
+  document.getElementById("settings-discord").value = savedDiscord;
+  updateSettingsAvatarPreview(savedAvatar);
   buildPresetAvatarGrid();
 
   if(modal) modal.style.display = "flex";
@@ -5656,31 +5664,38 @@ async function saveUserProfile() {
     saveBtn.textContent = "SPEICHERE PROFIL...";
   }
 
-  const avatarUrl = (document.getElementById("settings-avatar-url").value || "").trim() || `https://api.dicebear.com/7.x/bottts/svg?seed=${CURRENT_USER.name}`;
-  const bio = (document.getElementById("settings-bio").value || "").trim() || "HySchool Team Mitglied.";
+  const avatarUrl = (document.getElementById("settings-avatar-url").value || "").trim() || `https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN`;
+  const bio = (document.getElementById("settings-bio").value || "").trim() || "HySchool Owner & Lead Developer.";
   const discord = (document.getElementById("settings-discord").value || "").trim();
 
-  const userKey = CURRENT_USER.key || CURRENT_USER.name;
-  const existing = USER_PROFILES[userKey] || USER_PROFILES[CURRENT_USER.name] || {};
+  const userKey = CURRENT_USER.key || CURRENT_USER.name || "ADMIN";
+  const existing = USER_PROFILES[userKey] || USER_PROFILES["ADMIN"] || USER_PROFILES[CURRENT_USER.name] || {};
 
   const updatedProfile = {
     ...existing,
-    username: CURRENT_USER.name,
+    username: CURRENT_USER.name || "ADMIN",
     key: CURRENT_USER.key || "ADMIN",
     avatar: avatarUrl,
     bio: bio,
     discord: discord,
-    joined: existing.joined || "05.09.2026",
+    rank: "inhaber",
+    joined: existing.joined || "01.01.2026",
     guestbook: existing.guestbook || []
   };
 
   USER_PROFILES[CURRENT_USER.name] = updatedProfile;
+  USER_PROFILES["ADMIN"] = updatedProfile;
   if(CURRENT_USER.key) USER_PROFILES[CURRENT_USER.key] = updatedProfile;
 
   try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
+  try { localStorage.setItem("hyschool_admin_avatar", avatarUrl); } catch(_) {}
+  try { localStorage.setItem("hyschool_admin_bio", bio); } catch(_) {}
+  try { localStorage.setItem("hyschool_admin_discord", discord); } catch(_) {}
 
   const dashImg = document.getElementById("dash-avatar-img");
   if(dashImg) dashImg.src = avatarUrl;
+  const settingsPreview = document.getElementById("settings-avatar-preview");
+  if(settingsPreview) settingsPreview.src = avatarUrl;
 
   try {
     const fullJson = JSON.stringify(USER_PROFILES, null, 2);
