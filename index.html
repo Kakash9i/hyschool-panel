@@ -5563,22 +5563,38 @@ async function loadProfiles() {
 
 function getUserProfile(usernameOrKey) {
   if(!usernameOrKey) return null;
-  const direct = USER_PROFILES[usernameOrKey];
-  if(direct) return direct;
+  const isMe = (usernameOrKey === "ADMIN") || (CURRENT_USER && CURRENT_USER.name === usernameOrKey) || (CURRENT_USER && CURRENT_USER.is_admin && usernameOrKey === "ADMIN");
+  
+  let p = USER_PROFILES[usernameOrKey] || USER_PROFILES["ADMIN"];
+  if (!p) {
+    const values = Object.values(USER_PROFILES);
+    p = values.find(x => (x.username && x.username.toLowerCase() === String(usernameOrKey).toLowerCase()) || (x.key && x.key.toUpperCase() === String(usernameOrKey).toUpperCase()));
+  }
 
-  const values = Object.values(USER_PROFILES);
-  const found = values.find(p => (p.username && p.username.toLowerCase() === usernameOrKey.toLowerCase()) || (p.key && p.key.toUpperCase() === usernameOrKey.toUpperCase()));
-  if(found) return found;
+  if (isMe) {
+    const localAvatar = localStorage.getItem("hyschool_admin_avatar");
+    const localBio = localStorage.getItem("hyschool_admin_bio");
+    const localDiscord = localStorage.getItem("hyschool_admin_discord");
+    if (localAvatar || localBio || localDiscord) {
+      p = Object.assign({}, p || {}, {
+        username: "ADMIN",
+        avatar: localAvatar || (p && p.avatar) || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN",
+        bio: localBio || (p && p.bio) || "HySchool Owner & Lead Developer.",
+        discord: (localDiscord !== null && localDiscord !== undefined) ? localDiscord : ((p && p.discord) || "")
+      });
+    }
+  }
 
-  const isOwner = usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN";
-  const defaultAvatar = isOwner ? "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN" : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey)}`;
+  if (p) return p;
+
+  const isOwner = usernameOrKey === "ADMIN" || (CURRENT_USER && CURRENT_USER.is_admin);
   return {
-    username: usernameOrKey,
-    key: "",
-    avatar: defaultAvatar,
-    bio: isOwner ? "HySchool Owner & Lead Developer." : "HySchool Team & Community Mitglied.",
-    discord: "",
-    joined: "05.09.2026",
+    username: isOwner ? "ADMIN" : usernameOrKey,
+    key: isOwner ? "MASTER-ADMIN" : "",
+    avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey)}`,
+    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "HySchool Team & Community Mitglied.",
+    discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "",
+    joined: "01.01.2026",
     guestbook: []
   };
 }
