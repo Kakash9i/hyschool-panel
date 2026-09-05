@@ -16,10 +16,10 @@
       }
     ]
   },
-  "Admin": {
-    "username": "Admin",
+  "ADMIN": {
+    "username": "ADMIN",
     "key": "HYS-VAL-1D-HS9E-F0KL",
-    "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=Admin",
+    "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN",
     "bio": "HySchool Inhaber & Administration",
     "discord": "admin#1337",
     "rank": "inhaber",
