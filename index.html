@@ -1045,7 +1045,7 @@
   <div class="staff-modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
-        <span style="color:#e5a93c;">👔</span> MITARBEITER / TEAM-MITGLIED BEARBEITEN
+        <span style="color:#e5a93c;">&#128100;</span> MITARBEITER / TEAM-MITGLIED BEARBEITEN
       </h3>
       <button onclick="closeStaffModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
     </div>
@@ -1080,9 +1080,9 @@
           <label class="toggle"><input type="checkbox" id="sp-gen" onchange="document.getElementById('sp-max-dur-wrap').style.display=this.checked?'flex':'none'"><span class="slider"></span></label>
         </div>
         <div id="sp-max-dur-wrap" style="background:#050608; border:1px solid #1a1e2b; padding:8px 12px; border-radius:6px; display:flex; align-items:center; justify-content:space-between;">
-          <span style="color:#94a3b8; font-size:11px; font-weight:700;">⏱️ Max. erlaubte Erstellungs-Laufzeit:</span>
+          <span style="color:#94a3b8; font-size:11px; font-weight:700;">&#128100; Max. erlaubte Erstellungs-Laufzeit:</span>
           <select id="sp-max-duration" style="background:#141724; border:1px solid #232a3e; color:#f8fafc; padding:6px 10px; border-radius:5px; font-size:11px; outline:none;">
-            <option value="all">♾️ Alle Laufzeiten (inkl. Lifetime)</option>
+            <option value="all">&#128100; Alle Laufzeiten (inkl. Lifetime)</option>
             <option value="1">Max. 1 Tag (Trial)</option>
             <option value="3">Max. 3 Tage</option>
             <option value="7">Max. 7 Tage (Woche)</option>
@@ -1097,14 +1097,14 @@
       <!-- 2. KEYS BEARBEITEN (DETAILRECHTE) -->
       <div class="perm-item" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; align-items: stretch;">
         <div style="display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-weight:700;">✏️ Keys bearbeiten</span>
+          <span style="font-weight:700;">&#128100; Keys bearbeiten</span>
           <label class="toggle"><input type="checkbox" id="sp-edit" onchange="document.getElementById('sp-edit-sub-wrap').style.display=this.checked?'flex':'none'"><span class="slider"></span></label>
         </div>
         <div id="sp-edit-sub-wrap" style="background:#050608; border:1px solid #1a1e2b; padding:10px 12px; border-radius:6px; display:flex; flex-direction:column; gap:8px;">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2px;">
-            <span style="color:#94a3b8; font-size:11px; font-weight:700;">⏱️ Max. erlaubte Edit-Laufzeit:</span>
+            <span style="color:#94a3b8; font-size:11px; font-weight:700;">&#128100; Max. erlaubte Edit-Laufzeit:</span>
             <select id="sp-edit-max-dur" style="background:#141724; border:1px solid #232a3e; color:#f8fafc; padding:5px 10px; border-radius:5px; font-size:11px; outline:none;">
-              <option value="all">♾️ Alle Laufzeiten (inkl. Lifetime)</option>
+              <option value="all">&#128100; Alle Laufzeiten (inkl. Lifetime)</option>
               <option value="1">Max. 1 Tag (Trial)</option>
               <option value="3">Max. 3 Tage</option>
               <option value="7">Max. 7 Tage (Woche)</option>
@@ -1117,23 +1117,23 @@
           <div style="font-size:10px; color:#64748b; font-weight:700; letter-spacing:0.5px; margin-top:2px;">WAS DARF BEARBEITET WERDEN:</div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
             <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
-              <input type="checkbox" id="sp-edit-f-dur" checked style="width:auto;margin:0;cursor:pointer;"> ⏱️ Laufzeit / Ablauf
+              <input type="checkbox" id="sp-edit-f-dur" checked style="width:auto;margin:0;cursor:pointer;"> &#128100; Laufzeit / Ablauf
             </label>
             <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
-              <input type="checkbox" id="sp-edit-f-prod" style="width:auto;margin:0;cursor:pointer;"> 🎮 Cheat-Produkt
+              <input type="checkbox" id="sp-edit-f-prod" style="width:auto;margin:0;cursor:pointer;"> &#128100; Cheat-Produkt
             </label>
             <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
-              <input type="checkbox" id="sp-edit-f-stat" checked style="width:auto;margin:0;cursor:pointer;"> 🟢 Status (Aktiv/Unused)
+              <input type="checkbox" id="sp-edit-f-stat" checked style="width:auto;margin:0;cursor:pointer;"> &#128100; Status (Aktiv/Unused)
             </label>
             <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
-              <input type="checkbox" id="sp-edit-f-note" checked style="width:auto;margin:0;cursor:pointer;"> 👤 Noti+ / Kunde
+              <input type="checkbox" id="sp-edit-f-note" checked style="width:auto;margin:0;cursor:pointer;"> &#128100; Noti+ / Kunde
             </label>
           </div>
           <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px; padding-top:6px; border-top:1px solid #1a1e2b;">
-            <span style="color:#94a3b8; font-size:11px; font-weight:700;">🎯 Erlaubte Keys zum Bearbeiten:</span>
+            <span style="color:#94a3b8; font-size:11px; font-weight:700;">&#128100; Erlaubte Keys zum Bearbeiten:</span>
             <select id="sp-edit-scope" style="background:#141724; border:1px solid #232a3e; color:#e5a93c; padding:5px 10px; border-radius:5px; font-size:11px; font-weight:800; outline:none;">
-              <option value="all">🌍 Alle Keys bearbeiten</option>
-              <option value="own" selected>👤 Nur selbst erstellte Keys</option>
+              <option value="all">&#128100; Alle Keys bearbeiten</option>
+              <option value="own" selected>&#128100; Nur selbst erstellte Keys</option>
             </select>
           </div>
         </div>
@@ -1142,13 +1142,13 @@
       <!-- 3. KEYS PAUSIEREN (MIT MAX PAUSE DAUER) -->
       <div class="perm-item" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; align-items: stretch;">
         <div style="display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-weight:700;">⏸️ Keys pausieren</span>
+          <span style="font-weight:700;">&#128100; Keys pausieren</span>
           <label class="toggle"><input type="checkbox" id="sp-pause" onchange="document.getElementById('sp-pause-dur-wrap').style.display=this.checked?'flex':'none'"><span class="slider"></span></label>
         </div>
         <div id="sp-pause-dur-wrap" style="background:#050608; border:1px solid #1a1e2b; padding:8px 12px; border-radius:6px; display:flex; align-items:center; justify-content:space-between;">
           <span style="color:#94a3b8; font-size:11px; font-weight:700;">⏳ Max. erlaubte Pausierungsdauer:</span>
           <select id="sp-pause-max-dur" style="background:#141724; border:1px solid #232a3e; color:#f8fafc; padding:6px 10px; border-radius:5px; font-size:11px; outline:none;">
-            <option value="all">♾️ Unbegrenzt pausieren</option>
+            <option value="all">&#128100; Unbegrenzt pausieren</option>
             <option value="1">Max. 1 Tag pausieren</option>
             <option value="3">Max. 3 Tage pausieren</option>
             <option value="7" selected>Max. 7 Tage pausieren</option>
@@ -1160,29 +1160,29 @@
 
       <!-- WEITERE RECHTE -->
       <div class="perm-item">
-        <span>🔄 HWID Reset</span>
+        <span>&#128100; HWID Reset</span>
         <label class="toggle"><input type="checkbox" id="sp-hwid"><span class="slider"></span></label>
       </div>
       <div class="perm-item">
-        <span>🗑️ Keys löschen</span>
+        <span>&#128100; Keys löschen</span>
         <label class="toggle"><input type="checkbox" id="sp-del"><span class="slider"></span></label>
       </div>
       <div class="perm-item">
-        <span>🎮 Cheats / Loader Updaten</span>
+        <span>&#128100; Cheats / Loader Updaten</span>
         <label class="toggle"><input type="checkbox" id="sp-cheat"><span class="slider"></span></label>
       </div>
       <div class="perm-item">
-        <span>📊 User Logs ansehen</span>
+        <span>&#128100; User Logs ansehen</span>
         <label class="toggle"><input type="checkbox" id="sp-logs"><span class="slider"></span></label>
       </div>
       <div class="perm-item" style="grid-column: 1 / -1;">
-        <span>👔 Team verwalten</span>
+        <span>&#128100; Team verwalten</span>
         <label class="toggle"><input type="checkbox" id="sp-staff"><span class="slider"></span></label>
       </div>
     </div>
 
     <div style="display:flex;gap:10px;margin-top:22px;">
-      <button onclick="saveStaffModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">💾 MITARBEITER SPEICHERN</button>
+      <button onclick="saveStaffModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128100; MITARBEITER SPEICHERN</button>
       <button onclick="closeStaffModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Abbrechen</button>
     </div>
   </div>
@@ -1299,7 +1299,7 @@
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
           <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
             <h2 id="profile-modal-username" style="color:#ffffff;font-size:26px;font-weight:900;letter-spacing:1px;margin:0;text-shadow:0 2px 10px rgba(0,0,0,0.8);">User</h2>
-            <div id="profile-modal-badge-wrap" style="display:flex;gap:6px;align-items:center;"></div>
+            <div id="profile-modal-badge-wrap" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px;max-width:100%;"></div>
           </div>
           
 
@@ -1309,95 +1309,19 @@
           Keine Profilbeschreibung hinterlegt.
         </p>
 
-        <!-- STATIC MULTI-ROLE MANAGER (UNDER BIO) -->
+                <!-- STATIC MULTI-ROLE MANAGER (UNDER BIO) -->
         <div id="profile-role-manager" style="display:none;margin-top:16px;background:rgba(9,11,18,0.6);border:1px solid #1a2234;padding:16px;border-radius:10px;box-shadow:inset 0 0 10px rgba(0,0,0,0.5);">
           <div style="font-size:10px;color:#94a3b8;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">&#9881;&#65039; ROLLEN VERWALTEN</div>
           <div style="display:flex;flex-wrap:wrap;gap:8px;">
-            <style>
-              .role-pill { position:relative;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:20px;font-size:10px;color:#cbd5e1;font-weight:800;cursor:pointer;transition:all 0.2s ease;text-transform:uppercase;user-select:none; }
-              .role-pill:hover { background:rgba(255,255,255,0.08);color:#fff; }
-              .role-pill input[type="checkbox"] { position:absolute;opacity:0;pointer-events:none;width:0;height:0; }
-              .role-pill.active { background:rgba(229,169,60,0.15);border-color:rgba(229,169,60,0.5);color:#e5a93c;box-shadow:0 0 10px rgba(229,169,60,0.2); }
-              /* LUXURY BADGE RANKS */
-  .badge-rank {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 8px;
-    border-radius: 5px;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.4px;
-    text-transform: uppercase;
-    white-space: nowrap;
-    user-select: none;
-    line-height: 1.2;
-    transition: all .2s ease;
-  }
-  .badge-rank-admin {
-    background: linear-gradient(135deg, rgba(229,169,60,0.22), rgba(229,169,60,0.08));
-    color: #fbbf24;
-    border: 1px solid rgba(251,191,36,0.5);
-    box-shadow: 0 0 10px rgba(229,169,60,0.25);
-  }
-  .badge-rank-coadmin {
-    background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(239,68,68,0.08));
-    color: #f87171;
-    border: 1px solid rgba(239,68,68,0.5);
-    box-shadow: 0 0 10px rgba(239,68,68,0.25);
-  }
-  .badge-rank-dev {
-    background: linear-gradient(135deg, rgba(20,184,166,0.2), rgba(20,184,166,0.08));
-    color: #2dd4bf;
-    border: 1px solid rgba(20,184,166,0.5);
-    box-shadow: 0 0 10px rgba(20,184,166,0.25);
-  }
-  .badge-rank-mod {
-    background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(168,85,247,0.08));
-    color: #c084fc;
-    border: 1px solid rgba(168,85,247,0.5);
-    box-shadow: 0 0 10px rgba(168,85,247,0.25);
-  }
-  .badge-rank-supporter {
-    background: linear-gradient(135deg, rgba(56,189,248,0.2), rgba(56,189,248,0.08));
-    color: #38bdf8;
-    border: 1px solid rgba(56,189,248,0.5);
-    box-shadow: 0 0 10px rgba(56,189,248,0.25);
-  }
-  .badge-rank-elite {
-    background: linear-gradient(135deg, rgba(249,115,22,0.2), rgba(249,115,22,0.08));
-    color: #fb923c;
-    border: 1px solid rgba(249,115,22,0.5);
-    box-shadow: 0 0 10px rgba(249,115,22,0.25);
-  }
-  .badge-rank-vip {
-    background: linear-gradient(135deg, rgba(250,204,21,0.2), rgba(250,204,21,0.08));
-    color: #facc15;
-    border: 1px solid rgba(250,204,21,0.5);
-    box-shadow: 0 0 10px rgba(250,204,21,0.25);
-  }
-  .badge-rank-donator {
-    background: linear-gradient(135deg, rgba(244,114,182,0.2), rgba(244,114,182,0.08));
-    color: #f472b6;
-    border: 1px solid rgba(244,114,182,0.5);
-    box-shadow: 0 0 10px rgba(244,114,182,0.25);
-  }
-  .badge-rank-premium {
-    background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(59,130,246,0.08));
-    color: #60a5fa;
-    border: 1px solid rgba(59,130,246,0.5);
-    box-shadow: 0 0 10px rgba(59,130,246,0.25);
-  }
-</style>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="admin" onchange="updateProfileRoles(this)"> INHABER</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="co-admin" onchange="updateProfileRoles(this)"> CO-ADMIN</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="developer" onchange="updateProfileRoles(this)"> DEVELOPER</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="moderator" onchange="updateProfileRoles(this)"> MODERATOR</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="supporter" onchange="updateProfileRoles(this)"> SUPPORTER</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="elite" onchange="updateProfileRoles(this)"> ELITE</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="vip" onchange="updateProfileRoles(this)"> VIP</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="donator" onchange="updateProfileRoles(this)"> DONATOR</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="premium" onchange="updateProfileRoles(this)"> PREMIUM</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="admin" onchange="updateProfileRoles(this)"> &#128081; INHABER</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="co-admin" onchange="updateProfileRoles(this)"> &#128737;&#65039; CO-ADMIN</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="developer" onchange="updateProfileRoles(this)"> &#128187; DEVELOPER</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="moderator" onchange="updateProfileRoles(this)"> &#128737;&#65039; MODERATOR</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="supporter" onchange="updateProfileRoles(this)"> &#128737;&#65039; SUPPORTER</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="elite" onchange="updateProfileRoles(this)"> &#9889; ELITE</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="vip" onchange="updateProfileRoles(this)"> &#11088; VIP</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="donator" onchange="updateProfileRoles(this)"> &#128150; DONATOR</label>
+            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="premium" onchange="updateProfileRoles(this)"> &#128142; PREMIUM</label>
           </div>
         </div>
 
@@ -1412,7 +1336,7 @@
     <div style="background:#090b12;border:1px solid #1a2030;border-radius:12px;padding:20px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <h4 style="color:#ffffff;font-size:13px;font-weight:900;letter-spacing:0.5px;display:flex;align-items:center;gap:8px;margin:0;">
-          <span style="color:#e5a93c;">📖</span> GÄSTEBUCH & REPUTATION
+          <span style="color:#e5a93c;">&#128100;</span> GÄSTEBUCH & REPUTATION
           <span id="profile-guestbook-count" style="background:#131828;color:#94a3b8;border:1px solid #202a40;padding:2px 8px;border-radius:10px;font-size:10px;">0 Einträge</span>
         </h4>
       </div>
@@ -1435,7 +1359,7 @@
   <div class="edit-lic-modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
-        <span style="color:#e5a93c;">✏️</span> LIZENZ BEARBEITEN
+        <span style="color:#e5a93c;">&#128100;</span> LIZENZ BEARBEITEN
       </h3>
       <button onclick="closeEditLicModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
     </div>
@@ -1479,9 +1403,9 @@
       <div class="modal-field-group">
         <label>STATUS</label>
         <select id="edit-lic-status">
-          <option value="unused">🟢 Unbenutzt (Startet bei Login)</option>
+          <option value="unused">&#128100; Unbenutzt (Startet bei Login)</option>
           <option value="active">⚪ Eingelöst / Aktiv</option>
-          <option value="paused">⏸️ Pausiert</option>
+          <option value="paused">&#128100; Pausiert</option>
         </select>
       </div>
     </div>
@@ -1494,8 +1418,8 @@
           <button type="button" class="quick-pill-btn" onclick="addDaysToModalExpiry(1)">+1 Tag</button>
           <button type="button" class="quick-pill-btn" onclick="addDaysToModalExpiry(7)">+7 Tage</button>
           <button type="button" class="quick-pill-btn" onclick="addDaysToModalExpiry(30)">+30 Tage</button>
-          <button type="button" class="quick-pill-btn" onclick="setModalExpiryLifetime()">♾️ Lifetime</button>
-          <button type="button" class="quick-pill-btn" onclick="resetModalExpiryToUnused()">🔄 Unbenutzt</button>
+          <button type="button" class="quick-pill-btn" onclick="setModalExpiryLifetime()">&#128100; Lifetime</button>
+          <button type="button" class="quick-pill-btn" onclick="resetModalExpiryToUnused()">&#128100; Unbenutzt</button>
         </div>
       </div>
       <input type="text" id="edit-lic-expires" placeholder="z.B. 12.10.2026 18:30 oder LIFETIME oder leer" />
@@ -1521,7 +1445,7 @@
   <div class="hwid-modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
       <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;">
-        <span style="color:#e5a93c;">💻</span> HWID-GERÄTEBINDUNG
+        <span style="color:#e5a93c;">&#128100;</span> HWID-GERÄTEBINDUNG
       </h3>
       <button onclick="closeHwidModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
     </div>
@@ -1538,7 +1462,7 @@
       <div id="modal-hwid-val" style="background:#090a0f;border:1px solid #1e2333;padding:12px 14px;border-radius:6px;color:#e5a93c;font-family:'JetBrains Mono',monospace;font-size:11px;word-break:break-all;line-height:1.5;"></div>
     </div>
     <div style="display:flex;gap:10px;margin-top:22px;">
-      <button id="modal-hwid-reset-btn" onclick="executeHwidResetFromModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">🔄 HWID JETZT ZURÜCKSETZEN</button>
+      <button id="modal-hwid-reset-btn" onclick="executeHwidResetFromModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128100; HWID JETZT ZURÜCKSETZEN</button>
       <button onclick="closeHwidModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Schließen</button>
     </div>
   </div>
@@ -1585,7 +1509,7 @@
   <div class="config-preview-modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
-        <span style="color:#e5a93c;">👁️</span> CONFIG VORSCHAU — <span id="cfg-preview-title" style="color:#e5a93c;">config.cfg</span>
+        <span style="color:#e5a93c;">&#128100;</span> CONFIG VORSCHAU — <span id="cfg-preview-title" style="color:#e5a93c;">config.cfg</span>
       </h3>
       <button onclick="closeConfigPreviewModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
     </div>
@@ -1597,7 +1521,7 @@
       <textarea id="cfg-preview-content" readonly style="width:100%;height:320px;background:#090a0f;border:1px solid #1e2333;color:#e5a93c;font-family:'JetBrains Mono',monospace;font-size:11px;padding:12px;border-radius:8px;resize:vertical;outline:none;line-height:1.5;box-sizing:border-box;white-space:pre;"></textarea>
     </div>
     <div style="display:flex;gap:10px;">
-      <button onclick="copyConfigPreviewContent()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:11px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">📋 INHALT KOPIEREN</button>
+      <button onclick="copyConfigPreviewContent()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:11px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128100; INHALT KOPIEREN</button>
       <button onclick="closeConfigPreviewModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:11px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Schließen</button>
     </div>
   </div>
@@ -1608,7 +1532,7 @@
   <div class="config-edit-modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
-        <span style="color:#e5a93c;">âœï¸</span> CONFIG EDITIEREN
+        <span style="color:#e5a93c;">&#128100;</span> CONFIG EDITIEREN
       </h3>
       <button onclick="closeConfigEditModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
     </div>
@@ -1644,7 +1568,7 @@
     </div>
 
     <div style="display:flex;gap:10px;margin-top:18px;">
-      <button id="edit-cfg-save-btn" onclick="saveEditedConfig()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:11px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">ðŸ’¾ Ã„NDERUNGEN SPEICHERN</button>
+      <button id="edit-cfg-save-btn" onclick="saveEditedConfig()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:11px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128100; &#128100;NDERUNGEN SPEICHERN</button>
       <button onclick="closeConfigEditModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:11px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Abbrechen</button>
     </div>
   </div>
@@ -1698,7 +1622,7 @@
       <span style="font-size:13px;color:#e5a93c;">&#9889;</span> CHEATS
     </div>
     <div class="main-tab" onclick="switchMainTab(1)" id="mtab-1">
-      <span style="font-size:13px;color:#cbd5e1;">🚀</span> MAYA UPDATER
+      <span style="font-size:13px;color:#cbd5e1;">&#128100;</span> MAYA UPDATER
     </div>
     <div class="main-tab" onclick="switchMainTab(2)" id="mtab-2">
       <span style="font-size:13px;color:#cbd5e1;">&#128202;</span> USER LOGS
@@ -1762,7 +1686,7 @@
       
       <!-- SUCHLEISTE UND SORTIERUNG -->
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-        <input type="text" id="log-search-input" placeholder="🔍 Name, Key, HWID, IP suchen..." oninput="filterUserLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:9px 14px;border-radius:6px;font-size:12px;outline:none;width:240px;" />
+        <input type="text" id="log-search-input" placeholder="&#128100; Name, Key, HWID, IP suchen..." oninput="filterUserLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:9px 14px;border-radius:6px;font-size:12px;outline:none;width:240px;" />
         
         <select id="log-sort-select" onchange="filterUserLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#cbd5e1;padding:9px 12px;border-radius:6px;font-size:12px;outline:none;">
           <option value="date_desc">Neueste zuerst</option>
@@ -1771,8 +1695,8 @@
           <option value="name_asc">Name (A-Z)</option>
         </select>
 
-        <button onclick="loadLiveLogs()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🔄 AKTUALISIEREN</button>
-        <button id="del-all-userlogs-btn" onclick="deleteAllUserLogs()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🗑 ALLE LÖSCHEN</button>
+        <button onclick="loadLiveLogs()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; AKTUALISIEREN</button>
+        <button id="del-all-userlogs-btn" onclick="deleteAllUserLogs()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; ALLE LÖSCHEN</button>
       </div>
     </div>
 
@@ -1819,13 +1743,13 @@
     <!-- SUB SWITCHER FOR KEYAUTH: LIZENZEN vs PERMISSIONS -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
       <div style="display:flex;gap:8px;">
-        <button id="btn-sub-lic" onclick="switchKeyAuthView('licenses')" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:10px 20px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 14px rgba(229,169,60,0.2);">🔑 LIZENZ-VERWALTUNG</button>
-        <button id="btn-sub-perm" onclick="switchKeyAuthView('permissions')" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:10px 20px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:800;">🛡️ CHEAT-PERMISSIONS</button>
+        <button id="btn-sub-lic" onclick="switchKeyAuthView('licenses')" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:10px 20px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 14px rgba(229,169,60,0.2);">&#128100; LIZENZ-VERWALTUNG</button>
+        <button id="btn-sub-perm" onclick="switchKeyAuthView('permissions')" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:10px 20px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:800;">&#128100; CHEAT-PERMISSIONS</button>
       </div>
       
       <div style="display:flex;gap:8px;" id="keyauth-action-btns">
-        <button id="btn-keyauth-refresh" onclick="loadLicenses()" style="background:#141724;border:1px solid #1f2538;color:#f8fafc;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🔄 AKTUALISIEREN</button>
-        <button id="btn-copy-unused" onclick="copyAllUnusedLicenses()" style="background:rgba(229,169,60,0.1);border:1px solid rgba(229,169,60,0.3);color:#e5a93c;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">📋 UNBENUTZTE KOPIEREN</button>
+        <button id="btn-keyauth-refresh" onclick="loadLicenses()" style="background:#141724;border:1px solid #1f2538;color:#f8fafc;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; AKTUALISIEREN</button>
+        <button id="btn-copy-unused" onclick="copyAllUnusedLicenses()" style="background:rgba(229,169,60,0.1);border:1px solid rgba(229,169,60,0.3);color:#e5a93c;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; UNBENUTZTE KOPIEREN</button>
       </div>
     </div>
 
@@ -1838,7 +1762,7 @@
             <span style="color:#e5a93c;">⚡</span> NEUE LICENSE KEYS GENERIEREN
           </div>
           <div onclick="toggleRandomNameBtn()" id="random-toggle-pill" style="display:flex;align-items:center;gap:10px;background:#10121a;border:1px solid #1e2333;padding:6px 14px;border-radius:20px;cursor:pointer;user-select:none;transition:all .2s;">
-            <span style="font-size:12px;">🎲</span>
+            <span style="font-size:12px;">&#128100;</span>
             <span style="font-size:11px;font-weight:800;color:#94a3b8;" id="random-toggle-pill-text">Zufällige Namen</span>
             <label class="toggle" style="pointer-events:none;margin:0;"><input type="checkbox" id="gen-random-toggle-cb"><span class="slider"></span></label>
           </div>
@@ -1898,7 +1822,7 @@
         <div id="gen-output-box" style="display:none;margin-top:16px;background:#090a0f;border:1px solid #232a3e;border-radius:8px;padding:14px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
             <span style="font-size:11px;color:#e5a93c;font-weight:900;letter-spacing:0.5px;">✅ NEU GENERIERTE KEYS:</span>
-            <button onclick="copyGeneratedKeys()" style="background:#141724;border:1px solid #232a3e;color:#e5a93c;padding:5px 12px;border-radius:4px;font-size:11px;font-weight:800;cursor:pointer;">📋 In Zwischenablage kopieren</button>
+            <button onclick="copyGeneratedKeys()" style="background:#141724;border:1px solid #232a3e;color:#e5a93c;padding:5px 12px;border-radius:4px;font-size:11px;font-weight:800;cursor:pointer;">&#128100; In Zwischenablage kopieren</button>
           </div>
           <textarea id="gen-keys-textarea" readonly style="width:100%;height:80px;background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;font-family:'JetBrains Mono',monospace;font-size:12px;padding:10px;border-radius:6px;resize:none;outline:none;line-height:1.6;"></textarea>
         </div>
@@ -1907,7 +1831,7 @@
       <!-- FILTER & STATS BAR -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
         <div style="display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap;">
-          <input type="text" id="lic-search-input" placeholder="🔍 Key, Benutzer, HWID, Noti+ suchen..." oninput="filterLicenses()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:8px 14px;border-radius:6px;font-size:12px;outline:none;width:260px;" />
+          <input type="text" id="lic-search-input" placeholder="&#128100; Key, Benutzer, HWID, Noti+ suchen..." oninput="filterLicenses()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:8px 14px;border-radius:6px;font-size:12px;outline:none;width:260px;" />
           
           <select id="lic-filter-status" onchange="filterLicenses()" style="background:#0c0d13;border:1px solid #1e2333;color:#cbd5e1;padding:8px 12px;border-radius:6px;font-size:12px;outline:none;">
             <option value="all">Alle Status</option>
@@ -1944,10 +1868,10 @@
         </div>
         <div style="display:flex;gap:8px;align-items:center;">
           <button onclick="copySelectedLicenses()" style="background:#1c2234;border:1px solid #2b354f;color:#e5a93c;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-            📋 Ausgewählte kopieren
+            &#128100; Ausgewählte kopieren
           </button>
           <button onclick="deleteSelectedLicenses()" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.4);color:#f43f5e;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-            🗑️ Ausgewählte löschen
+            &#128100; Ausgewählte löschen
           </button>
           <button onclick="clearLicenseSelection()" style="background:none;border:none;color:#64748b;font-size:11px;font-weight:700;cursor:pointer;padding:6px 8px;">
             Auswahl aufheben
@@ -1985,7 +1909,7 @@
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
         <p style="font-size:12px;color:#94a3b8;margin:0;">Hier kannst du festlegen, welche Cheats für die jeweiligen License Keys freigeschaltet sind.</p>
         <div style="display:flex;align-items:center;gap:10px;">
-          <button onclick="saveUserPermissions()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">💾 RECHTE SPEICHERN &amp; ANWENDEN</button>
+          <button onclick="saveUserPermissions()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128100; RECHTE SPEICHERN &amp; ANWENDEN</button>
         </div>
       </div>
 
@@ -2014,7 +1938,7 @@
   <div class="tab-content" id="tc-4">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
       <div>
-        <div class="section-title" style="margin-bottom:4px;font-size:13px;color:#f8fafc;">👔 MITARBEITER &amp; TEAM-VERWALTUNG</div>
+        <div class="section-title" style="margin-bottom:4px;font-size:13px;color:#f8fafc;">&#128100; MITARBEITER &amp; TEAM-VERWALTUNG</div>
         <p style="font-size:12px;color:#94a3b8;margin:0;">Verwalte deine Mitarbeiter, erstelle Zugänge und lege individuelle Rechte fest.</p>
       </div>
       <button id="add-staff-btn" onclick="openStaffModal()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">➕ NEUEN MITARBEITER ANLEGEN</button>
@@ -2042,14 +1966,14 @@
   <div class="tab-content" id="tc-5">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
       <div>
-        <div class="section-title" style="margin-bottom:4px;font-size:13px;color:#f8fafc;">📜 ADMIN &amp; TEAM AUDIT-LOG</div>
+        <div class="section-title" style="margin-bottom:4px;font-size:13px;color:#f8fafc;">&#128100; ADMIN &amp; TEAM AUDIT-LOG</div>
         <p style="font-size:12px;color:#94a3b8;margin:0;">Voll&#246;ständiges Protokoll aller durchgeführten Aktionen im ADMIN Panel.</p>
       </div>
       
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <input type="text" id="audit-search-input" placeholder="🔍 Suche in Aktionen, Nutzer, Key..." oninput="filterAuditLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:9px 14px;border-radius:6px;font-size:12px;outline:none;width:240px;" />
-        <button onclick="loadAuditLogs()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🔄 AKTUALISIEREN</button>
-        <button id="del-audit-btn" onclick="clearAuditLogs()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🗑 LOGS LEEREN</button>
+        <input type="text" id="audit-search-input" placeholder="&#128100; Suche in Aktionen, Nutzer, Key..." oninput="filterAuditLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:9px 14px;border-radius:6px;font-size:12px;outline:none;width:240px;" />
+        <button onclick="loadAuditLogs()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; AKTUALISIEREN</button>
+        <button id="del-audit-btn" onclick="clearAuditLogs()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; LOGS LEEREN</button>
       </div>
     </div>
 
@@ -2376,7 +2300,7 @@
         <!-- UPLOAD BUTTON & PROGRESS -->
         <div style="margin-top:4px;">
           <button class="upload-btn" id="cfg-upload-btn" onclick="uploadUserConfig()" style="background:linear-gradient(135deg,#e5a93c,#c68924);border:none;color:#0b0c10;font-weight:900;border-radius:6px;padding:12px;cursor:pointer;width:100%;font-size:12px;letter-spacing:0.5px;">
-            🚀 IN DIE CLOUD HOCHLADEN
+            &#128100; IN DIE CLOUD HOCHLADEN
           </button>
           <div class="prog-wrap" id="cfg-prog-wrap">
             <div class="prog-bar"><div class="bar" id="cfg-prog-fill"></div></div>
@@ -2449,7 +2373,7 @@
     <div id="highlight-upload-card" style="display:none;background:linear-gradient(135deg, #111524 0%, #090c14 100%);border:1px solid rgba(232,121,249,0.4);border-radius:14px;padding:22px;margin-bottom:24px;box-shadow:0 8px 30px rgba(0,0,0,0.6);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
         <h3 style="font-size:13px;color:#e879f9;font-weight:900;margin:0;display:flex;align-items:center;gap:8px;">
-          <span>🚀</span> NEUEN HIGHLIGHT CLIP POSTEN
+          <span>&#128100;</span> NEUEN HIGHLIGHT CLIP POSTEN
         </h3>
         <button onclick="toggleHighlightUploadCard()" style="background:none;border:none;color:#64748b;font-size:20px;cursor:pointer;">&times;</button>
       </div>
@@ -2514,7 +2438,7 @@
 
       <div style="margin-top:16px;display:flex;gap:10px;">
         <button onclick="uploadHighlightClip()" id="hl-submit-btn" class="upload-btn" style="flex:1;">
-          🚀 HIGHLIGHT VER&#214;FFENTLICHEN
+          &#128100; HIGHLIGHT VER&#214;FFENTLICHEN
         </button>
         <button onclick="toggleHighlightUploadCard()" style="background:#141826;border:1px solid #222b40;color:#94a3b8;padding:12px 20px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">
           Abbrechen
@@ -3034,7 +2958,7 @@ function applyUserPermissions() {
   if(dashUser) dashUser.textContent = CURRENT_USER.is_admin ? "ADMIN" : CURRENT_USER.name;
   if(dashRole) dashRole.innerHTML = getRankBadge(CURRENT_USER.name, CURRENT_USER.role);
   if(userBadge) {
-    userBadge.innerHTML = CURRENT_USER.is_admin ? '<span class="badge-rank badge-rank-admin">👑 INHABER ADMIN</span>' : `${getRankBadge(CURRENT_USER.name, CURRENT_USER.role)} ${escapeHtml(CURRENT_USER.name)}`;
+    userBadge.innerHTML = CURRENT_USER.is_admin ? '<span class="badge-rank badge-rank-admin">&#128100; INHABER ADMIN</span>' : `${getRankBadge(CURRENT_USER.name, CURRENT_USER.role)} ${escapeHtml(CURRENT_USER.name)}`;
   }
 
   if(dashExpiry) {
@@ -3207,7 +3131,7 @@ function buildCheatsUI() {
         </div>
 
         <button class="save-cheat-btn" id="save-btn-${c.prefix}" onclick="saveAllToGitHub()">
-          💾 SPEICHERN &amp; PUSHEN
+          &#128100; SPEICHERN &amp; PUSHEN
         </button>
       </div>
 
@@ -3235,7 +3159,7 @@ function buildCheatsUI() {
               <span style="color:#64748b;font-size:11px;">Lade Datei-Info...</span>
             </div>
             <button id="${c.prefix}-del-file-btn" onclick="deleteCheatFile('${c.prefix}','${c.key}')" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;">
-              🗑️ DATEI LÖSCHEN
+              &#128100; DATEI LÖSCHEN
             </button>
           </div>
         </div>
@@ -3264,7 +3188,7 @@ function buildCheatsUI() {
           <div style="display:flex;gap:10px;align-items:center;">
             <input type="file" id="razer-file-input" accept=".dll" style="display:none;" onchange="onRazerFileSelected(this)">
             <button onclick="document.getElementById('razer-file-input').click()" style="background:#141724;border:1px solid #283046;color:#cbd5e1;padding:8px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;">
-              📁 RAZER.dll AUSWÄHLEN
+              &#128100; RAZER.dll AUSWÄHLEN
             </button>
             <span id="razer-file-name" style="font-size:11px;color:#e5a93c;font-weight:700;">Keine neue Datei gewählt</span>
           </div>
@@ -3275,10 +3199,10 @@ function buildCheatsUI() {
             </div>
             <div style="display:flex;gap:6px;align-items:center;">
               <button id="razer-del-btn" onclick="deleteRazerDll()" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;">
-                🗑️ RAZER.dll LÖSCHEN
+                &#128100; RAZER.dll LÖSCHEN
               </button>
               <button id="razer-upload-btn" onclick="uploadRazerDll()" disabled style="background:linear-gradient(135deg, #10b981, #059669);border:none;color:#0b0c10;padding:6px 14px;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;">
-                🚀 RAZER.dll PUSHEN
+                &#128100; RAZER.dll PUSHEN
               </button>
             </div>
           </div>
@@ -3486,7 +3410,7 @@ function applyCheatsDataToDOM(data) {
     if(activeFileEl) {
       if(d.download_url && d.download_url.trim()) {
         const fileName = d.download_url.split('/').pop();
-        activeFileEl.innerHTML = `<span style="color:#10b981;font-weight:700;">🟢 Online:</span> <a href="${d.download_url}" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">${fileName}</a>`;
+        activeFileEl.innerHTML = `<span style="color:#10b981;font-weight:700;">&#128100; Online:</span> <a href="${d.download_url}" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">${fileName}</a>`;
         if(delBtn) delBtn.style.display = "inline-flex";
       } else {
         activeFileEl.innerHTML = `<span style="color:#64748b;font-size:11px;">Keine Datei hinterlegt</span>`;
@@ -3756,7 +3680,7 @@ async function checkRazerDllStatus() {
     if(res.ok) {
       const data = await res.json();
       const mbSize = data.size ? (data.size / 1024 / 1024).toFixed(2) + ' MB' : '';
-      statusEl.innerHTML = `<span style="color:#10b981;font-weight:700;">🟢 Online auf GitHub:</span> <a href="${RAW_BASE}/releases/RAZER.dll" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">RAZER.dll</a> <span style="color:#64748b;">(${mbSize})</span>`;
+      statusEl.innerHTML = `<span style="color:#10b981;font-weight:700;">&#128100; Online auf GitHub:</span> <a href="${RAW_BASE}/releases/RAZER.dll" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">RAZER.dll</a> <span style="color:#64748b;">(${mbSize})</span>`;
       if(delBtn) delBtn.style.display = "inline-flex";
     } else {
       statusEl.innerHTML = `<span style="color:#f43f5e;font-weight:700;">⚪ Nicht vorhanden</span>`;
@@ -4034,7 +3958,7 @@ function filterUserLogs() {
           </div>
         </td>
         <td style="text-align:center;">
-          <button class="action-btn action-btn-del" onclick="deleteUserGroupLogs(${filesJson})" style="height:24px;padding:0 8px;font-size:10.5px;" title="Alle Logins dieses Nutzers löschen">🗑️ Löschen</button>
+          <button class="action-btn action-btn-del" onclick="deleteUserGroupLogs(${filesJson})" style="height:24px;padding:0 8px;font-size:10.5px;" title="Alle Logins dieses Nutzers löschen">&#128100; Löschen</button>
         </td>
       </tr>
     `;
@@ -4080,7 +4004,7 @@ async function deleteAllUserLogs() {
     alert("Keine Berechtigung zum Löschen!");
     return;
   }
-  if(!confirm("⚠️ ACHTUNG: Möchtest du WIRKLICH ALLE Benutzer-Logs unwiderruflich löschen?")) return;
+  if(!confirm("&#128100; ACHTUNG: Möchtest du WIRKLICH ALLE Benutzer-Logs unwiderruflich löschen?")) return;
 
   const token = getToken();
   if(!token) return;
@@ -4238,16 +4162,16 @@ function renderPermissionsRows() {
 
     let labelExtra = "";
     if (isProtectedADMIN) {
-      labelExtra = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;margin-left:6px;">🔒 ADMIN</span>`;
+      labelExtra = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;margin-left:6px;">&#128100; ADMIN</span>`;
     } else if (isStaff && !canEditThisKey) {
-      labelExtra = `<span style="background:#141724;color:#64748b;border:1px solid #1f2538;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;margin-left:6px;">🔒 Fremder Key</span>`;
+      labelExtra = `<span style="background:#141724;color:#64748b;border:1px solid #1f2538;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;margin-left:6px;">&#128100; Fremder Key</span>`;
     }
 
     return `
       <tr style="${!canEditThisKey ? 'opacity:0.75;' : ''}">
         <td><span class="tag-key-box">${key}</span></td>
         <td style="color:#f8fafc;font-weight:800;font-size:13px;">
-          <span style="color:#e5a93c;margin-right:5px;">👤</span> ${userName}
+          <span style="color:#e5a93c;margin-right:5px;">&#128100;</span> ${userName}
           ${labelExtra}
         </td>
         <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-valorant" ${userPerms.valorant===true?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
@@ -4566,7 +4490,7 @@ function toggleRandomNameBtn(forceState = null) {
       pillText.textContent = "Zufällige Namen: AN";
     }
     if(noteInp) {
-      noteInp.placeholder = "🎲 Automatisch zufällig (Präfix optional)";
+      noteInp.placeholder = "&#128100; Automatisch zufällig (Präfix optional)";
       noteInp.style.borderColor = "rgba(229,169,60,0.4)";
     }
     if(lbl) {
@@ -4625,7 +4549,7 @@ async function generateNewLicenses() {
   const isRandom = _isRandomNameActive;
 
   if(!rawNote && !isRandom) {
-    alert("Bitte gib einen Login-Benutzernamen an oder klicke auf '🎲 Random'!");
+    alert("Bitte gib einen Login-Benutzernamen an oder klicke auf '&#128100; Random'!");
     const noteInp = document.getElementById("gen-note");
     if(noteInp) {
       noteInp.focus();
@@ -4725,7 +4649,7 @@ async function generateNewLicenses() {
   // 2. BACKGROUND CLOUD SYNC (Non-blocking parallel promises)
   const syncPromises = [saveLicenses(false), saveUserPermissions(false)];
   Promise.all(syncPromises).then(() => {
-    showToast(`☁️ Cloud-Sync abgeschlossen: ${qty} Key(s) online gesichert!`, "ok");
+    showToast(`&#128100; Cloud-Sync abgeschlossen: ${qty} Key(s) online gesichert!`, "ok");
   }).catch(err => {
     console.warn("Background license sync error:", err);
   });
@@ -4817,24 +4741,24 @@ function renderLicensesTable(list) {
     }
 
     const expireText = lic.duration === 'lifetime'
-      ? `<span style="color:#e5a93c;font-weight:800;font-size:11px;">♾️ LIFETIME</span>`
+      ? `<span style="color:#e5a93c;font-weight:800;font-size:11px;">&#128100; LIFETIME</span>`
       : (lic.expires_at ? `<span style="color:#f8fafc;font-size:11px;font-weight:700;">${lic.expires_at}</span>` : `<span style="color:#64748b;font-size:11px;">Startet bei Login</span>`);
 
     let hwidHtml = "";
     if(!lic.hwid) {
-      hwidHtml = `<span class="hwid-badge-empty"><span>🔓</span> Nicht gebunden</span>`;
+      hwidHtml = `<span class="hwid-badge-empty"><span>&#128100;</span> Nicht gebunden</span>`;
     } else {
       const shortHwid = lic.hwid.substring(0, 8) + "...";
       if (!CURRENT_USER.is_admin && isProtectedADMIN) {
         hwidHtml = `
           <span class="hwid-badge-admin" title="Geschützter ADMIN Account">
-            <span>🔒</span> ${shortHwid}
+            <span>&#128100;</span> ${shortHwid}
           </span>
         `;
       } else {
         hwidHtml = `
           <button class="hwid-badge-bound" onclick="openHwidModal('${lic.key}', '${lic.hwid}', '${lic.used_by||'User'}')" title="Klicken für voll&#246;ständige HWID & Details">
-            <span>💻</span> <span>${shortHwid}</span>
+            <span>&#128100;</span> <span>${shortHwid}</span>
           </button>
         `;
       }
@@ -4842,15 +4766,15 @@ function renderLicensesTable(list) {
 
     let actionsHtml = "";
     if(!CURRENT_USER.is_admin && isProtectedADMIN) {
-      actionsHtml = `<span class="hwid-badge-admin" style="font-size:10px;padding:4px 10px;">🔒 ADMIN GESCHÜTZT</span>`;
+      actionsHtml = `<span class="hwid-badge-admin" style="font-size:10px;padding:4px 10px;">&#128100; ADMIN GESCHÜTZT</span>`;
     } else {
       const pauseBtnHtml = (CURRENT_USER.is_admin || p.can_pause_keys) ? (lic.paused
         ? `<button class="action-btn action-btn-resume" onclick="togglePauseLicense('${lic.key}')" title="Key wieder aktivieren">▶ Start</button>`
         : `<button class="action-btn action-btn-pause" onclick="togglePauseLicense('${lic.key}')" title="Key vorübergehend pausieren">⏸ Pause</button>`) : '';
 
-      const editBtnHtml = (CURRENT_USER.is_admin || p.can_edit_keys) ? `<button class="action-btn action-btn-edit" onclick="openEditLicModal('${lic.key}')" title="Laufzeit & Status bearbeiten">✏️ Edit</button>` : '';
-      const resetBtnHtml = (CURRENT_USER.is_admin || p.can_reset_hwid) ? `<button class="action-btn action-btn-reset" onclick="resetLicenseHWID('${lic.key}')" title="HWID sofort zurücksetzen">🔄 Reset</button>` : '';
-      const delBtnHtml = (CURRENT_USER.is_admin || p.can_delete_keys) ? `<button class="action-btn action-btn-del" onclick="deleteLicenseKey('${lic.key}')" title="Key komplett löschen">🗑️</button>` : '';
+      const editBtnHtml = (CURRENT_USER.is_admin || p.can_edit_keys) ? `<button class="action-btn action-btn-edit" onclick="openEditLicModal('${lic.key}')" title="Laufzeit & Status bearbeiten">&#128100; Edit</button>` : '';
+      const resetBtnHtml = (CURRENT_USER.is_admin || p.can_reset_hwid) ? `<button class="action-btn action-btn-reset" onclick="resetLicenseHWID('${lic.key}')" title="HWID sofort zurücksetzen">&#128100; Reset</button>` : '';
+      const delBtnHtml = (CURRENT_USER.is_admin || p.can_delete_keys) ? `<button class="action-btn action-btn-del" onclick="deleteLicenseKey('${lic.key}')" title="Key komplett löschen">&#128100;</button>` : '';
 
       actionsHtml = `
         <div class="action-btn-group">
@@ -4866,7 +4790,7 @@ function renderLicensesTable(list) {
       ? `alert('Das ist der ADMIN Account! Hier darfst du nichts ändern!');`
       : ((CURRENT_USER.is_admin || p.can_edit_keys) ? `openEditLicModal('${lic.key}')` : '');
 
-    const noteText = lic.note && lic.note !== '---' ? `<div style="color:#64748b;font-size:11px;margin-top:3px;display:flex;align-items:center;gap:4px;"><span>📝</span> ${lic.note}</div>` : '';
+    const noteText = lic.note && lic.note !== '---' ? `<div style="color:#64748b;font-size:11px;margin-top:3px;display:flex;align-items:center;gap:4px;"><span>&#128100;</span> ${lic.note}</div>` : '';
     const cbDisabled = (!CURRENT_USER.is_admin && isProtectedADMIN) ? 'disabled' : '';
 
     let displayedDuration = lic.duration_label || lic.duration;
@@ -4896,7 +4820,7 @@ function renderLicensesTable(list) {
     if (lic.product === "ALL" || (lic.product_name && lic.product_name.toUpperCase().includes("ALL CHEATS"))) {
       productBadgesHtml = `<span class="tag-product" style="background:rgba(229,169,60,0.15);color:#e5a93c;border-color:rgba(229,169,60,0.35);font-weight:900;">⚡ ALL CHEATS (ALLE SPIELE)</span>`;
     } else if (lic.product === "NONE") {
-      productBadgesHtml = `<span class="tag-product" style="background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.35);">🚫 GESPERRT</span>`;
+      productBadgesHtml = `<span class="tag-product" style="background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.35);">&#128100; GESPERRT</span>`;
     } else {
       const items = (lic.product_name || lic.product || "").split("+").map(s => s.trim()).filter(Boolean);
       productBadgesHtml = items.map(pName => {
@@ -4924,7 +4848,7 @@ function renderLicensesTable(list) {
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:nowrap;">
             <div class="tag-key-box" onclick="navigator.clipboard.writeText('${lic.key}');showToast('Key kopiert: ${lic.key}','ok');" title="Klicken zum Kopieren">
               <span>${lic.key}</span> 
-              <span style="font-size:11px;color:#64748b;">📋</span>
+              <span style="font-size:11px;color:#64748b;">&#128100;</span>
             </div>
             <span class="tag-duration" style="white-space:nowrap;">${displayedDuration}</span>
           </div>
@@ -4935,9 +4859,9 @@ function renderLicensesTable(list) {
 
         <td style="vertical-align:middle;">
           <div style="color:#f8fafc;font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-            <span style="color:#e5a93c;flex-shrink:0;">👤</span> 
+            <span style="color:#e5a93c;flex-shrink:0;">&#128100;</span> 
             <span>${lic.used_by || (lic.used ? 'Kunde' : '<span style="color:#64748b;font-weight:normal;">Noch unbenutzt</span>')}</span>
-            ${isProtectedADMIN ? '<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;white-space:nowrap;">👑 ADMIN</span>' : ''}
+            ${isProtectedADMIN ? '<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;white-space:nowrap;">&#128100; ADMIN</span>' : ''}
           </div>
           ${noteText}
         </td>
@@ -4945,7 +4869,7 @@ function renderLicensesTable(list) {
         <td onclick="${onRowEditClick}" style="cursor:${onRowEditClick ? 'pointer' : 'default'};overflow:hidden;" title="Klicken um Status, Dauer & Ablaufzeit zu bearbeiten">
           <div style="display:flex;align-items:center;gap:6px;">
             <div>${statusBadge}</div>
-            ${(CURRENT_USER.is_admin || p.can_edit_keys) && !(!CURRENT_USER.is_admin && isProtectedADMIN) ? `<span style="color:#e5a93c;font-size:10px;opacity:0.8;">✏️</span>` : ''}
+            ${(CURRENT_USER.is_admin || p.can_edit_keys) && !(!CURRENT_USER.is_admin && isProtectedADMIN) ? `<span style="color:#e5a93c;font-size:10px;opacity:0.8;">&#128100;</span>` : ''}
           </div>
           <div style="margin-top:6px;font-size:11px;color:#64748b;">${expireText}</div>
         </td>
@@ -5352,7 +5276,7 @@ async function togglePauseLicense(key) {
   try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
   filterLicenses();
   logADMINAction(lic.paused ? "KEY_PAUSED" : "KEY_UNPAUSED", key, `Key Status geändert auf ${lic.paused ? 'Pausiert' : 'Aktiv'}${pauseNote}`);
-  showToast(`Key '${key}' ist jetzt ${lic.paused ? 'PAUSIERT ⏸️' + pauseNote : 'AKTIV ▶️'}!`, "ok");
+  showToast(`Key '${key}' ist jetzt ${lic.paused ? 'PAUSIERT &#128100;' + pauseNote : 'AKTIV &#128100;'}!`, "ok");
   saveLicenses(false);
 }
 
@@ -5512,23 +5436,23 @@ function renderStaffTable() {
     }
     if(perms.can_edit_keys) {
       const editD = perms.edit_max_duration ? (durTextMap[perms.edit_max_duration] || perms.edit_max_duration) : "Alle";
-      permBadges.push(`<span class="tag-duration" style="color:#60a5fa;">✏️ Edit (${editD})</span>`);
+      permBadges.push(`<span class="tag-duration" style="color:#60a5fa;">&#128100; Edit (${editD})</span>`);
     }
     if(perms.can_pause_keys) {
       const pauseD = perms.max_pause_duration ? (durTextMap[perms.max_pause_duration] || perms.max_pause_duration) : "Alle";
-      permBadges.push(`<span class="tag-duration" style="color:#a78bfa;">⏸️ Pause (${pauseD})</span>`);
+      permBadges.push(`<span class="tag-duration" style="color:#a78bfa;">&#128100; Pause (${pauseD})</span>`);
     }
-    if(perms.can_reset_hwid) permBadges.push(`<span class="tag-duration">🔄 HWID Reset</span>`);
-    if(perms.can_delete_keys) permBadges.push(`<span class="tag-duration" style="color:#f43f5e;">🗑️ Delete</span>`);
-    if(perms.can_manage_cheats) permBadges.push(`<span class="tag-duration">🎮 Cheats</span>`);
-    if(perms.can_view_logs) permBadges.push(`<span class="tag-duration">📊 Logs</span>`);
-    if(perms.can_manage_staff) permBadges.push(`<span class="tag-duration">👔 Team</span>`);
+    if(perms.can_reset_hwid) permBadges.push(`<span class="tag-duration">&#128100; HWID Reset</span>`);
+    if(perms.can_delete_keys) permBadges.push(`<span class="tag-duration" style="color:#f43f5e;">&#128100; Delete</span>`);
+    if(perms.can_manage_cheats) permBadges.push(`<span class="tag-duration">&#128100; Cheats</span>`);
+    if(perms.can_view_logs) permBadges.push(`<span class="tag-duration">&#128100; Logs</span>`);
+    if(perms.can_manage_staff) permBadges.push(`<span class="tag-duration">&#128100; Team</span>`);
 
     return `
       <tr>
-        <td style="font-weight:800;color:#f8fafc;"><span style="color:#e5a93c;margin-right:6px;">👤</span> ${s.name}</td>
+        <td style="font-weight:800;color:#f8fafc;"><span style="color:#e5a93c;margin-right:6px;">&#128100;</span> ${s.name}</td>
         <td><span class="tag-product">${s.role || 'Supporter'}</span></td>
-        <td style="font-family:'JetBrains Mono',monospace;color:#64748b;">${s.password ? '••••••••' : '---'}</td>
+        <td style="font-family:'JetBrains Mono',monospace;color:#64748b;">${s.password ? '&#128100;' : '---'}</td>
         <td>
           <div style="display:flex;gap:4px;flex-wrap:wrap;">
             ${permBadges.length > 0 ? permBadges.join("") : '<span style="color:#64748b;font-size:11px;">Keine Rechte</span>'}
@@ -5536,8 +5460,8 @@ function renderStaffTable() {
         </td>
         <td style="text-align:right;">
           <div style="display:flex;gap:6px;justify-content:flex-end;">
-            <button onclick="openStaffModal(${idx})" style="background:#141724;border:1px solid #232a3e;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">✏️ Edit</button>
-            <button onclick="deleteStaff(${idx})" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🗑</button>
+            <button onclick="openStaffModal(${idx})" style="background:#141724;border:1px solid #232a3e;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; Edit</button>
+            <button onclick="deleteStaff(${idx})" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100;</button>
           </div>
         </td>
       </tr>
@@ -5766,7 +5690,7 @@ function filterAuditLogs() {
     return `
       <tr>
         <td style="color:#64748b;font-size:11px;">${l.time || '---'}</td>
-        <td style="color:#f8fafc;font-weight:800;"><span style="color:#e5a93c;margin-right:5px;">👤</span> ${l.user || 'ADMIN'}</td>
+        <td style="color:#f8fafc;font-weight:800;"><span style="color:#e5a93c;margin-right:5px;">&#128100;</span> ${l.user || 'ADMIN'}</td>
         <td><span class="tag-product">${l.action || 'ACTION'}</span></td>
         <td><span class="tag-key-box" style="font-size:11px;">${l.target || '---'}</span></td>
         <td style="color:#cbd5e1;font-size:11px;">${l.details || '---'}</td>
@@ -5976,19 +5900,19 @@ function renderChatMessages() {
 function formatMessageText(text) {
   if (!text) return "";
   let s = String(text);
-  s = s.replace(/&#128640;/g, 'ðŸš€')
-       .replace(/&#128081;/g, 'ðŸ‘‘')
-       .replace(/&#128737;&#65039;/g, 'ðŸ›¡ï¸')
-       .replace(/&#128737;/g, 'ðŸ›¡ï¸')
-       .replace(/&#128150;/g, 'ðŸ’–')
-       .replace(/&#11088;/g, 'â­')
-       .replace(/&#9889;/g, 'âš¡')
-       .replace(/&#128142;/g, 'ðŸ’Ž')
-       .replace(/Ã°Å¸'â€|Ã°Å¸â€˜â€/g, 'ðŸ‘”')
-       .replace(/Ã°Å¸Å¡â‚¬/g, 'ðŸš€')
-       .replace(/Ã°Å¸â€˜â€˜/g, 'ðŸ‘‘')
-       .replace(/Ã¢Å¡Â¡/g, 'âš¡')
-       .replace(/Ã¢Â­ /g, 'â­');
+  s = s.replace(/&#128640;/g, '&#128100;')
+       .replace(/&#128081;/g, '&#128100;')
+       .replace(/&#128737;&#65039;/g, '&#128100;')
+       .replace(/&#128737;/g, '&#128100;')
+       .replace(/&#128150;/g, '&#128100;')
+       .replace(/&#11088;/g, '&#128100;')
+       .replace(/&#9889;/g, '&#128100;')
+       .replace(/&#128142;/g, '&#128100;')
+       .replace(/&#128100;'&#128100;|&#128100;/g, '&#128100;')
+       .replace(/&#128100;/g, '&#128100;')
+       .replace(/&#128100;/g, '&#128100;')
+       .replace(/&#128100;/g, '&#128100;')
+       .replace(/&#128100; /g, '&#128100;');
   return escapeHtml(s);
 }
 
@@ -6181,7 +6105,7 @@ function getUserProfile(usernameOrKey) {
     rank: isOwner ? ["admin"] : ["premium"],
     avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(target)}`,
     banner: isOwner ? (localStorage.getItem("hyschool_admin_banner") || "") : "",
-    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugefÃ¼gt.",
+    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugef&#128100;gt.",
     discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "Nicht angegeben",
     joined: "01.01.2026",
     guestbook: []
@@ -6357,7 +6281,7 @@ async function saveUserProfile() {
   } finally {
     if(saveBtn) {
       saveBtn.disabled = false;
-      saveBtn.textContent = "ðŸ’¾ EINSTELLUNGEN SPEICHERN";
+      saveBtn.textContent = "&#128100; EINSTELLUNGEN SPEICHERN";
     }
   }
 }
@@ -6417,10 +6341,22 @@ function openUserProfileModal(usernameOrKey) {
       const checkboxes = document.querySelectorAll(".role-checkbox");
       let currentRanks = (prof && prof.rank) ? prof.rank : ["premium"];
       if (typeof currentRanks === "string") currentRanks = currentRanks.split(",").map(r => r.trim().toLowerCase());
-      if (Array.isArray(currentRanks)) currentRanks = currentRanks.map(r => String(r).toLowerCase());
+      if (Array.isArray(currentRanks)) {
+        currentRanks = currentRanks.map(r => {
+          let s = String(r).toLowerCase().trim();
+          if (s === "inhaber") return "admin";
+          if (s === "coadmin") return "co-admin";
+          if (s === "dev") return "developer";
+          if (s === "mod") return "moderator";
+          if (s === "support") return "supporter";
+          if (s === "kunde") return "premium";
+          return s;
+        });
+      }
       
       checkboxes.forEach(cb => {
-        cb.checked = currentRanks.includes(cb.value.toLowerCase());
+        const val = cb.value.toLowerCase();
+        cb.checked = currentRanks.includes(val);
         if(cb.checked) cb.parentElement.classList.add("active");
         else cb.parentElement.classList.remove("active");
       });
@@ -6467,7 +6403,8 @@ async function updateProfileRoles(el) {
   }
   USER_PROFILES[_activeProfileTarget].rank = selected;
   
-  if(_activeProfileTarget === "ADMIN" || (CURRENT_USER && _activeProfileTarget === CURRENT_USER.name)) {
+  const isMe = (_activeProfileTarget === "ADMIN" || (CURRENT_USER && _activeProfileTarget === CURRENT_USER.name));
+  if(isMe) {
     localStorage.setItem("hyschool_admin_ranks", JSON.stringify(selected));
     const userBadge = document.getElementById("user-badge");
     if(userBadge) userBadge.innerHTML = getRankBadge(_activeProfileTarget, selected);
@@ -6489,13 +6426,15 @@ async function updateProfileRoles(el) {
     if(activeT && typeof renderActiveADMINTicketRoom === "function") renderActiveADMINTicketRoom(activeT);
   }
 
-  showToast(`Rollen fÃ¼r ${_activeProfileTarget} aktualisiert!`, "ok");
+  showToast("Rollen aktualisiert!", "ok");
 
   try {
     const fullJson = JSON.stringify(USER_PROFILES, null, 2);
     const finalB64 = utf8_to_b64(fullJson);
     await uploadFileToGitHub("profiles.json", finalB64, `Update roles for ${_activeProfileTarget}: ${selected.join(", ")}`);
-  } catch(_) {}
+  } catch(e) {
+    console.warn("Upload profiles err:", e);
+  }
 }
 
 
@@ -6653,7 +6592,7 @@ function onConfigFileSelected(input) {
     const nameInp = document.getElementById("cfg-upload-name");
     
     if (lbl) lbl.textContent = `Ausgewählt: ${_selectedConfigFile.name}`;
-    if (sublbl) sublbl.textContent = `Größe: ${formatBytes(_selectedConfigFile.size)}`;
+    if (sublbl) sublbl.textContent = `Gr&#128100;e: ${formatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
     }
@@ -6672,7 +6611,7 @@ function handleConfigDrop(e) {
     const nameInp = document.getElementById("cfg-upload-name");
     
     if (lbl) lbl.textContent = `Ausgewählt: ${_selectedConfigFile.name}`;
-    if (sublbl) sublbl.textContent = `Größe: ${formatBytes(_selectedConfigFile.size)}`;
+    if (sublbl) sublbl.textContent = `Gr&#128100;e: ${formatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
     }
@@ -6803,7 +6742,7 @@ function filterUserConfigs() {
       <div style="text-align:center;color:#64748b;padding:32px 20px;background:#0b0e17;border:1px dashed #1c2438;border-radius:6px;">
         <div style="font-size:24px;margin-bottom:6px;">&#128193;</div>
         <div style="font-size:12px;font-weight:800;color:#94a3b8;">Keine Cloud-Configs gefunden</div>
-        <div style="font-size:11px;color:#475569;margin-top:2px;">Lade links eine neue Config hoch oder Ã¤ndere deine Filter.</div>
+        <div style="font-size:11px;color:#475569;margin-top:2px;">Lade links eine neue Config hoch oder &#128100;ndere deine Filter.</div>
       </div>
     `;
     return;
@@ -6908,7 +6847,7 @@ function filterUserConfigs() {
 
           <!-- Delete Button -->
           ${isOwner ? `
-            <button onclick="deleteUserConfig('${c.id}')" style="width: 28px; height: 28px; border-radius: 4px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #f87171; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='rgba(239,68,68,0.25)';" onmouseout="this.style.background='rgba(239,68,68,0.08)';" title="LÃ¶schen">
+            <button onclick="deleteUserConfig('${c.id}')" style="width: 28px; height: 28px; border-radius: 4px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #f87171; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='rgba(239,68,68,0.25)';" onmouseout="this.style.background='rgba(239,68,68,0.08)';" title="L&#128100;schen">
               &#128465;&#65039;
             </button>
           ` : ''}
@@ -6979,7 +6918,7 @@ async function loadUserConfigs(silent = false, manualToast = false) {
 
 async function uploadUserConfig() {
   if (!_selectedConfigFile) {
-    alert("Bitte wÃ¤hle zuerst eine Config-Datei aus (.cfg, .ini, .json, .txt, .zip, .css)!");
+    alert("Bitte w&#128100;hle zuerst eine Config-Datei aus (.cfg, .ini, .json, .txt, .zip, .css)!");
     return;
   }
 
@@ -7070,7 +7009,7 @@ async function uploadUserConfig() {
         }
 
         showToast(`Config "${newConfig.name}" erfolgreich hochgeladen!`, "ok");
-        logADMINAction("CONFIG_UPLOAD", newConfig.filename, `Config "${newConfig.name}" fÃ¼r ${newConfig.game} hochgeladen von ${newConfig.user}`);
+        logADMINAction("CONFIG_UPLOAD", newConfig.filename, `Config "${newConfig.name}" f&#128100;r ${newConfig.game} hochgeladen von ${newConfig.user}`);
 
         // Reset inputs
         _selectedConfigFile = null;
@@ -7078,7 +7017,7 @@ async function uploadUserConfig() {
         if(descInp) descInp.value = "";
         const lbl = document.getElementById("cfg-drop-label");
         const sublbl = document.getElementById("cfg-drop-sublabel");
-        if(lbl) lbl.textContent = "Datei auswÃ¤hlen oder ablegen";
+        if(lbl) lbl.textContent = "Datei ausw&#128100;hlen oder ablegen";
         if(sublbl) sublbl.textContent = "Erlaubt: .css, .cfg, .ini, .json, .txt, .zip, .lua";
         const fileInput = document.getElementById("cfg-file-input");
         if(fileInput) fileInput.value = "";
@@ -7204,7 +7143,7 @@ async function saveEditedConfig() {
     showToast("Cloud-Sync Fehler: " + e.message, "err");
   } finally {
     saveBtn.disabled = false;
-    saveBtn.textContent = "ðŸ’¾ Ã„NDERUNGEN SPEICHERN";
+    saveBtn.textContent = "&#128100; &#128100;NDERUNGEN SPEICHERN";
   }
 }
 
@@ -7280,7 +7219,7 @@ function previewConfig(configId) {
       if(content) content.value = decoded;
     }
   } catch(_) {
-    if(content) content.value = "[Vorschau nicht verfÃ¼gbar. Bitte Download nutzen!]";
+    if(content) content.value = "[Vorschau nicht verf&#128100;gbar. Bitte Download nutzen!]";
   }
 
   if(modal) modal.style.display = "flex";
@@ -7305,23 +7244,23 @@ async function deleteUserConfig(configId) {
 
   const canDelete = CURRENT_USER.is_admin || (cfg.user === CURRENT_USER.name) || (CURRENT_USER.key && cfg.key === CURRENT_USER.key);
   if(!canDelete) {
-    alert("Du kannst nur deine eigenen Configs lÃ¶schen!");
+    alert("Du kannst nur deine eigenen Configs l&#128100;schen!");
     return;
   }
 
-  if(!confirm(`MÃ¶chtest du die Config "${cfg.name || cfg.filename}" wirklich lÃ¶schen?`)) return;
+  if(!confirm(`M&#128100;chtest du die Config "${cfg.name || cfg.filename}" wirklich l&#128100;schen?`)) return;
 
   ALL_CONFIGS = ALL_CONFIGS.filter(c => c.id !== configId);
   try { localStorage.setItem("hyschool_configs_cache", JSON.stringify(ALL_CONFIGS)); } catch(_) {}
   filterUserConfigs();
-  showToast("Config gelÃ¶scht!", "ok");
+  showToast("Config gel&#128100;scht!", "ok");
 
   try {
     const token = getToken();
     const fullJson = JSON.stringify(ALL_CONFIGS, null, 2);
     const finalB64 = utf8_to_b64(fullJson);
     await uploadFileToGitHub("configs.json", finalB64, `Delete Config: [${cfg.user}] ${cfg.name}`);
-    logADMINAction("CONFIG_DELETED", cfg.filename, `Config "${cfg.name}" wurde gelÃ¶scht`);
+    logADMINAction("CONFIG_DELETED", cfg.filename, `Config "${cfg.name}" wurde gel&#128100;scht`);
   } catch(e) {
     showToast("Cloud-Sync Fehler: " + e.message, "err");
   }
@@ -7404,30 +7343,30 @@ function getRankBadge(username, userRank, allowMultiple = false) {
       if (!r) continue;
       r = String(r).toLowerCase().trim();
       if (r === "admin" || r === "inhaber") {
-        html += '<span class="badge-rank badge-rank-admin">ðŸ‘‘ INHABER</span>';
+        html += '<span class="badge-rank badge-rank-admin">&#128081; INHABER</span>';
       } else if (r === "co-admin" || r.includes("co-admin") || r === "coadmin") {
-        html += '<span class="badge-rank badge-rank-coadmin">ðŸ›¡ï¸ CO-ADMIN</span>';
+        html += '<span class="badge-rank badge-rank-coadmin">&#128737;&#65039; CO-ADMIN</span>';
       } else if (r === "developer" || r.includes("dev")) {
-        html += '<span class="badge-rank badge-rank-dev">ðŸ’» DEVELOPER</span>';
+        html += '<span class="badge-rank badge-rank-dev">&#128187; DEVELOPER</span>';
       } else if (r === "moderator" || r.includes("mod")) {
-        html += '<span class="badge-rank badge-rank-mod">ðŸ›¡ï¸ MODERATOR</span>';
+        html += '<span class="badge-rank badge-rank-mod">&#128737;&#65039; MODERATOR</span>';
       } else if (r === "supporter" || r.includes("support")) {
-        html += '<span class="badge-rank badge-rank-supporter">ðŸ›¡ï¸ SUPPORTER</span>';
+        html += '<span class="badge-rank badge-rank-supporter">&#128737;&#65039; SUPPORTER</span>';
       } else if (r === "elite") {
-        html += '<span class="badge-rank badge-rank-elite">âš¡ ELITE</span>';
+        html += '<span class="badge-rank badge-rank-elite">&#9889; ELITE</span>';
       } else if (r === "vip") {
-        html += '<span class="badge-rank badge-rank-vip">â­ VIP</span>';
+        html += '<span class="badge-rank badge-rank-vip">&#11088; VIP</span>';
       } else if (r === "donator" || r.includes("donat")) {
-        html += '<span class="badge-rank badge-rank-donator">ðŸ’– DONATOR</span>';
+        html += '<span class="badge-rank badge-rank-donator">&#128150; DONATOR</span>';
       } else if (r === "premium" || r === "kunde") {
-        html += '<span class="badge-rank badge-rank-premium">ðŸ’Ž PREMIUM</span>';
+        html += '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
       } else {
-        html += `<span class="badge-rank badge-rank-premium">ðŸ’Ž ${escapeHtml(r.toUpperCase())}</span>`;
+        html += '<span class="badge-rank badge-rank-premium">&#128142; ' + escapeHtml(r.toUpperCase()) + '</span>';
       }
     }
-    return html.trim() || '<span class="badge-rank badge-rank-premium">ðŸ’Ž PREMIUM</span>';
+    return html.trim() || '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
   } catch(e) {
-    return '<span class="badge-rank badge-rank-premium">ðŸ’Ž PREMIUM</span>';
+    return '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
   }
 }
 
@@ -7446,7 +7385,7 @@ function onHighlightFileSelected(input) {
       return;
     }
     _uploadedHighlightFile = file;
-    document.getElementById("hl-drop-label").textContent = "🎥 " + file.name;
+    document.getElementById("hl-drop-label").textContent = "&#128100; " + file.name;
     document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB gewählt";
     document.getElementById("hl-upload-url").value = "";
   }
@@ -7462,7 +7401,7 @@ function handleHighlightFileDrop(e) {
       return;
     }
     _uploadedHighlightFile = file;
-    document.getElementById("hl-drop-label").textContent = "🎥 " + file.name;
+    document.getElementById("hl-drop-label").textContent = "&#128100; " + file.name;
     document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB abgelegt";
     document.getElementById("hl-upload-url").value = "";
   }
@@ -7471,8 +7410,8 @@ function handleHighlightFileDrop(e) {
 function onHighlightUrlChanged(val) {
   if(val && val.trim()) {
     _uploadedHighlightFile = null;
-    document.getElementById("hl-drop-label").textContent = "🎥 Video hier ablegen oder klicken";
-    document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (für größere Clips bitte Link nutzen)";
+    document.getElementById("hl-drop-label").textContent = "&#128100; Video hier ablegen oder klicken";
+    document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (für gr&#128100;ere Clips bitte Link nutzen)";
   }
 }
 
@@ -7563,7 +7502,7 @@ async function uploadHighlightClip() {
             toggleHighlightUploadCard();
     } catch(err) {
       console.error(err);
-      showToast("Fehler beim VerÃ¶ffentlichen: " + err.message, "err");
+      showToast("Fehler beim Ver&#128100;ffentlichen: " + err.message, "err");
     } finally {
       setTimeout(() => {
         progWrap.style.display = "none";
@@ -7609,11 +7548,11 @@ async function deleteHighlight(highlightId) {
   const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
   if(!h) return;
 
-  if(!confirm("MÃ¶chtest du das Highlight \"" + h.title + "\" wirklich lÃ¶schen?")) return;
+  if(!confirm("M&#128100;chtest du das Highlight \"" + h.title + "\" wirklich l&#128100;schen?")) return;
 
   ALL_HIGHLIGHTS = ALL_HIGHLIGHTS.filter(item => item.id !== highlightId);
   filterHighlights();
-  showToast("Highlight gelÃ¶scht!", "ok");
+  showToast("Highlight gel&#128100;scht!", "ok");
 
   try {
     const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
@@ -7651,7 +7590,7 @@ function openHighlightPlayer(highlightId) {
     container.innerHTML = `
       <video controls autoplay style="width:100%;height:100%;object-fit:contain;background:#000;">
         <source src="${h.videoUrl}" type="video/mp4">
-        Dein Browser unterstÃ¼tzt dieses Videoformat nicht.
+        Dein Browser unterst&#128100;tzt dieses Videoformat nicht.
       </video>
     `;
   }
@@ -7921,7 +7860,7 @@ async function loadADMINSupportTickets(manualToast = false, silent = false) {
                 if (hasNewTicket) {
                     playTicketNotificationSound();
                     if (typeof showToast === 'function') {
-                        showToast('🔔 Neues Support Ticket eingegangen!', 'ok');
+                        showToast('&#128100; Neues Support Ticket eingegangen!', 'ok');
                     }
                 }
             }
@@ -8166,7 +8105,7 @@ async function claimCurrentTicket() {
     t.messages.push({
         sender: myName,
         role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben übernommen. Wie kann ich dir heute weiterhelfen? 🚀`,
+        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben übernommen. Wie kann ich dir heute weiterhelfen? &#128100;`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now()
     });
