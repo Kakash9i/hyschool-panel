@@ -5880,12 +5880,14 @@ function getUserProfile(usernameOrKey) {
 
   if (isMe) {
     const localAvatar = localStorage.getItem("hyschool_admin_avatar");
+    const localBanner = localStorage.getItem("hyschool_admin_banner");
     const localBio = localStorage.getItem("hyschool_admin_bio");
     const localDiscord = localStorage.getItem("hyschool_admin_discord");
-    if (localAvatar || localBio || localDiscord) {
+    if (localAvatar || localBio || localDiscord || localBanner) {
       p = Object.assign({}, p || {}, {
         username: "ADMIN",
         avatar: localAvatar || (p && p.avatar) || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN",
+        banner: localBanner || (p && p.banner) || "",
         bio: localBio || (p && p.bio) || "HySchool Owner & Lead Developer.",
         discord: (localDiscord !== null && localDiscord !== undefined) ? localDiscord : ((p && p.discord) || "")
       });
@@ -5898,7 +5900,8 @@ function getUserProfile(usernameOrKey) {
   return {
     username: isOwner ? "ADMIN" : usernameOrKey,
     key: isOwner ? "MASTER-ADMIN" : "",
-    avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey)}`,
+        avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey)}`,
+    banner: isOwner ? (localStorage.getItem("hyschool_admin_banner") || "") : "",
     bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "HySchool Team & Community Mitglied.",
     discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "",
     joined: "01.01.2026",
@@ -6051,6 +6054,8 @@ function openUserProfileModal(usernameOrKey) {
   const modal = document.getElementById("user-profile-modal");
 
   const avatarEl = document.getElementById("profile-modal-avatar");
+  const bannerEl = document.getElementById("profile-modal-banner");
+  const btnUploadBanner = document.getElementById("btn-upload-banner");
   const userEl = document.getElementById("profile-modal-username");
   const badgeEl = document.getElementById("profile-modal-badge-wrap");
   const bioEl = document.getElementById("profile-modal-bio");
@@ -6059,6 +6064,13 @@ function openUserProfileModal(usernameOrKey) {
   const cfgCountEl = document.getElementById("profile-modal-cfg-count");
 
   const isOwner = usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || CURRENT_USER.is_admin;
+  
+  if(bannerEl) {
+    bannerEl.style.backgroundImage = (prof.banner) ? `url(${prof.banner})` : `linear-gradient(45deg, #1e293b, #0f172a)`;
+  }
+  if(btnUploadBanner) {
+    btnUploadBanner.style.display = isOwner ? "block" : "none";
+  }
   const userConfigs = ALL_CONFIGS.filter(c => c.user === (prof.username || usernameOrKey));
 
   if(avatarEl) avatarEl.src = prof.avatar || getAvatarUrl(usernameOrKey);
@@ -6104,6 +6116,28 @@ function updateProfileRole() {
   if(typeof filterUserConfigs === "function") filterUserConfigs();
   
   showToast("Rolle lokal aktualisiert (" + newRole.toUpperCase() + ")", "ok");
+}
+
+function handleBannerUpload(e) {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const dataUrl = evt.target.result;
+    
+    // Save to local storage if it's me
+    if(_activeProfileTarget === "ADMIN" || _activeProfileTarget === CURRENT_USER.name) {
+      localStorage.setItem("hyschool_admin_banner", dataUrl);
+    }
+    
+    // Save to prof memory
+    if(!USER_PROFILES[_activeProfileTarget]) USER_PROFILES[_activeProfileTarget] = {};
+    USER_PROFILES[_activeProfileTarget].banner = dataUrl;
+    
+    document.getElementById("profile-modal-banner").style.backgroundImage = `url(${dataUrl})`;
+    showToast("Banner erfolgreich aktualisiert!", "ok");
+  };
+  reader.readAsDataURL(file);
 }
 
 function closeProfileModal() {
@@ -7703,6 +7737,10 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
+
+
+
 
 
 
