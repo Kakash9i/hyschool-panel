@@ -1993,13 +1993,13 @@
       <!-- LEFT SIDEBAR: TICKET QUEUE & FILTER -->
       <div style="width:320px;background:#0a0c13;border:1px solid #1c2235;border-radius:12px;display:flex;flex-direction:column;overflow:hidden;">
         <!-- FILTER BUTTONS -->
-        <div style="padding:12px;background:#0e111a;border-bottom:1px solid #1c2235;display:flex;flex-direction:column;gap:8px;">
-          <div style="display:flex;gap:6px;">
-            <button id="st-filter-open" onclick="filterADMINTickets('open')" style="flex:1;background:linear-gradient(135deg,#e5a93c,#c68924);color:#0b0c10;border:none;padding:7px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;">Offene Tickets</button>
-            <button id="st-filter-closed" onclick="filterADMINTickets('closed')" style="flex:1;background:#161c2c;color:#94a3b8;border:1px solid #232b40;padding:7px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">Geschlossen (24h)</button>
+        <div style="padding:14px;background:#0d1118;border-bottom:1px solid #1c2235;display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:8px;background:#131825;padding:4px;border-radius:8px;border:1px solid #1e2638;">
+            <button id="st-filter-open" onclick="filterADMINTickets('open')" style="flex:1;background:linear-gradient(135deg,rgba(229,169,60,0.2),rgba(198,137,36,0.1));color:#e5a93c;border:1px solid rgba(229,169,60,0.4);box-shadow:0 0 10px rgba(229,169,60,0.15);padding:8px;border-radius:6px;font-size:10.5px;font-weight:900;cursor:pointer;transition:all 0.2s;">&#128233; OFFEN</button>
+            <button id="st-filter-closed" onclick="filterADMINTickets('closed')" style="flex:1;background:transparent;color:#64748b;border:1px solid transparent;padding:8px;border-radius:6px;font-size:10.5px;font-weight:900;cursor:pointer;transition:all 0.2s;">&#128274; ZU (24H)</button>
           </div>
-          <button onclick="loadADMINSupportTickets(true)" style="background:#121624;border:1px solid #1f273e;color:#cbd5e1;padding:6px;border-radius:6px;font-size:10.5px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
-            <span>&#128260;</span> Tickets Aktualisieren
+          <button onclick="loadADMINSupportTickets(true)" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);color:#94a3b8;padding:8px;border-radius:6px;font-size:10.5px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.02)';this.style.color='#94a3b8'">
+            <span>&#128260;</span> TICKETS AKTUALISIEREN
           </button>
         </div>
 
@@ -7629,28 +7629,45 @@ function renderADMINTicketsList() {
     });
 
     if (filtered.length === 0) {
-        listWrap.innerHTML = `<div style="text-align:center;color:#64748b;padding:30px 10px;font-size:11px;">Keine ${_adminTicketFilter === 'open' ? 'offenen' : 'geschlossenen'} Tickets</div>`;
+        listWrap.innerHTML = `<div style="text-align:center;color:#64748b;padding:30px 10px;font-size:11px;font-weight:800;">&#128236; Keine ${_adminTicketFilter === 'open' ? 'offenen' : 'geschlossenen'} Tickets</div>`;
         return;
     }
 
     let html = '';
     filtered.forEach(t => {
         const isActive = t.id === _adminActiveTicketId;
-        const statusColor = t.status === 'closed' ? '#64748b' : (t.status === 'in_progress' ? '#38bdf8' : '#e5a93c');
-        const statusText = t.status === 'closed' ? 'GESCHLOSSEN' : (t.status === 'in_progress' ? `In Bearbeitung (${t.assignedTo || 'Team'})` : 'NEU / WARTET');
-        const borderCol = isActive ? '#e5a93c' : '#1e2638';
-        const bgCol = isActive ? '#182030' : '#121622';
+        const isClosed = t.status === 'closed';
+        const isProgress = t.status === 'in_progress' || t.status === 'in-progress';
+        
+        let statusColor, statusText, statusBg, statusBorder;
+        if(isClosed) {
+           statusColor = '#94a3b8'; statusBg = 'rgba(148,163,184,0.1)'; statusBorder = 'rgba(148,163,184,0.25)'; statusText = 'GESCHLOSSEN';
+        } else if(isProgress) {
+           statusColor = '#3b82f6'; statusBg = 'rgba(59,130,246,0.1)'; statusBorder = 'rgba(59,130,246,0.3)'; statusText = `IN BEARBEITUNG`;
+        } else {
+           statusColor = '#e5a93c'; statusBg = 'rgba(229,169,60,0.15)'; statusBorder = 'rgba(229,169,60,0.3)'; statusText = 'NEU / WARTET';
+        }
+
+        const borderCol = isActive ? 'rgba(229,169,60,0.5)' : 'rgba(255,255,255,0.05)';
+        const bgCol = isActive ? 'linear-gradient(135deg, rgba(229,169,60,0.1), rgba(198,137,36,0.03))' : 'rgba(15,20,30,0.6)';
+        const shadow = isActive ? 'box-shadow: 0 4px 15px rgba(229,169,60,0.15);' : '';
+        const titleCol = isActive ? '#fff' : '#cbd5e1';
 
         html += `
-            <div onclick="selectADMINTicket('${t.id}')" style="background:${bgCol};border:1px solid ${borderCol};border-radius:8px;padding:10px 12px;cursor:pointer;transition:.2s;" onmouseover="this.style.borderColor='#e5a93c'" onmouseout="this.style.borderColor='${borderCol}'">
-                <div style="display:flex;justify-content:space-between;align-items:center;">
-                    <span style="font-size:11px;font-weight:800;color:#f8fafc;">${escapeHtml(t.topic || 'Anfrage')}</span>
-                    <span style="font-size:9px;padding:1px 6px;border-radius:4px;background:${statusColor}22;color:${statusColor};font-weight:800;">${statusText}</span>
+            <div onclick="selectADMINTicket('${t.id}')" style="background:${bgCol};border:1px solid ${borderCol};${shadow}border-radius:10px;padding:12px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(229,169,60,0.5)';this.style.transform='translateY(-1px)';" onmouseout="this.style.borderColor='${borderCol}';this.style.transform='none';">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+                    <span style="font-size:12px;font-weight:900;color:${titleCol};letter-spacing:0.3px;line-height:1.2;">${escapeHtml(t.topic || 'Anfrage')}</span>
+                    <span style="font-size:8.5px;padding:2px 6px;border-radius:4px;background:${statusBg};border:1px solid ${statusBorder};color:${statusColor};font-weight:900;letter-spacing:0.5px;white-space:nowrap;margin-left:8px;">${statusText}</span>
                 </div>
-                <div style="font-size:10.5px;color:#94a3b8;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">&#128100; ${escapeHtml(t.customerName || 'Kunde')}: ${escapeHtml(t.description || '')}</div>
-                <div style="font-size:9.5px;color:#64748b;margin-top:4px;display:flex;justify-content:space-between;">
-                    <span>${new Date(t.createdAt).toLocaleDateString()} ${new Date(t.createdAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
-                    <span style="color:#e5a93c;font-weight:700;">#${t.id}</span>
+                
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+                  <div style="width:16px;height:16px;border-radius:4px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:9px;">&#128100;</div>
+                  <span style="font-size:11px;color:#94a3b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;"><b style="color:#e2e8f0;">${escapeHtml(t.customerName || 'Kunde')}</b>: ${escapeHtml(t.description || '')}</span>
+                </div>
+                
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span style="font-size:9.5px;color:#64748b;font-weight:700;">&#128197; ${new Date(t.createdAt).toLocaleDateString()} &middot; ${new Date(t.createdAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
+                    <span style="font-size:10px;color:rgba(255,255,255,0.2);font-weight:900;">#${t.id}</span>
                 </div>
             </div>
         `;
@@ -7897,6 +7914,8 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
+
 
 
 
