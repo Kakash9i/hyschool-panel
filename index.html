@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -966,6 +966,76 @@
   .clip-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid #141928; margin-top: auto; }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  /* LUXURY BADGE RANKS */
+  .badge-rank {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    user-select: none;
+    line-height: 1.2;
+    transition: all .2s ease;
+  }
+  .badge-rank-admin {
+    background: linear-gradient(135deg, rgba(229,169,60,0.22), rgba(229,169,60,0.08));
+    color: #fbbf24;
+    border: 1px solid rgba(251,191,36,0.5);
+    box-shadow: 0 0 10px rgba(229,169,60,0.25);
+  }
+  .badge-rank-coadmin {
+    background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(239,68,68,0.08));
+    color: #f87171;
+    border: 1px solid rgba(239,68,68,0.5);
+    box-shadow: 0 0 10px rgba(239,68,68,0.25);
+  }
+  .badge-rank-dev {
+    background: linear-gradient(135deg, rgba(20,184,166,0.2), rgba(20,184,166,0.08));
+    color: #2dd4bf;
+    border: 1px solid rgba(20,184,166,0.5);
+    box-shadow: 0 0 10px rgba(20,184,166,0.25);
+  }
+  .badge-rank-mod {
+    background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(168,85,247,0.08));
+    color: #c084fc;
+    border: 1px solid rgba(168,85,247,0.5);
+    box-shadow: 0 0 10px rgba(168,85,247,0.25);
+  }
+  .badge-rank-supporter {
+    background: linear-gradient(135deg, rgba(56,189,248,0.2), rgba(56,189,248,0.08));
+    color: #38bdf8;
+    border: 1px solid rgba(56,189,248,0.5);
+    box-shadow: 0 0 10px rgba(56,189,248,0.25);
+  }
+  .badge-rank-elite {
+    background: linear-gradient(135deg, rgba(249,115,22,0.2), rgba(249,115,22,0.08));
+    color: #fb923c;
+    border: 1px solid rgba(249,115,22,0.5);
+    box-shadow: 0 0 10px rgba(249,115,22,0.25);
+  }
+  .badge-rank-vip {
+    background: linear-gradient(135deg, rgba(250,204,21,0.2), rgba(250,204,21,0.08));
+    color: #facc15;
+    border: 1px solid rgba(250,204,21,0.5);
+    box-shadow: 0 0 10px rgba(250,204,21,0.25);
+  }
+  .badge-rank-donator {
+    background: linear-gradient(135deg, rgba(244,114,182,0.2), rgba(244,114,182,0.08));
+    color: #f472b6;
+    border: 1px solid rgba(244,114,182,0.5);
+    box-shadow: 0 0 10px rgba(244,114,182,0.25);
+  }
+  .badge-rank-premium {
+    background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(59,130,246,0.08));
+    color: #60a5fa;
+    border: 1px solid rgba(59,130,246,0.5);
+    box-shadow: 0 0 10px rgba(59,130,246,0.25);
+  }
 </style>
 </head>
 <body>
@@ -1248,7 +1318,77 @@
               .role-pill:hover { background:rgba(255,255,255,0.08);color:#fff; }
               .role-pill input[type="checkbox"] { position:absolute;opacity:0;pointer-events:none;width:0;height:0; }
               .role-pill.active { background:rgba(229,169,60,0.15);border-color:rgba(229,169,60,0.5);color:#e5a93c;box-shadow:0 0 10px rgba(229,169,60,0.2); }
-            </style>
+              /* LUXURY BADGE RANKS */
+  .badge-rank {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    user-select: none;
+    line-height: 1.2;
+    transition: all .2s ease;
+  }
+  .badge-rank-admin {
+    background: linear-gradient(135deg, rgba(229,169,60,0.22), rgba(229,169,60,0.08));
+    color: #fbbf24;
+    border: 1px solid rgba(251,191,36,0.5);
+    box-shadow: 0 0 10px rgba(229,169,60,0.25);
+  }
+  .badge-rank-coadmin {
+    background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(239,68,68,0.08));
+    color: #f87171;
+    border: 1px solid rgba(239,68,68,0.5);
+    box-shadow: 0 0 10px rgba(239,68,68,0.25);
+  }
+  .badge-rank-dev {
+    background: linear-gradient(135deg, rgba(20,184,166,0.2), rgba(20,184,166,0.08));
+    color: #2dd4bf;
+    border: 1px solid rgba(20,184,166,0.5);
+    box-shadow: 0 0 10px rgba(20,184,166,0.25);
+  }
+  .badge-rank-mod {
+    background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(168,85,247,0.08));
+    color: #c084fc;
+    border: 1px solid rgba(168,85,247,0.5);
+    box-shadow: 0 0 10px rgba(168,85,247,0.25);
+  }
+  .badge-rank-supporter {
+    background: linear-gradient(135deg, rgba(56,189,248,0.2), rgba(56,189,248,0.08));
+    color: #38bdf8;
+    border: 1px solid rgba(56,189,248,0.5);
+    box-shadow: 0 0 10px rgba(56,189,248,0.25);
+  }
+  .badge-rank-elite {
+    background: linear-gradient(135deg, rgba(249,115,22,0.2), rgba(249,115,22,0.08));
+    color: #fb923c;
+    border: 1px solid rgba(249,115,22,0.5);
+    box-shadow: 0 0 10px rgba(249,115,22,0.25);
+  }
+  .badge-rank-vip {
+    background: linear-gradient(135deg, rgba(250,204,21,0.2), rgba(250,204,21,0.08));
+    color: #facc15;
+    border: 1px solid rgba(250,204,21,0.5);
+    box-shadow: 0 0 10px rgba(250,204,21,0.25);
+  }
+  .badge-rank-donator {
+    background: linear-gradient(135deg, rgba(244,114,182,0.2), rgba(244,114,182,0.08));
+    color: #f472b6;
+    border: 1px solid rgba(244,114,182,0.5);
+    box-shadow: 0 0 10px rgba(244,114,182,0.25);
+  }
+  .badge-rank-premium {
+    background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(59,130,246,0.08));
+    color: #60a5fa;
+    border: 1px solid rgba(59,130,246,0.5);
+    box-shadow: 0 0 10px rgba(59,130,246,0.25);
+  }
+</style>
             <label class="role-pill"><input type="checkbox" class="role-checkbox" value="admin" onchange="updateProfileRoles(this)"> INHABER</label>
             <label class="role-pill"><input type="checkbox" class="role-checkbox" value="co-admin" onchange="updateProfileRoles(this)"> CO-ADMIN</label>
             <label class="role-pill"><input type="checkbox" class="role-checkbox" value="developer" onchange="updateProfileRoles(this)"> DEVELOPER</label>
@@ -2047,7 +2187,77 @@
               <style>
                 .macro-chip { background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;padding:6px 12px;border-radius:6px;font-size:10.5px;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:6px; }
                 .macro-chip:hover { background:rgba(255,255,255,0.08);color:#fff;border-color:rgba(255,255,255,0.15);transform:translateY(-1px); }
-              </style>
+                /* LUXURY BADGE RANKS */
+  .badge-rank {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    user-select: none;
+    line-height: 1.2;
+    transition: all .2s ease;
+  }
+  .badge-rank-admin {
+    background: linear-gradient(135deg, rgba(229,169,60,0.22), rgba(229,169,60,0.08));
+    color: #fbbf24;
+    border: 1px solid rgba(251,191,36,0.5);
+    box-shadow: 0 0 10px rgba(229,169,60,0.25);
+  }
+  .badge-rank-coadmin {
+    background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(239,68,68,0.08));
+    color: #f87171;
+    border: 1px solid rgba(239,68,68,0.5);
+    box-shadow: 0 0 10px rgba(239,68,68,0.25);
+  }
+  .badge-rank-dev {
+    background: linear-gradient(135deg, rgba(20,184,166,0.2), rgba(20,184,166,0.08));
+    color: #2dd4bf;
+    border: 1px solid rgba(20,184,166,0.5);
+    box-shadow: 0 0 10px rgba(20,184,166,0.25);
+  }
+  .badge-rank-mod {
+    background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(168,85,247,0.08));
+    color: #c084fc;
+    border: 1px solid rgba(168,85,247,0.5);
+    box-shadow: 0 0 10px rgba(168,85,247,0.25);
+  }
+  .badge-rank-supporter {
+    background: linear-gradient(135deg, rgba(56,189,248,0.2), rgba(56,189,248,0.08));
+    color: #38bdf8;
+    border: 1px solid rgba(56,189,248,0.5);
+    box-shadow: 0 0 10px rgba(56,189,248,0.25);
+  }
+  .badge-rank-elite {
+    background: linear-gradient(135deg, rgba(249,115,22,0.2), rgba(249,115,22,0.08));
+    color: #fb923c;
+    border: 1px solid rgba(249,115,22,0.5);
+    box-shadow: 0 0 10px rgba(249,115,22,0.25);
+  }
+  .badge-rank-vip {
+    background: linear-gradient(135deg, rgba(250,204,21,0.2), rgba(250,204,21,0.08));
+    color: #facc15;
+    border: 1px solid rgba(250,204,21,0.5);
+    box-shadow: 0 0 10px rgba(250,204,21,0.25);
+  }
+  .badge-rank-donator {
+    background: linear-gradient(135deg, rgba(244,114,182,0.2), rgba(244,114,182,0.08));
+    color: #f472b6;
+    border: 1px solid rgba(244,114,182,0.5);
+    box-shadow: 0 0 10px rgba(244,114,182,0.25);
+  }
+  .badge-rank-premium {
+    background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(59,130,246,0.08));
+    color: #60a5fa;
+    border: 1px solid rgba(59,130,246,0.5);
+    box-shadow: 0 0 10px rgba(59,130,246,0.25);
+  }
+</style>
               <button type="button" class="macro-chip" onclick="insertStaffMacro('freigeschaltet')"><span style="color:#10b981;">&#9989;</span> Freigeschaltet</button>
               <button type="button" class="macro-chip" onclick="insertStaffMacro('hwid')"><span style="color:#3b82f6;">&#128260;</span> HWID Reset</button>
               <button type="button" class="macro-chip" onclick="insertStaffMacro('antivirus')"><span style="color:#f59e0b;">&#128737;&#65039;</span> Defender Info</button>
@@ -2824,14 +3034,10 @@ function applyUserPermissions() {
   if(dashUser) dashUser.textContent = CURRENT_USER.is_admin ? "ADMIN" : CURRENT_USER.name;
   if(dashRole) dashRole.innerHTML = getRankBadge(CURRENT_USER.name, CURRENT_USER.role);
   if(userBadge) {
-    if(CURRENT_USER.is_admin) {
-      userBadge.innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px;"><span style="color:#fbbf24;">&#128081;</span> INHABER ADMIN</span>`;
-    } else {
-      userBadge.innerHTML = `${getRankBadge(CURRENT_USER.name, CURRENT_USER.role)} ${escapeHtml(CURRENT_USER.name)}`;
-    }
+    userBadge.innerHTML = CURRENT_USER.is_admin ? '<span class="badge-rank badge-rank-admin">👑 INHABER ADMIN</span>' : `${getRankBadge(CURRENT_USER.name, CURRENT_USER.role)} ${escapeHtml(CURRENT_USER.name)}`;
   }
 
-      if(dashExpiry) {
+  if(dashExpiry) {
     if(CURRENT_USER.license && CURRENT_USER.license.expires_at && CURRENT_USER.license.duration !== "lifetime") {
       dashExpiry.innerHTML = `<span style="color:#e5a93c;font-weight:800;font-size:12px;">&#9203; Bis ${CURRENT_USER.license.expires_at}</span>`;
     } else {
@@ -5729,19 +5935,11 @@ function renderChatMessages() {
   const isScrolledToBottom = wrap.scrollHeight - wrap.clientHeight <= wrap.scrollTop + 100;
 
   wrap.innerHTML = ALL_CHAT_MESSAGES.map(msg => {
-    const isMe = msg.user === CURRENT_USER.name || (CURRENT_USER.is_admin && (msg.user === 'ADMIN' || msg.user === 'ADMIN'));
-    const isADMIN = msg.is_admin || msg.user === 'ADMIN' || msg.user === 'ADMIN';
-    const isCustomer = msg.role === 'Kunde' || msg.is_customer;
-    const avatarUrl = getAvatarUrl(msg.user);
-
-    let userBadge = '';
-    if (isADMIN) {
-      userBadge = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.4);padding:2px 8px;border-radius:4px;font-size:9px;font-weight:900;letter-spacing:0.5px;">&#128081; INHABER</span>`;
-    } else if (isCustomer) {
-      userBadge = `<span style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.4);padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:0.5px;">&#127918; Kunde</span>`;
-    } else {
-      userBadge = `<span style="background:#141724;color:#cbd5e1;border:1px solid #232a3e;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:0.5px;">ðŸ‘” ${msg.role || 'Mitarbeiter'}</span>`;
-    }
+    const isMe = msg.user === CURRENT_USER.name || (CURRENT_USER.is_admin && (msg.user === 'ADMIN'));
+    const prof = (typeof getUserProfile === 'function') ? getUserProfile(msg.user) : null;
+    const avatarUrl = (prof && prof.avatar) ? prof.avatar : getAvatarUrl(msg.user);
+    const userBadge = getRankBadge(msg.user, (prof && prof.rank) ? prof.rank : msg.role);
+    const isADMIN = (prof && prof.rank && (prof.rank === 'admin' || (Array.isArray(prof.rank) && prof.rank.includes('admin')))) || msg.is_admin || msg.user === 'ADMIN';
 
     const avatar = `
       <div onclick="openUserProfileModal('${escapeHtml(msg.user)}')" class="clickable-user" style="width:36px;height:36px;border-radius:10px;overflow:hidden;border:1.5px solid ${isADMIN ? '#e5a93c' : '#1e283e'};flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,0.4);">
@@ -5758,12 +5956,12 @@ function renderChatMessages() {
         ${avatar}
         <div style="display:flex;flex-direction:column;${isMe ? 'align-items:flex-end;' : 'align-items:flex-start;'}">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-            <span class="clickable-user" onclick="openUserProfileModal('${escapeHtml(msg.user)}')" style="font-size:12px;font-weight:900;color:${isADMIN ? '#e5a93c' : (isCustomer ? '#10b981' : '#f8fafc')};">${escapeHtml(formatNameUpper(msg.user))}</span>
+            <span class="clickable-user" onclick="openUserProfileModal('${escapeHtml(msg.user)}')" style="font-size:12px;font-weight:900;color:${isADMIN ? '#e5a93c' : '#f8fafc'};">${escapeHtml(formatNameUpper(msg.user))}</span>
             ${userBadge}
             <span style="font-size:10px;color:#64748b;font-weight:600;">${msg.time || ''}</span>
           </div>
           <div style="${bubbleBg} padding: 10px 15px; border-radius: ${isMe ? '12px 2px 12px 12px' : '2px 12px 12px 12px'}; color: #f8fafc; font-size: 12.5px; line-height: 1.5; word-break: break-word; box-shadow: 0 4px 16px rgba(0,0,0,0.35);">
-            ${escapeHtml(msg.text)}
+            ${formatMessageText(msg.text)}
           </div>
         </div>
       </div>
@@ -5773,6 +5971,25 @@ function renderChatMessages() {
   if(isScrolledToBottom || ALL_CHAT_MESSAGES.length === 1) {
     wrap.scrollTop = wrap.scrollHeight;
   }
+}
+
+function formatMessageText(text) {
+  if (!text) return "";
+  let s = String(text);
+  s = s.replace(/&#128640;/g, 'ðŸš€')
+       .replace(/&#128081;/g, 'ðŸ‘‘')
+       .replace(/&#128737;&#65039;/g, 'ðŸ›¡ï¸')
+       .replace(/&#128737;/g, 'ðŸ›¡ï¸')
+       .replace(/&#128150;/g, 'ðŸ’–')
+       .replace(/&#11088;/g, 'â­')
+       .replace(/&#9889;/g, 'âš¡')
+       .replace(/&#128142;/g, 'ðŸ’Ž')
+       .replace(/Ã°Å¸'â€|Ã°Å¸â€˜â€/g, 'ðŸ‘”')
+       .replace(/Ã°Å¸Å¡â‚¬/g, 'ðŸš€')
+       .replace(/Ã°Å¸â€˜â€˜/g, 'ðŸ‘‘')
+       .replace(/Ã¢Å¡Â¡/g, 'âš¡')
+       .replace(/Ã¢Â­ /g, 'â­');
+  return escapeHtml(s);
 }
 
 function escapeHtml(text) {
@@ -5917,57 +6134,55 @@ async function loadProfiles() {
 
 function getUserProfile(usernameOrKey) {
   if(!usernameOrKey) return null;
-  const isMe = (usernameOrKey === "ADMIN") || (CURRENT_USER && CURRENT_USER.name === usernameOrKey) || (CURRENT_USER && CURRENT_USER.is_admin && usernameOrKey === "ADMIN");
+  const target = String(usernameOrKey).trim();
+  const lower = target.toLowerCase();
   
-  let p = USER_PROFILES[usernameOrKey];
-  if (!p) {
-    const values = Object.values(USER_PROFILES);
-    p = values.find(x => (x.username && x.username.toLowerCase() === String(usernameOrKey).toLowerCase()) || (x.key && x.key.toUpperCase() === String(usernameOrKey).toUpperCase()));
-  }
+  const isMe = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && (
+    (CURRENT_USER.is_admin && (lower === "admin" || target === CURRENT_USER.name)) ||
+    (target === CURRENT_USER.name) ||
+    (CURRENT_USER.key && target === CURRENT_USER.key)
+  ));
 
-  // If still not found and not Me, return a default mock profile instead of ADMIN's
-  if (!p && !isMe) {
-    return {
-      username: usernameOrKey,
-      rank: ["premium"],
-      avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey)}`,
-      banner: "",
-      bio: "Dieser User hat noch keine Bio hinzugefügt.",
-      joinedAt: "Unbekannt",
-      discord: "Nicht angegeben"
-    };
-  } else if (!p && isMe) {
-    p = USER_PROFILES["ADMIN"] || {};
-  }
-
-  if (isMe) {
-    const localAvatar = localStorage.getItem("hyschool_admin_avatar");
-    const localBanner = localStorage.getItem("hyschool_admin_banner");
-    const localBio = localStorage.getItem("hyschool_admin_bio");
-    const localDiscord = localStorage.getItem("hyschool_admin_discord");
-    if (localAvatar || localBio || localDiscord || localBanner) {
-      p = Object.assign({}, p || {}, {
-        username: "ADMIN",
-        rank: (p && p.rank) || "admin",
-        avatar: localAvatar || (p && p.avatar) || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN",
-        banner: localBanner || (p && p.banner) || "",
-        bio: localBio || (p && p.bio) || "HySchool Owner & Lead Developer.",
-        discord: (localDiscord !== null && localDiscord !== undefined) ? localDiscord : ((p && p.discord) || "")
-      });
+  let p = null;
+  if (typeof USER_PROFILES !== 'undefined' && USER_PROFILES) {
+    if (USER_PROFILES[target]) {
+      p = USER_PROFILES[target];
+    } else {
+      for (const k in USER_PROFILES) {
+        if (k.toLowerCase() === lower || 
+           (USER_PROFILES[k].username && USER_PROFILES[k].username.toLowerCase() === lower) || 
+           (USER_PROFILES[k].key && USER_PROFILES[k].key.toLowerCase() === lower)) {
+          p = USER_PROFILES[k];
+          break;
+        }
+      }
     }
   }
 
-  if (p) return p;
+  if (p) {
+    if (isMe) {
+      const myAvatar = localStorage.getItem("hyschool_avatar_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_avatar") : null);
+      const myBanner = localStorage.getItem("hyschool_banner_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_banner") : null);
+      const myBio = localStorage.getItem("hyschool_bio_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_bio") : null);
+      const myDiscord = localStorage.getItem("hyschool_discord_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_discord") : null);
+      
+      if (myAvatar) p.avatar = myAvatar;
+      if (myBanner) p.banner = myBanner;
+      if (myBio) p.bio = myBio;
+      if (myDiscord !== null && myDiscord !== undefined) p.discord = myDiscord;
+    }
+    return p;
+  }
 
-  const isOwner = usernameOrKey === "ADMIN" || (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.is_admin && (usernameOrKey === CURRENT_USER.name || usernameOrKey === "ADMIN"));
+  const isOwner = (lower === "admin" || (CURRENT_USER && CURRENT_USER.is_admin && isMe));
   return {
-      username: isOwner ? "ADMIN" : usernameOrKey,
-    key: isOwner ? "MASTER-ADMIN" : "",
+    username: isOwner ? "ADMIN" : target,
+    key: isOwner ? "MASTER-ADMIN" : (CURRENT_USER && isMe ? (CURRENT_USER.key || "") : ""),
     rank: isOwner ? ["admin"] : ["premium"],
-    avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey)}`,
+    avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(target)}`,
     banner: isOwner ? (localStorage.getItem("hyschool_admin_banner") || "") : "",
-    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "HySchool Team & Community Mitglied.",
-    discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "",
+    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugefÃ¼gt.",
+    discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "Nicht angegeben",
     joined: "01.01.2026",
     guestbook: []
   };
@@ -5975,11 +6190,7 @@ function getUserProfile(usernameOrKey) {
 
 function getAvatarUrl(usernameOrKey) {
   if(!usernameOrKey) return "https://api.dicebear.com/7.x/bottts/svg?seed=User";
-  const isOwner = usernameOrKey === "ADMIN" || (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.is_admin && (usernameOrKey === CURRENT_USER.name || usernameOrKey === "ADMIN"));
-  if (isOwner) {
-    return localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN";
-  }
-  const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES) ? USER_PROFILES[usernameOrKey] : null;
+  const prof = (typeof getUserProfile === 'function') ? getUserProfile(usernameOrKey) : null;
   if(prof && prof.avatar) return prof.avatar;
   return `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey)}`;
 }
@@ -6083,36 +6294,49 @@ async function saveUserProfile() {
     saveBtn.textContent = "SPEICHERE PROFIL...";
   }
 
-  const avatarUrl = (document.getElementById("settings-avatar-url").value || "").trim() || `https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN`;
+  const avatarUrl = (document.getElementById("settings-avatar-url").value || "").trim() || `https://api.dicebear.com/7.x/bottts/svg?seed=User`;
   const bannerUrl = (document.getElementById("settings-banner-url").value || "").trim();
-  const bio = (document.getElementById("settings-bio").value || "").trim() || "HySchool Owner & Lead Developer.";
+  const bio = (document.getElementById("settings-bio").value || "").trim() || "HySchool Community Mitglied.";
   const discord = (document.getElementById("settings-discord").value || "").trim();
 
-  const userKey = CURRENT_USER.key || CURRENT_USER.name || "ADMIN";
-  const existing = USER_PROFILES[userKey] || USER_PROFILES["ADMIN"] || USER_PROFILES[CURRENT_USER.name] || {};
+  const myName = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : "ADMIN";
+  const userKey = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.key) ? CURRENT_USER.key : myName;
+  const existing = (typeof getUserProfile === 'function') ? (getUserProfile(myName) || {}) : {};
 
   const updatedProfile = {
     ...existing,
-    username: CURRENT_USER.name || "ADMIN",
-    key: CURRENT_USER.key || "ADMIN",
+    username: myName,
+    key: userKey,
     avatar: avatarUrl,
     banner: bannerUrl,
     bio: bio,
     discord: discord,
-    rank: existing.rank || ["premium"],
+    rank: existing.rank || (CURRENT_USER && CURRENT_USER.is_admin ? ["admin"] : ["premium"]),
     joined: existing.joined || "01.01.2026",
     guestbook: existing.guestbook || []
   };
 
-  USER_PROFILES[CURRENT_USER.name] = updatedProfile;
-  USER_PROFILES["ADMIN"] = updatedProfile;
-  if(CURRENT_USER.key) USER_PROFILES[CURRENT_USER.key] = updatedProfile;
+  if(!USER_PROFILES) USER_PROFILES = {};
+  USER_PROFILES[myName] = updatedProfile;
+  if(CURRENT_USER && CURRENT_USER.is_admin) {
+    USER_PROFILES["ADMIN"] = updatedProfile;
+  }
+  if(CURRENT_USER && CURRENT_USER.key) {
+    USER_PROFILES[CURRENT_USER.key] = updatedProfile;
+  }
 
   try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
-  try { localStorage.setItem("hyschool_admin_avatar", avatarUrl); } catch(_) {}
-  try { localStorage.setItem("hyschool_admin_banner", bannerUrl); } catch(_) {}
-  try { localStorage.setItem("hyschool_admin_bio", bio); } catch(_) {}
-  try { localStorage.setItem("hyschool_admin_discord", discord); } catch(_) {}
+  try { localStorage.setItem("hyschool_avatar_" + myName, avatarUrl); } catch(_) {}
+  try { localStorage.setItem("hyschool_banner_" + myName, bannerUrl); } catch(_) {}
+  try { localStorage.setItem("hyschool_bio_" + myName, bio); } catch(_) {}
+  try { localStorage.setItem("hyschool_discord_" + myName, discord); } catch(_) {}
+
+  if(CURRENT_USER && CURRENT_USER.is_admin) {
+    try { localStorage.setItem("hyschool_admin_avatar", avatarUrl); } catch(_) {}
+    try { localStorage.setItem("hyschool_admin_banner", bannerUrl); } catch(_) {}
+    try { localStorage.setItem("hyschool_admin_bio", bio); } catch(_) {}
+    try { localStorage.setItem("hyschool_admin_discord", discord); } catch(_) {}
+  }
 
   const dashImg = document.getElementById("dash-avatar-img");
   if(dashImg) dashImg.src = avatarUrl;
@@ -6122,18 +6346,18 @@ async function saveUserProfile() {
   try {
     const fullJson = JSON.stringify(USER_PROFILES, null, 2);
     const finalB64 = utf8_to_b64(fullJson);
-    await uploadFileToGitHub("profiles.json", finalB64, `Update Profile: ${CURRENT_USER.name}`);
+    await uploadFileToGitHub("profiles.json", finalB64, `Update Profile: ${myName}`);
     showToast("Profil erfolgreich aktualisiert!", "ok");
     closeSettingsModal();
-    if(document.getElementById("tc-6") && document.getElementById("tc-6").classList.contains("active")) renderChatMessages();
-    filterUserConfigs();
+    if(typeof renderChatMessages === "function") renderChatMessages();
+    if(typeof filterUserConfigs === "function") filterUserConfigs();
   } catch(err) {
     showToast("Lokal gespeichert: " + err.message, "err");
     closeSettingsModal();
   } finally {
     if(saveBtn) {
       saveBtn.disabled = false;
-      saveBtn.textContent = "💾 EINSTELLUNGEN SPEICHERN";
+      saveBtn.textContent = "ðŸ’¾ EINSTELLUNGEN SPEICHERN";
     }
   }
 }
@@ -6141,12 +6365,13 @@ async function saveUserProfile() {
 let _activeProfileTarget = null;
 
 function openOwnProfileModal() {
-  openUserProfileModal("ADMIN");
+  const myName = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : "ADMIN";
+  openUserProfileModal(myName);
 }
 
 function openUserProfileModal(usernameOrKey) {
   _activeProfileTarget = usernameOrKey;
-  const prof = getUserProfile(usernameOrKey);
+  const prof = getUserProfile(usernameOrKey) || {};
   const modal = document.getElementById("user-profile-modal");
 
   const avatarEl = document.getElementById("profile-modal-avatar");
@@ -6167,7 +6392,7 @@ function openUserProfileModal(usernameOrKey) {
   if(bannerEl) {
     let bUrl = (prof && prof.banner) ? prof.banner : "";
     if (isSelf && !bUrl) {
-      try { bUrl = localStorage.getItem("hyschool_admin_banner") || ""; } catch(e){}
+      try { bUrl = localStorage.getItem("hyschool_banner_" + usernameOrKey) || localStorage.getItem("hyschool_admin_banner") || ""; } catch(e){}
     }
     bannerEl.style.backgroundImage = bUrl ? `url(${bUrl})` : `linear-gradient(45deg, #1e293b, #0f172a)`;
   }
@@ -6179,18 +6404,16 @@ function openUserProfileModal(usernameOrKey) {
   if(avatarEl) avatarEl.src = (prof && prof.avatar) ? prof.avatar : getAvatarUrl(usernameOrKey);
   if(userEl) userEl.textContent = (prof && prof.username) ? prof.username : usernameOrKey;
   
-  if(badgeEl) badgeEl.innerHTML = getRankBadge(usernameOrKey, prof ? prof.rank : null);
+  if(badgeEl) badgeEl.innerHTML = getRankBadge(usernameOrKey, prof ? prof.rank : null, true);
 
   const roleManager = document.getElementById("profile-role-manager");
   if(roleManager) {
     const canManageRoles = typeof CURRENT_USER !== 'undefined' && CURRENT_USER && (
       CURRENT_USER.is_admin || 
-      CURRENT_USER.is_staff || 
-      (CURRENT_USER.role && CURRENT_USER.role !== 'Kunde') ||
       (CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_staff)
     );
     if(canManageRoles) {
-      roleManager.style.display = "flex";
+      roleManager.style.display = "block";
       const checkboxes = document.querySelectorAll(".role-checkbox");
       let currentRanks = (prof && prof.rank) ? prof.rank : ["premium"];
       if (typeof currentRanks === "string") currentRanks = currentRanks.split(",").map(r => r.trim().toLowerCase());
@@ -6206,8 +6429,8 @@ function openUserProfileModal(usernameOrKey) {
     }
   }
 
-  if(bioEl) bioEl.textContent = (prof && prof.bio) ? prof.bio : "Dieser User hat noch keine Bio hinzugefügt.";
-  if(joinedEl) joinedEl.textContent = (prof && prof.joined) ? prof.joined : "05.09.2026";
+  if(bioEl) bioEl.textContent = (prof && prof.bio) ? prof.bio : "Dieser User hat noch keine Bio hinzugefÃ¼gt.";
+  if(joinedEl) joinedEl.textContent = (prof && prof.joined) ? prof.joined : "01.01.2026";
   if(discordEl) discordEl.textContent = (prof && prof.discord) ? prof.discord : "Nicht angegeben";
   if(cfgCountEl) cfgCountEl.textContent = `${userConfigs.length} Configs`;
 
@@ -6238,26 +6461,35 @@ async function updateProfileRoles(el) {
     });
   }
   
+  if(!USER_PROFILES) USER_PROFILES = {};
   if(!USER_PROFILES[_activeProfileTarget]) {
     USER_PROFILES[_activeProfileTarget] = { username: _activeProfileTarget };
   }
   USER_PROFILES[_activeProfileTarget].rank = selected;
   
-  if(_activeProfileTarget === "ADMIN" || _activeProfileTarget === CURRENT_USER.name) {
+  if(_activeProfileTarget === "ADMIN" || (CURRENT_USER && _activeProfileTarget === CURRENT_USER.name)) {
     localStorage.setItem("hyschool_admin_ranks", JSON.stringify(selected));
     const userBadge = document.getElementById("user-badge");
-    if(userBadge) userBadge.innerHTML = getRankBadge("ADMIN", selected);
+    if(userBadge) userBadge.innerHTML = getRankBadge(_activeProfileTarget, selected);
     const dashRole = document.getElementById("cfg-dash-role-badge");
-    if(dashRole) dashRole.innerHTML = getRankBadge("ADMIN", selected);
+    if(dashRole) dashRole.innerHTML = getRankBadge(_activeProfileTarget, selected);
   }
   
   try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
   
   const badgeEl = document.getElementById("profile-modal-badge-wrap");
-  if(badgeEl) badgeEl.innerHTML = getRankBadge(_activeProfileTarget, selected);
+  if(badgeEl) badgeEl.innerHTML = getRankBadge(_activeProfileTarget, selected, true);
   
   if(typeof renderStaffTable === "function") renderStaffTable();
   if(typeof filterUserConfigs === "function") filterUserConfigs();
+  if(typeof renderChatMessages === "function") renderChatMessages();
+  if(typeof renderADMINTicketsList === "function") renderADMINTicketsList();
+  if(_adminActiveTicketId && typeof _adminTicketsData !== 'undefined') {
+    const activeT = _adminTicketsData.find(x => x.id === _adminActiveTicketId);
+    if(activeT && typeof renderActiveADMINTicketRoom === "function") renderActiveADMINTicketRoom(activeT);
+  }
+
+  showToast(`Rollen fÃ¼r ${_activeProfileTarget} aktualisiert!`, "ok");
 
   try {
     const fullJson = JSON.stringify(USER_PROFILES, null, 2);
@@ -7094,36 +7326,48 @@ async function deleteUserConfig(configId) {
     showToast("Cloud-Sync Fehler: " + e.message, "err");
   }
 }
-// Silent Auto-Polling alle 5 Sekunden
+// Silent Auto-Polling alle 3-4 Sekunden
 setInterval(() => {
   const tc3 = document.getElementById("tc-3");
   if(tc3 && tc3.classList.contains("active")) {
     const vLic = document.getElementById("view-licenses");
-    if(vLic && vLic.style.display !== "none") {
-      loadLicenses(true);
-    }
+    if(vLic && vLic.style.display !== "none") loadLicenses(true);
   }
   const tc2 = document.getElementById("tc-2");
-  if(tc2 && tc2.classList.contains("active")) {
-    loadLiveLogs(true);
-  }
+  if(tc2 && tc2.classList.contains("active")) loadLiveLogs(true);
   const tc5 = document.getElementById("tc-5");
-  if(tc5 && tc5.classList.contains("active")) {
-    loadAuditLogs(true);
-  }
+  if(tc5 && tc5.classList.contains("active")) loadAuditLogs(true);
   const tc7 = document.getElementById("tc-7");
-  if(tc7 && tc7.classList.contains("active")) {
-    loadUserConfigs(true);
+  if(tc7 && tc7.classList.contains("active")) loadUserConfigs(true);
+  
+  // Tab 6: Chat & Support Tickets
+  const tc6 = document.getElementById("tc-6");
+  if(tc6 && tc6.classList.contains("active")) {
+    const commPanel = document.getElementById("admin-community-chat-panel");
+    if(commPanel && commPanel.style.display !== "none") {
+      loadTeamChat(true);
+    } else {
+      loadADMINSupportTickets(false, true);
+    }
+  } else {
+    // Global ticket poll for audio notification & badge count
+    loadADMINSupportTickets(false, true);
   }
-}, 5000);
+}, 3500);
 
 let ALL_HIGHLIGHTS = [];
 let _uploadedHighlightFile = null;
 let _activePlayerHighlight = null;
 
-function getRankBadge(username, userRank) {
+function getRankBadge(username, userRank, allowMultiple = false) {
   try {
-    const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES && USER_PROFILES[username]) ? USER_PROFILES[username] : {};
+    let prof = null;
+    if (typeof getUserProfile === 'function') {
+      prof = getUserProfile(username);
+    } else if (typeof USER_PROFILES !== 'undefined' && USER_PROFILES && username) {
+      prof = USER_PROFILES[username];
+    }
+    
     let ranksInput = userRank || (prof && prof.rank) || "premium";
     let ranks = [];
     
@@ -7138,48 +7382,52 @@ function getRankBadge(username, userRank) {
     const rolePriority = {
       "admin": 1, "inhaber": 1,
       "co-admin": 2, "coadmin": 2,
-      "developer": 3,
-      "moderator": 4,
-      "supporter": 5,
+      "developer": 3, "dev": 3,
+      "moderator": 4, "mod": 4,
+      "supporter": 5, "support": 5,
       "elite": 6,
       "vip": 7,
-      "donator": 8,
-      "premium": 9
+      "donator": 8, "booster": 8,
+      "premium": 9, "kunde": 9
     };
     
     ranks.sort((a, b) => {
-      const sa = String(a || '').toLowerCase();
-      const sb = String(b || '').toLowerCase();
+      const sa = String(a || '').toLowerCase().trim();
+      const sb = String(b || '').toLowerCase().trim();
       return (rolePriority[sa] || 99) - (rolePriority[sb] || 99);
     });
     
+    const targetRanks = allowMultiple ? ranks : [ranks[0]];
+    
     let html = "";
-    for (let r of ranks) {
+    for (let r of targetRanks) {
       if (!r) continue;
       r = String(r).toLowerCase().trim();
       if (r === "admin" || r === "inhaber") {
-        html += '<span class="badge-rank badge-rank-admin" style="margin-right:4px;box-shadow:0 0 10px rgba(229,169,60,0.25);border:1px solid rgba(229,169,60,0.5);">&#128081; INHABER</span>';
+        html += '<span class="badge-rank badge-rank-admin">ðŸ‘‘ INHABER</span>';
       } else if (r === "co-admin" || r.includes("co-admin") || r === "coadmin") {
-        html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(239,68,68,0.25);border:1px solid rgba(239,68,68,0.5);">&#128737;&#65039; CO-ADMIN</span>';
-      } else if (r === "supporter" || r.includes("support")) {
-        html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(56,189,248,0.25);border:1px solid rgba(56,189,248,0.5);">&#128737;&#65039; SUPPORTER</span>';
-      } else if (r === "moderator" || r.includes("mod")) {
-        html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(168,85,247,0.25);border:1px solid rgba(168,85,247,0.5);">&#128737;&#65039; MODERATOR</span>';
+        html += '<span class="badge-rank badge-rank-coadmin">ðŸ›¡ï¸ CO-ADMIN</span>';
       } else if (r === "developer" || r.includes("dev")) {
-        html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(20,184,166,0.25);border:1px solid rgba(20,184,166,0.5);">&#128737;&#65039; DEVELOPER</span>';
-      } else if (r === "donator" || r.includes("donat")) {
-        html += '<span class="badge-rank badge-rank-donator" style="margin-right:4px;box-shadow:0 0 10px rgba(244,114,182,0.25);border:1px solid rgba(244,114,182,0.5);">&#128150; DONATOR</span>';
-      } else if (r === "vip") {
-        html += '<span class="badge-rank badge-rank-vip" style="margin-right:4px;box-shadow:0 0 10px rgba(250,204,21,0.25);border:1px solid rgba(250,204,21,0.5);">&#11088; VIP</span>';
+        html += '<span class="badge-rank badge-rank-dev">ðŸ’» DEVELOPER</span>';
+      } else if (r === "moderator" || r.includes("mod")) {
+        html += '<span class="badge-rank badge-rank-mod">ðŸ›¡ï¸ MODERATOR</span>';
+      } else if (r === "supporter" || r.includes("support")) {
+        html += '<span class="badge-rank badge-rank-supporter">ðŸ›¡ï¸ SUPPORTER</span>';
       } else if (r === "elite") {
-        html += '<span class="badge-rank badge-rank-elite" style="margin-right:4px;box-shadow:0 0 10px rgba(249,115,22,0.25);border:1px solid rgba(249,115,22,0.5);">&#9889; ELITE</span>';
-      } else if (r === "premium") {
-        html += '<span class="badge-rank badge-rank-premium" style="margin-right:4px;box-shadow:0 0 10px rgba(59,130,246,0.25);border:1px solid rgba(59,130,246,0.5);">&#128142; PREMIUM</span>';
+        html += '<span class="badge-rank badge-rank-elite">âš¡ ELITE</span>';
+      } else if (r === "vip") {
+        html += '<span class="badge-rank badge-rank-vip">â­ VIP</span>';
+      } else if (r === "donator" || r.includes("donat")) {
+        html += '<span class="badge-rank badge-rank-donator">ðŸ’– DONATOR</span>';
+      } else if (r === "premium" || r === "kunde") {
+        html += '<span class="badge-rank badge-rank-premium">ðŸ’Ž PREMIUM</span>';
+      } else {
+        html += `<span class="badge-rank badge-rank-premium">ðŸ’Ž ${escapeHtml(r.toUpperCase())}</span>`;
       }
     }
-    return html.trim() || '<span class="badge-rank badge-rank-premium" style="box-shadow:0 0 10px rgba(59,130,246,0.25);border:1px solid rgba(59,130,246,0.5);">&#128142; PREMIUM</span>';
+    return html.trim() || '<span class="badge-rank badge-rank-premium">ðŸ’Ž PREMIUM</span>';
   } catch(e) {
-    return '<span class="badge-rank badge-rank-premium" style="box-shadow:0 0 10px rgba(59,130,246,0.25);border:1px solid rgba(59,130,246,0.5);">&#128142; PREMIUM</span>';
+    return '<span class="badge-rank badge-rank-premium">ðŸ’Ž PREMIUM</span>';
   }
 }
 
@@ -7808,7 +8056,8 @@ function renderActiveADMINTicketRoom(t) {
 
     const userLbl = document.getElementById('admin-ticket-user-label');
     if (userLbl) {
-        userLbl.innerHTML = `Kunde: <b style="color:#e5a93c;">${escapeHtml(t.customerName || 'Kunde')}</b> ${t.customerKey ? `(${escapeHtml(t.customerKey)})` : ''}`;
+        const custRank = getRankBadge(t.customerName);
+        userLbl.innerHTML = `Kunde: <b style="color:#e5a93c;">${escapeHtml(t.customerName || 'Kunde')}</b> ${custRank} ${t.customerKey ? `(${escapeHtml(t.customerKey)})` : ''}`;
     }
 
     const btnClaim = document.getElementById('btn-claim-ticket');
@@ -7849,20 +8098,11 @@ function renderActiveADMINTicketRoom(t) {
               cleanSender = cleanSender.substring(0, cleanSender.indexOf(" (")).trim();
             }
             
-            const isStaff = (m.role && m.role !== 'Kunde') || cleanSender === 'System' || cleanSender === 'ADMIN' || CURRENT_USER && cleanSender === CURRENT_USER.name;
-            
-            let senderAvatar = getAvatarUrl(cleanSender);
             let senderProf = getUserProfile(cleanSender) || {};
-            if(senderProf && senderProf.avatar) senderAvatar = senderProf.avatar;
+            let senderAvatar = (senderProf && senderProf.avatar) ? senderProf.avatar : getAvatarUrl(cleanSender);
             
-            let badgeHtml = "";
-            if(isStaff) {
-               let r = senderProf.rank || ["inhaber"];
-               if(Array.isArray(r)) r = r[0]; 
-               badgeHtml = getRankBadge(cleanSender, [r]);
-            } else {
-               badgeHtml = `<span style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);color:#3b82f6;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;">KUNDE</span>`;
-            }
+            const isStaff = (m.role && m.role !== 'Kunde') || cleanSender === 'System' || cleanSender === 'ADMIN' || (CURRENT_USER && cleanSender === CURRENT_USER.name && CURRENT_USER.is_admin);
+            let badgeHtml = getRankBadge(cleanSender, (senderProf && senderProf.rank) ? senderProf.rank : m.role);
             
             const align = isStaff ? 'flex-end' : 'flex-start';
             const flexDir = isStaff ? 'row-reverse' : 'row';
@@ -7879,14 +8119,14 @@ function renderActiveADMINTicketRoom(t) {
                 <div style="display:flex;flex-direction:column;align-items:${align};max-width:80%;">
                   <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-direction:${flexDir};">
                     <b onclick="openUserProfileModal('${escapeHtml(cleanSender)}')" style="cursor:pointer;color:#ffffff;font-size:12px;letter-spacing:0.5px;">${escapeHtml(cleanSender)}</b>
-                    <div style="display:flex;align-items:center;transform:scale(0.85);margin-top:-2px;">
+                    <div style="display:flex;align-items:center;">
                       ${badgeHtml}
                     </div>
                     <span style="font-size:9.5px;color:#64748b;font-weight:600;">${m.time || ''}</span>
                   </div>
                   
                   <div style="background:${bubbleBg};border:1px solid ${borderCol};color:#f8fafc;padding:10px 14px;border-radius:12px;border-bottom-${isStaff ? 'right' : 'left'}-radius:2px;font-size:11.5px;line-height:1.5;word-break:break-word;box-shadow:0 4px 15px rgba(0,0,0,0.2);">
-                    ${escapeHtml(m.text)}
+                    ${formatMessageText(m.text)}
                   </div>
                 </div>
                 
