@@ -2426,6 +2426,27 @@ function handleLoginSuccess(user, pass) {
   try { showToast(`Willkommen zurück, ${user}!`, "ok"); } catch(_) {}
 }
 
+function doLogout() {
+  try {
+    localStorage.removeItem("admin_user");
+    localStorage.removeItem("admin_pw");
+  } catch(_) {}
+
+  const mainPanel = document.getElementById("main-panel");
+  const loginScreen = document.getElementById("login-screen");
+  const userInp = document.getElementById("user-input");
+  const pwInp = document.getElementById("pw-input");
+  const loginErr = document.getElementById("login-err");
+
+  if (mainPanel) mainPanel.style.display = "none";
+  if (loginScreen) loginScreen.style.display = "block";
+  if (userInp) userInp.value = "";
+  if (pwInp) pwInp.value = "";
+  if (loginErr) loginErr.style.display = "none";
+
+  showToast("Erfolgreich abgemeldet!", "ok");
+}
+
 function applyUserPermissions() {
   const dashKey = document.getElementById("cfg-dash-key");
   const dashExpiry = document.getElementById("cfg-dash-expiry");
