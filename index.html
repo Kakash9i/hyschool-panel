@@ -2579,7 +2579,7 @@ async function deleteFileFromGitHub(path, commitMsg) {
 
 // LOGIN LOGIC
 // LOGIN LOGIC
-async function doLogin() {
+async async function doLogin() {
   const userEl = document.getElementById("user-input");
   const pwEl = document.getElementById("pw-input");
   const errEl = document.getElementById("login-error");
@@ -7766,7 +7766,7 @@ function renderActiveADMINTicketRoom(t) {
               cleanSender = cleanSender.substring(0, cleanSender.indexOf(" (")).trim();
             }
             
-            const isStaff = (m.role && m.role !== 'Kunde') || cleanSender === 'System' || cleanSender === 'ADMIN' || cleanSender === CURRENT_USER.name;
+            const isStaff = (m.role && m.role !== 'Kunde') || cleanSender === 'System' || cleanSender === 'ADMIN' || CURRENT_USER && cleanSender === CURRENT_USER.name;
             
             let senderAvatar = getAvatarUrl(cleanSender);
             let senderProf = getUserProfile(cleanSender) || {};
@@ -7954,6 +7954,7 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
 
 
 
