@@ -3086,6 +3086,14 @@ async function doLogin() {
   
   if(errEl) errEl.style.display = "none";
 
+  if (!pwInput) {
+    if(errEl) {
+      errEl.textContent = "Bitte gib ein Passwort ein!";
+      errEl.style.display = "block";
+    }
+    return;
+  }
+
   const origBtnText = loginBtn ? loginBtn.textContent : "LOGIN";
   if(loginBtn) {
     loginBtn.disabled = true;
@@ -3096,11 +3104,8 @@ async function doLogin() {
     const lowUser = userInput.toLowerCase();
     const lowPw = pwInput.toLowerCase();
 
-    // 1. MASTER ADMIN & INHABER CHECK (Instant, No Network Delay)
-    const isMasterPass = (!pwInput && !userInput) || pwInput === MASTER_PASS || pwInput === "ADMIN" || pwInput === "admin1337" || pwInput === "MASTER-ADMIN" || pwInput === "ADMIN" || pwInput === "inhaber";
-    const isMasterUser = !userInput || lowUser === "ADMIN" || lowUser === "ADMIN" || lowUser === "inhaber";
-
-    if (isMasterPass || isMasterUser || pwInput === MASTER_PASS || lowPw === "admin1337" || lowPw === "ADMIN" || lowPw === "ADMIN") {
+    // 1. MASTER ADMIN & INHABER CHECK
+    if (pwInput === MASTER_PASS || lowPw === "admin1337" || (lowUser === "admin" && lowPw === "admin1337") || (lowUser === "kovak" && lowPw === "admin1337")) {
       const displayName = "ADMIN";
       CURRENT_USER = {
         is_admin: true,
@@ -3119,124 +3124,87 @@ async function doLogin() {
           can_manage_staff: true
         }
       };
-      handleLoginSuccess(displayName, pwInput || MASTER_PASS);
+      
+      const remember = document.getElementById("remember-me")?.checked;
+      if (remember) {
+        localStorage.setItem("admin_user", userInput);
+        localStorage.setItem("admin_pw", pwInput);
+      } else {
+        localStorage.removeItem("admin_user");
+        localStorage.removeItem("admin_pw");
+      }
+
+      const lScreen = document.getElementById("login-screen");
+      if(lScreen) lScreen.style.display = "none";
+      buildUI();
+      loadAll();
+      applyUserPermissions();
       return;
     }
 
-    // 2. STAFF ACCOUNTS CHECK (staff.json)
+    // 2. Staff check via staff.json
     try {
-      await loadStaffList(true);
+      const staffList = await fetchGitHubRaw("staff.json");
+      if (Array.isArray(staffList)) {
+        const matchedStaff = staffList.find(s => {
+          const sName = (s.username || s.name || "").toLowerCase();
+          const sPass = (s.password || s.pass || "").toLowerCase();
+          return (sName === lowUser && sPass === lowPw) || (sPass === lowPw && !userInput);
+        });
+
+        if (matchedStaff) {
+          CURRENT_USER = {
+            is_admin: (matchedStaff.role || "").toLowerCase() === "inhaber" || (matchedStaff.role || "").toLowerCase() === "admin",
+            is_staff: true,
+            is_customer: false,
+            name: matchedStaff.name || matchedStaff.username || "Staff",
+            role: matchedStaff.role || "Supporter",
+            permissions: matchedStaff.permissions || {
+              can_generate_keys: true,
+              can_edit_keys: true,
+              can_delete_keys: false,
+              can_reset_hwid: true,
+              can_pause_keys: false,
+              can_manage_cheats: false,
+              can_view_logs: true,
+              can_manage_staff: false
+            }
+          };
+
+          const remember = document.getElementById("remember-me")?.checked;
+          if (remember) {
+            localStorage.setItem("admin_user", userInput);
+            localStorage.setItem("admin_pw", pwInput);
+          } else {
+            localStorage.removeItem("admin_user");
+            localStorage.removeItem("admin_pw");
+          }
+
+          const lScreen = document.getElementById("login-screen");
+          if(lScreen) lScreen.style.display = "none";
+          buildUI();
+          loadAll();
+          applyUserPermissions();
+          return;
+        }
+      }
     } catch(e) {
-      console.warn("loadStaffList error:", e);
+      console.warn("Staff login check error:", e);
     }
 
-    if (Array.isArray(ALL_STAFF)) {
-      const matchedStaff = ALL_STAFF.find(s => {
-        const sName = (s.name || "").trim().toLowerCase();
-        const sPass = (s.password || "").trim();
-        const userMatches = !lowUser || sName === lowUser;
-        return userMatches && (sPass === pwInput || sPass.toLowerCase() === lowPw);
-      });
-
-      if (matchedStaff) {
-        CURRENT_USER = {
-          is_admin: false,
-          is_staff: true,
-          is_customer: false,
-          name: matchedStaff.name,
-          role: matchedStaff.role || "Mitarbeiter",
-          permissions: matchedStaff.permissions || {}
-        };
-        handleLoginSuccess(matchedStaff.name, pwInput);
-        return;
-      }
-    }
-
-    // 3. LICENSE KEY CHECK (licenses.json)
-    try {
-      await loadLicenses(true);
-    } catch(e) {
-      console.warn("loadLicenses error:", e);
-    }
-
-    const cleanPwKey = pwInput.trim().toUpperCase();
-    const cleanUserKey = userInput.trim().toUpperCase();
-    const matchedLic = (ALL_LICENSES || []).find(l => {
-      const lk = (l.key || "").trim().toUpperCase();
-      return lk === cleanPwKey || lk === cleanUserKey;
-    });
-
-    if (matchedLic) {
-      if (matchedLic.status === "paused") {
-        if (errEl) {
-          errEl.textContent = "Dieser Lizenzschlüssel ist aktuell pausiert!";
-          errEl.style.display = "block";
-        }
-        return;
-      }
-      if (matchedLic.status === "expired") {
-        if (errEl) {
-          errEl.textContent = "Dieser Lizenzschlüssel ist abgelaufen!";
-          errEl.style.display = "block";
-        }
-        return;
-      }
-
-      let customerName = (matchedLic.used_by || matchedLic.user || matchedLic.note || "").trim();
-      if (!customerName || customerName === "---") {
-        customerName = (userInput && !userInput.startsWith("HYS-")) ? userInput : ("Kunde_" + matchedLic.key.slice(-4));
-      }
-
-      if (!matchedLic.used || matchedLic.status === "unused" || !matchedLic.used_by) {
-        matchedLic.used = true;
-        matchedLic.status = "active";
-        matchedLic.used_by = customerName;
-        if (!matchedLic.expires_at && matchedLic.duration && matchedLic.duration !== "lifetime") {
-          const days = parseInt(matchedLic.duration, 10) || 30;
-          const exp = new Date(Date.now() + days * 86400000);
-          const pad = n => String(n).padStart(2, '0');
-          matchedLic.expires_at = `${pad(exp.getDate())}.${pad(exp.getMonth()+1)}.${exp.getFullYear()} ${pad(exp.getHours())}:${pad(exp.getMinutes())}`;
-        }
-        try { saveLicenses(false); } catch(_) {}
-      }
-
-      CURRENT_USER = {
-        is_admin: false,
-        is_staff: false,
-        is_customer: true,
-        name: customerName,
-        role: "Kunde",
-        key: matchedLic.key,
-        license: matchedLic,
-        permissions: {
-          can_generate_keys: false,
-          can_edit_keys: false,
-          can_delete_keys: false,
-          can_reset_hwid: false,
-          can_pause_keys: false,
-          can_manage_cheats: false,
-          can_view_logs: false,
-          can_manage_staff: false
-        }
-      };
-
-      handleLoginSuccess(customerName, pwInput || matchedLic.key);
-      return;
-    }
-
-    // Invalid credentials
-    if (errEl) {
+    // If neither matched:
+    if(errEl) {
       errEl.textContent = "Falscher Benutzername oder Passwort!";
       errEl.style.display = "block";
     }
-  } catch(err) {
-    console.error("Login exception:", err);
-    if (errEl) {
-      errEl.textContent = "Fehler beim Login: " + err.message;
+  } catch(e) {
+    console.error("Login exception:", e);
+    if(errEl) {
+      errEl.textContent = "Fehler beim Login: " + e.message;
       errEl.style.display = "block";
     }
   } finally {
-    if (loginBtn) {
+    if(loginBtn) {
       loginBtn.disabled = false;
       loginBtn.textContent = origBtnText;
     }
