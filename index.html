@@ -12,45 +12,10 @@
 let ALL_SEARCH_USERS = [];
 let ACTIVE_VIEWED_USER = null;
 
-function getRankBadge(arg1, arg2) {
-    let roles = [];
-    if (arg2 !== undefined && typeof arg2 === 'string') {
-        roles = [arg2];
-    } else if (Array.isArray(arg1)) {
-        roles = arg1;
-    } else if (typeof arg1 === 'string') {
-        roles = arg1.split(',').map(r => r.trim()).filter(Boolean);
-    }
-    if (roles.length === 0) roles = ['premium'];
-
-    return roles.map(role => {
-        const r = String(role).toLowerCase().trim();
-        if (r === 'inhaber' || r === 'owner' || r === 'admin') {
-            return '<span class="badge badge-rank-inhaber" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;box-shadow:0 0 10px rgba(255,215,0,0.5);"><i class="fas fa-crown"></i> ðŸ‘‘ INHABER</span>';
-        } else if (r === 'co-admin' || r === 'coadmin') {
-            return '<span class="badge badge-rank-coadmin" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(244,63,94,0.5);"><i class="fas fa-shield-alt"></i> ðŸ›¡ï¸ CO-ADMIN</span>';
-        } else if (r === 'developer' || r === 'dev') {
-            return '<span class="badge badge-rank-developer" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(6,182,212,0.5);"><i class="fas fa-code"></i> ðŸ’» DEVELOPER</span>';
-        } else if (r === 'moderator' || r === 'mod') {
-            return '<span class="badge badge-rank-moderator" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(16,185,129,0.5);"><i class="fas fa-gavel"></i> ðŸ”¨ MODERATOR</span>';
-        } else if (r === 'supporter' || r === 'support') {
-            return '<span class="badge badge-rank-supporter" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(59,130,246,0.5);"><i class="fas fa-headset"></i> ðŸŽ§ SUPPORTER</span>';
-        } else if (r === 'donator') {
-            return '<span class="badge badge-rank-donator" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(236,72,153,0.5);"><i class="fas fa-heart"></i> ðŸ’– DONATOR</span>';
-        } else if (r === 'vip') {
-            return '<span class="badge badge-rank-vip" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;box-shadow:0 0 10px rgba(234,179,8,0.5);"><i class="fas fa-star"></i> â­ VIP</span>';
-        } else if (r === 'elite') {
-            return '<span class="badge badge-rank-elite" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(139,92,246,0.5);"><i class="fas fa-bolt"></i> âš¡ ELITE</span>';
-        } else {
-            return '<span class="badge badge-rank-premium" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(56,189,248,0.5);"><i class="fas fa-gem"></i> ðŸ’Ž PREMIUM</span>';
-        }
-    }).join(' ');
-}
-
-async function openUserSearchModal() {
+function openUserSearchModal() {
     const modal = document.getElementById('user-search-modal');
     if (modal) modal.style.display = 'flex';
-    await loadUserSearchData();
+    loadUserSearchData();
 }
 
 function closeUserSearchModal() {
@@ -239,7 +204,19 @@ function renderModalUserSearch(users) {
     }
 
     listEl.innerHTML = users.map(u => {
-        const badges = getRankBadge(u.roles || ['premium']);
+        const badges = (u.roles || ['premium']).map(r => {
+            const low = r.toLowerCase();
+            if (low === 'inhaber' || low === 'admin') return '<span class="badge" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;">ðŸ‘‘ INHABER</span>';
+            if (low === 'co-admin') return '<span class="badge" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;">ðŸ›¡ï¸ CO-ADMIN</span>';
+            if (low === 'developer') return '<span class="badge" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;">ðŸ’» DEVELOPER</span>';
+            if (low === 'moderator') return '<span class="badge" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;">ðŸ”¨ MODERATOR</span>';
+            if (low === 'supporter') return '<span class="badge" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;">ðŸŽ§ SUPPORTER</span>';
+            if (low === 'donator') return '<span class="badge" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;">ðŸ’– DONATOR</span>';
+            if (low === 'vip') return '<span class="badge" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;">â­ VIP</span>';
+            if (low === 'elite') return '<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;">âš¡ ELITE</span>';
+            return '<span class="badge" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;">ðŸ’Ž PREMIUM</span>';
+        }).join(' ');
+
         const avatarSrc = u.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(u.username);
         const clipCount = (u.highlights && Array.isArray(u.highlights)) ? u.highlights.length : 0;
         const configCount = (u.configs && Array.isArray(u.configs)) ? u.configs.length : 0;
@@ -280,7 +257,19 @@ function openUserProfileView(username) {
 
     modal.style.display = 'flex';
 
-    const badges = getRankBadge(user.roles || ['premium']);
+    const badges = (user.roles || ['premium']).map(r => {
+        const low = r.toLowerCase();
+        if (low === 'inhaber' || low === 'admin') return '<span class="badge" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;">ðŸ‘‘ INHABER</span>';
+        if (low === 'co-admin') return '<span class="badge" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;">ðŸ›¡ï¸ CO-ADMIN</span>';
+        if (low === 'developer') return '<span class="badge" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;">ðŸ’» DEVELOPER</span>';
+        if (low === 'moderator') return '<span class="badge" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;">ðŸ”¨ MODERATOR</span>';
+        if (low === 'supporter') return '<span class="badge" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;">ðŸŽ§ SUPPORTER</span>';
+        if (low === 'donator') return '<span class="badge" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;">ðŸ’– DONATOR</span>';
+        if (low === 'vip') return '<span class="badge" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;">â­ VIP</span>';
+        if (low === 'elite') return '<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;">âš¡ ELITE</span>';
+        return '<span class="badge" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;">ðŸ’Ž PREMIUM</span>';
+    }).join(' ');
+
     const avatarSrc = user.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(user.username);
     const clips = user.highlights || [];
     const guestbook = user.guestbook || [];
@@ -364,13 +353,11 @@ function openUserProfileView(username) {
                 <i class="fas fa-book-open"></i> GÃ¤stebuch (${guestbook.length})
             </h4>
 
-            <!-- Write guestbook entry -->
             <div style="display:flex;gap:8px;margin-bottom:14px;">
                 <input type="text" id="modal-gb-input" placeholder="Hinterlasse einen Eintrag im GÃ¤stebuch..." style="flex:1;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.12);color:#fff;border-radius:8px;padding:8px 12px;font-size:0.82rem;" onkeydown="if(event.key==='Enter') submitModalGuestbook('${escapeHtml(user.username)}')">
                 <button onclick="submitModalGuestbook('${escapeHtml(user.username)}')" class="btn btn-primary" style="padding:8px 16px;font-size:0.82rem;"><i class="fas fa-paper-plane"></i> Senden</button>
             </div>
 
-            <!-- Guestbook Entries List -->
             <div id="modal-gb-list" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;">
                 ${guestbook.length === 0 ? '<div style="text-align:center;padding:14px;color:#94a3b8;font-size:0.78rem;">Noch keine EintrÃ¤ge vorhanden.</div>' : 
                     guestbook.slice().reverse().map(g => `
@@ -388,7 +375,6 @@ function openUserProfileView(username) {
     `;
 
     body.innerHTML = `
-        <!-- Profile Header -->
         <div style="display:flex;align-items:center;gap:18px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:18px;">
             <img src="${avatarSrc}" alt="${escapeHtml(user.username)}" style="width:72px;height:72px;border-radius:50%;border:3px solid #7c3aed;object-fit:cover;background:rgba(0,0,0,0.4);box-shadow:0 0 20px rgba(124,58,237,0.3);">
             <div style="flex:1;">
@@ -1519,16 +1505,6 @@ async function submitModalGuestbook(targetUsername) {
   .clip-body { padding: 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
   .clip-title { font-size: 13px; font-weight: 900; color: #f8fafc; line-height: 1.3; }
   .clip-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid #141928; margin-top: auto; }
-    .badge-rank-inhaber { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; font-weight: 800; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
-    .badge-rank-admin { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; font-weight: 800; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
-    .badge-rank-coadmin { background: linear-gradient(135deg, #f43f5e, #be123c); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(244,63,94,0.5); }
-    .badge-rank-developer { background: linear-gradient(135deg, #06b6d4, #0284c7); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(6,182,212,0.5); }
-    .badge-rank-moderator { background: linear-gradient(135deg, #10b981, #047857); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(16,185,129,0.5); }
-    .badge-rank-supporter { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(59,130,246,0.5); }
-    .badge-rank-donator { background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(236,72,153,0.5); }
-    .badge-rank-vip { background: linear-gradient(135deg, #eab308, #ca8a04); color: #000; font-weight: 800; box-shadow: 0 0 10px rgba(234,179,8,0.5); }
-    .badge-rank-elite { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(139,92,246,0.5); }
-    .badge-rank-premium { background: linear-gradient(135deg, #38bdf8, #0284c7); color: #fff; font-weight: 800; box-shadow: 0 0 10px rgba(56,189,248,0.5); }
 </style>
 </head>
 <body>
@@ -2037,7 +2013,7 @@ async function submitModalGuestbook(targetUsername) {
     <div class="header">
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
       <h1 style="margin:0;font-size:18px;font-weight:900;letter-spacing:1px;color:#f8fafc;display:flex;align-items:center;gap:8px;"><span style="color:#e5a93c;">&#9889;</span> HYSCHOOL ADMIN PANEL</h1>
-      <span id="user-badge" style="background:rgba(229,169,60,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.45);padding:4px 10px;border-radius:4px;font-size:10.5px;font-weight:900;letter-spacing:0.5px;display:inline-flex;align-items:center;gap:6px;"><span style="color:#fbbf24;">ðŸ‘</span> INHABER ADMIN</span>
+      <span id="user-badge" style="background:rgba(229,169,60,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.45);padding:4px 10px;border-radius:4px;font-size:10.5px;font-weight:900;letter-spacing:0.5px;display:inline-flex;align-items:center;gap:6px;"><span style="color:#fbbf24;">&#128081;</span> INHABER ADMIN</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
       <div class="status-indicator" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10b981;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:6px;">
@@ -2047,6 +2023,10 @@ async function submitModalGuestbook(targetUsername) {
 
       <button onclick="openOwnProfileModal()" class="btn-nav-action" style="background:#121624;border:1px solid #232c42;color:#cbd5e1;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
         <span style="color:#a855f7;">&#128100;</span> MEIN PROFIL
+      </button>
+
+            <button onclick="openUserSearchModal()" class="btn-nav-action" style="background:#121624;border:1px solid rgba(56,189,248,0.45);color:#38bdf8;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+        <span style="color:#38bdf8;">&#128269;</span> USER SUCHEN
       </button>
 
       <button onclick="openSettingsModal()" class="btn-nav-action" style="background:#121624;border:1px solid rgba(229,169,60,0.4);color:#e5a93c;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
@@ -2605,7 +2585,7 @@ async function submitModalGuestbook(targetUsername) {
 
         <div>
           <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;display:flex;align-items:center;gap:4px;">&#127918; FREIGESCHALTETE CHEATS</div>
-          <div id="cfg-dash-cheats-wrap" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;"><span class="tag-product">ðŸ‘ ALLE CHEATS</span></div>
+          <div id="cfg-dash-cheats-wrap" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;"><span class="tag-product">&#128081; ALLE CHEATS</span></div>
         </div>
 
         <div>
@@ -3077,7 +3057,7 @@ async function deleteFileFromGitHub(path, commitMsg) {
 
 // LOGIN LOGIC
 // LOGIN LOGIC
-async async function doLogin() {
+async function doLogin() {
   const userEl = document.getElementById("user-input");
   const pwEl = document.getElementById("pw-input");
   const errEl = document.getElementById("login-error");
@@ -3088,120 +3068,164 @@ async async function doLogin() {
   
   if(errEl) errEl.style.display = "none";
 
-  const lowUser = userInput.toLowerCase();
-  const lowPw = pwInput.toLowerCase();
-
-  // 1. MASTER ADMIN & INHABER CHECK (Instant, No Delay)
-  if (!pwInput || pwInput === MASTER_PASS || lowPw === "admin1337" || lowPw === "admin" || lowUser === "admin" || lowUser === "kovak" || lowUser === "inhaber") {
-    const displayName = "ADMIN";
-    CURRENT_USER = {
-      is_admin: true,
-      is_staff: false,
-      is_customer: false,
-      name: displayName,
-      role: "Inhaber",
-      permissions: {
-        can_generate_keys: true,
-        can_edit_keys: true,
-        can_delete_keys: true,
-        can_reset_hwid: true,
-        can_pause_keys: true,
-        can_manage_cheats: true,
-        can_view_logs: true,
-        can_manage_staff: true
-      }
-    };
-    handleLoginSuccess(displayName, pwInput || MASTER_PASS);
-    return;
+  const origBtnText = loginBtn ? loginBtn.textContent : "LOGIN";
+  if(loginBtn) {
+    loginBtn.disabled = true;
+    loginBtn.textContent = "LOGIN...";
   }
 
-  // 2. STAFF CHECK
   try {
-    if (typeof loadStaffList === 'function') await loadStaffList(true);
-  } catch(e) {}
+    const lowUser = userInput.toLowerCase();
+    const lowPw = pwInput.toLowerCase();
 
-  if (Array.isArray(ALL_STAFF)) {
-    const matchedStaff = ALL_STAFF.find(s => {
-      const sName = (s.name || "").trim().toLowerCase();
-      const sPass = (s.password || "").trim();
-      const userMatches = !lowUser || sName === lowUser;
-      return userMatches && (sPass === pwInput || sPass.toLowerCase() === lowPw);
-    });
+    // 1. MASTER ADMIN & INHABER CHECK (Instant, No Network Delay)
+    const isMasterPass = (!pwInput && !userInput) || pwInput === MASTER_PASS || pwInput === "ADMIN" || pwInput === "admin1337" || pwInput === "MASTER-ADMIN" || pwInput === "ADMIN" || pwInput === "inhaber";
+    const isMasterUser = !userInput || lowUser === "ADMIN" || lowUser === "ADMIN" || lowUser === "inhaber";
 
-    if (matchedStaff) {
+    if (isMasterPass || isMasterUser || pwInput === MASTER_PASS || lowPw === "admin1337" || lowPw === "ADMIN" || lowPw === "ADMIN") {
+      const displayName = "ADMIN";
       CURRENT_USER = {
-        is_admin: false,
-        is_staff: true,
+        is_admin: true,
+        is_staff: false,
         is_customer: false,
-        name: matchedStaff.name,
-        role: matchedStaff.role || "Mitarbeiter",
-        permissions: matchedStaff.permissions || {}
+        name: displayName,
+        role: "Inhaber",
+        permissions: {
+          can_generate_keys: true,
+          can_edit_keys: true,
+          can_delete_keys: true,
+          can_reset_hwid: true,
+          can_pause_keys: true,
+          can_manage_cheats: true,
+          can_view_logs: true,
+          can_manage_staff: true
+        }
       };
-      handleLoginSuccess(matchedStaff.name, pwInput);
+      handleLoginSuccess(displayName, pwInput || MASTER_PASS);
       return;
     }
-  }
 
-  // 3. LICENSE CHECK
-  try {
-    if (typeof loadLicenses === 'function') await loadLicenses(true);
-  } catch(e) {}
-
-  const cleanPwKey = pwInput.trim().toUpperCase();
-  const cleanUserKey = userInput.trim().toUpperCase();
-  const matchedLic = (typeof ALL_LICENSES !== 'undefined' && Array.isArray(ALL_LICENSES)) ? ALL_LICENSES.find(l => {
-    const lk = (l.key || "").trim().toUpperCase();
-    return lk === cleanPwKey || lk === cleanUserKey;
-  }) : null;
-
-  if (matchedLic) {
-    let customerName = (matchedLic.used_by || matchedLic.user || matchedLic.note || "").trim();
-    if (!customerName || customerName === "---") {
-      customerName = (userInput && !userInput.startsWith("HYS-")) ? userInput : ("Kunde_" + matchedLic.key.slice(-4));
+    // 2. STAFF ACCOUNTS CHECK (staff.json)
+    try {
+      await loadStaffList(true);
+    } catch(e) {
+      console.warn("loadStaffList error:", e);
     }
 
-    CURRENT_USER = {
-      is_admin: false,
-      is_staff: false,
-      is_customer: true,
-      name: customerName,
-      role: "Kunde",
-      key: matchedLic.key,
-      license: matchedLic,
-      permissions: {
-        can_generate_keys: false,
-        can_edit_keys: false,
-        can_delete_keys: false,
-        can_reset_hwid: false,
-        can_pause_keys: false,
-        can_manage_cheats: false,
-        can_view_logs: false,
-        can_manage_staff: false
+    if (Array.isArray(ALL_STAFF)) {
+      const matchedStaff = ALL_STAFF.find(s => {
+        const sName = (s.name || "").trim().toLowerCase();
+        const sPass = (s.password || "").trim();
+        const userMatches = !lowUser || sName === lowUser;
+        return userMatches && (sPass === pwInput || sPass.toLowerCase() === lowPw);
+      });
+
+      if (matchedStaff) {
+        CURRENT_USER = {
+          is_admin: false,
+          is_staff: true,
+          is_customer: false,
+          name: matchedStaff.name,
+          role: matchedStaff.role || "Mitarbeiter",
+          permissions: matchedStaff.permissions || {}
+        };
+        handleLoginSuccess(matchedStaff.name, pwInput);
+        return;
       }
-    };
+    }
 
-    handleLoginSuccess(customerName, pwInput || matchedLic.key);
-    return;
-  }
+    // 3. LICENSE KEY CHECK (licenses.json)
+    try {
+      await loadLicenses(true);
+    } catch(e) {
+      console.warn("loadLicenses error:", e);
+    }
 
-  if (errEl) {
-    errEl.textContent = "Falscher Benutzername oder Passwort!";
-    errEl.style.display = "block";
+    const cleanPwKey = pwInput.trim().toUpperCase();
+    const cleanUserKey = userInput.trim().toUpperCase();
+    const matchedLic = (ALL_LICENSES || []).find(l => {
+      const lk = (l.key || "").trim().toUpperCase();
+      return lk === cleanPwKey || lk === cleanUserKey;
+    });
+
+    if (matchedLic) {
+      if (matchedLic.status === "paused") {
+        if (errEl) {
+          errEl.textContent = "Dieser Lizenzschlüssel ist aktuell pausiert!";
+          errEl.style.display = "block";
+        }
+        return;
+      }
+      if (matchedLic.status === "expired") {
+        if (errEl) {
+          errEl.textContent = "Dieser Lizenzschlüssel ist abgelaufen!";
+          errEl.style.display = "block";
+        }
+        return;
+      }
+
+      let customerName = (matchedLic.used_by || matchedLic.user || matchedLic.note || "").trim();
+      if (!customerName || customerName === "---") {
+        customerName = (userInput && !userInput.startsWith("HYS-")) ? userInput : ("Kunde_" + matchedLic.key.slice(-4));
+      }
+
+      if (!matchedLic.used || matchedLic.status === "unused" || !matchedLic.used_by) {
+        matchedLic.used = true;
+        matchedLic.status = "active";
+        matchedLic.used_by = customerName;
+        if (!matchedLic.expires_at && matchedLic.duration && matchedLic.duration !== "lifetime") {
+          const days = parseInt(matchedLic.duration, 10) || 30;
+          const exp = new Date(Date.now() + days * 86400000);
+          const pad = n => String(n).padStart(2, '0');
+          matchedLic.expires_at = `${pad(exp.getDate())}.${pad(exp.getMonth()+1)}.${exp.getFullYear()} ${pad(exp.getHours())}:${pad(exp.getMinutes())}`;
+        }
+        try { saveLicenses(false); } catch(_) {}
+      }
+
+      CURRENT_USER = {
+        is_admin: false,
+        is_staff: false,
+        is_customer: true,
+        name: customerName,
+        role: "Kunde",
+        key: matchedLic.key,
+        license: matchedLic,
+        permissions: {
+          can_generate_keys: false,
+          can_edit_keys: false,
+          can_delete_keys: false,
+          can_reset_hwid: false,
+          can_pause_keys: false,
+          can_manage_cheats: false,
+          can_view_logs: false,
+          can_manage_staff: false
+        }
+      };
+
+      handleLoginSuccess(customerName, pwInput || matchedLic.key);
+      return;
+    }
+
+    // Invalid credentials
+    if (errEl) {
+      errEl.textContent = "Falscher Benutzername oder Passwort!";
+      errEl.style.display = "block";
+    }
+  } catch(err) {
+    console.error("Login exception:", err);
+    if (errEl) {
+      errEl.textContent = "Fehler beim Login: " + err.message;
+      errEl.style.display = "block";
+    }
+  } finally {
+    if (loginBtn) {
+      loginBtn.disabled = false;
+      loginBtn.textContent = origBtnText;
+    }
   }
 }
 
 function handleLoginSuccess(user, pass) {
-  // 1. Instantly switch views FIRST
-  try {
-    const loginScreen = document.getElementById("login-screen");
-    const mainPanel = document.getElementById("main-panel");
-    if(loginScreen) loginScreen.style.display = "none";
-    if(mainPanel) mainPanel.style.display = "block";
-  } catch(e) {
-    console.error("View switch error:", e);
-  }
-
-  // 2. Remember password if checked
   try {
     const cb = document.getElementById("save-pw-cb");
     if (cb && cb.checked) {
@@ -3213,7 +3237,11 @@ function handleLoginSuccess(user, pass) {
     }
   } catch(_) {}
 
-  // 3. Apply UI & permissions
+  const loginScreen = document.getElementById("login-screen");
+  const mainPanel = document.getElementById("main-panel");
+  if(loginScreen) loginScreen.style.display = "none";
+  if(mainPanel) mainPanel.style.display = "block";
+  
   try { applyUserPermissions(); } catch(e) { console.error("applyUserPermissions err:", e); }
   try { buildUI(); } catch(e) { console.error("buildUI err:", e); }
   
@@ -3234,7 +3262,8 @@ function handleLoginSuccess(user, pass) {
   }
   try { switchMainTab(initialTab); } catch(e) { console.error("switchMainTab err:", e); }
 
-  try { logADMINAction("LOGIN", "-", `${CURRENT_USER.name} (${CURRENT_USER.role}) angemeldet`); } catch(_) {}
+  try { logADMINAction("LOGIN", "-", `${CURRENT_USER.name} (${CURRENT_USER.role}) hat sich eingeloggt`); } catch(_) {}
+  try { showToast(`Willkommen zurück, ${user}!`, "ok"); } catch(_) {}
 }
 
 function doLogout() {
@@ -3267,7 +3296,7 @@ function applyUserPermissions() {
   const userBadge = document.getElementById("user-badge");
   const dashImg = document.getElementById("dash-avatar-img");
 
-  const prof = (typeof getUserProfile === 'function' ? (getUserProfile(CURRENT_USER.name) || getUserProfile("ADMIN")) : {}) || {};
+  const prof = getUserProfile(CURRENT_USER.name) || getUserProfile("ADMIN") || {};
   const savedAvatar = localStorage.getItem("hyschool_admin_avatar") || prof.avatar;
   if(dashImg) dashImg.src = savedAvatar || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN";
 
@@ -3275,13 +3304,13 @@ function applyUserPermissions() {
   if(dashRole) dashRole.innerHTML = getRankBadge(CURRENT_USER.name, CURRENT_USER.role);
   if(userBadge) {
     if(CURRENT_USER.is_admin) {
-      userBadge.innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px;"><i class="fas fa-crown" style="color:#fbbf24;"></i> INHABER ADMIN</span>`;
+      userBadge.innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px;"><span style="color:#fbbf24;">&#128081;</span> INHABER ADMIN</span>`;
     } else {
       userBadge.innerHTML = `${getRankBadge(CURRENT_USER.name, CURRENT_USER.role)} ${escapeHtml(CURRENT_USER.name)}`;
     }
   }
 
-  if(dashExpiry) {
+      if(dashExpiry) {
     if(CURRENT_USER.license && CURRENT_USER.license.expires_at && CURRENT_USER.license.duration !== "lifetime") {
       dashExpiry.innerHTML = `<span style="color:#e5a93c;font-weight:800;font-size:12px;">&#9203; Bis ${CURRENT_USER.license.expires_at}</span>`;
     } else {
@@ -3293,8 +3322,8 @@ function applyUserPermissions() {
     if(CURRENT_USER.is_admin) {
       dashCheats.innerHTML = `<span class="tag-product">&#128081; ALLE CHEATS</span>`;
     } else if(CURRENT_USER.key) {
-      const defPerms = typeof getDefaultPermissionsForKey === 'function' ? getDefaultPermissionsForKey(CURRENT_USER.key, CURRENT_USER.license) : {};
-      const curPerms = (typeof USER_PERMISSIONS !== 'undefined' && USER_PERMISSIONS[CURRENT_USER.key]) ? USER_PERMISSIONS[CURRENT_USER.key] : defPerms;
+      const defPerms = getDefaultPermissionsForKey(CURRENT_USER.key, CURRENT_USER.license);
+      const curPerms = USER_PERMISSIONS[CURRENT_USER.key] || defPerms;
       const gameBadges = [];
       const prodColors = {
         valorant: { label: "VALORANT", color: "#f43f5e", bg: "rgba(244,63,94,0.12)", border: "rgba(244,63,94,0.3)" },
@@ -3305,7 +3334,7 @@ function applyUserPermissions() {
       };
 
       Object.keys(prodColors).forEach(k => {
-        if(curPerms && curPerms[k] === true) {
+        if(curPerms[k] === true) {
           const info = prodColors[k];
           gameBadges.push(`<span style="background:${info.bg};color:${info.color};border:1px solid ${info.border};padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;">${info.label}</span>`);
         }
@@ -3325,7 +3354,7 @@ function applyUserPermissions() {
   const mtab3 = document.getElementById("mtab-3");
   const mtab4 = document.getElementById("mtab-4");
   const mtab5 = document.getElementById("mtab-5");
-  const mtab6 = document.getElementById("mtab-6");
+    const mtab6 = document.getElementById("mtab-6");
   const mtab7 = document.getElementById("mtab-7");
   const mtab8 = document.getElementById("mtab-8");
 
@@ -3351,6 +3380,7 @@ function applyUserPermissions() {
     if(mtab8) mtab8.style.display = "inline-flex";
   }
 
+  // Cheat Permissions subtab button: visible for ADMIN OR Staff with Cheat-Product edit permission
   const btnSubPerm = document.getElementById("btn-sub-perm");
   if(btnSubPerm) btnSubPerm.style.display = (CURRENT_USER.is_admin || (p.can_edit_keys && p.edit_allow_product)) ? "inline-block" : "none";
 
@@ -6185,7 +6215,7 @@ function renderChatMessages() {
 
     let userBadge = '';
     if (isADMIN) {
-      userBadge = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.4);padding:2px 8px;border-radius:4px;font-size:9px;font-weight:900;letter-spacing:0.5px;">ðŸ‘ INHABER</span>`;
+      userBadge = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.4);padding:2px 8px;border-radius:4px;font-size:9px;font-weight:900;letter-spacing:0.5px;">&#128081; INHABER</span>`;
     } else if (isCustomer) {
       userBadge = `<span style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.4);padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:0.5px;">&#127918; Kunde</span>`;
     } else {
@@ -6562,7 +6592,7 @@ function openUserProfileModal(usernameOrKey) {
   
   if(badgeEl) {
     if(isOwner) {
-      badgeEl.innerHTML = "ðŸ‘ INHABER";
+      badgeEl.innerHTML = "&#128081; INHABER";
       badgeEl.style.color = "#e5a93c";
       badgeEl.style.background = "rgba(229,169,60,0.15)";
       badgeEl.style.borderColor = "rgba(229,169,60,0.4)";
@@ -6934,7 +6964,7 @@ function filterUserConfigs() {
           <div class="clickable-user" onclick="openUserProfileModal('${escapeHtml(displayAuthor)}')" style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 20px; transition: all 0.2s ease;" onmouseover="this.style.borderColor='rgba(245,158,11,0.4)'; this.style.background='rgba(245,158,11,0.05)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.background='rgba(255,255,255,0.03)';">
             <img src="${authorAvatar}" style="width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid rgba(245,158,11,0.5); object-fit: cover;" alt="Avatar">
             <span style="font-weight: 900; color: #f8fafc; font-size: 11px; letter-spacing: 0.3px;">${escapeHtml(displayAuthor)}</span>
-            <span class="badge-rank badge-rank-admin" style="font-size: 8.5px; padding: 1.5px 6px; border-radius: 4px; background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.15)); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); font-weight: 900; letter-spacing: 0.3px; white-space: nowrap;">ðŸ‘ INHABER</span>
+            <span class="badge-rank badge-rank-admin" style="font-size: 8.5px; padding: 1.5px 6px; border-radius: 4px; background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.15)); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); font-weight: 900; letter-spacing: 0.3px; white-space: nowrap;">&#128081; INHABER</span>
           </div>
         </div>
 
@@ -7415,39 +7445,27 @@ let ALL_HIGHLIGHTS = [];
 let _uploadedHighlightFile = null;
 let _activePlayerHighlight = null;
 
-function getRankBadge(arg1, arg2) {
-    let roles = [];
-    if (arg2 !== undefined && typeof arg2 === 'string') {
-        roles = [arg2];
-    } else if (Array.isArray(arg1)) {
-        roles = arg1;
-    } else if (typeof arg1 === 'string') {
-        roles = arg1.split(',').map(r => r.trim()).filter(Boolean);
-    }
-    if (roles.length === 0) roles = ['premium'];
-
-    return roles.map(role => {
-        const r = String(role).toLowerCase().trim();
-        if (r === 'inhaber' || r === 'owner' || r === 'admin') {
-            return '<span class="badge badge-rank-inhaber" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;box-shadow:0 0 10px rgba(255,215,0,0.5);"><i class="fas fa-crown"></i> ðŸ‘‘ INHABER</span>';
-        } else if (r === 'co-admin' || r === 'coadmin') {
-            return '<span class="badge badge-rank-coadmin" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(244,63,94,0.5);"><i class="fas fa-shield-alt"></i> ðŸ›¡ï¸ CO-ADMIN</span>';
-        } else if (r === 'developer' || r === 'dev') {
-            return '<span class="badge badge-rank-developer" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(6,182,212,0.5);"><i class="fas fa-code"></i> ðŸ’» DEVELOPER</span>';
-        } else if (r === 'moderator' || r === 'mod') {
-            return '<span class="badge badge-rank-moderator" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(16,185,129,0.5);"><i class="fas fa-gavel"></i> ðŸ”¨ MODERATOR</span>';
-        } else if (r === 'supporter' || r === 'support') {
-            return '<span class="badge badge-rank-supporter" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(59,130,246,0.5);"><i class="fas fa-headset"></i> ðŸŽ§ SUPPORTER</span>';
-        } else if (r === 'donator') {
-            return '<span class="badge badge-rank-donator" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(236,72,153,0.5);"><i class="fas fa-heart"></i> ðŸ’– DONATOR</span>';
-        } else if (r === 'vip') {
-            return '<span class="badge badge-rank-vip" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;box-shadow:0 0 10px rgba(234,179,8,0.5);"><i class="fas fa-star"></i> â­ VIP</span>';
-        } else if (r === 'elite') {
-            return '<span class="badge badge-rank-elite" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(139,92,246,0.5);"><i class="fas fa-bolt"></i> âš¡ ELITE</span>';
-        } else {
-            return '<span class="badge badge-rank-premium" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(56,189,248,0.5);"><i class="fas fa-gem"></i> ðŸ’Ž PREMIUM</span>';
-        }
-    }).join(' ');
+function getRankBadge(username, userRank) {
+  const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES[username]) ? USER_PROFILES[username] : {};
+  const r = (userRank || prof.rank || "kunde").toLowerCase();
+  
+  if (r === "ADMIN" || r === "inhaber" || (username && (username.toLowerCase() === "ADMIN" || username.toLowerCase() === "ADMIN"))) {
+    return '<span class="badge-rank badge-rank-admin">&#128081; INHABER</span>';
+  } else if (r === "co-admin" || r.includes("co-admin")) {
+    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; CO-ADMIN</span>';
+  } else if (r === "supporter" || r.includes("support")) {
+    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; SUPPORTER</span>';
+  } else if (r === "moderator" || r.includes("mod")) {
+    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; MODERATOR</span>';
+  } else if (r === "vip") {
+    return '<span class="badge-rank badge-rank-vip">&#11088; VIP</span>';
+  } else if (r === "elite") {
+    return '<span class="badge-rank badge-rank-elite">&#9889; ELITE</span>';
+  } else if (r === "premium") {
+    return '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
+  } else {
+    return '<span class="badge-rank badge-rank-kunde">&#128100; KUNDE</span>';
+  }
 }
 
 function toggleHighlightUploadCard() {
@@ -8192,45 +8210,10 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 let ALL_SEARCH_USERS = [];
 let ACTIVE_VIEWED_USER = null;
 
-function getRankBadge(arg1, arg2) {
-    let roles = [];
-    if (arg2 !== undefined && typeof arg2 === 'string') {
-        roles = [arg2];
-    } else if (Array.isArray(arg1)) {
-        roles = arg1;
-    } else if (typeof arg1 === 'string') {
-        roles = arg1.split(',').map(r => r.trim()).filter(Boolean);
-    }
-    if (roles.length === 0) roles = ['premium'];
-
-    return roles.map(role => {
-        const r = String(role).toLowerCase().trim();
-        if (r === 'inhaber' || r === 'owner' || r === 'admin') {
-            return '<span class="badge badge-rank-inhaber" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;box-shadow:0 0 10px rgba(255,215,0,0.5);"><i class="fas fa-crown"></i> ðŸ‘‘ INHABER</span>';
-        } else if (r === 'co-admin' || r === 'coadmin') {
-            return '<span class="badge badge-rank-coadmin" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(244,63,94,0.5);"><i class="fas fa-shield-alt"></i> ðŸ›¡ï¸ CO-ADMIN</span>';
-        } else if (r === 'developer' || r === 'dev') {
-            return '<span class="badge badge-rank-developer" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(6,182,212,0.5);"><i class="fas fa-code"></i> ðŸ’» DEVELOPER</span>';
-        } else if (r === 'moderator' || r === 'mod') {
-            return '<span class="badge badge-rank-moderator" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(16,185,129,0.5);"><i class="fas fa-gavel"></i> ðŸ”¨ MODERATOR</span>';
-        } else if (r === 'supporter' || r === 'support') {
-            return '<span class="badge badge-rank-supporter" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(59,130,246,0.5);"><i class="fas fa-headset"></i> ðŸŽ§ SUPPORTER</span>';
-        } else if (r === 'donator') {
-            return '<span class="badge badge-rank-donator" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(236,72,153,0.5);"><i class="fas fa-heart"></i> ðŸ’– DONATOR</span>';
-        } else if (r === 'vip') {
-            return '<span class="badge badge-rank-vip" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;box-shadow:0 0 10px rgba(234,179,8,0.5);"><i class="fas fa-star"></i> â­ VIP</span>';
-        } else if (r === 'elite') {
-            return '<span class="badge badge-rank-elite" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(139,92,246,0.5);"><i class="fas fa-bolt"></i> âš¡ ELITE</span>';
-        } else {
-            return '<span class="badge badge-rank-premium" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;box-shadow:0 0 10px rgba(56,189,248,0.5);"><i class="fas fa-gem"></i> ðŸ’Ž PREMIUM</span>';
-        }
-    }).join(' ');
-}
-
-async function openUserSearchModal() {
+function openUserSearchModal() {
     const modal = document.getElementById('user-search-modal');
     if (modal) modal.style.display = 'flex';
-    await loadUserSearchData();
+    loadUserSearchData();
 }
 
 function closeUserSearchModal() {
@@ -8419,7 +8402,19 @@ function renderModalUserSearch(users) {
     }
 
     listEl.innerHTML = users.map(u => {
-        const badges = getRankBadge(u.roles || ['premium']);
+        const badges = (u.roles || ['premium']).map(r => {
+            const low = r.toLowerCase();
+            if (low === 'inhaber' || low === 'admin') return '<span class="badge" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;">ðŸ‘‘ INHABER</span>';
+            if (low === 'co-admin') return '<span class="badge" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;">ðŸ›¡ï¸ CO-ADMIN</span>';
+            if (low === 'developer') return '<span class="badge" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;">ðŸ’» DEVELOPER</span>';
+            if (low === 'moderator') return '<span class="badge" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;">ðŸ”¨ MODERATOR</span>';
+            if (low === 'supporter') return '<span class="badge" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;">ðŸŽ§ SUPPORTER</span>';
+            if (low === 'donator') return '<span class="badge" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;">ðŸ’– DONATOR</span>';
+            if (low === 'vip') return '<span class="badge" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;">â­ VIP</span>';
+            if (low === 'elite') return '<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;">âš¡ ELITE</span>';
+            return '<span class="badge" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;">ðŸ’Ž PREMIUM</span>';
+        }).join(' ');
+
         const avatarSrc = u.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(u.username);
         const clipCount = (u.highlights && Array.isArray(u.highlights)) ? u.highlights.length : 0;
         const configCount = (u.configs && Array.isArray(u.configs)) ? u.configs.length : 0;
@@ -8460,7 +8455,19 @@ function openUserProfileView(username) {
 
     modal.style.display = 'flex';
 
-    const badges = getRankBadge(user.roles || ['premium']);
+    const badges = (user.roles || ['premium']).map(r => {
+        const low = r.toLowerCase();
+        if (low === 'inhaber' || low === 'admin') return '<span class="badge" style="background:linear-gradient(135deg,#ffd700,#ff8c00);color:#000;font-weight:800;">ðŸ‘‘ INHABER</span>';
+        if (low === 'co-admin') return '<span class="badge" style="background:linear-gradient(135deg,#f43f5e,#be123c);color:#fff;font-weight:800;">ðŸ›¡ï¸ CO-ADMIN</span>';
+        if (low === 'developer') return '<span class="badge" style="background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;font-weight:800;">ðŸ’» DEVELOPER</span>';
+        if (low === 'moderator') return '<span class="badge" style="background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-weight:800;">ðŸ”¨ MODERATOR</span>';
+        if (low === 'supporter') return '<span class="badge" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;font-weight:800;">ðŸŽ§ SUPPORTER</span>';
+        if (low === 'donator') return '<span class="badge" style="background:linear-gradient(135deg,#ec4899,#be185d);color:#fff;font-weight:800;">ðŸ’– DONATOR</span>';
+        if (low === 'vip') return '<span class="badge" style="background:linear-gradient(135deg,#eab308,#ca8a04);color:#000;font-weight:800;">â­ VIP</span>';
+        if (low === 'elite') return '<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;font-weight:800;">âš¡ ELITE</span>';
+        return '<span class="badge" style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-weight:800;">ðŸ’Ž PREMIUM</span>';
+    }).join(' ');
+
     const avatarSrc = user.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + encodeURIComponent(user.username);
     const clips = user.highlights || [];
     const guestbook = user.guestbook || [];
@@ -8544,13 +8551,11 @@ function openUserProfileView(username) {
                 <i class="fas fa-book-open"></i> GÃ¤stebuch (${guestbook.length})
             </h4>
 
-            <!-- Write guestbook entry -->
             <div style="display:flex;gap:8px;margin-bottom:14px;">
                 <input type="text" id="modal-gb-input" placeholder="Hinterlasse einen Eintrag im GÃ¤stebuch..." style="flex:1;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.12);color:#fff;border-radius:8px;padding:8px 12px;font-size:0.82rem;" onkeydown="if(event.key==='Enter') submitModalGuestbook('${escapeHtml(user.username)}')">
                 <button onclick="submitModalGuestbook('${escapeHtml(user.username)}')" class="btn btn-primary" style="padding:8px 16px;font-size:0.82rem;"><i class="fas fa-paper-plane"></i> Senden</button>
             </div>
 
-            <!-- Guestbook Entries List -->
             <div id="modal-gb-list" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;">
                 ${guestbook.length === 0 ? '<div style="text-align:center;padding:14px;color:#94a3b8;font-size:0.78rem;">Noch keine EintrÃ¤ge vorhanden.</div>' : 
                     guestbook.slice().reverse().map(g => `
@@ -8568,7 +8573,6 @@ function openUserProfileView(username) {
     `;
 
     body.innerHTML = `
-        <!-- Profile Header -->
         <div style="display:flex;align-items:center;gap:18px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:18px;">
             <img src="${avatarSrc}" alt="${escapeHtml(user.username)}" style="width:72px;height:72px;border-radius:50%;border:3px solid #7c3aed;object-fit:cover;background:rgba(0,0,0,0.4);box-shadow:0 0 20px rgba(124,58,237,0.3);">
             <div style="flex:1;">
@@ -8746,8 +8750,7 @@ async function submitModalGuestbook(targetUsername) {
 
 <!-- USER SEARCH MODAL -->
 <div id="user-search-modal" class="modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:99999;align-items:center;justify-content:center;padding:20px;">
-    <div style="background:#12131c;border:1px solid rgba(124,58,237,0.3);box-shadow:0 12px 40px rgba(0,0,0,0.7),0 0 25px rgba(124,58,237,0.2);border-radius:14px;width:100%;max-width:850px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;">
-        <!-- Header -->
+    <div style="background:#10121a;border:1px solid rgba(124,58,237,0.3);box-shadow:0 12px 40px rgba(0,0,0,0.7),0 0 25px rgba(124,58,237,0.2);border-radius:14px;width:100%;max-width:850px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;">
         <div style="padding:16px 22px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;background:rgba(124,58,237,0.08);">
             <div style="display:flex;align-items:center;gap:10px;">
                 <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg, #7c3aed, #3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;">
@@ -8760,8 +8763,6 @@ async function submitModalGuestbook(targetUsername) {
             </div>
             <button onclick="closeUserSearchModal()" style="background:transparent;border:none;color:#94a3b8;font-size:1.3rem;cursor:pointer;padding:4px 8px;"><i class="fas fa-times"></i></button>
         </div>
-
-        <!-- Search / Filter Bar -->
         <div style="padding:14px 22px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;gap:12px;background:rgba(0,0,0,0.2);">
             <div style="position:relative;flex:1;">
                 <i class="fas fa-search" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#7c3aed;font-size:0.9rem;"></i>
@@ -8780,18 +8781,13 @@ async function submitModalGuestbook(targetUsername) {
                 <option value="premium">ðŸ’Ž PREMIUM</option>
             </select>
         </div>
-
-        <!-- User Grid List -->
-        <div id="modal-user-search-list" style="padding:18px 22px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:14px;flex:1;">
-            <!-- Injected by JS -->
-        </div>
+        <div id="modal-user-search-list" style="padding:18px 22px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:14px;flex:1;"></div>
     </div>
 </div>
 
 <!-- USER DETAIL PROFILE MODAL -->
 <div id="user-profile-view-modal" class="modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:100000;align-items:center;justify-content:center;padding:20px;">
-    <div style="background:#12131c;border:1px solid rgba(124,58,237,0.3);box-shadow:0 12px 40px rgba(0,0,0,0.7),0 0 30px rgba(124,58,237,0.25);border-radius:14px;width:100%;max-width:750px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;">
-        <!-- Header -->
+    <div style="background:#10121a;border:1px solid rgba(124,58,237,0.3);box-shadow:0 12px 40px rgba(0,0,0,0.7),0 0 30px rgba(124,58,237,0.25);border-radius:14px;width:100%;max-width:750px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;">
         <div style="padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;background:rgba(124,58,237,0.08);">
             <div style="display:flex;align-items:center;gap:10px;">
                 <button onclick="backToUserSearchModal()" class="btn btn-outline" style="padding:4px 10px;font-size:0.75rem;"><i class="fas fa-arrow-left"></i> ZURÃœCK</button>
@@ -8799,11 +8795,7 @@ async function submitModalGuestbook(targetUsername) {
             </div>
             <button onclick="closeUserProfileViewModal()" style="background:transparent;border:none;color:#94a3b8;font-size:1.3rem;cursor:pointer;padding:4px 8px;"><i class="fas fa-times"></i></button>
         </div>
-
-        <!-- Body Content -->
-        <div id="user-profile-view-body" style="padding:20px;overflow-y:auto;flex:1;">
-            <!-- Injected via JS -->
-        </div>
+        <div id="user-profile-view-body" style="padding:20px;overflow-y:auto;flex:1;"></div>
     </div>
 </div>
 </body>
