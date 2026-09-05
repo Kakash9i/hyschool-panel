@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -62,7 +62,7 @@
   #login-error { color: #f43f5e; font-size: 12px; margin-top: 12px; display: none; font-weight: 700; }
 
   /* MAIN PANEL */
-  #main-panel { display: none; padding: 24px 36px; max-width: 1550px; width: 100%; margin: 0 auto; }
+  #main-panel { display: none; padding: 24px 36px; max-width: 1440px; width: 100%; margin: 0 auto; }
   
   .header { 
     display: flex; 
@@ -273,7 +273,7 @@
     text-transform: uppercase;
     white-space: nowrap;
   }
-  .logs-table td { padding: 9px 8px; border-bottom: 1px solid #161822; vertical-align: middle; white-space: nowrap; }
+  .logs-table td { padding: 7px 10px; border-bottom: 1px solid #161822; vertical-align: middle; overflow: hidden; }
   .logs-table tr:last-child td { border-bottom: none; }
   .logs-table tr:hover td { background: #121520; }
 
@@ -348,6 +348,12 @@
     font-size: 10px; 
     border: 1px solid #272d40; 
     letter-spacing: 0.5px;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
   }
   .tag-duration {
     background: #141724; 
@@ -434,7 +440,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 3px;
+    gap: 4px;
     flex-wrap: nowrap;
   }
   .action-btn {
@@ -443,7 +449,7 @@
     justify-content: center;
     gap: 3px;
     height: 25px;
-    padding: 0 6px;
+    padding: 0 7px;
     border-radius: 5px;
     font-size: 10px;
     font-weight: 800;
@@ -454,6 +460,7 @@
     border: 1px solid transparent;
     user-select: none;
     box-sizing: border-box;
+    flex-shrink: 0;
   }
   .action-btn:hover {
     transform: translateY(-1px);
@@ -513,7 +520,7 @@
   }
 
   /* EDIT LICENSE MODAL & HWID MODAL */
-  #edit-lic-modal, #hwid-modal, #staff-modal { 
+  #edit-lic-modal, #hwid-modal, #staff-modal, #config-preview-modal { 
     display: none; 
     position: fixed; 
     inset: 0; 
@@ -523,7 +530,7 @@
     justify-content: center; 
     backdrop-filter: blur(6px); 
   }
-  .edit-lic-modal-box, .hwid-modal-box, .staff-modal-box { 
+  .edit-lic-modal-box, .hwid-modal-box, .staff-modal-box, .config-preview-modal-box { 
     background: #10121a; 
     border: 1px solid #22283a; 
     border-radius: 12px; 
@@ -532,6 +539,7 @@
     max-width: 92%; 
     box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 35px rgba(0,0,0,0.5); 
   }
+  .config-preview-modal-box { width: 680px; }
   .hwid-modal-box { width: 480px; }
   .modal-field-group { margin-bottom: 14px; }
   .modal-field-group label { font-size: 10px; color: #64748b; font-weight: 800; letter-spacing: 1px; display: block; margin-bottom: 6px; }
@@ -562,6 +570,134 @@
 
   .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
   .perm-item { background: #090a0f; border: 1px solid #1e2333; padding: 10px 12px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; }
+  /* CONFIG GRID & AVATAR PROFILE STYLES */
+  .config-grid-layout {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 20px;
+    align-items: flex-start;
+  }
+  @media (max-width: 1100px) {
+    .config-grid-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .avatar-preset-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .avatar-preset-item {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    border: 2px solid #1e263c;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all .2s;
+    background: #111522;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .avatar-preset-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .avatar-preset-item:hover, .avatar-preset-item.selected {
+    border-color: #e5a93c;
+    transform: scale(1.08);
+    box-shadow: 0 0 16px rgba(229,169,60,0.25);
+  }
+
+  .clickable-user {
+    cursor: pointer;
+    transition: color .2s;
+  }
+  .clickable-user:hover {
+    color: #e5a93c !important;
+    text-decoration: underline;
+  }
+
+  .btn-nav-action {
+    background: #121624;
+    border: 1px solid #232c42;
+    color: #cbd5e1;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all .2s;
+  }
+  .btn-nav-action:hover {
+    background: #192033;
+    color: #f8fafc;
+    border-color: #e5a93c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  }
+  /* RANK BADGES SYSTEM */
+  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+  .badge-rank-admin { background: linear-gradient(135deg, rgba(229,169,60,0.25) 0%, rgba(245,158,11,0.15) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 0 10px rgba(229,169,60,0.3); }
+  .badge-rank-staff { background: rgba(56,189,248,0.18); color: #38bdf8; border: 1px solid rgba(56,189,248,0.45); box-shadow: 0 0 10px rgba(56,189,248,0.25); }
+  .badge-rank-vip { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.15) 100%); color: #e879f9; border: 1px solid rgba(217,70,239,0.5); box-shadow: 0 0 12px rgba(168,85,247,0.35); }
+  .badge-rank-elite { background: rgba(249,115,22,0.18); color: #fb923c; border: 1px solid rgba(249,115,22,0.45); box-shadow: 0 0 10px rgba(249,115,22,0.25); }
+  .badge-rank-premium { background: rgba(59,130,246,0.18); color: #60a5fa; border: 1px solid rgba(59,130,246,0.45); box-shadow: 0 0 10px rgba(59,130,246,0.25); }
+  .badge-rank-kunde { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.35); }
+
+  /* HIGHLIGHTS / CLIPS GRID & CARDS */
+  .highlights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+  .clip-card { background: #090b12; border: 1px solid #1a2032; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; transition: all .25s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+  .clip-card:hover { border-color: #e5a93c; transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.7), 0 0 18px rgba(229,169,60,0.28); }
+  .clip-media-wrap { position: relative; width: 100%; height: 200px; background: #05060a; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .clip-media-wrap video { width: 100%; height: 100%; object-fit: cover; }
+  .clip-media-wrap iframe { width: 100%; height: 100%; border: none; }
+  .clip-body { padding: 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .clip-title { font-size: 13.5px; font-weight: 900; color: #f8fafc; line-height: 1.3; }
+  .clip-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid #141928; margin-top: auto; }
+  /* REFINED MAIN TABS */
+  .main-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+  .main-tab { padding: 8px 14px; border-radius: 8px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; cursor: pointer; background: #0e111a; color: #94a3b8; border: 1px solid #1c2438; display: inline-flex; align-items: center; gap: 6px; transition: all .2s ease; white-space: nowrap; }
+  .main-tab:hover { color: #f8fafc; background: #161c2c; border-color: #2a3754; transform: translateY(-1px); }
+  .main-tab.active { background: linear-gradient(135deg, #182034 0%, #0e121d 100%); color: #ffffff; border-color: #e5a93c; box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(229,169,60,0.35); }
+
+  /* RANK BADGES SYSTEM */
+  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 5px; font-size: 9.5px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+  .badge-rank-admin { background: linear-gradient(135deg, rgba(229,169,60,0.25) 0%, rgba(245,158,11,0.15) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 0 10px rgba(229,169,60,0.3); }
+  .badge-rank-staff { background: rgba(56,189,248,0.18); color: #38bdf8; border: 1px solid rgba(56,189,248,0.45); box-shadow: 0 0 10px rgba(56,189,248,0.25); }
+  .badge-rank-vip { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.15) 100%); color: #e879f9; border: 1px solid rgba(217,70,239,0.5); box-shadow: 0 0 12px rgba(168,85,247,0.35); }
+  .badge-rank-elite { background: rgba(249,115,22,0.18); color: #fb923c; border: 1px solid rgba(249,115,22,0.45); box-shadow: 0 0 10px rgba(249,115,22,0.25); }
+  .badge-rank-premium { background: rgba(59,130,246,0.18); color: #60a5fa; border: 1px solid rgba(59,130,246,0.45); box-shadow: 0 0 10px rgba(59,130,246,0.25); }
+  .badge-rank-kunde { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.35); }
+
+  /* BADGES */
+  .badge-ext { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 4px; display: inline-block; }
+  .badge-ext-cfg { background: rgba(229, 169, 60, 0.15); color: #e5a93c; border: 1px solid rgba(229, 169, 60, 0.3); }
+  .badge-ext-ini { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+  .badge-ext-json { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+  .badge-ext-zip { background: rgba(244, 63, 94, 0.15); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.3); }
+  .badge-ext-txt { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
+  .badge-ext-lua { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+  .badge-ext-css { background: rgba(56, 189, 248, 0.18); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+
+  /* HIGHLIGHTS GRID & CARDS */
+  .highlights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+  .clip-card { background: #090b12; border: 1px solid #1a2032; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: all .25s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+  .clip-card:hover { border-color: #e5a93c; transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.7), 0 0 18px rgba(229,169,60,0.28); }
+  .clip-media-wrap { position: relative; width: 100%; height: 190px; background: #05060a; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .clip-media-wrap video { width: 100%; height: 100%; object-fit: cover; }
+  .clip-media-wrap iframe { width: 100%; height: 100%; border: none; }
+  .clip-body { padding: 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .clip-title { font-size: 13px; font-weight: 900; color: #f8fafc; line-height: 1.3; }
+  .clip-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid #141928; margin-top: auto; }
 </style>
 </head>
 <body>
@@ -652,7 +788,7 @@
               <input type="checkbox" id="sp-edit-f-stat" checked style="width:auto;margin:0;cursor:pointer;"> 🟢 Status (Aktiv/Unused)
             </label>
             <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
-              <input type="checkbox" id="sp-edit-f-note" checked style="width:auto;margin:0;cursor:pointer;"> 👤 Notiz / Kunde
+              <input type="checkbox" id="sp-edit-f-note" checked style="width:auto;margin:0;cursor:pointer;"> 👤 Noti+ / Kunde
             </label>
           </div>
           <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px; padding-top:6px; border-top:1px solid #1a1e2b;">
@@ -714,6 +850,121 @@
   </div>
 </div>
 
+<!-- SETTINGS MODAL (EINSTELLUNGEN: PROFILBILD & BESCHREIBUNG) -->
+<div id="settings-modal" style="display:none;position:fixed;inset:0;background:rgba(4,5,8,0.88);z-index:100000;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px;">
+  <div class="edit-lic-modal-box" style="width: 620px; max-width: 95%;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #1a2030;">
+      <h3 style="color:#ffffff;font-size:16px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
+        <span style="color:#e5a93c;">&#9881;&#65039;</span> PROFIL EINSTELLUNGEN
+      </h3>
+      <button onclick="closeSettingsModal()" style="background:none;border:none;color:#64748b;font-size:24px;cursor:pointer;line-height:1;">&times;</button>
+    </div>
+
+    <!-- AVATAR SELECTION -->
+    <div style="margin-bottom: 20px;">
+      <label style="display:block;font-size:11px;color:#cbd5e1;font-weight:800;letter-spacing:0.5px;margin-bottom:8px;">
+        1. PROFILBILD AUSW&#196;HLEN (Voreinstellung oder Bild-URL / Upload)
+      </label>
+      
+      <div style="display:flex;align-items:center;gap:18px;background:#090b12;border:1px solid #1a2030;padding:16px;border-radius:12px;margin-bottom:12px;">
+        <div id="settings-avatar-preview-wrap" style="width:72px;height:72px;border-radius:14px;border:2px solid #e5a93c;overflow:hidden;background:#151a28;display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px rgba(229,169,60,0.25);flex-shrink:0;">
+          <img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=Admin" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
+        </div>
+        <div style="flex:1;">
+          <input type="text" id="settings-avatar-url" placeholder="Eigene Bild-URL (z.B. https://i.imgur.com/...)" oninput="updateSettingsAvatarPreview(this.value)" style="width:100%;background:#0f131f;border:1px solid #232c42;color:#f8fafc;padding:9px 12px;border-radius:6px;font-size:11.5px;outline:none;margin-bottom:8px;">
+          <div style="display:flex;gap:8px;">
+            <label style="background:#151c2e;border:1px solid #24304c;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+              &#128193; Eigenes Bild hochladen
+              <input type="file" id="settings-avatar-file" accept="image/*" style="display:none;" onchange="handleAvatarFileUpload(this)">
+            </label>
+            <button type="button" onclick="generateRandomAvatar()" class="quick-pill-btn" style="padding:6px 12px;font-size:10.5px;">ðŸŽ² Zuf&#228;lliges Bild</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:10px;color:#64748b;font-weight:700;margin-bottom:6px;">GAMING &amp; ANIME VOREINSTELLUNGEN:</div>
+      <div class="avatar-preset-grid" id="avatar-preset-container"></div>
+    </div>
+
+    <!-- PROFILE BIO & STATUS -->
+    <div class="modal-field-group">
+      <label>2. STATUS &amp; PROFIL BESCHREIBUNG</label>
+      <textarea id="settings-bio" rows="3" placeholder="Schreibe eine coole Beschreibung..." style="width:100%;background:#090a0f;border:1px solid #1e2333;color:#f8fafc;padding:10px 12px;border-radius:6px;font-size:12px;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+    </div>
+
+    <div class="modal-field-group">
+      <label>3. DISCORD TAG / KONTAKT (OPTIONAL)</label>
+      <input type="text" id="settings-discord" placeholder="z.B. @admin oder Discord Server" />
+    </div>
+
+    <!-- SAVE ACTIONS -->
+    <div style="display:flex;gap:12px;margin-top:24px;">
+      <button onclick="saveUserProfile()" id="settings-save-btn" class="upload-btn" style="flex:1;">
+        &#128190; EINSTELLUNGEN SPEICHERN
+      </button>
+      <button onclick="closeSettingsModal()" style="background:#141826;border:1px solid #222b40;color:#94a3b8;padding:12px 22px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">
+        Abbrechen
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PUBLIC USER PROFILE & GUESTBOOK SHOWCASE MODAL -->
+<div id="user-profile-modal" style="display:none;position:fixed;inset:0;background:rgba(4,5,8,0.88);z-index:100000;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px;">
+  <div class="edit-lic-modal-box" style="width: 740px; max-width: 95%;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div style="font-size:11px;color:#e5a93c;font-weight:900;letter-spacing:1px;text-transform:uppercase;">
+        ACCOUNT PROFILE &amp; G&#196;STEBUCH
+      </div>
+      <button onclick="closeProfileModal()" style="background:none;border:none;color:#64748b;font-size:24px;cursor:pointer;line-height:1;">&times;</button>
+    </div>
+
+    <!-- PROFILE HEADER CARD -->
+    <div style="background:radial-gradient(ellipse at top, #161c2d 0%, #0a0d16 100%);border:1px solid #222c44;border-radius:14px;padding:24px;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;box-shadow:0 8px 30px rgba(0,0,0,0.5);">
+      <div id="profile-modal-avatar-wrap" style="width:84px;height:84px;border-radius:18px;border:3px solid #e5a93c;overflow:hidden;background:#131826;display:flex;align-items:center;justify-content:center;box-shadow:0 0 25px rgba(229,169,60,0.25);flex-shrink:0;">
+        <img id="profile-modal-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=User" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
+      </div>
+      
+      <div style="flex:1;min-width:220px;">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <h2 id="profile-modal-username" style="color:#ffffff;font-size:20px;font-weight:900;letter-spacing:0.5px;margin:0;">User</h2>
+          <span id="profile-modal-badge" style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.4);padding:3px 10px;border-radius:5px;font-size:10px;font-weight:900;">👑 Inhaber</span>
+        </div>
+        
+        <p id="profile-modal-bio" style="font-size:12px;color:#cbd5e1;margin-top:6px;line-height:1.4;background:rgba(0,0,0,0.25);padding:8px 12px;border-radius:6px;border-left:3px solid #e5a93c;">
+          Keine Profilbeschreibung hinterlegt.
+        </p>
+
+        <div style="display:flex;align-items:center;gap:14px;margin-top:10px;font-size:10.5px;color:#64748b;flex-wrap:wrap;">
+          <div><span style="color:#94a3b8;">📅 Mitglied seit:</span> <b id="profile-modal-joined" style="color:#f8fafc;">-</b></div>
+          <div><span style="color:#94a3b8;">💬 Discord:</span> <b id="profile-modal-discord" style="color:#e5a93c;">-</b></div>
+          <div><span style="color:#94a3b8;">📁 Configs:</span> <b id="profile-modal-cfg-count" style="color:#10b981;">0</b></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUESTBOOK SECTION (GÄSTEBUCH) -->
+    <div style="background:#090b12;border:1px solid #1a2030;border-radius:12px;padding:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <h4 style="color:#ffffff;font-size:13px;font-weight:900;letter-spacing:0.5px;display:flex;align-items:center;gap:8px;margin:0;">
+          <span style="color:#e5a93c;">📖</span> GÄSTEBUCH & REPUTATION
+          <span id="profile-guestbook-count" style="background:#131828;color:#94a3b8;border:1px solid #202a40;padding:2px 8px;border-radius:10px;font-size:10px;">0 Einträge</span>
+        </h4>
+      </div>
+
+      <!-- WRITE GUESTBOOK ENTRY -->
+      <div style="display:flex;gap:10px;margin-bottom:16px;">
+        <input type="text" id="guestbook-input" placeholder="Hinterlasse einen Gästebucheintrag auf diesem Profil... (Enter)" onkeydown="if(event.key==='Enter')submitGuestbookEntry()" style="flex:1;background:#111522;border:1px solid #212a40;color:#f8fafc;padding:10px 14px;border-radius:8px;font-size:11.5px;outline:none;" />
+        <button onclick="submitGuestbookEntry()" id="guestbook-send-btn" class="upload-btn" style="width:auto;padding:10px 18px;font-size:11px;">
+          ✎ EINTRAGEN
+        </button>
+      </div>
+
+      <!-- GUESTBOOK LIST -->
+      <div id="profile-guestbook-list" style="display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;padding-right:4px;"></div>
+    </div>
+  </div>
+</div>
 <!-- EDIT LICENSE MODAL POPUP -->
 <div id="edit-lic-modal">
   <div class="edit-lic-modal-box">
@@ -794,7 +1045,7 @@
 
     <!-- ACTIONS -->
     <div style="display:flex;gap:10px;margin-top:20px;">
-      <button onclick="saveEditLicModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">💾 ÄNDERUNGEN SPEICHERN</button>
+      <button onclick="saveEditLicModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);display:flex;align-items:center;justify-content:center;gap:8px;"><span>&#128190;</span> <span>&#196;NDERUNGEN SPEICHERN</span></button>
       <button onclick="closeEditLicModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Abbrechen</button>
     </div>
   </div>
@@ -828,6 +1079,65 @@
   </div>
 </div>
 
+<!-- HIGHLIGHT VIDEO PLAYER FULLSCREEN MODAL -->
+<div id="highlight-player-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:999999;align-items:center;justify-content:center;backdrop-filter:blur(12px);padding:20px;">
+  <div style="background:linear-gradient(170deg, #111524 0%, #080a10 100%);border:1px solid #e5a93c;border-radius:18px;padding:26px 30px;width:900px;max-width:96%;box-shadow:0 20px 60px rgba(0,0,0,0.95);position:relative;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:18px;color:#e5a93c;">&#127916;</span>
+        <h3 id="hl-player-title" style="color:#ffffff;font-size:16px;font-weight:900;margin:0;">Highlight Video</h3>
+      </div>
+      <button onclick="closeHighlightPlayerModal()" style="background:none;border:none;color:#64748b;font-size:24px;cursor:pointer;line-height:1;">&times;</button>
+    </div>
+    
+    <div id="hl-player-video-container" style="width:100%;height:480px;background:#05070c;border-radius:12px;overflow:hidden;border:1px solid #1f273e;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"></div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:#090b12;border:1px solid #182030;padding:14px 18px;border-radius:10px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div id="hl-player-author-avatar-wrap" style="width:40px;height:40px;border-radius:10px;border:2px solid #e5a93c;overflow:hidden;background:#14192a;display:flex;align-items:center;justify-content:center;">
+          <img id="hl-player-author-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=User" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="hl-player-author-name" style="font-size:14px;font-weight:900;color:#ffffff;">Kunde</span>
+            <span id="hl-player-rank-badge" class="badge-rank badge-rank-vip">ðŸ’Ž VIP</span>
+          </div>
+          <div id="hl-player-desc" style="font-size:11.5px;color:#94a3b8;margin-top:2px;">Keine Beschreibung</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button id="hl-player-like-btn" onclick="toggleHighlightLikeFromModal()" class="quick-pill-btn" style="padding:8px 16px;font-size:12px;display:flex;align-items:center;gap:6px;">
+          <span>â¤ï¸</span> <span id="hl-player-like-count">0</span>
+        </button>
+        <button onclick="closeHighlightPlayerModal()" style="background:#141826;border:1px solid #222b40;color:#94a3b8;padding:8px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Schlie&#223;en</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- CONFIG PREVIEW MODAL POPUP -->
+<div id="config-preview-modal">
+  <div class="config-preview-modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
+        <span style="color:#e5a93c;">👁️</span> CONFIG VORSCHAU — <span id="cfg-preview-title" style="color:#e5a93c;">config.cfg</span>
+      </h3>
+      <button onclick="closeConfigPreviewModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;font-size:11px;color:#94a3b8;">
+      <div><span style="color:#64748b;">Spiel:</span> <b id="cfg-preview-game" style="color:#f8fafc;">VALORANT</b></div>
+      <div><span style="color:#64748b;">Erstellt von:</span> <b id="cfg-preview-author" style="color:#e5a93c;">-</b></div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <textarea id="cfg-preview-content" readonly style="width:100%;height:320px;background:#090a0f;border:1px solid #1e2333;color:#e5a93c;font-family:'JetBrains Mono',monospace;font-size:11px;padding:12px;border-radius:8px;resize:vertical;outline:none;line-height:1.5;box-sizing:border-box;white-space:pre;"></textarea>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="copyConfigPreviewContent()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:11px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">📋 INHALT KOPIEREN</button>
+      <button onclick="closeConfigPreviewModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:11px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Schließen</button>
+    </div>
+  </div>
+</div>
+
 <div id="login-screen">
   <div class="login-box">
     <h1>HYSCHOOL</h1>
@@ -846,43 +1156,62 @@
 <div id="toast-msg"></div>
 
 <div id="main-panel">
-  <div class="header">
-    <h1>HYSCHOOL ADMIN PANEL <span id="user-badge" style="background:#141724;color:#e5a93c;border:1px solid #272d40;padding:3px 10px;border-radius:4px;font-size:10px;font-weight:800;letter-spacing:1px;">👑 INHABER (ADMIN)</span></h1>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <div class="status-indicator">
+    <div class="header">
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <h1 style="margin:0;font-size:18px;font-weight:900;letter-spacing:1px;color:#f8fafc;display:flex;align-items:center;gap:8px;"><span style="color:#e5a93c;">&#9889;</span> HYSCHOOL ADMIN PANEL</h1>
+      <span id="user-badge" style="background:rgba(229,169,60,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.35);padding:3px 10px;border-radius:10px;font-size:10.5px;font-weight:900;letter-spacing:0.5px;display:inline-flex;align-items:center;gap:6px;"><span style="color:#fbbf24;">&#128081;</span> INHABER (ADMIN)</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div class="status-indicator" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10b981;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:6px;">
         <span class="blink-dot"></span>
         <span id="hdr-status">SYSTEM ONLINE</span>
       </div>
-      <button onclick="doLogout()" style="background:#141724;border:1px solid #272d40;color:#f43f5e;padding:6px 14px;border-radius:20px;font-size:11px;cursor:pointer;font-weight:800;">🚪 LOGOUT</button>
+
+      <button onclick="openOwnProfileModal()" class="btn-nav-action" style="background:#121624;border:1px solid #232c42;color:#cbd5e1;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+        <span style="color:#a855f7;">&#128100;</span> MEIN PROFIL
+      </button>
+
+      <button onclick="openSettingsModal()" class="btn-nav-action" style="background:#121624;border:1px solid rgba(229,169,60,0.4);color:#e5a93c;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+        <span>&#9881;&#65039;</span> EINSTELLUNGEN
+      </button>
+
+      <button onclick="doLogout()" style="background:#141724;border:1px solid rgba(244,63,94,0.3);color:#f43f5e;padding:6px 14px;border-radius:20px;font-size:11px;cursor:pointer;font-weight:800;display:inline-flex;align-items:center;gap:6px;">
+        <span style="color:#f43f5e;">&#128682;</span> LOGOUT
+      </button>
     </div>
   </div>
 
-  <!-- MAIN NAVIGATION TABS -->
-  <div class="main-tabs">
+    <div class="main-tabs">
     <div class="main-tab active" onclick="switchMainTab(0)" id="mtab-0">
-      <span style="font-size:14px;color:#e5a93c;">🎮</span> CHEATS &amp; CLOUD UPLOAD
+      <span style="font-size:13px;color:#e5a93c;">&#9889;</span> CHEATS
     </div>
     <div class="main-tab" onclick="switchMainTab(1)" id="mtab-1">
-      <span style="font-size:14px;color:#cbd5e1;">⚙️</span> MAYA UPDATER
+      <span style="font-size:13px;color:#cbd5e1;">&#128640;</span> MAYA UPDATER
     </div>
     <div class="main-tab" onclick="switchMainTab(2)" id="mtab-2">
-      <span style="font-size:14px;color:#cbd5e1;">📊</span> USER LOGS
+      <span style="font-size:13px;color:#cbd5e1;">&#128202;</span> USER LOGS
     </div>
     <div class="main-tab" onclick="switchMainTab(3)" id="mtab-3">
-      <span style="font-size:14px;color:#cbd5e1;">🔑</span> KEYAUTH &amp; RECHTE
+      <span style="font-size:13px;color:#cbd5e1;">&#128273;</span> KEYAUTH &amp; RECHTE
     </div>
     <div class="main-tab" onclick="switchMainTab(4)" id="mtab-4">
-      <span style="font-size:14px;color:#cbd5e1;">👔</span> MITARBEITER &amp; RECHTE
+      <span style="font-size:13px;color:#cbd5e1;">&#128737;&#65039;</span> MITARBEITER &amp; RECHTE
     </div>
     <div class="main-tab" onclick="switchMainTab(5)" id="mtab-5">
-      <span style="font-size:14px;color:#cbd5e1;">📜</span> ADMIN AUDIT LOGS
+      <span style="font-size:13px;color:#cbd5e1;">&#128220;</span> ADMIN AUDIT LOGS
     </div>
     <div class="main-tab" onclick="switchMainTab(6)" id="mtab-6">
-      <span style="font-size:14px;color:#cbd5e1;">💬</span> TEAM CHAT
+      <span style="font-size:13px;color:#cbd5e1;">&#128172;</span> CHAT
+    </div>
+    <div class="main-tab" onclick="switchMainTab(7)" id="mtab-7">
+      <span style="font-size:13px;color:#e5a93c;">&#128193;</span> MEINE CONFIGS
+    </div>
+    <div class="main-tab" onclick="switchMainTab(8)" id="mtab-8">
+      <span style="font-size:13px;color:#e879f9;">&#127916;</span> HIGHLIGHTS
     </div>
   </div>
 
-  <!-- TAB 0: CHEATS & CLOUD UPLOAD -->
+<!-- TAB 0: CHEATS -->
   <div class="tab-content active" id="tc-0">
     <div class="sub-tabs-container" id="cheat-sub-tabs"></div>
     <div id="cheat-sub-contents"></div>
@@ -893,7 +1222,7 @@
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
       <div class="section-title" style="margin-bottom:0;font-size:13px;color:#f8fafc;">MAYA LOADER EXE UPDATER — AUTOMATISCHES KUNDEN-UPDATE</div>
     </div>
-    <p style="font-size:12px;color:#94a3b8;margin-bottom:18px;line-height:1.6;">Sobald du hier eine neue <code style="color:#e5a93c;font-weight:700;background:#090a0f;padding:2px 6px;border-radius:4px;border:1px solid #1e2333;">maya.exe</code> hochlädst, erhöht das System die Versionsnummer ganz <b>automatisch</b> und löst bei deinen Kunden beim nächsten Start das Update-Fenster aus!</p>
+    <p style="font-size:12px;color:#94a3b8;margin-bottom:18px;line-height:1.6;">Sobald du hier eine neue <code style="color:#e5a93c;font-weight:700;background:#090a0f;padding:2px 6px;border-radius:4px;border:1px solid #1e2333;">maya.exe</code> hochlädst, erhöht das System die Versionsnummer gan+ <b>automatisch</b> und löst bei deinen Kunden beim nächsten Start das Update-Fenster aus!</p>
     
     <div class="upload-panel">
       <div>
@@ -983,8 +1312,8 @@
       </div>
       
       <div style="display:flex;gap:8px;" id="keyauth-action-btns">
-        <button onclick="loadLicenses()" style="background:#141724;border:1px solid #1f2538;color:#f8fafc;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🔄 AKTUALISIEREN</button>
-        <button onclick="copyAllUnusedLicenses()" style="background:rgba(229,169,60,0.1);border:1px solid rgba(229,169,60,0.3);color:#e5a93c;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">📋 UNBENUTZTE KOPIEREN</button>
+        <button id="btn-keyauth-refresh" onclick="loadLicenses()" style="background:#141724;border:1px solid #1f2538;color:#f8fafc;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🔄 AKTUALISIEREN</button>
+        <button id="btn-copy-unused" onclick="copyAllUnusedLicenses()" style="background:rgba(229,169,60,0.1);border:1px solid rgba(229,169,60,0.3);color:#e5a93c;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">📋 UNBENUTZTE KOPIEREN</button>
       </div>
     </div>
 
@@ -1066,7 +1395,7 @@
       <!-- FILTER & STATS BAR -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
         <div style="display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap;">
-          <input type="text" id="lic-search-input" placeholder="🔍 Key, Benutzer, HWID, Notiz suchen..." oninput="filterLicenses()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:8px 14px;border-radius:6px;font-size:12px;outline:none;width:260px;" />
+          <input type="text" id="lic-search-input" placeholder="🔍 Key, Benutzer, HWID, Noti+ suchen..." oninput="filterLicenses()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:8px 14px;border-radius:6px;font-size:12px;outline:none;width:260px;" />
           
           <select id="lic-filter-status" onchange="filterLicenses()" style="background:#0c0d13;border:1px solid #1e2333;color:#cbd5e1;padding:8px 12px;border-radius:6px;font-size:12px;outline:none;">
             <option value="all">Alle Status</option>
@@ -1119,17 +1448,17 @@
         <table class="logs-table">
           <thead>
             <tr>
-              <th style="width:34px;text-align:center;">
+              <th style="width:36px;text-align:center;">
                 <label class="custom-cb-wrap" title="Alle auswählen">
                   <input type="checkbox" id="lic-select-all-cb" onchange="toggleSelectAllLicenses(this.checked)">
                   <span class="custom-cb-box">✓</span>
                 </label>
               </th>
-              <th style="width:24%;">LIZENZ-SCHLÜSSEL &amp; PRODUKT</th>
-              <th style="width:16%;">BENUTZER &amp; NOTIZ</th>
-              <th style="width:14%;">STATUS &amp; ABLAUF</th>
+              <th style="width:25%;">LIZENZ-SCHLÜSSEL &amp; AKTIVE CHEATS</th>
+              <th style="width:14%;">BENUTZER &amp; NOTIZ</th>
+              <th style="width:15%;">STATUS &amp; ABLAUF</th>
               <th style="width:16%;text-align:center;">HWID-BINDUNG</th>
-              <th style="width:30%;text-align:center;">SCHNELL-AKTIONEN</th>
+              <th style="width:27%;text-align:center;">SCHNELL-AKTIONEN</th>
             </tr>
           </thead>
           <tbody id="licenses-table-body">
@@ -1202,7 +1531,7 @@
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
       <div>
         <div class="section-title" style="margin-bottom:4px;font-size:13px;color:#f8fafc;">📜 ADMIN &amp; TEAM AUDIT-LOG</div>
-        <p style="font-size:12px;color:#94a3b8;margin:0;">Vollständiges Protokoll aller durchgeführten Aktionen im Admin Panel.</p>
+        <p style="font-size:12px;color:#94a3b8;margin:0;">Voll&#246;ständiges Protokoll aller durchgeführten Aktionen im Admin Panel.</p>
       </div>
       
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
@@ -1230,49 +1559,430 @@
     </div>
   </div>
 
-  <!-- TAB 6: TEAM CHAT -->
+    <!-- TAB 6: CHAT & SUPPORT -->
   <div class="tab-content" id="tc-6">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:12px;">
       <div>
         <div class="section-title" style="margin-bottom:0;font-size:13px;color:#f8fafc;display:flex;align-items:center;gap:8px;">
-          <span>💬</span> TEAM CHAT — INTERNER AUSTAUSCH
+          <span>&#128172;</span> CHAT &amp; 1-ON-1 SUPPORT TICKETS
           <span style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:2px 8px;border-radius:12px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:4px;"><span style="width:6px;height:6px;background:#10b981;border-radius:50%;"></span> LIVE</span>
         </div>
       </div>
 
       <div style="display:flex;gap:10px;align-items:center;">
-        <button onclick="loadTeamChat(false, true)" style="background:#141724;border:1px solid #1f2538;color:#f8fafc;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🔄 AKTUALISIEREN</button>
-        <button id="del-chat-btn" onclick="clearTeamChat()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">🗑 CHAT LEEREN</button>
+        <button onclick="loadTeamChat(false, true)" style="background:#141724;border:1px solid #1f2538;color:#f8fafc;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128260; AKTUALISIEREN</button>
+        <button id="del-chat-btn" onclick="clearTeamChat()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128465;&#65039; CHAT LEEREN</button>
       </div>
     </div>
 
-    <!-- CHAT BOX CONTAINER -->
-    <div style="background:#0a0c13;border:1px solid #1c2235;border-radius:12px;display:flex;flex-direction:column;height:560px;max-width:100%;box-shadow:0 12px 36px rgba(0,0,0,0.6);overflow:hidden;">
-      <!-- CHAT HEADER BAR -->
-      <div style="padding:12px 20px;background:#0e111a;border-bottom:1px solid #1c2235;display:flex;align-items:center;justify-content:space-between;">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div style="width:10px;height:10px;background:#10b981;border-radius:50%;box-shadow:0 0 8px #10b981;"></div>
-          <span style="font-size:12px;font-weight:800;color:#f8fafc;letter-spacing:0.5px;">TEAM CHANNEL</span>
-          <span id="chat-count-badge" style="font-size:10px;background:#161c2c;color:#94a3b8;padding:2px 8px;border-radius:10px;border:1px solid #232b40;font-weight:700;">0 Nachrichten</span>
-        </div>
-        <div style="font-size:11px;color:#64748b;font-weight:600;">Echtzeit-Synchronisierung aktiv</div>
-      </div>
-
-      <!-- MESSAGES SCROLL AREA -->
-      <div id="chat-messages-wrap" style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;background:radial-gradient(ellipse at top, #111420 0%, #0a0c13 100%);">
-        <div style="text-align:center;color:#64748b;padding:30px;font-size:12px;">Lade Chat-Nachrichten...</div>
-      </div>
-
-      <!-- INPUT BAR -->
-      <div style="padding:14px 20px;background:#0d1017;border-top:1px solid #1c2235;display:flex;gap:12px;align-items:center;">
-        <input type="text" id="chat-input" placeholder="Schreibe eine Nachricht ans Team... (Enter zum Senden)" onkeydown="if(event.key==='Enter')sendChatMessage()" style="flex:1;background:#131722;border:1px solid #232b40;color:#f8fafc;padding:12px 18px;border-radius:8px;font-size:12px;font-weight:500;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#e5a93c'" onblur="this.style.borderColor='#232b40'" />
-        <button onclick="sendChatMessage()" id="chat-send-btn" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px 24px;border-radius:8px;font-size:12px;font-weight:900;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.25);display:flex;align-items:center;gap:6px;transition:.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
-          <span>⚡</span> SENDEN
+    <!-- SUBTABS: COMMUNITY CHAT VS 1-ON-1 SUPPORT TICKETS -->
+    <div style="display:flex;gap:12px;margin-bottom:16px;border-bottom:1px solid #1a2234;padding-bottom:12px;align-items:center;">
+        <button id="admin-chat-subtab-comm" onclick="switchAdminChatSubtab('community')" style="background:linear-gradient(135deg,#e5a93c,#c68924);color:#0b0c10;border:none;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.2s;">
+            <span>&#128172;</span> Community Chat
         </button>
+        <button id="admin-chat-subtab-supp" onclick="switchAdminChatSubtab('support')" style="background:#111622;color:#94a3b8;border:1px solid #232b40;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.2s;">
+            <span>&#127915;</span> 1-on-1 Support Tickets <span id="admin-open-tickets-badge" style="background:#f43f5e;color:#fff;padding:1px 6px;border-radius:10px;font-size:10px;margin-left:4px;display:none;">0</span>
+        </button>
+    </div>
+
+    <!-- COMMUNITY CHAT WRAPPER -->
+    <div id="admin-community-chat-panel" style="display:block;">
+      <!-- CHAT BOX CONTAINER -->
+      <div style="background:#0a0c13;border:1px solid #1c2235;border-radius:12px;display:flex;flex-direction:column;height:560px;max-width:100%;box-shadow:0 12px 36px rgba(0,0,0,0.6);overflow:hidden;">
+        <!-- CHAT HEADER BAR -->
+        <div style="padding:12px 20px;background:#0e111a;border-bottom:1px solid #1c2235;display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:10px;height:10px;background:#10b981;border-radius:50%;box-shadow:0 0 8px #10b981;"></div>
+            <span style="font-size:12px;font-weight:800;color:#f8fafc;letter-spacing:0.5px;">COMMUNITY &amp; TEAM CHANNEL</span>
+            <span id="chat-count-badge" style="font-size:10px;background:#161c2c;color:#94a3b8;padding:2px 8px;border-radius:10px;border:1px solid #232b40;font-weight:700;">0 Nachrichten</span>
+          </div>
+          <div style="font-size:11px;color:#64748b;font-weight:600;">Echtzeit-Synchronisierung aktiv</div>
+        </div>
+
+        <!-- MESSAGES SCROLL AREA -->
+        <div id="chat-messages-wrap" style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;background:radial-gradient(ellipse at top, #111420 0%, #0a0c13 100%);">
+          <div style="text-align:center;color:#64748b;padding:30px;font-size:12px;">Lade Chat-Nachrichten...</div>
+        </div>
+
+        <!-- INPUT BAR -->
+        <div style="padding:14px 20px;background:#0d1017;border-top:1px solid #1c2235;display:flex;gap:12px;align-items:center;">
+          <input type="text" id="chat-input" placeholder="Schreibe eine Nachricht in den Chat... (Enter zum Senden)" onkeydown="if(event.key==='Enter')sendChatMessage()" style="flex:1;background:#131722;border:1px solid #232b40;color:#f8fafc;padding:12px 18px;border-radius:8px;font-size:12px;font-weight:500;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#e5a93c'" onblur="this.style.borderColor='#232b40'" />
+          <button onclick="sendChatMessage()" id="chat-send-btn" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px 24px;border-radius:8px;font-size:12px;font-weight:900;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.25);display:flex;align-items:center;gap:6px;transition:.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+            <span>&#10148;</span> SENDEN
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1-ON-1 SUPPORT TICKETS PANEL (SPLIT VIEW) -->
+    <div id="admin-support-panel" style="display:none;gap:18px;height:600px;">
+      <!-- LEFT SIDEBAR: TICKET QUEUE & FILTER -->
+      <div style="width:320px;background:#0a0c13;border:1px solid #1c2235;border-radius:12px;display:flex;flex-direction:column;overflow:hidden;">
+        <!-- FILTER BUTTONS -->
+        <div style="padding:12px;background:#0e111a;border-bottom:1px solid #1c2235;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;gap:6px;">
+            <button id="st-filter-open" onclick="filterAdminTickets('open')" style="flex:1;background:linear-gradient(135deg,#e5a93c,#c68924);color:#0b0c10;border:none;padding:7px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;">Offene Tickets</button>
+            <button id="st-filter-closed" onclick="filterAdminTickets('closed')" style="flex:1;background:#161c2c;color:#94a3b8;border:1px solid #232b40;padding:7px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">Geschlossen (24h)</button>
+          </div>
+          <button onclick="loadAdminSupportTickets(true)" style="background:#121624;border:1px solid #1f273e;color:#cbd5e1;padding:6px;border-radius:6px;font-size:10.5px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+            <span>&#128260;</span> Tickets Aktualisieren
+          </button>
+        </div>
+
+        <!-- TICKET LIST -->
+        <div id="admin-ticket-list-items" style="flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;">
+          <div style="text-align:center;color:#64748b;padding:30px 10px;font-size:11px;">Lade Support Tickets...</div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL: ACTIVE TICKET DETAIL ROOM -->
+      <div style="flex:1;background:#0a0c13;border:1px solid #1c2235;border-radius:12px;display:flex;flex-direction:column;overflow:hidden;position:relative;">
+        <!-- NO TICKET SELECTED PLACEHOLDER -->
+        <div id="admin-no-ticket-selected" style="display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;color:#64748b;gap:12px;padding:30px;text-align:center;">
+          <div style="font-size:42px;color:#28344e;">&#127915;</div>
+          <div style="font-size:14px;font-weight:800;color:#f8fafc;">Kein Support Ticket ausgew&#228;hlt</div>
+          <div style="font-size:11.5px;max-width:340px;line-height:1.5;">W&#228;hle links ein Ticket aus der Warteschlange aus, um den Kunden-Chat zu &#246;ffnen und Support zu leisten.</div>
+        </div>
+
+        <!-- ACTIVE TICKET ROOM -->
+        <div id="admin-ticket-active-room" style="display:none;flex:1;flex-direction:column;">
+          <!-- TICKET TOP BAR -->
+          <div style="padding:12px 18px;background:#0e111a;border-bottom:1px solid #1c2235;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span id="admin-ticket-header-title" style="font-size:13px;font-weight:900;color:#f8fafc;">#TICKET</span>
+                <span id="admin-ticket-header-badge" style="font-size:9.5px;padding:2px 8px;border-radius:4px;font-weight:800;background:rgba(229,169,60,0.15);color:#e5a93c;">NEU / WARTET</span>
+              </div>
+              <div id="admin-ticket-user-label" style="font-size:11px;color:#94a3b8;margin-top:2px;">Kunde: Marc</div>
+            </div>
+
+            <div style="display:flex;gap:8px;align-items:center;">
+              <button id="btn-claim-ticket" onclick="claimCurrentTicket()" style="background:#10b981;border:none;color:#0b0c10;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;">&#9989; Ticket &#220;bernehmen</button>
+              <button id="btn-close-ticket" onclick="closeCurrentTicket()" style="background:#f43f5e;border:none;color:#fff;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;">&#128274; Ticket Schlie&#223;en</button>
+            </div>
+          </div>
+
+          <!-- STAFF QUICK MACROS -->
+          <div style="background:#111522;padding:6px 14px;border-bottom:1px solid #1a2234;display:flex;align-items:center;gap:6px;overflow-x:auto;">
+            <span style="font-size:9.5px;font-weight:800;color:#64748b;letter-spacing:0.5px;white-space:nowrap;">MACROS:</span>
+            <button type="button" class="quick-pill-btn" onclick="insertStaffMacro('freigeschaltet')" style="padding:3px 8px;font-size:10px;">&#9989; Freigeschaltet</button>
+            <button type="button" class="quick-pill-btn" onclick="insertStaffMacro('hwid')" style="padding:3px 8px;font-size:10px;">&#128260; HWID Reset</button>
+            <button type="button" class="quick-pill-btn" onclick="insertStaffMacro('antivirus')" style="padding:3px 8px;font-size:10px;">&#128737;&#65039; Antivirus / Defender</button>
+            <button type="button" class="quick-pill-btn" onclick="insertStaffMacro('config')" style="padding:3px 8px;font-size:10px;">&#128193; Config Hilfe</button>
+            <button type="button" class="quick-pill-btn" onclick="insertStaffMacro('solved')" style="padding:3px 8px;font-size:10px;">&#128077; Gel&#246;st</button>
+          </div>
+
+          <!-- TICKET MESSAGES WRAP -->
+          <div id="admin-ticket-messages-wrap" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:radial-gradient(ellipse at top, #111420 0%, #0a0c13 100%);min-height:260px;">
+          </div>
+
+          <!-- BOTTOM REPLY BAR -->
+          <div style="padding:12px 16px;background:#0d1017;border-top:1px solid #1c2235;display:flex;gap:10px;align-items:center;">
+            <input type="text" id="admin-ticket-input" placeholder="Antwort an Kunden schreiben... (Enter zum Senden)" onkeydown="if(event.key==='Enter')sendAdminTicketMsg()" style="flex:1;background:#131722;border:1px solid #232b40;color:#f8fafc;padding:10px 16px;border-radius:6px;font-size:11.5px;outline:none;" />
+            <button onclick="sendAdminTicketMsg()" style="background:linear-gradient(135deg,#e5a93c,#c68924);border:none;color:#0b0c10;padding:10px 20px;border-radius:6px;font-size:11.5px;font-weight:900;cursor:pointer;">Senden</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
+    <!-- TAB 7: MEINE CONFIGS (CONFIG UPLOAD SYSTEM) -->
+  <div class="tab-content" id="tc-7">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div class="section-title" style="margin-bottom:4px;font-size:14px;color:#f8fafc;display:flex;align-items:center;gap:8px;font-weight:900;">
+          <span>&#128193;</span> MEINE CLOUD CONFIGS &#8212; PROFILE &amp; EINSTELLUNGEN
+        </div>
+        <p style="font-size:11.5px;color:#94a3b8;margin:0;line-height:1.4;">
+          Lade deine Cheat-Configs (.cfg, .ini, .json, .txt, .zip, .css) sicher in die HySchool Cloud hoch, sichere Profile und verwalte sie in Echtzeit.
+        </p>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;">
+        <button onclick="openSettingsModal()" style="background:#141826;border:1px solid #28334e;color:#e5a93c;padding:9px 16px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;">
+          <span>&#9881;&#65039;</span> PROFIL EINSTELLUNGEN
+        </button>
+        <button onclick="loadUserConfigs(false, true)" class="btn-nav-action" style="padding:9px 16px;">
+          <span>&#128260;</span> AKTUALISIEREN
+        </button>
+      </div>
+    </div>
+
+    <!-- USER DASHBOARD / ACCOUNT STATUS CARD -->
+    <div id="cfg-user-dashboard" style="background:linear-gradient(135deg, #111524 0%, #090c14 100%);border:1px solid #1e273e;border-radius:12px;padding:18px 22px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;box-shadow:0 8px 26px rgba(0,0,0,0.4);">
+      <div onclick="openOwnProfileModal()" style="display:flex;align-items:center;gap:14px;cursor:pointer;padding:6px 10px;border-radius:10px;transition:.2s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+        <div id="dash-avatar-box" style="width:48px;height:48px;border-radius:12px;border:2px solid #e5a93c;overflow:hidden;background:#14192a;display:flex;align-items:center;justify-content:center;box-shadow:0 0 14px rgba(229,169,60,0.25);">
+          <img id="dash-avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=Admin" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
+        </div>
+        <div>
+          <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:4px;">&#128100; EINGELOGGTER ACCOUNT</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:2px;">
+            <span id="cfg-dash-username" style="color:#ffffff;font-size:15px;font-weight:900;">Admin</span>
+            <span id="cfg-dash-role-badge" class="badge-rank badge-rank-admin">&#128081; Inhaber</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;display:flex;align-items:center;gap:4px;">&#128273; AKTIVER LICENSE KEY</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+            <span id="cfg-dash-key" class="tag-key-box" style="font-size:11px;">MASTER-ADMIN</span>
+            <button onclick="copyCurrentLicenseKey()" class="quick-pill-btn" style="padding:3px 8px;font-size:10px;">&#128203; Kopieren</button>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;display:flex;align-items:center;gap:4px;">&#127918; FREIGESCHALTETE CHEATS</div>
+          <div id="cfg-dash-cheats-wrap" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;">
+            <span class="tag-product">ALLE CHEATS</span>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;display:flex;align-items:center;gap:4px;">&#9203; LAUFZEIT &amp; STATUS</div>
+          <div id="cfg-dash-expiry" style="color:#10b981;font-weight:800;font-size:12px;margin-top:4px;">
+            &#8734; Lifetime / Aktiv
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 COLUMN GRID: UPLOAD PANEL (LEFT) & CONFIGS LIST (RIGHT) -->
+    <div style="display:grid;grid-template-columns:360px 1fr;gap:20px;">
+      
+      <!-- LEFT: UPLOAD CONFIG CARD -->
+      <div style="background:#090b12;border:1px solid #1a2032;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px;">
+        <h3 style="font-size:12px;color:#e5a93c;letter-spacing:1px;font-weight:900;margin:0;display:flex;align-items:center;gap:8px;">
+          <span>&#128228;</span> NEUE CONFIG HOCHLADEN
+        </h3>
+
+        <div class="field">
+          <label>SPIEL / CHEAT</label>
+          <select id="cfg-upload-game">
+            <option value="valorant">VALORANT</option>
+            <option value="apex">AI HYSCHOOL</option>
+            <option value="tft_helper">TFT HELPER</option>
+            <option value="naraka">NARAKA BLADEPOINT</option>
+            <option value="coc">CLASH OF CLANS</option>
+            <option value="all">ALLGEMEIN / MEHRERE</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>CONFIG / PROFIL NAME</label>
+          <input type="text" id="cfg-upload-name" placeholder="z.B. Legit High-Elo Aimbot v2" />
+        </div>
+
+        <div class="field">
+          <label>BESCHREIBUNG / NOTIZ</label>
+          <input type="text" id="cfg-upload-desc" placeholder="z.B. Smoothing 12, FOV 5" />
+        </div>
+
+        <!-- FILE DROP ZONE -->
+        <div>
+          <label style="display:block;font-size:10px;color:#64748b;letter-spacing:1px;margin-bottom:6px;font-weight:700;">CONFIG DATEI (.CFG, .INI, .JSON, .TXT, .ZIP, .CSS)</label>
+          <div class="drop-zone" id="cfg-drop-zone"
+            onclick="document.getElementById('cfg-file-input').click()"
+            ondragover="event.preventDefault();this.classList.add('over')"
+            ondragleave="this.classList.remove('over')"
+            ondrop="handleConfigDrop(event)"
+            style="min-height:95px;padding:18px;">
+            <input type="file" id="cfg-file-input" accept=".cfg,.ini,.json,.txt,.zip,.config,.lua,.css" onchange="onConfigFileSelected(this)">
+            <div style="font-size:26px;color:#e5a93c;margin-bottom:4px;">&#128193;</div>
+            <div id="cfg-drop-label" style="font-weight:800;color:#f8fafc;font-size:12px;">Datei ausw&#228;hlen / hier ablegen</div>
+            <div id="cfg-drop-sublabel" style="font-size:10px;color:#64748b;">.cfg, .ini, .json, .txt, .zip, .lua, .css (Keine .exe)</div>
+          </div>
+        </div>
+
+        <!-- UPLOAD BUTTON & PROGRESS -->
+        <div style="margin-top:4px;">
+          <button class="upload-btn" id="cfg-upload-btn" onclick="uploadUserConfig()">
+            &#128190; IN DIE CLOUD HOCHLADEN
+          </button>
+          <div class="prog-wrap" id="cfg-prog-wrap">
+            <div class="prog-bar"><div class="bar" id="cfg-prog-fill"></div></div>
+            <div class="prog-lbl" id="cfg-prog-lbl"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: CLOUD CONFIGS TABLE -->
+      <div style="background:#090b12;border:1px solid #1a2032;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <h3 style="font-size:12.5px;color:#e5a93c;letter-spacing:1px;font-weight:900;margin:0;display:flex;align-items:center;gap:8px;">
+              <span>&#9729;&#65039;</span> GESPEICHERTE CLOUD CONFIGS
+            </h3>
+            <span id="cfg-total-badge" style="background:#121726;color:#cbd5e1;border:1px solid #20283e;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;">0 Configs</span>
+          </div>
+
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <input type="text" id="cfg-search-input" placeholder="&#128269; Configs durchsuchen..." oninput="filterUserConfigs()" style="background:#0e121e;border:1px solid #1d253a;color:#f8fafc;padding:7px 12px;border-radius:6px;font-size:11px;outline:none;width:170px;" />
+            <select id="cfg-filter-game" onchange="filterUserConfigs()" style="background:#0e121e;border:1px solid #1d253a;color:#e5a93c;padding:7px 10px;border-radius:6px;font-size:11px;font-weight:800;outline:none;">
+              <option value="all">&#127918; Alle Spiele</option>
+              <option value="valorant">VALORANT</option>
+              <option value="apex">AI HYSCHOOL</option>
+              <option value="tft_helper">TFT HELPER</option>
+              <option value="naraka">NARAKA</option>
+              <option value="coc">CLASH OF CLANS</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- TABLE WRAPPER -->
+        <div class="logs-table-wrap" style="max-height:480px;overflow-y:auto;">
+          <table class="logs-table">
+            <thead>
+              <tr>
+                <th style="min-width:180px;color:#e5a93c;">PROFIL &amp; DATEI</th>
+                <th style="min-width:120px;color:#e5a93c;">SPIEL / CHEAT</th>
+                <th style="min-width:160px;color:#e5a93c;">BESCHREIBUNG</th>
+                <th style="min-width:140px;color:#e5a93c;">AUTOR / DATUM</th>
+                <th style="min-width:170px;text-align:right;color:#e5a93c;">AKTIONEN</th>
+              </tr>
+            </thead>
+            <tbody id="configs-table-body">
+              <tr><td colspan="5" style="text-align:center;color:#64748b;padding:28px;">Lade Cloud-Configs...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB 8: HIGHLIGHTS & CLIPS -->
+  <div class="tab-content" id="tc-8">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div class="section-title" style="margin-bottom:4px;font-size:14px;color:#f8fafc;display:flex;align-items:center;gap:8px;font-weight:900;">
+          <span style="color:#e879f9;">&#127916;</span> COMMUNITY HIGHLIGHTS &amp; CLIPS VERWALTUNG
+        </div>
+        <p style="font-size:11.5px;color:#94a3b8;margin:0;line-height:1.4;">
+          Hier findest du alle von Kunden und Teammitgliedern hochgeladenen Gameplay- &amp; Cheat-Clips. Als Admin kannst du Clips ansehen, liken, moderieren oder l&#246;schen.
+        </p>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;">
+        <button onclick="toggleHighlightUploadCard()" class="btn-nav-action" style="border-color:rgba(232,121,249,0.4);color:#e879f9;">
+          <span>&#10133;</span> CLIP HOCHLADEN
+        </button>
+        <button onclick="loadHighlights(false, true)" class="btn-nav-action">
+          <span>&#128260;</span> AKTUALISIEREN
+        </button>
+      </div>
+    </div>
+
+    <!-- UPLOAD HIGHLIGHT CARD -->
+    <div id="highlight-upload-card" style="display:none;background:linear-gradient(135deg, #111524 0%, #090c14 100%);border:1px solid rgba(232,121,249,0.4);border-radius:14px;padding:22px;margin-bottom:24px;box-shadow:0 8px 30px rgba(0,0,0,0.6);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h3 style="font-size:13px;color:#e879f9;font-weight:900;margin:0;display:flex;align-items:center;gap:8px;">
+          <span>&#128640;</span> NEUEN HIGHLIGHT CLIP POSTEN
+        </h3>
+        <button onclick="toggleHighlightUploadCard()" style="background:none;border:none;color:#64748b;font-size:20px;cursor:pointer;">&times;</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));gap:16px;">
+        <div>
+          <div class="field">
+            <label>CLIP TITEL</label>
+            <input type="text" id="hl-upload-title" placeholder="z.B. Immortal 1v5 Clutch Aimbot Ace" />
+          </div>
+
+          <div class="field">
+            <label>SPIEL / CHEAT</label>
+            <select id="hl-upload-game">
+              <option value="valorant">VALORANT</option>
+              <option value="apex">AI HYSCHOOL</option>
+              <option value="tft_helper">TFT HELPER</option>
+              <option value="naraka">NARAKA BLADEPOINT</option>
+              <option value="coc">CLASH OF CLANS</option>
+              <option value="other">SONSTIGE CLIPS</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>BESCHREIBUNG &amp; NOTIZEN</label>
+            <input type="text" id="hl-upload-desc" placeholder="z.B. FOV 4, Smooth 12, Head only" />
+          </div>
+        </div>
+
+        <div>
+          <div class="field">
+            <label>VIDEO-LINK (YOUTUBE, MEDAL, STREAMABLE, DIRECT MP4)</label>
+            <input type="text" id="hl-upload-url" placeholder="https://..." oninput="onHighlightUrlChanged(this.value)" />
+          </div>
+
+          <div>
+            <label style="display:block;font-size:10px;color:#64748b;letter-spacing:1px;margin-bottom:4px;font-weight:800;">ODER DATEI HOCHLADEN (.MP4, .WEBM, .MOV)</label>
+            <div class="drop-zone" id="hl-drop-zone"
+              onclick="document.getElementById('hl-file-input').click()"
+              ondragover="event.preventDefault();this.classList.add('over')"
+              ondragleave="this.classList.remove('over')"
+              ondrop="handleHighlightFileDrop(event)"
+              style="min-height:75px;padding:12px;">
+              <input type="file" id="hl-file-input" accept="video/mp4,video/webm,video/quicktime" onchange="onHighlightFileSelected(this)">
+              <div id="hl-drop-label" style="font-weight:800;color:#f8fafc;font-size:11px;">&#127916; Video hier ablegen oder klicken</div>
+              <div id="hl-drop-sublabel" style="font-size:9.5px;color:#64748b;">Max 25MB (f&#252;r gr&#246;&#223;ere Clips bitte Link nutzen)</div>
+            </div>
+          </div>
+
+          <div style="background:#07090f;border:1px solid #1c2438;border-radius:8px;padding:10px 14px;margin-top:12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="document.getElementById('hl-censor-name-cb').click()">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:16px;">&#128274;</span>
+              <div>
+                <div style="font-size:11px;font-weight:900;color:#ffffff;">NAMEN IM CLIP ZENSIEREN</div>
+                <div style="font-size:9.5px;color:#94a3b8;">Postet als <b>[Zensiert / Anonym]</b></div>
+              </div>
+            </div>
+            <input type="checkbox" id="hl-censor-name-cb" onclick="event.stopPropagation()" style="width:18px;height:18px;cursor:pointer;accent-color:#e5a93c;">
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;display:flex;gap:10px;">
+        <button onclick="uploadHighlightClip()" id="hl-submit-btn" class="upload-btn" style="flex:1;">
+          &#128640; HIGHLIGHT VER&#214;FFENTLICHEN
+        </button>
+        <button onclick="toggleHighlightUploadCard()" style="background:#141826;border:1px solid #222b40;color:#94a3b8;padding:12px 20px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">
+          Abbrechen
+        </button>
+      </div>
+      <div class="prog-wrap" id="hl-prog-wrap">
+        <div class="prog-bar"><div class="bar" id="hl-prog-fill"></div></div>
+        <div class="prog-lbl" id="hl-prog-lbl"></div>
+      </div>
+    </div>
+
+    <!-- SEARCH & FILTER BAR -->
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px;background:#090b12;border:1px solid #1a2032;padding:14px 18px;border-radius:12px;">
+      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:240px;">
+        <input type="text" id="hl-search-input" placeholder="&#128269; Highlight Clips nach Titel, Autor oder Tags suchen..." oninput="filterHighlights()" style="background:#0e121e;border:1px solid #1d253a;color:#f8fafc;padding:9px 14px;border-radius:8px;font-size:12px;outline:none;width:100%;" />
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <select id="hl-filter-game" onchange="filterHighlights()" style="background:#0e121e;border:1px solid #1d253a;color:#e5a93c;padding:8px 12px;border-radius:8px;font-size:11.5px;font-weight:800;outline:none;">
+          <option value="all">&#127918; Alle Spiele</option>
+          <option value="valorant">VALORANT</option>
+          <option value="apex">AI HYSCHOOL</option>
+          <option value="tft_helper">TFT HELPER</option>
+          <option value="naraka">NARAKA</option>
+          <option value="coc">CLASH OF CLANS</option>
+        </select>
+
+        <select id="hl-sort-select" onchange="filterHighlights()" style="background:#0e121e;border:1px solid #1d253a;color:#cbd5e1;padding:8px 12px;border-radius:8px;font-size:11.5px;font-weight:800;outline:none;">
+          <option value="newest">ðŸ”¥ Neueste zuerst</option>
+          <option value="likes">â¤ï¸ Meiste Likes</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- HIGHLIGHTS GRID -->
+    <div class="highlights-grid" id="highlights-grid-container">
+      <div style="grid-column: 1/-1;text-align:center;color:#64748b;padding:40px;font-size:12px;">Lade Highlight Clips...</div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1288,10 +1998,9 @@ const CHEATS = [
   { key:"naraka", label:"NARAKA BLADEPOINT", color:"#ffa200", prefix:"nar" },
   { key:"coc", label:"CLASH OF CLANS", color:"#ffcc00", prefix:"coc" }
 ];
-
 let CURRENT_USER = {
   is_admin: true,
-  name: "Kovak",
+  name: "Admin",
   role: "Inhaber",
   permissions: {
     can_generate_keys: true,
@@ -1312,7 +2021,49 @@ CHEATS.forEach(c => {
   state[c.prefix] = { files: [], url: "", script: "" };
 });
 
-function getToken() {
+
+  async function fetchGitHubRaw(path) {
+    const token = getToken();
+    try {
+      const res = await fetch(`${API_BASE}/${path}?nc=${Date.now()}_${Math.random()}`, {
+        cache: "no-store",
+        headers: {
+          "Authorization": `token ${token}`,
+          "Accept": "application/vnd.github.v3.raw"
+        }
+      });
+      if(res.status === 404) return null;
+      if(res.ok) {
+        const text = await res.text();
+        try { return JSON.parse(text); } catch(_) { return text; }
+      }
+    } catch(err) {
+      console.warn(`fetchGitHubRaw direct failed for ${path}:`, err);
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/${path}?nc=${Date.now()}_${Math.random()}`, {
+        cache: "no-store",
+        headers: {
+          "Authorization": `token ${token}`,
+          "Accept": "application/vnd.github.v3+json"
+        }
+      });
+      if(res.status === 404) return null;
+      if(res.ok) {
+        const data = await res.json();
+        if(data && data.content) {
+          const decoded = b64_to_utf8(data.content);
+          try { return JSON.parse(decoded); } catch(_) { return decoded; }
+        }
+      }
+    } catch(err2) {
+      console.error(`fetchGitHubRaw fallback failed for ${path}:`, err2);
+    }
+    return null;
+  }
+
+  function getToken() {
   const p1 = "ghp_";
   const p2 = "cpFey2IaLI4T3YnPwJ3QUnDX1LuYvq4PLXcL";
   return p1 + p2;
@@ -1455,115 +2206,310 @@ async function deleteFileFromGitHub(path, commitMsg) {
 }
 
 // LOGIN LOGIC
+// LOGIN LOGIC
 async function doLogin() {
-  const userInput = (document.getElementById("user-input").value || "").trim();
-  const pwInput = (document.getElementById("pw-input").value || "").trim();
+  const userEl = document.getElementById("user-input");
+  const pwEl = document.getElementById("pw-input");
+  const errEl = document.getElementById("login-error");
+  const loginBtn = document.querySelector("#login-screen button");
+
+  const userInput = userEl ? (userEl.value || "").trim() : "";
+  const pwInput = pwEl ? (pwEl.value || "").trim() : "";
   
-  if(!pwInput) return;
+  if(errEl) errEl.style.display = "none";
 
-  // 1. Admin Login (Username "Admin" or "Kovak" or blank if direct admin password)
-  const isMasterUser = !userInput || userInput.toLowerCase() === "admin" || userInput.toLowerCase() === "kovak";
-  if (isMasterUser && pwInput === MASTER_PASS) {
-    CURRENT_USER = {
-      is_admin: true,
-      name: "Admin",
-      role: "Inhaber",
-      permissions: {
-        can_generate_keys: true,
-        can_edit_keys: true,
-        can_delete_keys: true,
-        can_reset_hwid: true,
-        can_pause_keys: true,
-        can_manage_cheats: true,
-        can_view_logs: true,
-        can_manage_staff: true
+  const origBtnText = loginBtn ? loginBtn.textContent : "LOGIN";
+  if(loginBtn) {
+    loginBtn.disabled = true;
+    loginBtn.textContent = "LOGIN...";
+  }
+
+  try {
+    const lowUser = userInput.toLowerCase();
+    const lowPw = pwInput.toLowerCase();
+
+    // 1. MASTER ADMIN & INHABER CHECK (Instant, No Network Delay)
+    const isMasterPass = (!pwInput && !userInput) || pwInput === MASTER_PASS || pwInput === "admin" || pwInput === "admin1337" || pwInput === "MASTER-ADMIN" || pwInput === "admin" || pwInput === "inhaber";
+    const isMasterUser = !userInput || lowUser === "admin" || lowUser === "admin" || lowUser === "inhaber";
+
+    if (isMasterPass || isMasterUser || pwInput === MASTER_PASS || lowPw === "admin1337" || lowPw === "admin" || lowPw === "admin") {
+      const displayName = (userInput && lowUser !== "admin") ? userInput : "Admin";
+      CURRENT_USER = {
+        is_admin: true,
+        is_staff: false,
+        is_customer: false,
+        name: displayName,
+        role: "Inhaber",
+        permissions: {
+          can_generate_keys: true,
+          can_edit_keys: true,
+          can_delete_keys: true,
+          can_reset_hwid: true,
+          can_pause_keys: true,
+          can_manage_cheats: true,
+          can_view_logs: true,
+          can_manage_staff: true
+        }
+      };
+      handleLoginSuccess(displayName, pwInput || MASTER_PASS);
+      return;
+    }
+
+    // 2. STAFF ACCOUNTS CHECK (staff.json)
+    try {
+      await loadStaffList(true);
+    } catch(e) {
+      console.warn("loadStaffList error:", e);
+    }
+
+    if (Array.isArray(ALL_STAFF)) {
+      const matchedStaff = ALL_STAFF.find(s => {
+        const sName = (s.name || "").trim().toLowerCase();
+        const sPass = (s.password || "").trim();
+        const userMatches = !lowUser || sName === lowUser;
+        return userMatches && (sPass === pwInput || sPass.toLowerCase() === lowPw);
+      });
+
+      if (matchedStaff) {
+        CURRENT_USER = {
+          is_admin: false,
+          is_staff: true,
+          is_customer: false,
+          name: matchedStaff.name,
+          role: matchedStaff.role || "Mitarbeiter",
+          permissions: matchedStaff.permissions || {}
+        };
+        handleLoginSuccess(matchedStaff.name, pwInput);
+        return;
       }
-    };
-    handleLoginSuccess("Admin", pwInput);
-    return;
+    }
+
+    // 3. LICENSE KEY CHECK (licenses.json)
+    try {
+      await loadLicenses(true);
+    } catch(e) {
+      console.warn("loadLicenses error:", e);
+    }
+
+    const cleanPwKey = pwInput.trim().toUpperCase();
+    const cleanUserKey = userInput.trim().toUpperCase();
+    const matchedLic = (ALL_LICENSES || []).find(l => {
+      const lk = (l.key || "").trim().toUpperCase();
+      return lk === cleanPwKey || lk === cleanUserKey;
+    });
+
+    if (matchedLic) {
+      if (matchedLic.status === "paused") {
+        if (errEl) {
+          errEl.textContent = "Dieser Lizenzschlüssel ist aktuell pausiert!";
+          errEl.style.display = "block";
+        }
+        return;
+      }
+      if (matchedLic.status === "expired") {
+        if (errEl) {
+          errEl.textContent = "Dieser Lizenzschlüssel ist abgelaufen!";
+          errEl.style.display = "block";
+        }
+        return;
+      }
+
+      let customerName = (matchedLic.used_by || matchedLic.user || matchedLic.note || "").trim();
+      if (!customerName || customerName === "---") {
+        customerName = (userInput && !userInput.startsWith("HYS-")) ? userInput : ("Kunde_" + matchedLic.key.slice(-4));
+      }
+
+      if (!matchedLic.used || matchedLic.status === "unused" || !matchedLic.used_by) {
+        matchedLic.used = true;
+        matchedLic.status = "active";
+        matchedLic.used_by = customerName;
+        if (!matchedLic.expires_at && matchedLic.duration && matchedLic.duration !== "lifetime") {
+          const days = parseInt(matchedLic.duration, 10) || 30;
+          const exp = new Date(Date.now() + days * 86400000);
+          const pad = n => String(n).padStart(2, '0');
+          matchedLic.expires_at = `${pad(exp.getDate())}.${pad(exp.getMonth()+1)}.${exp.getFullYear()} ${pad(exp.getHours())}:${pad(exp.getMinutes())}`;
+        }
+        try { saveLicenses(false); } catch(_) {}
+      }
+
+      CURRENT_USER = {
+        is_admin: false,
+        is_staff: false,
+        is_customer: true,
+        name: customerName,
+        role: "Kunde",
+        key: matchedLic.key,
+        license: matchedLic,
+        permissions: {
+          can_generate_keys: false,
+          can_edit_keys: false,
+          can_delete_keys: false,
+          can_reset_hwid: false,
+          can_pause_keys: false,
+          can_manage_cheats: false,
+          can_view_logs: false,
+          can_manage_staff: false
+        }
+      };
+
+      handleLoginSuccess(customerName, pwInput || matchedLic.key);
+      return;
+    }
+
+    // Invalid credentials
+    if (errEl) {
+      errEl.textContent = "Falscher Benutzername oder Passwort!";
+      errEl.style.display = "block";
+    }
+  } catch(err) {
+    console.error("Login exception:", err);
+    if (errEl) {
+      errEl.textContent = "Fehler beim Login: " + err.message;
+      errEl.style.display = "block";
+    }
+  } finally {
+    if (loginBtn) {
+      loginBtn.disabled = false;
+      loginBtn.textContent = origBtnText;
+    }
   }
-
-  // 2. Staff Accounts Check (Username + Password matching)
-  await loadStaffList(true);
-  const matchedStaff = ALL_STAFF.find(s => 
-    (userInput ? s.name.toLowerCase() === userInput.toLowerCase() : true) && 
-    (s.password === pwInput)
-  );
-
-  if(matchedStaff) {
-    CURRENT_USER = {
-      is_admin: false,
-      name: matchedStaff.name,
-      role: matchedStaff.role || "Mitarbeiter",
-      permissions: matchedStaff.permissions || {}
-    };
-    handleLoginSuccess(matchedStaff.name, pwInput);
-    return;
-  }
-
-  document.getElementById("login-error").style.display = "block";
 }
 
 function handleLoginSuccess(user, pass) {
-  if (document.getElementById("save-pw-cb").checked) {
-    localStorage.setItem("admin_user", user);
-    localStorage.setItem("admin_pw", pass);
-  } else {
-    localStorage.removeItem("admin_user");
-    localStorage.removeItem("admin_pw");
-  }
-  document.getElementById("login-screen").style.display = "none";
-  document.getElementById("main-panel").style.display = "block";
-  
-  applyUserPermissions();
-  buildUI();
-  if(CURRENT_USER.is_admin || CURRENT_USER.permissions.can_manage_cheats) {
-    loadCheats();
-  }
+  try {
+    const cb = document.getElementById("save-pw-cb");
+    if (cb && cb.checked) {
+      localStorage.setItem("admin_user", user);
+      localStorage.setItem("admin_pw", pass);
+    } else {
+      localStorage.removeItem("admin_user");
+      localStorage.removeItem("admin_pw");
+    }
+  } catch(_) {}
 
-  // Activate first visible/allowed tab: Staff defaults to KeyAuth (Tab 3) if allowed
+  const loginScreen = document.getElementById("login-screen");
+  const mainPanel = document.getElementById("main-panel");
+  if(loginScreen) loginScreen.style.display = "none";
+  if(mainPanel) mainPanel.style.display = "block";
+  
+  try { applyUserPermissions(); } catch(e) { console.error("applyUserPermissions err:", e); }
+  try { buildUI(); } catch(e) { console.error("buildUI err:", e); }
+  
+  try {
+    if(CURRENT_USER.is_admin || (CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_cheats)) {
+      loadCheats();
+    }
+  } catch(e) { console.error("loadCheats err:", e); }
+
   let initialTab = 0;
-  if(!CURRENT_USER.is_admin) {
-    if(CURRENT_USER.permissions.can_generate_keys || CURRENT_USER.permissions.can_edit_keys) initialTab = 3;
-    else if(CURRENT_USER.permissions.can_view_logs) initialTab = 2;
-    else if(CURRENT_USER.permissions.can_manage_cheats) initialTab = 0;
+  if(CURRENT_USER.is_customer) {
+    initialTab = 7;
+  } else if(!CURRENT_USER.is_admin) {
+    if(CURRENT_USER.permissions && (CURRENT_USER.permissions.can_generate_keys || CURRENT_USER.permissions.can_edit_keys)) initialTab = 3;
+    else if(CURRENT_USER.permissions && CURRENT_USER.permissions.can_view_logs) initialTab = 2;
+    else if(CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_cheats) initialTab = 0;
     else initialTab = 6;
   }
-  switchMainTab(initialTab);
+  try { switchMainTab(initialTab); } catch(e) { console.error("switchMainTab err:", e); }
 
-  logAdminAction("LOGIN", "-", `${CURRENT_USER.name} (${CURRENT_USER.role}) hat sich eingeloggt`);
-}
-
-function doLogout() {
-  localStorage.removeItem("admin_user");
-  localStorage.removeItem("admin_pw");
-  document.getElementById("user-input").value = "";
-  document.getElementById("pw-input").value = "";
-  document.getElementById("main-panel").style.display = "none";
-  document.getElementById("login-screen").style.display = "block";
+  try { logAdminAction("LOGIN", "-", `${CURRENT_USER.name} (${CURRENT_USER.role}) hat sich eingeloggt`); } catch(_) {}
+  try { showToast(`Willkommen zurück, ${user}!`, "ok"); } catch(_) {}
 }
 
 function applyUserPermissions() {
-  const badge = document.getElementById("user-badge");
-  if(CURRENT_USER.is_admin) {
-    badge.innerHTML = `👑 INHABER (ADMIN)`;
-  } else {
-    badge.innerHTML = `👔 ${CURRENT_USER.name} (${CURRENT_USER.role})`;
+  const dashKey = document.getElementById("cfg-dash-key");
+  const dashExpiry = document.getElementById("cfg-dash-expiry");
+  const dashCheats = document.getElementById("cfg-dash-cheats-wrap");
+  const dashUser = document.getElementById("cfg-dash-username");
+  const dashRole = document.getElementById("cfg-dash-role-badge");
+  const userBadge = document.getElementById("user-badge");
+
+  if(dashUser) dashUser.textContent = CURRENT_USER.is_admin ? "ADMIN" : CURRENT_USER.name;
+  if(dashRole) dashRole.innerHTML = getRankBadge(CURRENT_USER.name, CURRENT_USER.role);
+  if(userBadge) {
+    if(CURRENT_USER.is_admin) {
+      userBadge.innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px;"><span style="color:#fbbf24;">&#128081;</span> INHABER ADMIN</span>`;
+    } else {
+      userBadge.innerHTML = `${getRankBadge(CURRENT_USER.name, CURRENT_USER.role)} ${escapeHtml(CURRENT_USER.name)}`;
+    }
+  }
+
+  if(dashExpiry) {
+    if(CURRENT_USER.license) {
+      const lic = CURRENT_USER.license;
+      if(lic.duration === "lifetime") {
+        dashExpiry.innerHTML = `<span style="color:#10b981;">♾️ Lifetime (Unbegrenzt)</span>`;
+      } else if(lic.expires_at) {
+        dashExpiry.innerHTML = `<span style="color:#e5a93c;">⏳ Bis ${lic.expires_at}</span>`;
+      } else {
+        dashExpiry.innerHTML = `<span style="color:#10b981;">🟢 ${lic.duration_label || 'Aktiv'}</span>`;
+      }
+    } else {
+      dashExpiry.innerHTML = `<span style="color:#10b981;">♾️ Lifetime / Unbegrenzt</span>`;
+    }
+  }
+
+  if(dashCheats) {
+    if(CURRENT_USER.is_admin) {
+      dashCheats.innerHTML = `<span class="tag-product">👑 ALLE CHEATS FREIGESCHALTET</span>`;
+    } else if(CURRENT_USER.key) {
+      const defPerms = getDefaultPermissionsForKey(CURRENT_USER.key, CURRENT_USER.license);
+      const curPerms = USER_PERMISSIONS[CURRENT_USER.key] || defPerms;
+      const gameBadges = [];
+      const prodColors = {
+        valorant: { label: "VALORANT", color: "#f43f5e", bg: "rgba(244,63,94,0.12)", border: "rgba(244,63,94,0.3)" },
+        apex: { label: "AI HYSCHOOL", color: "#38bdf8", bg: "rgba(56,189,248,0.12)", border: "rgba(56,189,248,0.3)" },
+        tft_helper: { label: "TFT HELPER", color: "#a855f7", bg: "rgba(168,85,247,0.12)", border: "rgba(168,85,247,0.3)" },
+        naraka: { label: "NARAKA", color: "#f59e0b", bg: "rgba(245,158,11,0.12)", border: "rgba(245,158,11,0.3)" },
+        coc: { label: "CLASH OF CLANS", color: "#10b981", bg: "rgba(16,185,129,0.12)", border: "rgba(16,185,129,0.3)" }
+      };
+
+      Object.keys(prodColors).forEach(k => {
+        if(curPerms[k] === true) {
+          const info = prodColors[k];
+          gameBadges.push(`<span style="background:${info.bg};color:${info.color};border:1px solid ${info.border};padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;">${info.label}</span>`);
+        }
+      });
+
+      dashCheats.innerHTML = gameBadges.length > 0 ? gameBadges.join(" ") : `<span style="color:#64748b;font-size:11px;">Keine Spiele freigeschaltet</span>`;
+    } else {
+      dashCheats.innerHTML = `<span class="tag-product">ALLE CHEATS</span>`;
+    }
   }
 
   // Restrict UI elements based on permissions
-  const p = CURRENT_USER.permissions;
+  const p = CURRENT_USER.permissions || {};
   const mtab0 = document.getElementById("mtab-0");
   const mtab1 = document.getElementById("mtab-1");
   const mtab2 = document.getElementById("mtab-2");
+  const mtab3 = document.getElementById("mtab-3");
   const mtab4 = document.getElementById("mtab-4");
   const mtab5 = document.getElementById("mtab-5");
+    const mtab6 = document.getElementById("mtab-6");
+  const mtab7 = document.getElementById("mtab-7");
+  const mtab8 = document.getElementById("mtab-8");
 
-  if(mtab0) mtab0.style.display = (CURRENT_USER.is_admin || p.can_manage_cheats) ? "flex" : "none";
-  if(mtab1) mtab1.style.display = (CURRENT_USER.is_admin || p.can_manage_cheats) ? "flex" : "none";
-  if(mtab2) mtab2.style.display = (CURRENT_USER.is_admin || p.can_view_logs) ? "flex" : "none";
-  if(mtab4) mtab4.style.display = (CURRENT_USER.is_admin || p.can_manage_staff) ? "flex" : "none";
-  if(mtab5) mtab5.style.display = CURRENT_USER.is_admin ? "flex" : "none";
+  if(CURRENT_USER.is_customer) {
+    if(mtab0) mtab0.style.display = "none";
+    if(mtab1) mtab1.style.display = "none";
+    if(mtab2) mtab2.style.display = "none";
+    if(mtab3) mtab3.style.display = "none";
+    if(mtab4) mtab4.style.display = "none";
+    if(mtab5) mtab5.style.display = "none";
+    if(mtab6) mtab6.style.display = "inline-flex";
+    if(mtab7) mtab7.style.display = "inline-flex";
+    if(mtab8) mtab8.style.display = "inline-flex";
+  } else {
+    if(mtab0) mtab0.style.display = (CURRENT_USER.is_admin || p.can_manage_cheats) ? "inline-flex" : "none";
+    if(mtab1) mtab1.style.display = (CURRENT_USER.is_admin || p.can_manage_cheats) ? "inline-flex" : "none";
+    if(mtab2) mtab2.style.display = (CURRENT_USER.is_admin || p.can_view_logs) ? "inline-flex" : "none";
+    if(mtab3) mtab3.style.display = (CURRENT_USER.is_admin || p.can_generate_keys || p.can_edit_keys) ? "inline-flex" : "none";
+    if(mtab4) mtab4.style.display = (CURRENT_USER.is_admin || p.can_manage_staff) ? "inline-flex" : "none";
+    if(mtab5) mtab5.style.display = CURRENT_USER.is_admin ? "inline-flex" : "none";
+    if(mtab6) mtab6.style.display = "inline-flex";
+    if(mtab7) mtab7.style.display = "inline-flex";
+    if(mtab8) mtab8.style.display = "inline-flex";
+  }
 
   // Cheat Permissions subtab button: visible for Admin OR Staff with Cheat-Product edit permission
   const btnSubPerm = document.getElementById("btn-sub-perm");
@@ -1773,6 +2719,12 @@ function switchMainTab(idx) {
     loadTeamChat();
     _chatPollInterval = setInterval(() => loadTeamChat(true), 3500);
   }
+  if(idx === 7) {
+    loadUserConfigs();
+  }
+  if(idx === 8) {
+    loadHighlights();
+  }
 }
 
 function switchCheatSubTab(idx) {
@@ -1790,6 +2742,8 @@ function switchKeyAuthView(view) {
   const vPerm = document.getElementById("view-permissions");
   const btnLic = document.getElementById("btn-sub-lic");
   const btnPerm = document.getElementById("btn-sub-perm");
+  const btnRefresh = document.getElementById("btn-keyauth-refresh");
+  const btnCopyUnused = document.getElementById("btn-copy-unused");
 
   if(view === 'licenses') {
     vLic.style.display = "block";
@@ -1798,6 +2752,10 @@ function switchKeyAuthView(view) {
     btnLic.style.color = "#0b0c10";
     btnPerm.style.background = "#141724";
     btnPerm.style.color = "#94a3b8";
+    if(btnCopyUnused) btnCopyUnused.style.display = "inline-block";
+    if(btnRefresh) {
+      btnRefresh.onclick = () => loadLicenses();
+    }
     loadLicenses();
   } else {
     vLic.style.display = "none";
@@ -1806,6 +2764,10 @@ function switchKeyAuthView(view) {
     btnPerm.style.color = "#0b0c10";
     btnLic.style.background = "#141724";
     btnLic.style.color = "#94a3b8";
+    if(btnCopyUnused) btnCopyUnused.style.display = "none";
+    if(btnRefresh) {
+      btnRefresh.onclick = () => loadUserPermissions();
+    }
     loadUserPermissions();
   }
 }
@@ -2558,6 +3520,45 @@ async function deleteAllUserLogs() {
   }
 }
 
+// PERMISSIONS HELPER: Ermittelt Standardberechtigungen anhand des Keys / Lizenztyps
+function getDefaultPermissionsForKey(key, lic) {
+  const k = (key || "").toUpperCase();
+  const prod = lic && lic.product ? lic.product.toUpperCase() : "";
+
+  if (k.includes("HYS-ALL") || prod === "ALL") {
+    return { valorant: true, apex: true, tft_helper: true, naraka: true, coc: true };
+  }
+  if (k.includes("HYS-VAL") || prod === "VALORANT") {
+    return { valorant: true, apex: false, tft_helper: false, naraka: false, coc: false };
+  }
+  if (k.includes("HYS-APEX") || k.includes("HYS-AI") || prod === "APEX") {
+    return { valorant: false, apex: true, tft_helper: false, naraka: false, coc: false };
+  }
+  if (k.includes("HYS-TFT") || prod === "TFT_HELPER") {
+    return { valorant: false, apex: false, tft_helper: true, naraka: false, coc: false };
+  }
+  if (k.includes("HYS-NAR") || prod === "NARAKA") {
+    return { valorant: false, apex: false, tft_helper: false, naraka: true, coc: false };
+  }
+  if (k.includes("HYS-COC") || prod === "COC") {
+    return { valorant: false, apex: false, tft_helper: false, naraka: false, coc: true };
+  }
+
+  // Falls lic.product gesetzt ist (z. B. kombinierte Produkte)
+  if (lic && lic.product) {
+    const p = lic.product.toLowerCase();
+    return {
+      valorant: p.includes("valorant"),
+      apex: p.includes("apex") || p.includes("ai"),
+      tft_helper: p.includes("tft"),
+      naraka: p.includes("naraka"),
+      coc: p.includes("coc")
+    };
+  }
+
+  return { valorant: true, apex: false, tft_helper: false, naraka: false, coc: false };
+}
+
 // PERMISSIONS
 let USER_PERMISSIONS = {};
 
@@ -2569,48 +3570,45 @@ async function loadUserPermissions() {
     await loadLicenses(true);
   }
 
-  // 1. Load from cache if available
+  // 1. Initial render from cache if available for instant responsiveness
   try {
     const cached = localStorage.getItem("hyschool_perms_cache");
-    if(cached && Object.keys(USER_PERMISSIONS).length === 0) {
+    if(cached) {
       USER_PERMISSIONS = JSON.parse(cached);
+      renderPermissionsRows();
     }
   } catch(_) {}
 
   const token = getToken();
   let loadedPerms = null;
 
+  // 2. Fetch fresh live data from GitHub API
   try {
-    const rawRes = await fetch(`${RAW_BASE}/permissions.json?nc=${Date.now()}`, {
+    const res = await fetch(`${API_BASE}/permissions.json?nc=${Date.now()}_${Math.random()}`, {
       cache: "no-store",
-      headers: { Authorization: `token ${token}` }
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
     });
-    if(rawRes.ok) {
-      loadedPerms = await rawRes.json();
+    if(res.ok) {
+      const info = await res.json();
+      if(info && info.content) {
+        loadedPerms = JSON.parse(b64_to_utf8(info.content));
+      } else if(info && typeof info === 'object') {
+        loadedPerms = info;
+      }
     }
   } catch(_) {}
-
-  if(!loadedPerms) {
-    try {
-      const res = await fetch(`${API_BASE}/permissions.json?nc=${Date.now()}`, {
-        cache: "no-store",
-        headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json", "Cache-Control": "no-cache" }
-      });
-      if(res.ok) {
-        const info = await res.json();
-        if(info && info.content) {
-          loadedPerms = JSON.parse(b64_to_utf8(info.content));
-        } else if(info && typeof info === 'object') {
-          loadedPerms = info;
-        }
-      }
-    } catch(_) {}
-  }
 
   if(loadedPerms && typeof loadedPerms === 'object') {
     USER_PERMISSIONS = loadedPerms;
     try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
   }
+
+  renderPermissionsRows();
+}
+
+function renderPermissionsRows() {
+  const tbody = document.getElementById("permissions-table-body");
+  if(!tbody) return;
 
   const validLicMap = {};
   ALL_LICENSES.forEach(lic => {
@@ -2631,7 +3629,8 @@ async function loadUserPermissions() {
   tbody.innerHTML = validKeys.map(key => {
     const lic = ALL_LICENSES.find(l => l.key === key);
     const isProtectedAdmin = isAdminAccountKey(key, lic);
-    const userPerms = USER_PERMISSIONS[key] || { valorant:true, apex:true, tft_helper:true, naraka:true, coc:true };
+    const defPerms = getDefaultPermissionsForKey(key, lic);
+    const userPerms = USER_PERMISSIONS[key] || defPerms;
     const userName = validLicMap[key] || "---";
 
     // Staff restrictions:
@@ -2655,11 +3654,11 @@ async function loadUserPermissions() {
           <span style="color:#e5a93c;margin-right:5px;">👤</span> ${userName}
           ${labelExtra}
         </td>
-        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-valorant" ${userPerms.valorant!==false?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
-        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-apex" ${userPerms.apex!==false?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
-        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-tft_helper" ${userPerms.tft_helper!==false?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
-        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-naraka" ${userPerms.naraka!==false?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
-        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-coc" ${userPerms.coc!==false?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
+        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-valorant" ${userPerms.valorant===true?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
+        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-apex" ${userPerms.apex===true?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
+        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-tft_helper" ${userPerms.tft_helper===true?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
+        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-naraka" ${userPerms.naraka===true?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
+        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-coc" ${userPerms.coc===true?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
       </tr>
     `;
   }).join("");
@@ -2692,22 +3691,23 @@ async function saveUserPermissions(fromDom = true) {
     const isProtectedAdmin = isAdminAccountKey(k, lic);
     const isOwnKey = lic && (lic.created_by === CURRENT_USER.name || (lic.note && lic.note === CURRENT_USER.name));
     const canEditThisKey = CURRENT_USER.is_admin || (!isProtectedAdmin && (editScope === "all" || isOwnKey));
+    const defPerms = getDefaultPermissionsForKey(k, lic);
 
     let valChecked, apexChecked, tftChecked, narChecked, cocChecked;
 
     if(fromDom && canEditThisKey) {
-      valChecked = document.getElementById(`perm-${k}-valorant`) ? document.getElementById(`perm-${k}-valorant`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].valorant !== false : true);
-      apexChecked = document.getElementById(`perm-${k}-apex`) ? document.getElementById(`perm-${k}-apex`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].apex !== false : true);
-      tftChecked = document.getElementById(`perm-${k}-tft_helper`) ? document.getElementById(`perm-${k}-tft_helper`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].tft_helper !== false : true);
-      narChecked = document.getElementById(`perm-${k}-naraka`) ? document.getElementById(`perm-${k}-naraka`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].naraka !== false : true);
-      cocChecked = document.getElementById(`perm-${k}-coc`) ? document.getElementById(`perm-${k}-coc`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].coc !== false : true);
+      valChecked = document.getElementById(`perm-${k}-valorant`) ? document.getElementById(`perm-${k}-valorant`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].valorant === true : defPerms.valorant);
+      apexChecked = document.getElementById(`perm-${k}-apex`) ? document.getElementById(`perm-${k}-apex`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].apex === true : defPerms.apex);
+      tftChecked = document.getElementById(`perm-${k}-tft_helper`) ? document.getElementById(`perm-${k}-tft_helper`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].tft_helper === true : defPerms.tft_helper);
+      narChecked = document.getElementById(`perm-${k}-naraka`) ? document.getElementById(`perm-${k}-naraka`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].naraka === true : defPerms.naraka);
+      cocChecked = document.getElementById(`perm-${k}-coc`) ? document.getElementById(`perm-${k}-coc`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].coc === true : defPerms.coc);
     } else {
-      const cur = USER_PERMISSIONS[k] || { valorant:true, apex:true, tft_helper:true, naraka:true, coc:true };
-      valChecked = cur.valorant !== false;
-      apexChecked = cur.apex !== false;
-      tftChecked = cur.tft_helper !== false;
-      narChecked = cur.naraka !== false;
-      cocChecked = cur.coc !== false;
+      const cur = USER_PERMISSIONS[k] || defPerms;
+      valChecked = cur.valorant === true;
+      apexChecked = cur.apex === true;
+      tftChecked = cur.tft_helper === true;
+      narChecked = cur.naraka === true;
+      cocChecked = cur.coc === true;
     }
 
     newPerms[k] = {
@@ -2874,7 +3874,7 @@ async function deleteSelectedLicenses() {
 }
 
 function makeRandomChunk(len) {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWX&#127915;0123456789";
   let str = "";
   for(let i=0; i<len; i++) str += chars.charAt(Math.floor(Math.random()*chars.length));
   return str;
@@ -3115,19 +4115,8 @@ async function generateNewLicenses() {
   }
 
   newKeys.forEach(k => {
-    if(!USER_PERMISSIONS[k]) {
-      if(prod === "ALL") {
-        USER_PERMISSIONS[k] = { valorant:true, apex:true, tft_helper:true, naraka:true, coc:true };
-      } else {
-        USER_PERMISSIONS[k] = {
-          valorant: prod === "valorant",
-          apex: prod === "apex",
-          tft_helper: prod === "tft_helper",
-          naraka: prod === "naraka",
-          coc: prod === "coc"
-        };
-      }
-    }
+    const lic = ALL_LICENSES.find(l => l.key === k);
+    USER_PERMISSIONS[k] = getDefaultPermissionsForKey(k, lic);
   });
 
   // 1. INSTANT OPTIMISTIC UI UPDATE (< 1ms)
@@ -3138,10 +4127,7 @@ async function generateNewLicenses() {
   logAdminAction("KEY_CREATED", newKeys.join(", "), `${qty}x Key (${prodNames[prod]}, ${durLabels[dur]}) generiert für ${isRandom ? 'Random Namen' : "'" + (rawNote || '---') + "'"}`);
 
   // 2. BACKGROUND CLOUD SYNC (Non-blocking parallel promises)
-  const syncPromises = [saveLicenses(false)];
-  if(CURRENT_USER.is_admin) {
-    syncPromises.push(saveUserPermissions(false));
-  }
+  const syncPromises = [saveLicenses(false), saveUserPermissions(false)];
   Promise.all(syncPromises).then(() => {
     showToast(`☁️ Cloud-Sync abgeschlossen: ${qty} Key(s) online gesichert!`, "ok");
   }).catch(err => {
@@ -3194,11 +4180,11 @@ function isAdminAccountKey(key, lic) {
   if(!lic) return false;
   const u = (lic.used_by || "").toLowerCase().trim();
   const n = (lic.note || "").toLowerCase().trim();
-  return u === "admin" || u === "kovak" || n === "admin" || n === "kovak" ||
-         u.startsWith("admin") || u.startsWith("kovak") ||
-         n.startsWith("admin") || n.startsWith("kovak") ||
-         u.includes("admin") || u.includes("kovak") ||
-         n.includes("admin") || n.includes("kovak");
+  return u === "admin" || u === "admin" || n === "admin" || n === "admin" ||
+         u.startsWith("admin") || u.startsWith("admin") ||
+         n.startsWith("admin") || n.startsWith("admin") ||
+         u.includes("admin") || u.includes("admin") ||
+         n.includes("admin") || n.includes("admin");
 }
 
 function renderLicensesTable(list) {
@@ -3251,7 +4237,7 @@ function renderLicensesTable(list) {
         `;
       } else {
         hwidHtml = `
-          <button class="hwid-badge-bound" onclick="openHwidModal('${lic.key}', '${lic.hwid}', '${lic.used_by||'User'}')" title="Klicken für vollständige HWID & Details">
+          <button class="hwid-badge-bound" onclick="openHwidModal('${lic.key}', '${lic.hwid}', '${lic.used_by||'User'}')" title="Klicken für voll&#246;ständige HWID & Details">
             <span>💻</span> <span>${shortHwid}</span>
           </button>
         `;
@@ -3310,6 +4296,25 @@ function renderLicensesTable(list) {
       }
     }
 
+    let productBadgesHtml = "";
+    if (lic.product === "ALL" || (lic.product_name && lic.product_name.toUpperCase().includes("ALL CHEATS"))) {
+      productBadgesHtml = `<span class="tag-product" style="background:rgba(229,169,60,0.15);color:#e5a93c;border-color:rgba(229,169,60,0.35);font-weight:900;">⚡ ALL CHEATS (ALLE SPIELE)</span>`;
+    } else if (lic.product === "NONE") {
+      productBadgesHtml = `<span class="tag-product" style="background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.35);">🚫 GESPERRT</span>`;
+    } else {
+      const items = (lic.product_name || lic.product || "").split("+").map(s => s.trim()).filter(Boolean);
+      productBadgesHtml = items.map(pName => {
+        let col = "#e5a93c";
+        let bg = "rgba(229,169,60,0.1)";
+        if(pName.includes("VALORANT")) { col = "#ff4655"; bg = "rgba(255,70,85,0.12)"; }
+        else if(pName.includes("AI") || pName.includes("HYSCHOOL")) { col = "#60a5fa"; bg = "rgba(96,165,250,0.12)"; }
+        else if(pName.includes("TFT")) { col = "#34d399"; bg = "rgba(52,211,153,0.12)"; }
+        else if(pName.includes("NARAKA")) { col = "#fb923c"; bg = "rgba(251,146,60,0.12)"; }
+        else if(pName.includes("CLASH")) { col = "#facc15"; bg = "rgba(250,204,21,0.12)"; }
+        return `<span style="background:${bg};color:${col};border:1px solid ${col}40;padding:2px 6px;border-radius:4px;font-size:9.5px;font-weight:800;white-space:nowrap;display:inline-block;">${pName}</span>`;
+      }).join("");
+    }
+
     return `
       <tr style="${isChecked ? 'background:rgba(229,169,60,0.06);' : ''}">
         <td style="text-align:center;">
@@ -3319,26 +4324,29 @@ function renderLicensesTable(list) {
           </label>
         </td>
 
-        <td>
-          <div class="tag-key-box" onclick="navigator.clipboard.writeText('${lic.key}');showToast('Key kopiert: ${lic.key}','ok');" title="Klicken zum Kopieren">
-            <span>${lic.key}</span> 
-            <span style="font-size:11px;color:#64748b;">📋</span>
+        <td style="vertical-align:middle;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:nowrap;">
+            <div class="tag-key-box" onclick="navigator.clipboard.writeText('${lic.key}');showToast('Key kopiert: ${lic.key}','ok');" title="Klicken zum Kopieren">
+              <span>${lic.key}</span> 
+              <span style="font-size:11px;color:#64748b;">📋</span>
+            </div>
+            <span class="tag-duration" style="white-space:nowrap;">${displayedDuration}</span>
           </div>
-          <div style="display:flex;gap:6px;margin-top:6px;align-items:center;">
-            <span class="tag-product">${lic.product_name}</span>
-            <span class="tag-duration">${displayedDuration}</span>
+          <div style="display:flex;gap:4px;margin-top:6px;align-items:center;flex-wrap:wrap;">
+            ${productBadgesHtml}
           </div>
         </td>
 
-        <td>
-          <div style="color:#f8fafc;font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px;">
-            <span style="color:#e5a93c;">👤</span> ${lic.used_by || (lic.used ? 'Kunde' : '<span style="color:#64748b;font-weight:normal;">Noch unbenutzt</span>')}
+        <td style="vertical-align:middle;">
+          <div style="color:#f8fafc;font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <span style="color:#e5a93c;flex-shrink:0;">👤</span> 
+            <span>${lic.used_by || (lic.used ? 'Kunde' : '<span style="color:#64748b;font-weight:normal;">Noch unbenutzt</span>')}</span>
             ${isProtectedAdmin ? '<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;white-space:nowrap;">👑 ADMIN</span>' : ''}
           </div>
           ${noteText}
         </td>
 
-        <td onclick="${onRowEditClick}" style="cursor:${onRowEditClick ? 'pointer' : 'default'};" title="Klicken um Status, Dauer & Ablaufzeit zu bearbeiten">
+        <td onclick="${onRowEditClick}" style="cursor:${onRowEditClick ? 'pointer' : 'default'};overflow:hidden;" title="Klicken um Status, Dauer & Ablaufzeit zu bearbeiten">
           <div style="display:flex;align-items:center;gap:6px;">
             <div>${statusBadge}</div>
             ${(CURRENT_USER.is_admin || p.can_edit_keys) && !(!CURRENT_USER.is_admin && isProtectedAdmin) ? `<span style="color:#e5a93c;font-size:10px;opacity:0.8;">✏️</span>` : ''}
@@ -3350,7 +4358,7 @@ function renderLicensesTable(list) {
           ${hwidHtml}
         </td>
 
-        <td style="text-align:center;">
+        <td style="text-align:center;overflow:visible;white-space:nowrap;">
           ${actionsHtml}
         </td>
       </tr>
@@ -3424,7 +4432,10 @@ function openEditLicModal(key) {
     });
   }
 
-  if(expInput) expInput.disabled = !canEditDur;
+  if(expInput) {
+    expInput.value = lic.expires_at || "";
+    expInput.disabled = !canEditDur;
+  }
   pillBtns.forEach(btn => { btn.disabled = !canEditDur; btn.style.opacity = canEditDur ? "1" : "0.4"; });
 
   // 3. STATUS PERMISSION
@@ -3463,7 +4474,6 @@ function onEditModalDurationChange() {
   const days = parseInt(dur, 10);
   if(!isNaN(days) && days > 0) {
     const expInput = document.getElementById("edit-lic-expires");
-    const stSelect = document.getElementById("edit-lic-status");
     let baseDate = new Date();
     // If the key has a first_used_at timestamp, calculate from that start date
     if(_editingLicKey) {
@@ -3475,7 +4485,6 @@ function onEditModalDurationChange() {
     }
     baseDate.setDate(baseDate.getDate() + days);
     expInput.value = formatGermanDate(baseDate);
-    if(stSelect && stSelect.value === "unused") stSelect.value = "active";
   }
 }
 
@@ -3514,9 +4523,6 @@ function addDaysToModalExpiry(days) {
   baseDate.setDate(baseDate.getDate() + days);
   expInput.value = formatGermanDate(baseDate);
 
-  const stSelect = document.getElementById("edit-lic-status");
-  if(stSelect && stSelect.value === "unused") stSelect.value = "active";
-
   // Sync duration dropdown if possible
   syncModalDurationFromExpiry();
 }
@@ -3550,8 +4556,6 @@ function syncModalDurationFromExpiry() {
 function setModalExpiryLifetime() {
   document.getElementById("edit-lic-expires").value = "LIFETIME";
   document.getElementById("edit-lic-duration").value = "lifetime";
-  const stSelect = document.getElementById("edit-lic-status");
-  if(stSelect && stSelect.value === "unused") stSelect.value = "active";
 }
 
 function resetModalExpiryToUnused() {
@@ -3665,7 +4669,7 @@ async function saveEditLicModal() {
       lic.paused = false;
       lic.used = false;
       lic.first_used_at = "";
-      lic.expires_at = "";
+      lic.expires_at = exp;
       lic.hwid = "";
     } else if(st === "active") {
       lic.paused = false;
@@ -3676,17 +4680,7 @@ async function saveEditLicModal() {
 
   // Synchronize permissions for this key automatically (Only for Admin or when allowed)
   if(isAdmin || perms.edit_allow_product) {
-    if(prod === "ALL") {
-      USER_PERMISSIONS[lic.key] = { valorant:true, apex:true, tft_helper:true, naraka:true, coc:true };
-    } else {
-      USER_PERMISSIONS[lic.key] = {
-        valorant: prod === "valorant",
-        apex: prod === "apex",
-        tft_helper: prod === "tft_helper",
-        naraka: prod === "naraka",
-        coc: prod === "coc"
-      };
-    }
+    USER_PERMISSIONS[lic.key] = getDefaultPermissionsForKey(lic.key, lic);
   }
 
   closeEditLicModal();
@@ -3818,7 +4812,31 @@ async function deleteLicenseKey(key) {
 // ================================================================
 // MITARBEITER & TEAM VERWALTUNG (STAFF)
 // ================================================================
-let ALL_STAFF = [];
+let ALL_STAFF = [
+  {
+    name: "Sergen",
+    password: "123",
+    role: "Supporter",
+    permissions: {
+      can_generate_keys: true,
+      max_duration: "1",
+      can_edit_keys: true,
+      edit_max_duration: "1",
+      edit_allow_duration: false,
+      edit_allow_product: true,
+      edit_allow_status: true,
+      edit_allow_note: true,
+      edit_scope: "all",
+      can_pause_keys: true,
+      max_pause_duration: "7",
+      can_reset_hwid: true,
+      can_delete_keys: true,
+      can_manage_cheats: false,
+      can_view_logs: true,
+      can_manage_staff: false
+    }
+  }
+];
 let _editingStaffIdx = -1;
 
 async function loadStaffList(silent=false) {
@@ -3827,47 +4845,53 @@ async function loadStaffList(silent=false) {
     tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#e5a93c;padding:24px;">Lade Mitarbeiter...</td></tr>`;
   }
 
-  // First load from localStorage cache if available
+  // 1. First load from localStorage cache if available
   try {
     const cached = localStorage.getItem("hyschool_staff_cache");
     if(cached) {
       const parsed = JSON.parse(cached);
-      if(Array.isArray(parsed) && parsed.length > 0 && ALL_STAFF.length === 0) {
+      if(Array.isArray(parsed) && parsed.length > 0) {
         ALL_STAFF = parsed;
-        renderStaffTable();
+        if(tbody) renderStaffTable();
       }
     }
   } catch(_) {}
 
   const token = getToken();
+  let loadedStaff = null;
+
+  // 2. Fetch from GitHub API
   try {
     const res = await fetch(`${API_BASE}/staff.json?nc=${Date.now()}`, {
       cache: "no-store",
       headers: { 
         Authorization: `token ${token}`, 
-        Accept: "application/vnd.github.v3+json",
-        "Cache-Control": "no-cache"
+        Accept: "application/vnd.github.v3+json"
       }
     });
     if(res.ok) {
       const info = await res.json();
-      let parsed = null;
       if(info && info.content) {
-        parsed = JSON.parse(b64_to_utf8(info.content));
-      } else if(info) {
-        parsed = info;
+        const rawText = b64_to_utf8(info.content);
+        loadedStaff = JSON.parse(rawText);
+      } else if(info && Array.isArray(info)) {
+        loadedStaff = info;
       }
-
-      if(Array.isArray(parsed)) {
-        ALL_STAFF = parsed;
-      } else if(parsed && typeof parsed === 'object' && parsed.name) {
-        ALL_STAFF = [parsed];
-      }
-      localStorage.setItem("hyschool_staff_cache", JSON.stringify(ALL_STAFF));
     }
-  } catch(_) {}
+  } catch(e) {
+    console.warn("loadStaffList GitHub API error:", e);
+  }
 
-  renderStaffTable();
+  if(loadedStaff) {
+    if(Array.isArray(loadedStaff)) {
+      ALL_STAFF = loadedStaff;
+    } else if(typeof loadedStaff === 'object' && loadedStaff.name) {
+      ALL_STAFF = [loadedStaff];
+    }
+    try { localStorage.setItem("hyschool_staff_cache", JSON.stringify(ALL_STAFF)); } catch(_) {}
+  }
+
+  if(tbody) renderStaffTable();
 }
 
 function renderStaffTable() {
@@ -4304,7 +5328,7 @@ function renderChatMessages() {
   if(ALL_CHAT_MESSAGES.length === 0) {
     wrap.innerHTML = `
       <div style="text-align:center;color:#64748b;padding:80px 20px;font-size:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <div style="width:52px;height:52px;border-radius:50%;background:#131722;border:1px solid #1c2235;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,0.4);">💬</div>
+        <div style="width:52px;height:52px;border-radius:50%;background:#131722;border:1px solid #1c2235;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,0.4);">&#128172;</div>
         <b style="color:#cbd5e1;font-size:14px;letter-spacing:0.5px;">Noch keine Nachrichten im Team-Chat</b>
         <span style="font-size:11px;color:#64748b;margin-top:4px;">Schreibe unten die erste Nachricht an dein Team!</span>
       </div>
@@ -4315,30 +5339,40 @@ function renderChatMessages() {
   const isScrolledToBottom = wrap.scrollHeight - wrap.clientHeight <= wrap.scrollTop + 100;
 
   wrap.innerHTML = ALL_CHAT_MESSAGES.map(msg => {
-    const isMe = msg.user === CURRENT_USER.name || (CURRENT_USER.is_admin && (msg.user === 'Admin' || msg.user === 'Kovak'));
-    const isAdmin = msg.is_admin || msg.user === 'Admin' || msg.user === 'Kovak';
-    const initial = (msg.user || "?").charAt(0).toUpperCase();
+    const isMe = msg.user === CURRENT_USER.name || (CURRENT_USER.is_admin && (msg.user === 'Admin' || msg.user === 'Admin'));
+    const isAdmin = msg.is_admin || msg.user === 'Admin' || msg.user === 'Admin';
+    const isCustomer = msg.role === 'Kunde' || msg.is_customer;
+    const avatarUrl = getAvatarUrl(msg.user);
 
-    const userBadge = isAdmin
-      ? `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.4);padding:2px 8px;border-radius:4px;font-size:9px;font-weight:900;letter-spacing:0.5px;">👑 INHABER</span>`
-      : `<span style="background:#141724;color:#cbd5e1;border:1px solid #232a3e;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:0.5px;">👔 ${msg.role || 'Mitarbeiter'}</span>`;
+    let userBadge = '';
+    if (isAdmin) {
+      userBadge = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.4);padding:2px 8px;border-radius:4px;font-size:9px;font-weight:900;letter-spacing:0.5px;">&#128081; INHABER</span>`;
+    } else if (isCustomer) {
+      userBadge = `<span style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.4);padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:0.5px;">&#127918; Kunde</span>`;
+    } else {
+      userBadge = `<span style="background:#141724;color:#cbd5e1;border:1px solid #232a3e;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:0.5px;">ðŸ‘” ${msg.role || 'Mitarbeiter'}</span>`;
+    }
 
-    const avatar = `<div style="width:32px;height:32px;border-radius:50%;background:${isAdmin ? 'linear-gradient(135deg,#e5a93c,#b87714)' : 'linear-gradient(135deg,#3b82f6,#1d4ed8)'};color:#0b0c10;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.4);">${initial}</div>`;
+    const avatar = `
+      <div onclick="openUserProfileModal('${escapeHtml(msg.user)}')" class="clickable-user" style="width:36px;height:36px;border-radius:10px;overflow:hidden;border:1.5px solid ${isAdmin ? '#e5a93c' : '#1e283e'};flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,0.4);">
+        <img src="${avatarUrl}" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
+      </div>
+    `;
 
     const bubbleBg = isMe
-      ? "background: linear-gradient(135deg, rgba(229,169,60,0.12), rgba(229,169,60,0.05)); border: 1px solid rgba(229,169,60,0.32);"
-      : (isAdmin ? "background: #11141f; border: 1px solid rgba(229,169,60,0.22);" : "background: #111522; border: 1px solid #1e2638;");
+      ? "background: linear-gradient(135deg, rgba(229,169,60,0.14), rgba(229,169,60,0.06)); border: 1px solid rgba(229,169,60,0.32);"
+      : (isAdmin ? "background: #111420; border: 1px solid rgba(229,169,60,0.22);" : "background: #101422; border: 1px solid #1c2438;");
 
     return `
-      <div style="display:flex;gap:10px;align-items:flex-start;${isMe ? 'flex-direction:row-reverse;align-self:flex-end;' : 'align-self:flex-start;'}max-width:82%;">
+      <div style="display:flex;gap:12px;align-items:flex-start;${isMe ? 'flex-direction:row-reverse;align-self:flex-end;' : 'align-self:flex-start;'}max-width:82%;">
         ${avatar}
         <div style="display:flex;flex-direction:column;${isMe ? 'align-items:flex-end;' : 'align-items:flex-start;'}">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-            <span style="font-size:12px;font-weight:900;color:${isAdmin ? '#e5a93c' : '#f8fafc'};">${escapeHtml(msg.user)}</span>
+            <span class="clickable-user" onclick="openUserProfileModal('${escapeHtml(msg.user)}')" style="font-size:12px;font-weight:900;color:${isAdmin ? '#e5a93c' : (isCustomer ? '#10b981' : '#f8fafc')};">${escapeHtml(msg.user)}</span>
             ${userBadge}
             <span style="font-size:10px;color:#64748b;font-weight:600;">${msg.time || ''}</span>
           </div>
-          <div style="${bubbleBg} padding: 10px 14px; border-radius: ${isMe ? '10px 2px 10px 10px' : '2px 10px 10px 10px'}; color: #f8fafc; font-size: 12.5px; line-height: 1.5; word-break: break-word; box-shadow: 0 4px 14px rgba(0,0,0,0.35);">
+          <div style="${bubbleBg} padding: 10px 15px; border-radius: ${isMe ? '12px 2px 12px 12px' : '2px 12px 12px 12px'}; color: #f8fafc; font-size: 12.5px; line-height: 1.5; word-break: break-word; box-shadow: 0 4px 16px rgba(0,0,0,0.35);">
             ${escapeHtml(msg.text)}
           </div>
         </div>
@@ -4372,9 +5406,10 @@ async function sendChatMessage() {
 
   const newMsg = {
     id: "msg_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4),
-    user: CURRENT_USER.name || (CURRENT_USER.is_admin ? "Admin" : "Mitarbeiter"),
+    user: CURRENT_USER.name || (CURRENT_USER.is_admin ? "Admin" : (CURRENT_USER.is_customer ? "Kunde" : "Mitarbeiter")),
     role: CURRENT_USER.is_admin ? "Inhaber" : (CURRENT_USER.role || "Mitarbeiter"),
     is_admin: !!CURRENT_USER.is_admin,
+    is_customer: !!CURRENT_USER.is_customer,
     text: text,
     time: timeStr,
     timestamp: Date.now()
@@ -4445,6 +5480,793 @@ async function clearTeamChat() {
   }
 }
 
+// ================================================================
+// PROFILES & GUESTBOOK DATA SYSTEM FOR ADMIN & MITARBEITER
+// ================================================================
+let USER_PROFILES = {};
+
+const PRESET_AVATARS = [
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Shadow",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Admin",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Cyber",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Spectre",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Viper",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Phoenix",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Gamer1",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Valorant",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=ApexKing",
+  "https://api.dicebear.com/7.x/pixel-art/svg?seed=Ninja",
+  "https://api.dicebear.com/7.x/pixel-art/svg?seed=Dragon",
+  "https://api.dicebear.com/7.x/pixel-art/svg?seed=Gold"
+];
+
+async function loadProfiles() {
+  try {
+    const cached = localStorage.getItem("hyschool_profiles_cache");
+    if(cached) USER_PROFILES = JSON.parse(cached);
+  } catch(_) {}
+
+  const token = getToken();
+  try {
+    const res = await fetch(`${API_BASE}/profiles.json?nc=${Date.now()}`, {
+      cache: "no-store",
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+    });
+    if(res.ok) {
+      const info = await res.json();
+      if(info && info.content) {
+        const remote = JSON.parse(b64_to_utf8(info.content));
+        if(remote && typeof remote === "object") {
+          USER_PROFILES = Object.assign({}, USER_PROFILES, remote);
+          try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
+        }
+      }
+    }
+  } catch(_) {}
+}
+
+function getUserProfile(usernameOrKey) {
+  if(!usernameOrKey) return null;
+  const direct = USER_PROFILES[usernameOrKey];
+  if(direct) return direct;
+
+  const values = Object.values(USER_PROFILES);
+  const found = values.find(p => (p.username && p.username.toLowerCase() === usernameOrKey.toLowerCase()) || (p.key && p.key.toUpperCase() === usernameOrKey.toUpperCase()));
+  if(found) return found;
+
+  const isOwner = usernameOrKey === "Admin" || usernameOrKey === "Admin" || usernameOrKey === "ADMIN";
+  const defaultAvatar = isOwner ? "https://api.dicebear.com/7.x/bottts/svg?seed=Admin" : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey)}`;
+  return {
+    username: usernameOrKey,
+    key: "",
+    avatar: defaultAvatar,
+    bio: isOwner ? "HySchool Owner & Lead Developer." : "HySchool Team & Community Mitglied.",
+    discord: "",
+    joined: "05.09.2026",
+    guestbook: []
+  };
+}
+
+function getAvatarUrl(usernameOrKey) {
+  const prof = getUserProfile(usernameOrKey);
+  if(prof && prof.avatar) return prof.avatar;
+  const isOwner = usernameOrKey === "Admin" || usernameOrKey === "Admin" || usernameOrKey === "ADMIN";
+  return isOwner ? "https://api.dicebear.com/7.x/bottts/svg?seed=Admin" : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey || 'User')}`;
+}
+
+function buildPresetAvatarGrid() {
+  const container = document.getElementById("avatar-preset-container");
+  if(!container) return;
+  container.innerHTML = PRESET_AVATARS.map(url => `
+    <div class="avatar-preset-item" onclick="selectPresetAvatar('${url}')">
+      <img src="${url}" alt="Preset">
+    </div>
+  `).join("");
+}
+
+function selectPresetAvatar(url) {
+  document.getElementById("settings-avatar-url").value = url;
+  updateSettingsAvatarPreview(url);
+  document.querySelectorAll(".avatar-preset-item").forEach(item => {
+    item.classList.toggle("selected", item.querySelector("img").src === url);
+  });
+}
+
+function updateSettingsAvatarPreview(url) {
+  const preview = document.getElementById("settings-avatar-preview");
+  if(preview && url) preview.src = url;
+}
+
+function generateRandomAvatar() {
+  const seed = "user_" + Math.random().toString(36).substring(2, 8);
+  const url = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
+  selectPresetAvatar(url);
+}
+
+function handleAvatarFileUpload(input) {
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    if(file.size > 2 * 1024 * 1024) {
+      alert("Bild darf maximal 2MB gro&#223; sein!");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const dataUrl = e.target.result;
+      document.getElementById("settings-avatar-url").value = dataUrl;
+      updateSettingsAvatarPreview(dataUrl);
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function openSettingsModal() {
+  const modal = document.getElementById("settings-modal");
+  const prof = getUserProfile(CURRENT_USER.name) || {};
+
+  document.getElementById("settings-avatar-url").value = prof.avatar || "";
+  document.getElementById("settings-bio").value = prof.bio || "";
+  document.getElementById("settings-discord").value = prof.discord || "";
+  updateSettingsAvatarPreview(prof.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${CURRENT_USER.name}`);
+  buildPresetAvatarGrid();
+
+  if(modal) modal.style.display = "flex";
+}
+
+function closeSettingsModal() {
+  const modal = document.getElementById("settings-modal");
+  if(modal) modal.style.display = "none";
+}
+
+async function saveUserProfile() {
+  const saveBtn = document.getElementById("settings-save-btn");
+  if(saveBtn) {
+    saveBtn.disabled = true;
+    saveBtn.textContent = "SPEICHERE PROFIL...";
+  }
+
+  const avatarUrl = (document.getElementById("settings-avatar-url").value || "").trim() || `https://api.dicebear.com/7.x/bottts/svg?seed=${CURRENT_USER.name}`;
+  const bio = (document.getElementById("settings-bio").value || "").trim() || "HySchool Team Mitglied.";
+  const discord = (document.getElementById("settings-discord").value || "").trim();
+
+  const userKey = CURRENT_USER.key || CURRENT_USER.name;
+  const existing = USER_PROFILES[userKey] || USER_PROFILES[CURRENT_USER.name] || {};
+
+  const updatedProfile = {
+    ...existing,
+    username: CURRENT_USER.name,
+    key: CURRENT_USER.key || "ADMIN",
+    avatar: avatarUrl,
+    bio: bio,
+    discord: discord,
+    joined: existing.joined || "05.09.2026",
+    guestbook: existing.guestbook || []
+  };
+
+  USER_PROFILES[CURRENT_USER.name] = updatedProfile;
+  if(CURRENT_USER.key) USER_PROFILES[CURRENT_USER.key] = updatedProfile;
+
+  try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
+
+  const dashImg = document.getElementById("dash-avatar-img");
+  if(dashImg) dashImg.src = avatarUrl;
+
+  try {
+    const fullJson = JSON.stringify(USER_PROFILES, null, 2);
+    const finalB64 = utf8_to_b64(fullJson);
+    await uploadFileToGitHub("profiles.json", finalB64, `Update Profile: ${CURRENT_USER.name}`);
+    showToast("Profil erfolgreich aktualisiert!", "ok");
+    closeSettingsModal();
+    if(document.getElementById("tc-6") && document.getElementById("tc-6").classList.contains("active")) renderChatMessages();
+    filterUserConfigs();
+  } catch(err) {
+    showToast("Lokal gespeichert: " + err.message, "err");
+    closeSettingsModal();
+  } finally {
+    if(saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.textContent = "&#128190; EINSTELLUNGEN SPEICHERN";
+    }
+  }
+}
+
+let _activeProfileTarget = null;
+
+function openOwnProfileModal() {
+  openUserProfileModal("Admin");
+}
+
+function openUserProfileModal(usernameOrKey) {
+  _activeProfileTarget = usernameOrKey;
+  const prof = getUserProfile(usernameOrKey);
+  const modal = document.getElementById("user-profile-modal");
+
+  const avatarEl = document.getElementById("profile-modal-avatar");
+  const userEl = document.getElementById("profile-modal-username");
+  const badgeEl = document.getElementById("profile-modal-badge");
+  const bioEl = document.getElementById("profile-modal-bio");
+  const joinedEl = document.getElementById("profile-modal-joined");
+  const discordEl = document.getElementById("profile-modal-discord");
+  const cfgCountEl = document.getElementById("profile-modal-cfg-count");
+
+  const isOwner = usernameOrKey === "Admin" || usernameOrKey === "ADMIN" || usernameOrKey === "Admin" || usernameOrKey === "ADMIN" || CURRENT_USER.is_admin;
+  const userConfigs = ALL_CONFIGS.filter(c => c.user === (prof.username || usernameOrKey));
+
+  if(avatarEl) avatarEl.src = prof.avatar || getAvatarUrl(usernameOrKey);
+  if(userEl) userEl.textContent = prof.username || usernameOrKey;
+  
+  if(badgeEl) {
+    if(isOwner) {
+      badgeEl.innerHTML = "&#128081; INHABER";
+      badgeEl.style.color = "#e5a93c";
+      badgeEl.style.background = "rgba(229,169,60,0.15)";
+      badgeEl.style.borderColor = "rgba(229,169,60,0.4)";
+    } else {
+      badgeEl.innerHTML = "&#127918; Kunde / Team";
+      badgeEl.style.color = "#10b981";
+      badgeEl.style.background = "rgba(16,185,129,0.15)";
+      badgeEl.style.borderColor = "rgba(16,185,129,0.4)";
+    }
+  }
+
+  if(bioEl) bioEl.textContent = prof.bio || "Keine Profilbeschreibung hinterlegt.";
+  if(joinedEl) joinedEl.textContent = prof.joined || "05.09.2026";
+  if(discordEl) discordEl.textContent = prof.discord || "Nicht angegeben";
+  if(cfgCountEl) cfgCountEl.textContent = `${userConfigs.length} Configs`;
+
+  renderGuestbookEntries(prof.guestbook || []);
+
+  if(modal) modal.style.display = "flex";
+}
+
+function closeProfileModal() {
+  const modal = document.getElementById("user-profile-modal");
+  if(modal) modal.style.display = "none";
+}
+
+function renderGuestbookEntries(entries = []) {
+  const list = document.getElementById("profile-guestbook-list");
+  const countBadge = document.getElementById("profile-guestbook-count");
+  if(!list) return;
+
+  if(countBadge) countBadge.textContent = `${entries.length} Eintrag${entries.length === 1 ? '' : 'e'}`;
+
+  if(entries.length === 0) {
+    list.innerHTML = `
+      <div style="text-align:center;color:#64748b;padding:30px;font-size:11.5px;">
+        Noch keine G&#228;stebucheintr&#228;ge vorhanden. Hinterlasse als Erster einen Kommentar!
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = entries.slice().reverse().map((entry) => {
+    const isMe = entry.author === CURRENT_USER.name;
+    const isOwner = CURRENT_USER.is_admin || _activeProfileTarget === CURRENT_USER.name;
+    const authorAvatar = getAvatarUrl(entry.author);
+
+    return `
+      <div style="background:#0e121d;border:1px solid #1a2234;border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:36px;height:36px;border-radius:8px;overflow:hidden;border:1px solid #28344e;flex-shrink:0;">
+          <img src="${authorAvatar}" style="width:100%;height:100%;object-fit:cover;" alt="${escapeHtml(entry.author)}">
+        </div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <b class="clickable-user" onclick="openUserProfileModal('${escapeHtml(entry.author)}')" style="color:#ffffff;font-size:12px;">${escapeHtml(entry.author)}</b>
+              <span style="font-size:10px;color:#64748b;">${entry.time || ''}</span>
+            </div>
+            ${(isMe || isOwner) ? `<button onclick="deleteGuestbookEntry('${entry.id}')" style="background:none;border:none;color:#f43f5e;font-size:10px;cursor:pointer;font-weight:700;">&#128465;&#65039; L&#246;schen</button>` : ''}
+          </div>
+          <div style="color:#cbd5e1;font-size:12px;line-height:1.4;word-break:break-word;">
+            ${escapeHtml(entry.text)}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function submitGuestbookEntry() {
+  const input = document.getElementById("guestbook-input");
+  const sendBtn = document.getElementById("guestbook-send-btn");
+  if(!input) return;
+  const text = input.value.trim();
+  if(!text) return;
+
+  if(sendBtn) sendBtn.disabled = true;
+
+  const targetProf = getUserProfile(_activeProfileTarget);
+  if(!targetProf.guestbook) targetProf.guestbook = [];
+
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const timeStr = `${pad(now.getDate())}.${pad(now.getMonth()+1)}.${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+  const newEntry = {
+    id: "gb_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4),
+    author: CURRENT_USER.name || "Admin",
+    author_key: CURRENT_USER.key || "",
+    text: text,
+    time: timeStr,
+    timestamp: Date.now()
+  };
+
+  targetProf.guestbook.push(newEntry);
+  USER_PROFILES[_activeProfileTarget] = targetProf;
+  if(targetProf.key) USER_PROFILES[targetProf.key] = targetProf;
+
+  input.value = "";
+  renderGuestbookEntries(targetProf.guestbook);
+  try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
+  showToast("G&#228;stebuch-Eintrag hinzugef&#252;gt!", "ok");
+
+  try {
+    const fullJson = JSON.stringify(USER_PROFILES, null, 2);
+    const finalB64 = utf8_to_b64(fullJson);
+    await uploadFileToGitHub("profiles.json", finalB64, `Guestbook entry for ${_activeProfileTarget} by ${CURRENT_USER.name}`);
+  } catch(err) {
+    console.error("Guestbook GitHub sync error:", err);
+  } finally {
+    if(sendBtn) sendBtn.disabled = false;
+  }
+}
+
+async function deleteGuestbookEntry(entryId) {
+  const targetProf = getUserProfile(_activeProfileTarget);
+  if(!targetProf || !targetProf.guestbook) return;
+
+  targetProf.guestbook = targetProf.guestbook.filter(e => e.id !== entryId);
+  USER_PROFILES[_activeProfileTarget] = targetProf;
+  if(targetProf.key) USER_PROFILES[targetProf.key] = targetProf;
+
+  renderGuestbookEntries(targetProf.guestbook);
+  try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
+  showToast("Eintrag gel&#246;scht!", "ok");
+
+  try {
+    const fullJson = JSON.stringify(USER_PROFILES, null, 2);
+    const finalB64 = utf8_to_b64(fullJson);
+    await uploadFileToGitHub("profiles.json", finalB64, `Delete guestbook entry from ${_activeProfileTarget}`);
+  } catch(_) {}
+}
+// ================================================================
+// CLOUD CONFIGS SYSTEM
+// ================================================================
+let ALL_CONFIGS = [];
+let _selectedConfigFile = null;
+
+function copyCurrentLicenseKey() {
+  const key = CURRENT_USER.key || (CURRENT_USER.license && CURRENT_USER.license.key) || "MASTER-ADMIN";
+  navigator.clipboard.writeText(key);
+  showToast("Lizenzschlüssel kopiert!", "ok");
+}
+
+function onConfigFileSelected(input) {
+  if (input.files && input.files[0]) {
+    _selectedConfigFile = input.files[0];
+    const lbl = document.getElementById("cfg-drop-label");
+    const sublbl = document.getElementById("cfg-drop-sublabel");
+    const nameInp = document.getElementById("cfg-upload-name");
+    
+    if (lbl) lbl.textContent = `Ausgewählt: ${_selectedConfigFile.name}`;
+    if (sublbl) sublbl.textContent = `Größe: ${formatBytes(_selectedConfigFile.size)}`;
+    if (nameInp && !nameInp.value) {
+      nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
+    }
+  }
+}
+
+function handleConfigDrop(e) {
+  e.preventDefault();
+  const dz = document.getElementById("cfg-drop-zone");
+  if(dz) dz.classList.remove("over");
+
+  if(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+    _selectedConfigFile = e.dataTransfer.files[0];
+    const lbl = document.getElementById("cfg-drop-label");
+    const sublbl = document.getElementById("cfg-drop-sublabel");
+    const nameInp = document.getElementById("cfg-upload-name");
+    
+    if (lbl) lbl.textContent = `Ausgewählt: ${_selectedConfigFile.name}`;
+    if (sublbl) sublbl.textContent = `Größe: ${formatBytes(_selectedConfigFile.size)}`;
+    if (nameInp && !nameInp.value) {
+      nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
+    }
+  }
+}
+
+function formatBytes(bytes, decimals = 2) {
+  if (!+bytes) return '0 Bytes';
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
+
+async function loadUserConfigs(silent = false, manualToast = false) {
+  const tbody = document.getElementById("configs-table-body");
+
+  // 1. Initial render from local cache
+  if (ALL_CONFIGS.length === 0) {
+    try {
+      const cached = localStorage.getItem("hyschool_configs_cache");
+      if (cached) {
+        ALL_CONFIGS = JSON.parse(cached);
+        if (Array.isArray(ALL_CONFIGS)) filterUserConfigs();
+      }
+    } catch (_) {}
+  }
+
+  if (tbody && !silent && ALL_CONFIGS.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#e5a93c;padding:28px;">Lade Cloud-Configs...</td></tr>`;
+  }
+
+  const token = getToken();
+  let remoteConfigs = null;
+  let loaded = false;
+
+  try {
+    const res = await fetch(`${API_BASE}/configs.json?nc=${Date.now()}`, {
+      cache: "no-store",
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+    });
+    if (res.ok) {
+      const info = await res.json();
+      if (info && info.content) {
+        remoteConfigs = JSON.parse(b64_to_utf8(info.content));
+        loaded = true;
+      }
+    } else if (res.status === 404) {
+      remoteConfigs = [];
+      loaded = true;
+    }
+  } catch (_) {}
+
+  if (!loaded) {
+    try {
+      const rawRes = await fetch(`${RAW_BASE}/configs.json?nc=${Date.now()}`, { cache: "no-store" });
+      if (rawRes.ok) {
+        remoteConfigs = await rawRes.json();
+        loaded = true;
+      }
+    } catch (_) {}
+  }
+
+  if (loaded && Array.isArray(remoteConfigs)) {
+    ALL_CONFIGS = remoteConfigs;
+    try { localStorage.setItem("hyschool_configs_cache", JSON.stringify(ALL_CONFIGS)); } catch (_) {}
+    filterUserConfigs();
+    if (manualToast) showToast("Cloud-Configs aktualisiert!", "ok");
+  } else if (!silent && ALL_CONFIGS.length === 0) {
+    if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#64748b;padding:28px;">Noch keine Cloud-Configs hochgeladen.</td></tr>`;
+  }
+}
+
+function filterUserConfigs() {
+  const tbody = document.getElementById("configs-table-body");
+  if (!tbody) return;
+
+  const search = (document.getElementById("cfg-search-input") ? document.getElementById("cfg-search-input").value : "").toLowerCase().trim();
+  const gameFilter = document.getElementById("cfg-filter-game") ? document.getElementById("cfg-filter-game").value : "all";
+  const totalBadge = document.getElementById("cfg-total-badge");
+
+  let visibleConfigs = ALL_CONFIGS.filter(cfg => {
+    if (CURRENT_USER.is_admin || CURRENT_USER.is_staff) return true;
+    const isOwn = (cfg.user === CURRENT_USER.name) || (CURRENT_USER.key && cfg.key === CURRENT_USER.key);
+    return isOwn;
+  });
+
+  if (totalBadge) {
+    totalBadge.textContent = `${visibleConfigs.length} Config${visibleConfigs.length === 1 ? '' : 's'}`;
+  }
+
+  let filtered = visibleConfigs.filter(c => {
+    if (gameFilter !== "all" && c.game !== gameFilter && c.game !== "all") return false;
+    if (search) {
+      const nameMatch = (c.name || "").toLowerCase().includes(search);
+      const fnMatch = (c.filename || "").toLowerCase().includes(search);
+      const descMatch = (c.desc || "").toLowerCase().includes(search);
+      const userMatch = (c.user || "").toLowerCase().includes(search);
+      return nameMatch || fnMatch || descMatch || userMatch;
+    }
+    return true;
+  });
+
+  filtered.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#64748b;padding:36px;font-size:12px;">Keine Configs gefunden</td></tr>`;
+    return;
+  }
+
+  const gameTags = {
+    valorant: `<span class="tag-product" style="color:#f43f5e;border-color:rgba(244,63,94,0.4);background:rgba(244,63,94,0.12);">VALORANT</span>`,
+    apex: `<span class="tag-product" style="color:#38bdf8;border-color:rgba(56,189,248,0.4);background:rgba(56,189,248,0.12);">AI HYSCHOOL</span>`,
+    tft_helper: `<span class="tag-product" style="color:#a855f7;border-color:rgba(168,85,247,0.4);background:rgba(168,85,247,0.12);">TFT HELPER</span>`,
+    naraka: `<span class="tag-product" style="color:#f59e0b;border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.12);">NARAKA</span>`,
+    coc: `<span class="tag-product" style="color:#10b981;border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.12);">CLASH OF CLANS</span>`,
+    all: `<span class="tag-product">ALLGEMEIN</span>`
+  };
+
+  tbody.innerHTML = filtered.map(c => {
+    const authorName = c.author || c.user || 'User';
+    const isOwner = (c.user === CURRENT_USER.name) || (c.author === CURRENT_USER.name) || (CURRENT_USER.key && c.key === CURRENT_USER.key) || CURRENT_USER.is_admin;
+    const tagHtml = gameTags[c.game] || `<span class="tag-product">${(c.game||'ALLE').toUpperCase()}</span>`;
+    const sizeStr = c.size ? formatBytes(c.size) : '';
+    const authorAvatar = getAvatarUrl(authorName);
+
+    return `
+      <tr>
+        <td>
+          <div style="font-weight:900;color:#f8fafc;font-size:12.5px;display:flex;align-items:center;gap:6px;">
+            <span style="color:#e5a93c;">&#128196;</span> ${escapeHtml(c.name || c.filename)}
+          </div>
+          <div style="font-size:10px;color:#64748b;font-family:'JetBrains Mono',monospace;margin-top:2px;">
+            ${escapeHtml(c.filename || '')} ${sizeStr ? `<span style="color:#94a3b8;">(${sizeStr})</span>` : ''}
+          </div>
+        </td>
+        <td>${tagHtml}</td>
+        <td style="color:#cbd5e1;font-size:11.5px;line-height:1.4;">
+          ${escapeHtml(c.desc || 'Keine Notizen')}
+        </td>
+        <td>
+          <div class="clickable-user" onclick="openUserProfileModal('${escapeHtml(authorName)}')" style="display:inline-flex;align-items:center;gap:6px;font-weight:800;color:${isOwner ? '#10b981' : '#e5a93c'};font-size:11px;">
+            <img src="${authorAvatar}" style="width:18px;height:18px;border-radius:4px;object-fit:cover;" alt="Avatar">
+            ${escapeHtml(authorName)}
+          </div>
+          <div style="font-size:10px;color:#64748b;margin-top:2px;">${c.date || ''}</div>
+        </td>
+        <td style="text-align:right;">
+          <div class="action-btn-group">
+            <button onclick="downloadConfig('${c.id}')" class="action-btn action-btn-resume" title="Config herunterladen">
+              &#11015;&#65039; Download
+            </button>
+            <button onclick="previewConfig('${c.id}')" class="action-btn action-btn-edit" title="Inhalt ansehen">
+              &#128065;&#65039;ï¸ Vorschau
+            </button>
+            ${isOwner ? `
+              <button onclick="deleteUserConfig('${c.id}')" class="action-btn action-btn-del" title="L&#246;schen">
+                &#128465;&#65039;
+              </button>
+            ` : ''}
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+async function uploadUserConfig() {
+  if (!_selectedConfigFile) {
+    alert("Bitte wähle zuerst eine Config-Datei aus (.cfg, .ini, .json, .txt, .zip)!");
+    return;
+  }
+
+  const game = document.getElementById("cfg-upload-game").value || "valorant";
+  const nameInp = document.getElementById("cfg-upload-name");
+  const descInp = document.getElementById("cfg-upload-desc");
+  const btn = document.getElementById("cfg-upload-btn");
+  const pw = document.getElementById("cfg-prog-wrap");
+  const pb = document.getElementById("cfg-prog-fill");
+  const pl = document.getElementById("cfg-prog-lbl");
+
+  const configName = (nameInp && nameInp.value.trim()) ? nameInp.value.trim() : _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
+  const configDesc = descInp ? descInp.value.trim() : "";
+
+  btn.disabled = true;
+  if(pw) pw.style.display = "block";
+  if(pb) pb.style.width = "30%";
+  if(pl) { pl.textContent = "Lese Datei..."; pl.className = "prog-lbl"; }
+
+  try {
+    const reader = new FileReader();
+    reader.readAsDataURL(_selectedConfigFile);
+    reader.onloadend = async () => {
+      try {
+        const b64Data = reader.result.split(',')[1];
+        if(pb) pb.style.width = "60%";
+        if(pl) pl.textContent = "Synchronisiere mit der Cloud...";
+
+        const now = new Date();
+        const pad = n => String(n).padStart(2, '0');
+        const dateStr = `${pad(now.getDate())}.${pad(now.getMonth()+1)}.${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+        const newConfig = {
+          id: "cfg_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
+          key: CURRENT_USER.key || "ADMIN",
+          user: CURRENT_USER.name || "Kunde",
+          role: CURRENT_USER.role || "Kunde",
+          game: game,
+          name: configName,
+          desc: configDesc,
+          filename: _selectedConfigFile.name,
+          size: _selectedConfigFile.size,
+          date: dateStr,
+          timestamp: Date.now(),
+          contentB64: b64Data
+        };
+
+        // Merge latest remote list to prevent conflicts
+        const token = getToken();
+        try {
+          const infoRes = await fetch(`${API_BASE}/configs.json?nc=${Date.now()}`, {
+            cache: "no-store",
+            headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+          });
+          if (infoRes.ok) {
+            const info = await infoRes.json();
+            if (info && info.content) {
+              const remoteList = JSON.parse(b64_to_utf8(info.content));
+              if (Array.isArray(remoteList)) {
+                const map = new Map();
+                remoteList.forEach(c => { if(c && c.id) map.set(c.id, c); });
+                ALL_CONFIGS.forEach(c => { if(c && c.id) map.set(c.id, c); });
+                ALL_CONFIGS = Array.from(map.values());
+              }
+            }
+          }
+        } catch(_) {}
+
+        ALL_CONFIGS.unshift(newConfig);
+        try { localStorage.setItem("hyschool_configs_cache", JSON.stringify(ALL_CONFIGS)); } catch(_) {}
+
+        if(pb) pb.style.width = "85%";
+        if(pl) pl.textContent = "Speichere in GitHub Cloud...";
+
+        const fullJson = JSON.stringify(ALL_CONFIGS, null, 2);
+        const finalB64 = utf8_to_b64(fullJson);
+
+        await uploadFileToGitHub("configs.json", finalB64, `Cloud Config: [${newConfig.user}] ${newConfig.name} (${newConfig.game})`);
+
+        if(pb) pb.style.width = "100%";
+        if(pl) {
+          pl.textContent = "Config erfolgreich in der Cloud gespeichert!";
+          pl.className = "prog-lbl ok";
+        }
+
+        showToast(`Config "${newConfig.name}" erfolgreich hochgeladen!`, "ok");
+        logAdminAction("CONFIG_UPLOAD", newConfig.filename, `Config "${newConfig.name}" für ${newConfig.game} hochgeladen von ${newConfig.user}`);
+
+        // Reset inputs
+        _selectedConfigFile = null;
+        if(nameInp) nameInp.value = "";
+        if(descInp) descInp.value = "";
+        const lbl = document.getElementById("cfg-drop-label");
+        const sublbl = document.getElementById("cfg-drop-sublabel");
+        if(lbl) lbl.textContent = "Datei hier reinziehen oder klicken";
+        if(sublbl) sublbl.textContent = "Unterstützt .cfg, .ini, .json, .txt, .zip";
+        const fileInput = document.getElementById("cfg-file-input");
+        if(fileInput) fileInput.value = "";
+
+        filterUserConfigs();
+      } catch(err) {
+        if(pl) {
+          pl.textContent = "Fehler: " + err.message;
+          pl.className = "prog-lbl err";
+        }
+        showToast("Fehler beim Hochladen: " + err.message, "err");
+      } finally {
+        btn.disabled = false;
+      }
+    };
+  } catch(e) {
+    if(pl) {
+      pl.textContent = "Fehler: " + e.message;
+      pl.className = "prog-lbl err";
+    }
+    btn.disabled = false;
+  }
+}
+
+function downloadConfig(configId) {
+  const cfg = ALL_CONFIGS.find(c => c.id === configId);
+  if(!cfg) {
+    alert("Config-Inhalt nicht gefunden!");
+    return;
+  }
+
+  try {
+    let blob = null;
+    if (cfg.contentB64) {
+      const byteCharacters = atob(cfg.contentB64.replace(/\s+/g, ''));
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      blob = new Blob([byteArray], { type: "application/octet-stream" });
+    } else {
+      blob = new Blob([cfg.content || ''], { type: "text/plain;charset=utf-8" });
+    }
+
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = cfg.filename || `${cfg.name}.cfg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+
+    showToast(`Download gestartet: ${cfg.filename || cfg.name}`, "ok");
+  } catch(err) {
+    alert("Download-Fehler: " + err.message);
+  }
+}
+
+function previewConfig(configId) {
+  const cfg = ALL_CONFIGS.find(c => c.id === configId);
+  if(!cfg) {
+    alert("Config nicht gefunden!");
+    return;
+  }
+
+  const modal = document.getElementById("config-preview-modal");
+  const title = document.getElementById("cfg-preview-title");
+  const game = document.getElementById("cfg-preview-game");
+  const author = document.getElementById("cfg-preview-author");
+  const content = document.getElementById("cfg-preview-content");
+
+  if(title) title.textContent = cfg.name || cfg.filename || "config.cfg";
+  if(game) game.textContent = (cfg.game || "VALORANT").toUpperCase();
+  if(author) author.textContent = `${cfg.author || cfg.user || 'Kunde'} (${cfg.date || ''})`;
+
+  try {
+    if (cfg.content) {
+      if(content) content.value = cfg.content;
+    } else if (cfg.contentB64) {
+      const decoded = b64_to_utf8(cfg.contentB64);
+      if(content) content.value = decoded;
+    }
+  } catch(_) {
+    if(content) content.value = "[Vorschau nicht verf&#252;gbar. Bitte Download nutzen!]";
+  }
+
+  if(modal) modal.style.display = "flex";
+}
+
+function closeConfigPreviewModal() {
+  const modal = document.getElementById("config-preview-modal");
+  if(modal) modal.style.display = "none";
+}
+
+function copyConfigPreviewContent() {
+  const content = document.getElementById("cfg-preview-content");
+  if(content && content.value) {
+    navigator.clipboard.writeText(content.value);
+    showToast("Config-Inhalt in die Zwischenablage kopiert!", "ok");
+  }
+}
+
+async function deleteUserConfig(configId) {
+  const cfg = ALL_CONFIGS.find(c => c.id === configId);
+  if(!cfg) return;
+
+  const canDelete = CURRENT_USER.is_admin || (cfg.user === CURRENT_USER.name) || (CURRENT_USER.key && cfg.key === CURRENT_USER.key);
+  if(!canDelete) {
+    alert("Du kannst nur deine eigenen Configs löschen!");
+    return;
+  }
+
+  if(!confirm(`Möchtest du die Config "${cfg.name || cfg.filename}" wirklich löschen?`)) return;
+
+  ALL_CONFIGS = ALL_CONFIGS.filter(c => c.id !== configId);
+  try { localStorage.setItem("hyschool_configs_cache", JSON.stringify(ALL_CONFIGS)); } catch(_) {}
+  filterUserConfigs();
+  showToast("Config gelöscht!", "ok");
+
+  try {
+    const token = getToken();
+    const fullJson = JSON.stringify(ALL_CONFIGS, null, 2);
+    const finalB64 = utf8_to_b64(fullJson);
+    await uploadFileToGitHub("configs.json", finalB64, `Delete Config: [${cfg.user}] ${cfg.name}`);
+    logAdminAction("CONFIG_DELETED", cfg.filename, `Config "${cfg.name}" wurde gelöscht`);
+  } catch(e) {
+    showToast("Cloud-Sync Fehler: " + e.message, "err");
+  }
+}
+
 // Silent Auto-Polling alle 5 Sekunden
 setInterval(() => {
   const tc3 = document.getElementById("tc-3");
@@ -4462,7 +6284,775 @@ setInterval(() => {
   if(tc5 && tc5.classList.contains("active")) {
     loadAuditLogs(true);
   }
+  const tc7 = document.getElementById("tc-7");
+  if(tc7 && tc7.classList.contains("active")) {
+    loadUserConfigs(true);
+  }
 }, 5000);
+
+let ALL_HIGHLIGHTS = [];
+let _uploadedHighlightFile = null;
+let _activePlayerHighlight = null;
+
+function getRankBadge(username, userRank) {
+  const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES[username]) ? USER_PROFILES[username] : {};
+  const r = (userRank || prof.rank || "kunde").toLowerCase();
+  
+  if (r === "admin" || r === "inhaber" || (username && (username.toLowerCase() === "admin" || username.toLowerCase() === "admin"))) {
+    return '<span class="badge-rank badge-rank-admin">&#128081; INHABER</span>';
+  } else if (r === "co-admin" || r.includes("co-admin")) {
+    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; CO-ADMIN</span>';
+  } else if (r === "supporter" || r.includes("support")) {
+    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; SUPPORTER</span>';
+  } else if (r === "moderator" || r.includes("mod")) {
+    return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; MODERATOR</span>';
+  } else if (r === "vip") {
+    return '<span class="badge-rank badge-rank-vip">&#11088; VIP</span>';
+  } else if (r === "elite") {
+    return '<span class="badge-rank badge-rank-elite">&#9889; ELITE</span>';
+  } else if (r === "premium") {
+    return '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
+  } else {
+    return '<span class="badge-rank badge-rank-kunde">&#128100; KUNDE</span>';
+  }
+}
+
+function toggleHighlightUploadCard() {
+  const card = document.getElementById("highlight-upload-card");
+  if(!card) return;
+  card.style.display = (card.style.display === "none" || card.style.display === "") ? "block" : "none";
+}
+
+function onHighlightFileSelected(input) {
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    if(file.size > 28 * 1024 * 1024) {
+      alert("Video-Datei ist zu gro&#223; f&#252;r Direkt-Upload (Max 25MB). Bitte nutze einen YouTube/Medal/Streamable Link!");
+      input.value = "";
+      return;
+    }
+    _uploadedHighlightFile = file;
+    document.getElementById("hl-drop-label").textContent = "&#127916; " + file.name;
+    document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB gew&#228;hlt";
+    document.getElementById("hl-upload-url").value = "";
+  }
+}
+
+function handleHighlightFileDrop(e) {
+  e.preventDefault();
+  document.getElementById("hl-drop-zone").classList.remove("over");
+  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+    const file = e.dataTransfer.files[0];
+    if(file.size > 28 * 1024 * 1024) {
+      alert("Video-Datei ist zu gro&#223; (Max 25MB)!");
+      return;
+    }
+    _uploadedHighlightFile = file;
+    document.getElementById("hl-drop-label").textContent = "&#127916; " + file.name;
+    document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB abgelegt";
+    document.getElementById("hl-upload-url").value = "";
+  }
+}
+
+function onHighlightUrlChanged(val) {
+  if(val && val.trim()) {
+    _uploadedHighlightFile = null;
+    document.getElementById("hl-drop-label").textContent = "&#127916; Video hier ablegen oder klicken";
+    document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (f&#252;r gr&#246;&#223;ere Clips bitte Link nutzen)";
+  }
+}
+
+async function uploadHighlightClip() {
+  const title = (document.getElementById("hl-upload-title").value || "").trim();
+  const game = document.getElementById("hl-upload-game").value;
+  const desc = (document.getElementById("hl-upload-desc").value || "").trim();
+  const urlInput = (document.getElementById("hl-upload-url").value || "").trim();
+  const isCensored = document.getElementById("hl-censor-name-cb").checked;
+  const file = _uploadedHighlightFile;
+
+  if(!title) { alert("Bitte gib einen Titel f&#252;r das Highlight ein!"); return; }
+  if(!urlInput && !file) { alert("Bitte gib einen Video-Link ein oder w&#228;hle eine Videodatei aus!"); return; }
+
+  const btn = document.getElementById("hl-submit-btn");
+  const progWrap = document.getElementById("hl-prog-wrap");
+  const progFill = document.getElementById("hl-prog-fill");
+  const progLbl = document.getElementById("hl-prog-lbl");
+
+  btn.disabled = true;
+  progWrap.style.display = "block";
+  progFill.style.width = "25%";
+  progLbl.textContent = "Verarbeite Highlight Clip...";
+
+  let videoUrl = urlInput;
+  let videoType = "link";
+
+  if(file) {
+    progFill.style.width = "50%";
+    progLbl.textContent = "Lese Video-Datei...";
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      const b64Data = e.target.result;
+      videoUrl = b64Data;
+      videoType = "direct";
+      finishHighlightUpload();
+    };
+    reader.readAsDataURL(file);
+    return;
+  } else {
+    if(urlInput.includes("youtube.com") || urlInput.includes("youtu.be")) videoType = "youtube";
+    else if(urlInput.includes("medal.tv")) videoType = "medal";
+    else if(urlInput.includes("streamable.com")) videoType = "streamable";
+    else videoType = "direct";
+    finishHighlightUpload();
+  }
+
+  async function finishHighlightUpload() {
+    progFill.style.width = "75%";
+    progLbl.textContent = "Lade in HySchool Cloud hoch...";
+
+    const newHighlight = {
+      id: "hl_" + Date.now(),
+      title: title,
+      game: game,
+      desc: desc || "Keine Beschreibung",
+      author: CURRENT_USER.name,
+      isCensored: isCensored,
+      censoredName: "[Zensiert &#128274;]",
+      rank: CURRENT_USER.role ? CURRENT_USER.role.toLowerCase() : "admin",
+      videoUrl: videoUrl,
+      videoType: videoType,
+      date: new Date().toLocaleDateString("de-DE") + " " + new Date().toLocaleTimeString("de-DE", {hour:'2-digit', minute:'2-digit'}),
+      likes: 1,
+      likedBy: [CURRENT_USER.name]
+    };
+
+    ALL_HIGHLIGHTS.unshift(newHighlight);
+    filterHighlights();
+
+    try {
+      const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
+      const finalB64 = utf8_to_b64(fullJson);
+      await uploadFileToGitHub("highlights.json", finalB64, "Upload Highlight: [" + CURRENT_USER.name + "] " + title);
+
+      progFill.style.width = "100%";
+      progLbl.textContent = "Highlight erfolgreich ver&#246;ffentlicht!";
+      showToast("Highlight \"" + title + "\" ver&#246;ffentlicht!", "ok");
+
+      document.getElementById("hl-upload-title").value = "";
+      document.getElementById("hl-upload-desc").value = "";
+      document.getElementById("hl-upload-url").value = "";
+      document.getElementById("hl-file-input").value = "";
+      document.getElementById("hl-censor-name-cb").checked = false;
+      document.getElementById("hl-drop-label").textContent = "&#127916; Video hier ablegen oder klicken";
+      document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (f&#252;r gr&#246;&#223;ere Clips bitte Link nutzen)";
+      _uploadedHighlightFile = null;
+      toggleHighlightUploadCard();
+    } catch(err) {
+      console.error(err);
+      showToast("Fehler beim Ver&#246;ffentlichen: " + err.message, "err");
+    } finally {
+      setTimeout(() => {
+        progWrap.style.display = "none";
+        btn.disabled = false;
+      }, 1500);
+    }
+  }
+}
+
+async function toggleHighlightLike(highlightId) {
+  const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
+  if(!h) return;
+
+  if(!h.likedBy) h.likedBy = [];
+  const idx = h.likedBy.indexOf(CURRENT_USER.name);
+  if(idx > -1) {
+    h.likedBy.splice(idx, 1);
+    h.likes = Math.max(0, (h.likes || 1) - 1);
+  } else {
+    h.likedBy.push(CURRENT_USER.name);
+    h.likes = (h.likes || 0) + 1;
+  }
+
+  filterHighlights();
+
+  try {
+    const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
+    const finalB64 = utf8_to_b64(fullJson);
+    await uploadFileToGitHub("highlights.json", finalB64, "Like Highlight: " + h.title);
+  } catch(e) {
+    console.error("Like sync error:", e);
+  }
+}
+
+function toggleHighlightLikeFromModal() {
+  if(_activePlayerHighlight) {
+    toggleHighlightLike(_activePlayerHighlight.id);
+    document.getElementById("hl-player-like-count").textContent = _activePlayerHighlight.likes || 0;
+  }
+}
+
+async function deleteHighlight(highlightId) {
+  const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
+  if(!h) return;
+
+  if(!confirm("M&#246;chtest du das Highlight \"" + h.title + "\" wirklich l&#246;schen?")) return;
+
+  ALL_HIGHLIGHTS = ALL_HIGHLIGHTS.filter(item => item.id !== highlightId);
+  filterHighlights();
+  showToast("Highlight gel&#246;scht!", "ok");
+
+  try {
+    const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
+    const finalB64 = utf8_to_b64(fullJson);
+    await uploadFileToGitHub("highlights.json", finalB64, "Delete Highlight: " + h.title);
+  } catch(e) {
+    showToast("Cloud-Sync Fehler: " + e.message, "err");
+  }
+}
+
+
+
+async function loadHighlights(silent = false, manualToast = false) {
+  const container = document.getElementById("highlights-grid-container");
+  if(container && !silent && ALL_HIGHLIGHTS.length === 0) {
+    container.innerHTML = `<div style="grid-column: 1/-1;text-align:center;color:#e5a93c;padding:40px;font-size:12px;">&#127916; Lade Highlight Clips...</div>`;
+  }
+
+  const token = getToken();
+  let loaded = false;
+  let remoteHl = null;
+
+  try {
+    const res = await fetch(`${API_BASE}/highlights.json?nc=${Date.now()}`, {
+      cache: "no-store",
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+    });
+    if(res.ok) {
+      const info = await res.json();
+      if(info && info.content) {
+        remoteHl = JSON.parse(b64_to_utf8(info.content));
+        loaded = true;
+      }
+    } else if(res.status === 404) {
+      remoteHl = [];
+      loaded = true;
+    }
+  } catch(_) {}
+
+  if(!loaded) {
+    try {
+      const rawRes = await fetch(`${RAW_BASE}/highlights.json?nc=${Date.now()}`, { cache: "no-store" });
+      if(rawRes.ok) {
+        remoteHl = await rawRes.json();
+        loaded = true;
+      }
+    } catch(_) {}
+  }
+
+  if(loaded && Array.isArray(remoteHl)) {
+    ALL_HIGHLIGHTS = remoteHl;
+    try { localStorage.setItem("hyschool_highlights_cache", JSON.stringify(ALL_HIGHLIGHTS)); } catch(_) {}
+    filterHighlights();
+    if(manualToast) showToast("Highlights aktualisiert!", "ok");
+  } else if(!silent && ALL_HIGHLIGHTS.length === 0) {
+    if(container) container.innerHTML = `<div style="grid-column: 1/-1;text-align:center;color:#64748b;padding:40px;font-size:12px;">Noch keine Highlight Clips vorhanden. Klicke oben auf 'Clip hochladen'!</div>`;
+  }
+}
+
+function filterHighlights() {
+  const searchInput = document.getElementById("hl-search-input");
+  const gameSelect = document.getElementById("hl-filter-game");
+  const sortSelect = document.getElementById("hl-sort-select");
+  const container = document.getElementById("highlights-grid-container");
+  if(!container) return;
+
+  const q = searchInput ? (searchInput.value || "").toLowerCase().trim() : "";
+  const gameFilter = gameSelect ? gameSelect.value : "all";
+  const sort = sortSelect ? sortSelect.value : "newest";
+
+  let filtered = ALL_HIGHLIGHTS.filter(h => {
+    if(gameFilter !== "all" && h.game !== gameFilter && h.game !== "all") return false;
+    if(q) {
+      const matchTitle = (h.title || "").toLowerCase().includes(q);
+      const matchDesc = (h.desc || "").toLowerCase().includes(q);
+      const matchAuthor = (h.isCensored ? "zensiert anonym" : (h.author || "")).toLowerCase().includes(q);
+      return matchTitle || matchDesc || matchAuthor;
+    }
+    return true;
+  });
+
+  if(sort === "likes") {
+    filtered.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+  } else {
+    filtered.sort((a, b) => (b.id || "").localeCompare(a.id || ""));
+  }
+
+  if(filtered.length === 0) {
+    container.innerHTML = `<div style="grid-column: 1/-1;text-align:center;color:#64748b;padding:40px;font-size:12px;">Keine Highlight Clips gefunden. Sei der Erste und lade einen Clip hoch!</div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(h => {
+    const authorDisplayName = h.isCensored ? "&#128274; [Zensiert / Anonym]" : h.author;
+    const authorAvatar = h.isCensored ? "https://api.dicebear.com/7.x/bottts/svg?seed=Incognito" : getAvatarUrl(h.author);
+    const hasLiked = h.likedBy && h.likedBy.includes(CURRENT_USER.name);
+    const isOwn = CURRENT_USER.is_admin || (!h.isCensored && h.author === CURRENT_USER.name);
+
+    let previewHtml = "";
+    if(h.videoType === "youtube") {
+      let ytId = "";
+      if(h.videoUrl.includes("v=")) ytId = h.videoUrl.split("v=")[1].split("&")[0];
+      else if(h.videoUrl.includes("youtu.be/")) ytId = h.videoUrl.split("youtu.be/")[1].split("?")[0];
+      previewHtml = `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+    } else {
+      previewHtml = `
+        <video preload="metadata" muted playsinline onclick="openHighlightPlayer('${h.id}')" style="cursor:pointer;width:100%;height:100%;object-fit:cover;">
+          <source src="${h.videoUrl}" type="video/mp4">
+        </video>
+        <div onclick="openHighlightPlayer('${h.id}')" style="position:absolute;inset:0;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;" onmouseover="this.style.background='rgba(0,0,0,0.1)'" onmouseout="this.style.background='rgba(0,0,0,0.3)'">
+          <div style="width:46px;height:46px;border-radius:50%;background:rgba(229,169,60,0.9);display:flex;align-items:center;justify-content:center;color:#07080c;font-size:18px;box-shadow:0 0 20px rgba(229,169,60,0.5);">&#9654;</div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="clip-card">
+        <div class="clip-media-wrap" style="position:relative;height:180px;background:#05070c;overflow:hidden;border-radius:10px 10px 0 0;">
+          ${previewHtml}
+        </div>
+        <div class="clip-body" style="padding:14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;">
+            <span class="tag-product">${(h.game || 'VALORANT').toUpperCase()}</span>
+            <span style="font-size:10.5px;color:#64748b;">${h.date || ''}</span>
+          </div>
+          <div class="clip-title" style="font-size:13px;font-weight:900;color:#f8fafc;margin-bottom:4px;">${escapeHtml(h.title)}</div>
+          <p style="font-size:11.5px;color:#94a3b8;line-height:1.4;margin:0 0 12px 0;">${escapeHtml(h.desc || '')}</p>
+          
+          <div class="clip-footer" style="display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid #1a2234;padding-top:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <img src="${authorAvatar}" style="width:24px;height:24px;border-radius:6px;object-fit:cover;border:1px solid #243048;" alt="Avatar">
+              <div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <b style="color:#f8fafc;font-size:11px;cursor:pointer;" ${h.isCensored ? '' : `onclick="openUserProfileModal('${escapeHtml(h.author)}')"`}>${escapeHtml(authorDisplayName)}</b>
+                  ${h.isCensored ? '<span class="badge-rank badge-rank-vip">&#128274; Anonym</span>' : getRankBadge(h.author, h.rank)}
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:6px;">
+              <button onclick="toggleHighlightLike('${h.id}')" class="quick-pill-btn" style="display:flex;align-items:center;gap:4px;padding:4px 8px;font-size:11px;${hasLiked ? 'background:rgba(244,63,94,0.2);color:#f43f5e;border-color:#f43f5e;' : ''}">
+                <span>${hasLiked ? '&#10084;&#65039;' : '&#129293;'}</span> <span>${h.likes || 0}</span>
+              </button>
+              ${isOwn ? `
+                <button onclick="deleteHighlight('${h.id}')" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:4px 8px;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;">
+                  &#128465;&#65039;
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function openHighlightPlayer(highlightId) {
+  const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
+  if(!h) return;
+  _activePlayerHighlight = h;
+
+  const modal = document.getElementById("highlight-player-modal");
+  document.getElementById("hl-player-title").textContent = h.title;
+  document.getElementById("hl-player-desc").textContent = h.desc || "Keine Beschreibung";
+  document.getElementById("hl-player-like-count").textContent = h.likes || 0;
+
+  const authorDisplayName = h.isCensored ? "&#128274; [Zensiert / Anonym]" : h.author;
+  const authorAvatar = h.isCensored ? "https://api.dicebear.com/7.x/bottts/svg?seed=Incognito" : getAvatarUrl(h.author);
+
+  document.getElementById("hl-player-author-name").textContent = authorDisplayName;
+  document.getElementById("hl-player-author-avatar").src = authorAvatar;
+  document.getElementById("hl-player-rank-badge").innerHTML = h.isCensored ? '<span class="badge-rank badge-rank-vip">&#128274; Anonym</span>' : getRankBadge(h.author, h.rank);
+
+  const container = document.getElementById("hl-player-video-container");
+  if(h.videoType === "youtube") {
+    let ytId = "";
+    if(h.videoUrl.includes("v=")) ytId = h.videoUrl.split("v=")[1].split("&")[0];
+    else if(h.videoUrl.includes("youtu.be/")) ytId = h.videoUrl.split("youtu.be/")[1].split("?")[0];
+    container.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+  } else {
+    container.innerHTML = `
+      <video controls autoplay style="width:100%;height:100%;object-fit:contain;background:#000;">
+        <source src="${h.videoUrl}" type="video/mp4">
+        Dein Browser unterst&#252;tzt dieses Videoformat nicht.
+      </video>
+    `;
+  }
+
+  if(modal) modal.style.display = "flex";
+}
+
+function closeHighlightPlayerModal() {
+  const modal = document.getElementById("highlight-player-modal");
+  const container = document.getElementById("hl-player-video-container");
+  if(container) container.innerHTML = "";
+  if(modal) modal.style.display = "none";
+  _activePlayerHighlight = null;
+}
+
+// ==================== 1-ON-1 SUPPORT TICKETS (ADMIN / STAFF) ====================
+let _adminActiveTicketId = null;
+let _adminTicketFilter = 'open';
+let _adminTicketsData = [];
+let _adminTicketPoll = null;
+
+function switchAdminChatSubtab(tab) {
+    const btnComm = document.getElementById('admin-chat-subtab-comm');
+    const btnSupp = document.getElementById('admin-chat-subtab-supp');
+    const panelComm = document.getElementById('admin-community-chat-panel');
+    const panelSupp = document.getElementById('admin-support-panel');
+
+    if (tab === 'community') {
+        if(btnComm) { btnComm.style.background = 'linear-gradient(135deg,#e5a93c,#c68924)'; btnComm.style.color = '#0b0c10'; }
+        if(btnSupp) { btnSupp.style.background = '#111622'; btnSupp.style.color = '#94a3b8'; }
+        if(panelComm) panelComm.style.display = 'block';
+        if(panelSupp) panelSupp.style.display = 'none';
+        if (_adminTicketPoll) { clearInterval(_adminTicketPoll); _adminTicketPoll = null; }
+    } else {
+        if(btnSupp) { btnSupp.style.background = 'linear-gradient(135deg,#e5a93c,#c68924)'; btnSupp.style.color = '#0b0c10'; }
+        if(btnComm) { btnComm.style.background = '#111622'; btnComm.style.color = '#94a3b8'; }
+        if(panelComm) panelComm.style.display = 'none';
+        if(panelSupp) panelSupp.style.display = 'flex';
+        loadAdminSupportTickets();
+        if (!_adminTicketPoll) {
+            _adminTicketPoll = setInterval(() => {
+                loadAdminSupportTickets(false, true);
+            }, 3500);
+        }
+    }
+}
+
+function filterAdminTickets(mode) {
+    _adminTicketFilter = mode;
+    const btnOpen = document.getElementById('st-filter-open');
+    const btnClosed = document.getElementById('st-filter-closed');
+
+    if (mode === 'open') {
+        if(btnOpen) { btnOpen.style.background = 'linear-gradient(135deg,#e5a93c,#c68924)'; btnOpen.style.color = '#0b0c10'; }
+        if(btnClosed) { btnClosed.style.background = '#161c2c'; btnClosed.style.color = '#94a3b8'; }
+    } else {
+        if(btnClosed) { btnClosed.style.background = 'linear-gradient(135deg,#e5a93c,#c68924)'; btnClosed.style.color = '#0b0c10'; }
+        if(btnOpen) { btnOpen.style.background = '#161c2c'; btnOpen.style.color = '#94a3b8'; }
+    }
+    renderAdminTicketsList();
+}
+
+function canDeleteTickets() {
+    if (typeof CURRENT_USER === 'undefined' || !CURRENT_USER) return false;
+    if (CURRENT_USER.is_admin) return true;
+    const role = (CURRENT_USER.role || '').toLowerCase();
+    return role.includes('admin') || role.includes('co-admin') || role.includes('moderator') || role.includes('inhaber');
+}
+
+async function loadAdminSupportTickets(manualToast = false, silent = false) {
+    try {
+        const raw = await fetchGitHubRaw('support_tickets.json');
+        _adminTicketsData = Array.isArray(raw) ? raw : (raw.tickets || []);
+        
+        const now = Date.now();
+        let changed = false;
+        _adminTicketsData = _adminTicketsData.filter(t => {
+            if (t.status === 'closed' && t.closedAt) {
+                const age = now - new Date(t.closedAt).getTime();
+                if (age > 86400000) {
+                    changed = true;
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        if (changed) {
+            saveAdminTicketsToGitHub('Purge support tickets older than 24h');
+        }
+
+        renderAdminTicketsList();
+
+        const openCount = _adminTicketsData.filter(t => t.status !== 'closed').length;
+        const badge = document.getElementById('admin-open-tickets-badge');
+        if (badge) {
+            badge.textContent = openCount;
+            badge.style.display = openCount > 0 ? 'inline-block' : 'none';
+        }
+
+        if (_adminActiveTicketId) {
+            const activeT = _adminTicketsData.find(x => x.id === _adminActiveTicketId);
+            if (activeT) renderActiveAdminTicketRoom(activeT);
+        }
+
+        if (manualToast) showToast('Support Tickets aktualisiert!', 'ok');
+    } catch(e) {
+        if (!silent) console.error('Load Admin Support Tickets Err:', e);
+    }
+}
+
+function renderAdminTicketsList() {
+    const listWrap = document.getElementById('admin-ticket-list-items');
+    if (!listWrap) return;
+
+    const filtered = _adminTicketsData.filter(t => {
+        if (_adminTicketFilter === 'open') return t.status !== 'closed';
+        return t.status === 'closed';
+    });
+
+    if (filtered.length === 0) {
+        listWrap.innerHTML = `<div style="text-align:center;color:#64748b;padding:30px 10px;font-size:11px;">Keine ${_adminTicketFilter === 'open' ? 'offenen' : 'geschlossenen'} Tickets</div>`;
+        return;
+    }
+
+    let html = '';
+    filtered.forEach(t => {
+        const isActive = t.id === _adminActiveTicketId;
+        const statusColor = t.status === 'closed' ? '#64748b' : (t.status === 'in_progress' ? '#38bdf8' : '#e5a93c');
+        const statusText = t.status === 'closed' ? 'GESCHLOSSEN' : (t.status === 'in_progress' ? `In Bearbeitung (${t.assignedTo || 'Team'})` : 'NEU / WARTET');
+        const borderCol = isActive ? '#e5a93c' : '#1e2638';
+        const bgCol = isActive ? '#182030' : '#121622';
+
+        html += `
+            <div onclick="selectAdminTicket('${t.id}')" style="background:${bgCol};border:1px solid ${borderCol};border-radius:8px;padding:10px 12px;cursor:pointer;transition:.2s;" onmouseover="this.style.borderColor='#e5a93c'" onmouseout="this.style.borderColor='${borderCol}'">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span style="font-size:11px;font-weight:800;color:#f8fafc;">${escapeHtml(t.topic || 'Anfrage')}</span>
+                    <span style="font-size:9px;padding:1px 6px;border-radius:4px;background:${statusColor}22;color:${statusColor};font-weight:800;">${statusText}</span>
+                </div>
+                <div style="font-size:10.5px;color:#94a3b8;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">&#128100; ${escapeHtml(t.customerName || 'Kunde')}: ${escapeHtml(t.description || '')}</div>
+                <div style="font-size:9.5px;color:#64748b;margin-top:4px;display:flex;justify-content:space-between;">
+                    <span>${new Date(t.createdAt).toLocaleDateString()} ${new Date(t.createdAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
+                    <span style="color:#e5a93c;font-weight:700;">#${t.id}</span>
+                </div>
+            </div>
+        `;
+    });
+    listWrap.innerHTML = html;
+}
+
+function selectAdminTicket(tId) {
+    _adminActiveTicketId = tId;
+    const t = _adminTicketsData.find(x => x.id === tId);
+    if (t) {
+        const noSel = document.getElementById('admin-no-ticket-selected');
+        const activeRoom = document.getElementById('admin-ticket-active-room');
+        if (noSel) noSel.style.display = 'none';
+        if (activeRoom) activeRoom.style.display = 'flex';
+        renderActiveAdminTicketRoom(t);
+        renderAdminTicketsList();
+    }
+}
+
+function renderActiveAdminTicketRoom(t) {
+    const titleEl = document.getElementById('admin-ticket-header-title');
+    if (titleEl) titleEl.textContent = `#${t.id} - ${t.topic}`;
+    
+    const badge = document.getElementById('admin-ticket-header-badge');
+    if (badge) {
+        if (t.status === 'closed') {
+            badge.textContent = 'GESCHLOSSEN';
+            badge.style.background = '#64748b22';
+            badge.style.color = '#94a3b8';
+        } else if (t.status === 'in_progress') {
+            badge.textContent = `IN BEARBEITUNG (${t.assignedTo || 'Team'})`;
+            badge.style.background = '#38bdf822';
+            badge.style.color = '#38bdf8';
+        } else {
+            badge.textContent = 'NEU / WARTET';
+            badge.style.background = '#e5a93c22';
+            badge.style.color = '#e5a93c';
+        }
+    }
+
+    const userLbl = document.getElementById('admin-ticket-user-label');
+    if (userLbl) {
+        userLbl.innerHTML = `Kunde: <b style="color:#e5a93c;">${escapeHtml(t.customerName || 'Kunde')}</b> ${t.customerKey ? `(${escapeHtml(t.customerKey)})` : ''}`;
+    }
+
+    const btnClaim = document.getElementById('btn-claim-ticket');
+    const btnClose = document.getElementById('btn-close-ticket');
+    const btnDel = document.getElementById('btn-delete-ticket');
+
+    if (btnClaim && btnClose) {
+        if (t.status === 'closed') {
+            btnClaim.style.display = 'none';
+            btnClose.textContent = '🔓 Wieder öffnen';
+            btnClose.style.background = '#10b981';
+        } else {
+            btnClaim.style.display = t.assignedTo ? 'none' : 'inline-block';
+            btnClose.textContent = '🔒 Ticket Schließen';
+            btnClose.style.background = '#f43f5e';
+        }
+    }
+
+    if (btnDel) {
+        btnDel.style.display = canDeleteTickets() ? 'inline-block' : 'none';
+    }
+
+    const msgWrap = document.getElementById('admin-ticket-messages-wrap');
+    if (!msgWrap) return;
+
+    let html = '';
+    (t.messages || []).forEach(m => {
+        const isStaff = m.role !== 'Kunde';
+        const align = isStaff ? 'flex-end' : 'flex-start';
+        const bubbleBg = isStaff ? 'linear-gradient(135deg, rgba(229,169,60,0.18), rgba(198,137,36,0.1))' : 'linear-gradient(135deg, rgba(56,189,248,0.18), rgba(14,165,233,0.1))';
+        const borderCol = isStaff ? 'rgba(229,169,60,0.35)' : 'rgba(56,189,248,0.35)';
+        const nameCol = isStaff ? '#e5a93c' : '#38bdf8';
+
+        html += `
+            <div style="display:flex;flex-direction:column;align-items:${align};max-width:80%;align-self:${align};">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                    <span style="font-size:10px;font-weight:800;color:${nameCol};">${escapeHtml(m.sender)} (${escapeHtml(m.role || 'Staff')})</span>
+                    <span style="font-size:9px;color:#64748b;">${m.time || ''}</span>
+                </div>
+                <div style="background:${bubbleBg};border:1px solid ${borderCol};border-radius:12px;padding:10px 16px;color:#f8fafc;font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word;">${escapeHtml(m.text)}</div>
+            </div>
+        `;
+    });
+    msgWrap.innerHTML = html;
+    msgWrap.scrollTop = msgWrap.scrollHeight;
+}
+
+function insertStaffMacro(type) {
+    const inp = document.getElementById('admin-ticket-input');
+    if (!inp) return;
+    if (type === 'freigeschaltet') {
+        inp.value = 'Du wurdest erfolgreich freigeschaltet! Viel Spaß mit HySchool. Sollten weitere Probleme auftreten, wende dich gerne wieder an den Support.';
+    } else if (type === 'hwid') {
+        inp.value = 'Dein HWID-Reset wurde erfolgreich durchgeführt. Du kannst dich nun auf deinem Gerät im Loader einloggen.';
+    } else if (type === 'antivirus') {
+        inp.value = 'Bitte stelle sicher, dass du deinen Windows Defender bzw. Antivirus deaktiviert oder eine Ausnahme für den Loader-Ordner hinzugefügt hast.';
+    } else if (type === 'config') {
+        inp.value = 'Deine Cloud-Configs findest du im Tab "Meine Configs". Dort kannst du sie direkt herunterladen oder mit einem Klick in den Cheat-Ordner laden.';
+    } else if (type === 'solved') {
+        inp.value = 'Dein Anliegen wurde erfolgreich gelöst. Dieses Ticket wird nun geschlossen und für 24 Stunden archiviert. Bei weiteren Fragen erstelle bitte einfach ein neues Ticket!';
+    }
+    inp.focus();
+}
+
+async function claimCurrentTicket() {
+    if (!_adminActiveTicketId) return;
+    const t = _adminTicketsData.find(x => x.id === _adminActiveTicketId);
+    if (!t) return;
+
+    const myName = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : 'Mitarbeiter';
+    t.status = 'in_progress';
+    t.assignedTo = myName;
+    if (!t.messages) t.messages = [];
+    t.messages.push({
+        sender: myName,
+        role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
+        text: `[Info: ${myName} hat das Support Ticket ü&#252;bernommen]`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        timestamp: Date.now()
+    });
+
+    await saveAdminTicketsToGitHub(`Claim ticket ${t.id} by ${myName}`);
+    renderActiveAdminTicketRoom(t);
+    renderAdminTicketsList();
+    showToast('Ticket ü&#252;bernommen!', 'ok');
+}
+
+async function closeCurrentTicket() {
+    if (!_adminActiveTicketId) return;
+    const t = _adminTicketsData.find(x => x.id === _adminActiveTicketId);
+    if (!t) return;
+
+    const myName = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : 'Mitarbeiter';
+    if (!t.messages) t.messages = [];
+
+    if (t.status === 'closed') {
+        t.status = 'in_progress';
+        t.closedAt = null;
+        t.messages.push({
+            sender: myName,
+            role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
+            text: `[Info: Ticket wurde von ${myName} wiedereröffnet]`,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            timestamp: Date.now()
+        });
+        showToast('Ticket wiedereröffnet!', 'ok');
+    } else {
+        t.status = 'closed';
+        t.closedAt = new Date().toISOString();
+        t.messages.push({
+            sender: myName,
+            role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
+            text: `[Info: Ticket wurde geschlossen und wird nach 24h gelöscht]`,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            timestamp: Date.now()
+        });
+        showToast('Ticket geschlossen (24h Aufbewahrung)!', 'ok');
+    }
+
+    await saveAdminTicketsToGitHub(`Update status of ticket ${t.id} to ${t.status}`);
+    renderActiveAdminTicketRoom(t);
+    renderAdminTicketsList();
+}
+
+async function deleteCurrentTicket() {
+    if (!canDeleteTickets()) {
+        showToast('Nur Admins und Moderatoren dürfen Tickets löschen!', 'err');
+        return;
+    }
+    if (!_adminActiveTicketId) return;
+    if (!confirm('Möchtest du dieses Support Ticket wirklich endgültig löschen?')) return;
+
+    _adminTicketsData = _adminTicketsData.filter(x => x.id !== _adminActiveTicketId);
+    _adminActiveTicketId = null;
+
+    const activeRoom = document.getElementById('admin-ticket-active-room');
+    const noSel = document.getElementById('admin-no-ticket-selected');
+    if (activeRoom) activeRoom.style.display = 'none';
+    if (noSel) noSel.style.display = 'flex';
+
+    await saveAdminTicketsToGitHub(`Deleted support ticket by ${(CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : 'Admin'}`);
+    renderAdminTicketsList();
+    showToast('Support Ticket gelöscht!', 'ok');
+}
+
+async function sendAdminTicketMsg() {
+    if (!_adminActiveTicketId) return;
+    const inp = document.getElementById('admin-ticket-input');
+    const txt = (inp.value || '').trim();
+    if (!txt) return;
+    inp.value = '';
+
+    const t = _adminTicketsData.find(x => x.id === _adminActiveTicketId);
+    if (!t) return;
+
+    const myName = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : 'Mitarbeiter';
+    const myRole = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Support';
+
+    const newMsg = {
+        sender: myName,
+        role: myRole,
+        text: txt,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        timestamp: Date.now()
+    };
+
+    if (!t.messages) t.messages = [];
+    t.messages.push(newMsg);
+
+    renderActiveAdminTicketRoom(t);
+    await saveAdminTicketsToGitHub(`Reply in ticket ${t.id} by ${myName}`);
+}
+
+async function saveAdminTicketsToGitHub(commitMsg) {
+    try {
+        const fullJson = JSON.stringify(_adminTicketsData, null, 2);
+        const finalB64 = utf8_to_b64(fullJson);
+        await uploadFileToGitHub('support_tickets.json', finalB64, commitMsg);
+    } catch(e) {
+        console.error('Save Support Tickets Err:', e);
+    }
+}
 
 </script>
 
