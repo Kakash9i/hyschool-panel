@@ -1,0 +1,39 @@
+﻿{
+  "ADMIN": {
+    "username": "ADMIN",
+    "key": "MASTER-ADMIN",
+    "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN",
+    "bio": "HySchool Inhaber & Head Developer",
+    "discord": "admin#0001",
+    "rank": "inhaber",
+    "joined": "01.01.2026",
+    "guestbook": [
+      {
+        "author": "SupportTeam",
+        "rank": "supporter",
+        "text": "HySchool Panel v5.0 läuft perfekt!",
+        "date": "05.09.2026 08:00"
+      }
+    ]
+  },
+  "Admin": {
+    "username": "Admin",
+    "key": "HYS-VAL-1D-HS9E-F0KL",
+    "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=Admin",
+    "bio": "HySchool Inhaber & Administration",
+    "discord": "admin#1337",
+    "rank": "inhaber",
+    "joined": "01.01.2026",
+    "guestbook": []
+  },
+  "Marc": {
+    "username": "Marc",
+    "key": "HYS-VIP-MARC",
+    "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=Marc",
+    "bio": "HySchool Moderator & Community Lead",
+    "discord": "marc#9999",
+    "rank": "moderator",
+    "joined": "15.02.2026",
+    "guestbook": []
+  }
+}
