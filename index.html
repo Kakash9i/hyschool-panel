@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -7831,7 +7831,7 @@ function insertStaffMacro(type) {
     inp.focus();
 }
 
-async async function claimCurrentTicket() {
+async function claimCurrentTicket() {
     if (!_adminActiveTicketId) return;
     const t = _adminTicketsData.find(x => x.id === _adminActiveTicketId);
     if (!t) return;
