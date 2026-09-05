@@ -5929,8 +5929,8 @@ function getUserProfile(usernameOrKey) {
   if (!p && !isMe) {
     return {
       username: usernameOrKey,
-      rank: "premium",
-      avatar: getAvatarUrl(usernameOrKey),
+      rank: ["premium"],
+      avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey)}`,
       banner: "",
       bio: "Dieser User hat noch keine Bio hinzugefügt.",
       joinedAt: "Unbekannt",
@@ -5959,12 +5959,12 @@ function getUserProfile(usernameOrKey) {
 
   if (p) return p;
 
-  const isOwner = usernameOrKey === "ADMIN" || (CURRENT_USER && CURRENT_USER.is_admin);
+  const isOwner = usernameOrKey === "ADMIN" || (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.is_admin && (usernameOrKey === CURRENT_USER.name || usernameOrKey === "ADMIN"));
   return {
-    username: isOwner ? "ADMIN" : usernameOrKey,
+      username: isOwner ? "ADMIN" : usernameOrKey,
     key: isOwner ? "MASTER-ADMIN" : "",
-    rank: isOwner ? "admin" : "premium",
-        avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey)}`,
+    rank: isOwner ? ["admin"] : ["premium"],
+    avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey)}`,
     banner: isOwner ? (localStorage.getItem("hyschool_admin_banner") || "") : "",
     bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "HySchool Team & Community Mitglied.",
     discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "",
@@ -5974,10 +5974,14 @@ function getUserProfile(usernameOrKey) {
 }
 
 function getAvatarUrl(usernameOrKey) {
-  const prof = getUserProfile(usernameOrKey);
+  if(!usernameOrKey) return "https://api.dicebear.com/7.x/bottts/svg?seed=User";
+  const isOwner = usernameOrKey === "ADMIN" || (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.is_admin && (usernameOrKey === CURRENT_USER.name || usernameOrKey === "ADMIN"));
+  if (isOwner) {
+    return localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN";
+  }
+  const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES) ? USER_PROFILES[usernameOrKey] : null;
   if(prof && prof.avatar) return prof.avatar;
-  const isOwner = usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN" || usernameOrKey === "ADMIN";
-  return isOwner ? "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN" : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey || 'User')}`;
+  return `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey)}`;
 }
 
 function buildPresetAvatarGrid() {
