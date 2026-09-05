@@ -7086,26 +7086,26 @@ function getRankBadge(username, userRank) {
   for (let r of ranks) {
     r = r.toLowerCase();
     if (r === "admin" || r === "inhaber") {
-      html += '<span class="badge-rank badge-rank-admin" style="margin-right:6px;box-shadow:0 0 15px rgba(229,169,60,0.4);border:1px solid rgba(229,169,60,0.8);text-shadow:0 0 5px rgba(229,169,60,0.5);">&#128081; INHABER</span>';
+      html += '<span class="badge-rank badge-rank-admin" style="margin-right:4px;box-shadow:0 0 10px rgba(229,169,60,0.25);border:1px solid rgba(229,169,60,0.5);">&#128081; INHABER</span>';
     } else if (r === "co-admin" || r.includes("co-admin") || r === "coadmin") {
-      html += '<span class="badge-rank badge-rank-staff" style="margin-right:6px;box-shadow:0 0 12px rgba(239,68,68,0.4);border:1px solid rgba(239,68,68,0.8);text-shadow:0 0 5px rgba(239,68,68,0.5);">&#128737;&#65039; CO-ADMIN</span>';
+      html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(239,68,68,0.25);border:1px solid rgba(239,68,68,0.5);">&#128737;&#65039; CO-ADMIN</span>';
     } else if (r === "supporter" || r.includes("support")) {
-      html += '<span class="badge-rank badge-rank-staff" style="margin-right:6px;box-shadow:0 0 10px rgba(56,189,248,0.3);border:1px solid rgba(56,189,248,0.6);">&#128737;&#65039; SUPPORTER</span>';
+      html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(56,189,248,0.25);border:1px solid rgba(56,189,248,0.5);">&#128737;&#65039; SUPPORTER</span>';
     } else if (r === "moderator" || r.includes("mod")) {
-      html += '<span class="badge-rank badge-rank-staff" style="margin-right:6px;box-shadow:0 0 10px rgba(168,85,247,0.3);border:1px solid rgba(168,85,247,0.6);">&#128737;&#65039; MODERATOR</span>';
+      html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(168,85,247,0.25);border:1px solid rgba(168,85,247,0.5);">&#128737;&#65039; MODERATOR</span>';
     } else if (r === "developer" || r.includes("dev")) {
-      html += '<span class="badge-rank badge-rank-staff" style="margin-right:6px;box-shadow:0 0 10px rgba(20,184,166,0.3);border:1px solid rgba(20,184,166,0.6);">&#128737;&#65039; DEVELOPER</span>';
+      html += '<span class="badge-rank badge-rank-staff" style="margin-right:4px;box-shadow:0 0 10px rgba(20,184,166,0.25);border:1px solid rgba(20,184,166,0.5);">&#128737;&#65039; DEVELOPER</span>';
     } else if (r === "donator" || r.includes("donat")) {
-      html += '<span class="badge-rank badge-rank-donator" style="margin-right:6px;box-shadow:0 0 10px rgba(244,114,182,0.3);border:1px solid rgba(244,114,182,0.6);">&#128150; DONATOR</span>';
+      html += '<span class="badge-rank badge-rank-donator" style="margin-right:4px;box-shadow:0 0 10px rgba(244,114,182,0.25);border:1px solid rgba(244,114,182,0.5);">&#128150; DONATOR</span>';
     } else if (r === "vip") {
-      html += '<span class="badge-rank badge-rank-vip" style="margin-right:6px;box-shadow:0 0 10px rgba(250,204,21,0.3);border:1px solid rgba(250,204,21,0.6);">&#11088; VIP</span>';
+      html += '<span class="badge-rank badge-rank-vip" style="margin-right:4px;box-shadow:0 0 10px rgba(250,204,21,0.25);border:1px solid rgba(250,204,21,0.5);">&#11088; VIP</span>';
     } else if (r === "elite") {
-      html += '<span class="badge-rank badge-rank-elite" style="margin-right:6px;box-shadow:0 0 10px rgba(249,115,22,0.3);border:1px solid rgba(249,115,22,0.6);">&#9889; ELITE</span>';
+      html += '<span class="badge-rank badge-rank-elite" style="margin-right:4px;box-shadow:0 0 10px rgba(249,115,22,0.25);border:1px solid rgba(249,115,22,0.5);">&#9889; ELITE</span>';
     } else if (r === "premium") {
-      html += '<span class="badge-rank badge-rank-premium" style="margin-right:6px;box-shadow:0 0 10px rgba(59,130,246,0.3);border:1px solid rgba(59,130,246,0.6);">&#128142; PREMIUM</span>';
+      html += '<span class="badge-rank badge-rank-premium" style="margin-right:4px;box-shadow:0 0 10px rgba(59,130,246,0.25);border:1px solid rgba(59,130,246,0.5);">&#128142; PREMIUM</span>';
     }
   }
-  return html.trim() || '<span class="badge-rank badge-rank-premium" style="box-shadow:0 0 10px rgba(59,130,246,0.3);border:1px solid rgba(59,130,246,0.6);">&#128142; PREMIUM</span>';
+  return html.trim() || '<span class="badge-rank badge-rank-premium" style="box-shadow:0 0 10px rgba(59,130,246,0.25);border:1px solid rgba(59,130,246,0.5);">&#128142; PREMIUM</span>';
 }
 
 function toggleHighlightUploadCard() {
@@ -7849,6 +7849,7 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
 
 
 
