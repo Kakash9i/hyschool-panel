@@ -5916,6 +5916,7 @@ function getUserProfile(usernameOrKey) {
     if (localAvatar || localBio || localDiscord || localBanner) {
       p = Object.assign({}, p || {}, {
         username: "ADMIN",
+        rank: (p && p.rank) || "admin",
         avatar: localAvatar || (p && p.avatar) || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN",
         banner: localBanner || (p && p.banner) || "",
         bio: localBio || (p && p.bio) || "HySchool Owner & Lead Developer.",
@@ -5930,6 +5931,7 @@ function getUserProfile(usernameOrKey) {
   return {
     username: isOwner ? "ADMIN" : usernameOrKey,
     key: isOwner ? "MASTER-ADMIN" : "",
+    rank: isOwner ? "admin" : "premium",
         avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(usernameOrKey)}`,
     banner: isOwner ? (localStorage.getItem("hyschool_admin_banner") || "") : "",
     bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "HySchool Team & Community Mitglied.",
@@ -7032,7 +7034,7 @@ function getRankBadge(username, userRank) {
   const prof = (typeof USER_PROFILES !== 'undefined' && USER_PROFILES[username]) ? USER_PROFILES[username] : {};
   const r = (userRank || prof.rank || "kunde").toLowerCase();
   
-  if (r === "ADMIN" || r === "inhaber" || (username && (username.toLowerCase() === "ADMIN" || username.toLowerCase() === "ADMIN"))) {
+  if (r === "admin" || r === "inhaber") {
     return '<span class="badge-rank badge-rank-admin">&#128081; INHABER</span>';
   } else if (r === "co-admin" || r.includes("co-admin")) {
     return '<span class="badge-rank badge-rank-staff">&#128737;&#65039; CO-ADMIN</span>';
@@ -7794,6 +7796,8 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
+
 
 
 
