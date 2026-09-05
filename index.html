@@ -5920,10 +5920,25 @@ function getUserProfile(usernameOrKey) {
   if(!usernameOrKey) return null;
   const isMe = (usernameOrKey === "ADMIN") || (CURRENT_USER && CURRENT_USER.name === usernameOrKey) || (CURRENT_USER && CURRENT_USER.is_admin && usernameOrKey === "ADMIN");
   
-  let p = USER_PROFILES[usernameOrKey] || USER_PROFILES["ADMIN"];
+  let p = USER_PROFILES[usernameOrKey];
   if (!p) {
     const values = Object.values(USER_PROFILES);
     p = values.find(x => (x.username && x.username.toLowerCase() === String(usernameOrKey).toLowerCase()) || (x.key && x.key.toUpperCase() === String(usernameOrKey).toUpperCase()));
+  }
+
+  // If still not found and not Me, return a default mock profile instead of ADMIN's
+  if (!p && !isMe) {
+    return {
+      username: usernameOrKey,
+      rank: "premium",
+      avatar: getAvatarUrl(usernameOrKey),
+      banner: "",
+      bio: "Dieser User hat noch keine Bio hinzugefügt.",
+      joinedAt: "Unbekannt",
+      discord: "Nicht angegeben"
+    };
+  } else if (!p && isMe) {
+    p = USER_PROFILES["ADMIN"] || {};
   }
 
   if (isMe) {
@@ -7934,6 +7949,7 @@ async function saveADMINTicketsToGitHub(commitMsg) {
 
 </body>
 </html>
+
 
 
 
