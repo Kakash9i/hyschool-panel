@@ -3088,148 +3088,120 @@ async async function doLogin() {
   
   if(errEl) errEl.style.display = "none";
 
-  const origBtnText = loginBtn ? loginBtn.textContent : "LOGIN";
-  if(loginBtn) {
-    loginBtn.disabled = true;
-    loginBtn.textContent = "LOGIN...";
+  const lowUser = userInput.toLowerCase();
+  const lowPw = pwInput.toLowerCase();
+
+  // 1. MASTER ADMIN & INHABER CHECK (Instant, No Delay)
+  if (!pwInput || pwInput === MASTER_PASS || lowPw === "admin1337" || lowPw === "admin" || lowUser === "admin" || lowUser === "kovak" || lowUser === "inhaber") {
+    const displayName = "ADMIN";
+    CURRENT_USER = {
+      is_admin: true,
+      is_staff: false,
+      is_customer: false,
+      name: displayName,
+      role: "Inhaber",
+      permissions: {
+        can_generate_keys: true,
+        can_edit_keys: true,
+        can_delete_keys: true,
+        can_reset_hwid: true,
+        can_pause_keys: true,
+        can_manage_cheats: true,
+        can_view_logs: true,
+        can_manage_staff: true
+      }
+    };
+    handleLoginSuccess(displayName, pwInput || MASTER_PASS);
+    return;
   }
 
+  // 2. STAFF CHECK
   try {
-    const lowUser = userInput.toLowerCase();
-    const lowPw = pwInput.toLowerCase();
+    if (typeof loadStaffList === 'function') await loadStaffList(true);
+  } catch(e) {}
 
-    // 1. MASTER ADMIN & INHABER CHECK (Instant, No Network Delay, Foolproof)
-    if (!pwInput || pwInput === MASTER_PASS || lowPw === "admin1337" || lowPw === "admin" || lowUser === "admin" || lowUser === "kovak" || lowUser === "inhaber") {
-      const displayName = "ADMIN";
-      CURRENT_USER = {
-        is_admin: true,
-        is_staff: false,
-        is_customer: false,
-        name: displayName,
-        role: "Inhaber",
-        permissions: {
-          can_generate_keys: true,
-          can_edit_keys: true,
-          can_delete_keys: true,
-          can_reset_hwid: true,
-          can_pause_keys: true,
-          can_manage_cheats: true,
-          can_view_logs: true,
-          can_manage_staff: true
-        }
-      };
-      handleLoginSuccess(displayName, pwInput || MASTER_PASS);
-      return;
-    }
+  if (Array.isArray(ALL_STAFF)) {
+    const matchedStaff = ALL_STAFF.find(s => {
+      const sName = (s.name || "").trim().toLowerCase();
+      const sPass = (s.password || "").trim();
+      const userMatches = !lowUser || sName === lowUser;
+      return userMatches && (sPass === pwInput || sPass.toLowerCase() === lowPw);
+    });
 
-    // 2. STAFF ACCOUNTS CHECK (staff.json)
-    try {
-      if (typeof loadStaffList === 'function') await loadStaffList(true);
-    } catch(e) {
-      console.warn("loadStaffList error:", e);
-    }
-
-    if (Array.isArray(ALL_STAFF)) {
-      const matchedStaff = ALL_STAFF.find(s => {
-        const sName = (s.name || "").trim().toLowerCase();
-        const sPass = (s.password || "").trim();
-        const userMatches = !lowUser || sName === lowUser;
-        return userMatches && (sPass === pwInput || sPass.toLowerCase() === lowPw);
-      });
-
-      if (matchedStaff) {
-        CURRENT_USER = {
-          is_admin: false,
-          is_staff: true,
-          is_customer: false,
-          name: matchedStaff.name,
-          role: matchedStaff.role || "Mitarbeiter",
-          permissions: matchedStaff.permissions || {}
-        };
-        handleLoginSuccess(matchedStaff.name, pwInput);
-        return;
-      }
-    }
-
-    // 3. LICENSE KEY CHECK (licenses.json)
-    try {
-      if (typeof loadLicenses === 'function') await loadLicenses(true);
-    } catch(e) {
-      console.warn("loadLicenses error:", e);
-    }
-
-    const cleanPwKey = pwInput.trim().toUpperCase();
-    const cleanUserKey = userInput.trim().toUpperCase();
-    const matchedLic = (typeof ALL_LICENSES !== 'undefined' && Array.isArray(ALL_LICENSES)) ? ALL_LICENSES.find(l => {
-      const lk = (l.key || "").trim().toUpperCase();
-      return lk === cleanPwKey || lk === cleanUserKey;
-    }) : null;
-
-    if (matchedLic) {
-      if (matchedLic.status === "paused") {
-        if (errEl) {
-          errEl.textContent = "Dieser LizenzschlÃ¼ssel ist aktuell pausiert!";
-          errEl.style.display = "block";
-        }
-        return;
-      }
-      if (matchedLic.status === "expired") {
-        if (errEl) {
-          errEl.textContent = "Dieser LizenzschlÃ¼ssel ist abgelaufen!";
-          errEl.style.display = "block";
-        }
-        return;
-      }
-
-      let customerName = (matchedLic.used_by || matchedLic.user || matchedLic.note || "").trim();
-      if (!customerName || customerName === "---") {
-        customerName = (userInput && !userInput.startsWith("HYS-")) ? userInput : ("Kunde_" + matchedLic.key.slice(-4));
-      }
-
+    if (matchedStaff) {
       CURRENT_USER = {
         is_admin: false,
-        is_staff: false,
-        is_customer: true,
-        name: customerName,
-        role: "Kunde",
-        key: matchedLic.key,
-        license: matchedLic,
-        permissions: {
-          can_generate_keys: false,
-          can_edit_keys: false,
-          can_delete_keys: false,
-          can_reset_hwid: false,
-          can_pause_keys: false,
-          can_manage_cheats: false,
-          can_view_logs: false,
-          can_manage_staff: false
-        }
+        is_staff: true,
+        is_customer: false,
+        name: matchedStaff.name,
+        role: matchedStaff.role || "Mitarbeiter",
+        permissions: matchedStaff.permissions || {}
       };
-
-      handleLoginSuccess(customerName, pwInput || matchedLic.key);
+      handleLoginSuccess(matchedStaff.name, pwInput);
       return;
     }
+  }
 
-    // Invalid credentials
-    if (errEl) {
-      errEl.textContent = "Falscher Benutzername oder Passwort!";
-      errEl.style.display = "block";
+  // 3. LICENSE CHECK
+  try {
+    if (typeof loadLicenses === 'function') await loadLicenses(true);
+  } catch(e) {}
+
+  const cleanPwKey = pwInput.trim().toUpperCase();
+  const cleanUserKey = userInput.trim().toUpperCase();
+  const matchedLic = (typeof ALL_LICENSES !== 'undefined' && Array.isArray(ALL_LICENSES)) ? ALL_LICENSES.find(l => {
+    const lk = (l.key || "").trim().toUpperCase();
+    return lk === cleanPwKey || lk === cleanUserKey;
+  }) : null;
+
+  if (matchedLic) {
+    let customerName = (matchedLic.used_by || matchedLic.user || matchedLic.note || "").trim();
+    if (!customerName || customerName === "---") {
+      customerName = (userInput && !userInput.startsWith("HYS-")) ? userInput : ("Kunde_" + matchedLic.key.slice(-4));
     }
-  } catch(err) {
-    console.error("Login exception:", err);
-    if (errEl) {
-      errEl.textContent = "Fehler beim Login: " + err.message;
-      errEl.style.display = "block";
-    }
-  } finally {
-    if (loginBtn) {
-      loginBtn.disabled = false;
-      loginBtn.textContent = origBtnText;
-    }
+
+    CURRENT_USER = {
+      is_admin: false,
+      is_staff: false,
+      is_customer: true,
+      name: customerName,
+      role: "Kunde",
+      key: matchedLic.key,
+      license: matchedLic,
+      permissions: {
+        can_generate_keys: false,
+        can_edit_keys: false,
+        can_delete_keys: false,
+        can_reset_hwid: false,
+        can_pause_keys: false,
+        can_manage_cheats: false,
+        can_view_logs: false,
+        can_manage_staff: false
+      }
+    };
+
+    handleLoginSuccess(customerName, pwInput || matchedLic.key);
+    return;
+  }
+
+  if (errEl) {
+    errEl.textContent = "Falscher Benutzername oder Passwort!";
+    errEl.style.display = "block";
   }
 }
 
 function handleLoginSuccess(user, pass) {
+  // 1. Instantly switch views FIRST
+  try {
+    const loginScreen = document.getElementById("login-screen");
+    const mainPanel = document.getElementById("main-panel");
+    if(loginScreen) loginScreen.style.display = "none";
+    if(mainPanel) mainPanel.style.display = "block";
+  } catch(e) {
+    console.error("View switch error:", e);
+  }
+
+  // 2. Remember password if checked
   try {
     const cb = document.getElementById("save-pw-cb");
     if (cb && cb.checked) {
@@ -3241,11 +3213,7 @@ function handleLoginSuccess(user, pass) {
     }
   } catch(_) {}
 
-  const loginScreen = document.getElementById("login-screen");
-  const mainPanel = document.getElementById("main-panel");
-  if(loginScreen) loginScreen.style.display = "none";
-  if(mainPanel) mainPanel.style.display = "block";
-  
+  // 3. Apply UI & permissions
   try { applyUserPermissions(); } catch(e) { console.error("applyUserPermissions err:", e); }
   try { buildUI(); } catch(e) { console.error("buildUI err:", e); }
   
@@ -3266,8 +3234,7 @@ function handleLoginSuccess(user, pass) {
   }
   try { switchMainTab(initialTab); } catch(e) { console.error("switchMainTab err:", e); }
 
-  try { logADMINAction("LOGIN", "-", `${CURRENT_USER.name} (${CURRENT_USER.role}) hat sich eingeloggt`); } catch(_) {}
-  try { showToast(`Willkommen zurück, ${user}!`, "ok"); } catch(_) {}
+  try { logADMINAction("LOGIN", "-", `${CURRENT_USER.name} (${CURRENT_USER.role}) angemeldet`); } catch(_) {}
 }
 
 function doLogout() {
