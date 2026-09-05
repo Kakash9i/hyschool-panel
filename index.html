@@ -6313,12 +6313,12 @@ async function loadUserConfigs(silent = false, manualToast = false) {
 }
 
 function getFileExtension(filename) {
-  if (!filename) return "CFG";
+  if (!filename) return "cfg";
   const parts = filename.split('.');
   if (parts.length > 1) {
-    return parts.pop().toUpperCase();
+    return parts.pop().toLowerCase();
   }
-  return "CFG";
+  return "cfg";
 }
 
 function filterUserConfigs() {
@@ -6365,88 +6365,89 @@ function filterUserConfigs() {
 
   if (filtered.length === 0) {
     container.innerHTML = `
-      <div style="text-align:center;color:#64748b;padding:48px 20px;background:#0b0e17;border:1px dashed #1c2438;border-radius:8px;">
-        <div style="font-size:28px;margin-bottom:8px;">&#128193;</div>
-        <div style="font-size:13px;font-weight:800;color:#94a3b8;">Keine Cloud-Configs gefunden</div>
-        <div style="font-size:11px;color:#475569;margin-top:4px;">Lade links eine neue Config hoch oder Ã¤ndere deine Filter.</div>
+      <div style="text-align:center;color:#64748b;padding:36px 20px;background:#0b0e17;border:1px dashed #1c2438;border-radius:6px;">
+        <div style="font-size:24px;margin-bottom:6px;">&#128193;</div>
+        <div style="font-size:12px;font-weight:800;color:#94a3b8;">Keine Cloud-Configs gefunden</div>
+        <div style="font-size:11px;color:#475569;margin-top:2px;">Lade links eine neue Config hoch oder Ã¤ndere deine Filter.</div>
       </div>
     `;
     return;
   }
 
   const gameTags = {
-    valorant: `<span class="tag-product" style="color:#f43f5e;border-color:rgba(244,63,94,0.4);background:rgba(244,63,94,0.12);border-radius:4px;font-size:9.5px;padding:2px 7px;">VALORANT</span>`,
-    apex: `<span class="tag-product" style="color:#38bdf8;border-color:rgba(56,189,248,0.4);background:rgba(56,189,248,0.12);border-radius:4px;font-size:9.5px;padding:2px 7px;">AI HYSCHOOL</span>`,
-    tft_helper: `<span class="tag-product" style="color:#a855f7;border-color:rgba(168,85,247,0.4);background:rgba(168,85,247,0.12);border-radius:4px;font-size:9.5px;padding:2px 7px;">TFT HELPER</span>`,
-    naraka: `<span class="tag-product" style="color:#f59e0b;border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.12);border-radius:4px;font-size:9.5px;padding:2px 7px;">NARAKA</span>`,
-    coc: `<span class="tag-product" style="color:#10b981;border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.12);border-radius:4px;font-size:9.5px;padding:2px 7px;">CLASH OF CLANS</span>`,
-    all: `<span class="tag-product" style="border-radius:4px;font-size:9.5px;padding:2px 7px;">ALLGEMEIN</span>`
+    valorant: `<span class="tag-product" style="color:#f43f5e;border-color:rgba(244,63,94,0.4);background:rgba(244,63,94,0.12);border-radius:4px;font-size:9.5px;padding:2px 6px;">VALORANT</span>`,
+    apex: `<span class="tag-product" style="color:#38bdf8;border-color:rgba(56,189,248,0.4);background:rgba(56,189,248,0.12);border-radius:4px;font-size:9.5px;padding:2px 6px;">AI HYSCHOOL</span>`,
+    tft_helper: `<span class="tag-product" style="color:#a855f7;border-color:rgba(168,85,247,0.4);background:rgba(168,85,247,0.12);border-radius:4px;font-size:9.5px;padding:2px 6px;">TFT HELPER</span>`,
+    naraka: `<span class="tag-product" style="color:#f59e0b;border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.12);border-radius:4px;font-size:9.5px;padding:2px 6px;">NARAKA</span>`,
+    coc: `<span class="tag-product" style="color:#10b981;border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.12);border-radius:4px;font-size:9.5px;padding:2px 6px;">CLASH OF CLANS</span>`,
+    all: `<span class="tag-product" style="border-radius:4px;font-size:9.5px;padding:2px 6px;">ALLGEMEIN</span>`
   };
 
   container.innerHTML = filtered.map(c => {
     const displayAuthor = formatNameUpper(c.author || c.user || "ADMIN");
     const isOwner = (c.user === CURRENT_USER.name) || (c.author === CURRENT_USER.name) || (CURRENT_USER.key && c.key === CURRENT_USER.key) || CURRENT_USER.is_admin;
-    const tagHtml = gameTags[c.game] || `<span class="tag-product" style="border-radius:4px;font-size:9.5px;padding:2px 7px;">${(c.game||'ALLE').toUpperCase()}</span>`;
+    const tagHtml = gameTags[c.game] || `<span class="tag-product" style="border-radius:4px;font-size:9.5px;padding:2px 6px;">${(c.game||'ALLE').toUpperCase()}</span>`;
     const sizeStr = c.size ? formatBytes(c.size) : '';
     const authorAvatar = getAvatarUrl(displayAuthor);
     const ext = getFileExtension(c.filename || c.name);
     const isLiked = Array.isArray(c.likedBy) && c.likedBy.includes(CURRENT_USER.name);
 
     return `
-      <div class="cfg-card">
-        <div class="cfg-card-header">
-          <div class="cfg-card-title-group">
-            <span class="cfg-card-ext">.${escapeHtml(ext.toLowerCase())}</span>
-            <span class="cfg-card-name">${escapeHtml(c.name || c.filename)}</span>
-            ${tagHtml}
-          </div>
+      <div style="background:#0b0e17;border:1px solid #1a2234;border-radius:6px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:border-color .15s ease;" onmouseover="this.style.borderColor='#e5a93c'" onmouseout="this.style.borderColor='#1a2234'">
+        <!-- LEFT: ext badge + name + game tag + meta/author -->
+        <div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1;">
+          <span style="background:rgba(56,189,248,0.12);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);font-size:10px;font-weight:900;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;text-transform:lowercase;flex-shrink:0;">${escapeHtml(ext)}</span>
 
-          <div class="cfg-community-pill">
-            <button onclick="toggleConfigLike('${c.id}')" class="cfg-card-like-btn ${isLiked ? 'liked' : ''}" title="Config liken">
-              <span style="font-size:12px;">${isLiked ? '&#10084;&#65039;' : '&#9825;'}</span>
-              <span>${c.likes || 0}</span>
-            </button>
-            <div class="cfg-card-dl-count" title="Downloads">
-              <span>&#11015;</span>
-              <span>${c.downloads || 0}</span>
+          <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span style="font-weight:800;color:#f8fafc;font-size:13px;letter-spacing:0.2px;">${escapeHtml(c.name || c.filename)}</span>
+              ${tagHtml}
+              <span style="font-size:10.5px;color:#64748b;font-family:'JetBrains Mono',monospace;">${escapeHtml(c.filename || '')} ${sizeStr ? `(${sizeStr})` : ''}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#64748b;flex-wrap:wrap;">
+              <!-- Author: Bild + ADMIN ohne Box drum herum -->
+              <div class="clickable-user" onclick="openUserProfileModal('${escapeHtml(displayAuthor)}')" style="display:inline-flex;align-items:center;gap:5px;font-weight:800;color:#10b981;">
+                <img src="${authorAvatar}" style="width:16px;height:16px;border-radius:3px;object-fit:cover;" alt="Avatar">
+                <span>${escapeHtml(displayAuthor)}</span>
+              </div>
+              <span style="color:#334155;">&#8226;</span>
+              <span style="color:#64748b;">${c.date || ''}</span>
+              ${c.desc ? `<span style="color:#334155;">&#8226;</span><span style="color:#94a3b8;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(c.desc)}</span>` : ''}
             </div>
           </div>
         </div>
 
-        <div class="cfg-card-desc">
-          ${c.desc ? escapeHtml(c.desc) : '<span style="color:#475569;font-style:italic;">Keine Notizen angegeben</span>'}
-        </div>
-
-        <div class="cfg-card-footer">
-          <div class="cfg-card-meta">
-            <div class="clickable-user" onclick="openUserProfileModal('${escapeHtml(displayAuthor)}')" style="display:inline-flex;align-items:center;gap:6px;font-weight:900;color:#10b981;background:#0e1320;padding:3px 8px;border-radius:4px;border:1px solid #1c263c;">
-              <img src="${authorAvatar}" class="cfg-card-avatar" alt="Avatar">
-              <span>${escapeHtml(displayAuthor)}</span>
-            </div>
-            <span class="cfg-card-dot">&#8226;</span>
-            <span style="font-weight:600;color:#64748b;">${c.date || ''}</span>
-            ${sizeStr ? `
-              <span class="cfg-card-dot">&#8226;</span>
-              <span class="cfg-card-size">${escapeHtml(c.filename || '')} (${sizeStr})</span>
-            ` : ''}
+        <!-- RIGHT: Like & DL + Action Buttons -->
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+          <!-- Like Button -->
+          <button onclick="toggleConfigLike('${c.id}')" style="background:${isLiked ? 'rgba(244,63,94,0.18)' : '#101420'};border:1px solid ${isLiked ? '#f43f5e' : '#1e283e'};color:${isLiked ? '#f43f5e' : '#94a3b8'};padding:4px 8px;border-radius:4px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s ease;" title="Like">
+            <span style="font-size:11px;">${isLiked ? '&#10084;&#65039;' : '&#9825;'}</span>
+            <span>${c.likes || 0}</span>
+          </button>
+          
+          <!-- Download Counter -->
+          <div style="background:#101420;border:1px solid #1e283e;color:#94a3b8;padding:4px 7px;border-radius:4px;font-size:10.5px;font-weight:800;display:inline-flex;align-items:center;gap:3px;" title="Downloads">
+            <span style="color:#e5a93c;">&#11015;</span> ${c.downloads || 0}
           </div>
 
-          <div class="cfg-card-actions">
-            <button onclick="downloadConfig('${c.id}')" class="btn-cfg-dl" title="Download">
-              <span>&#11015;</span> Download
+          <!-- Download Button -->
+          <button onclick="downloadConfig('${c.id}')" style="background:linear-gradient(135deg,#e5a93c,#c68924);border:none;color:#0b0c10;padding:5px 11px;border-radius:4px;font-size:10.5px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:4px;box-shadow:0 2px 8px rgba(229,169,60,0.25);" title="Download">
+            &#11015; Download
+          </button>
+
+          <!-- Preview Button -->
+          <button onclick="previewConfig('${c.id}')" style="background:#121726;border:1px solid #232d44;color:#38bdf8;padding:5px 8px;border-radius:4px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:3px;" title="Vorschau">
+            &#128065;
+          </button>
+
+          ${isOwner ? `
+            <button onclick="openConfigEditModal('${c.id}')" style="background:#141722;border:1px solid #28334e;color:#fbbf24;padding:5px 8px;border-radius:4px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:3px;" title="Editieren">
+              &#9999;&#65039;
             </button>
-            <button onclick="previewConfig('${c.id}')" class="btn-cfg-view" title="Vorschau anzeigen">
-              <span>&#128065;</span> Vorschau
+            <button onclick="deleteUserConfig('${c.id}')" class="action-btn action-btn-del" style="padding:5px 7px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;" title="LÃ¶schen">
+              &#128465;&#65039;
             </button>
-            ${isOwner ? `
-              <button onclick="openConfigEditModal('${c.id}')" class="btn-cfg-edit" title="Config bearbeiten">
-                <span>&#9999;&#65039;</span> Editieren
-              </button>
-              <button onclick="deleteUserConfig('${c.id}')" class="btn-cfg-del" title="Config lÃ¶schen">
-                <span>&#128465;&#65039;</span>
-              </button>
-            ` : ''}
-          </div>
+          ` : ''}
         </div>
       </div>
     `;
