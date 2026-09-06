@@ -1526,7 +1526,7 @@
         <div>
           <div style="display:flex;align-items:center;gap:8px;">
             <span id="hl-player-author-name" style="font-size:14px;font-weight:900;color:#ffffff;">Kunde</span>
-            <span id="hl-player-rank-badge" class="badge-rank badge-rank-vip">&#128142; VIP</span>
+            <span id="hl-player-rank-badge"></span>
           </div>
           <div id="hl-player-desc" style="font-size:11.5px;color:#94a3b8;margin-top:2px;">Keine Beschreibung</div>
         </div>
@@ -1632,6 +1632,7 @@
     <div class="header">
     <div style="display:flex;align-items:center;gap:12px;">
       <h1 style="margin:0;font-size:18px;font-weight:900;letter-spacing:1px;color:#f8fafc;display:flex;align-items:center;gap:8px;"><span style="color:#e5a93c;">&#9889;</span> HYSCHOOL ADMIN PANEL</h1>
+      <span id="user-badge" style="margin-left:4px;"></span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
       <div class="status-indicator" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10b981;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:6px;">
@@ -7706,12 +7707,12 @@ function openHighlightPlayer(highlightId) {
   document.getElementById("hl-player-desc").textContent = h.desc || "Keine Beschreibung";
   document.getElementById("hl-player-like-count").textContent = h.likes || 0;
 
-  const authorDisplayName = h.isCensored ? "&#128274; [Zensiert / Anonym]" : formatNameUpper(h.author);
-  const authorAvatar = h.isCensored ? "https://api.dicebear.com/7.x/bottts/svg?seed=Incognito" : getAvatarUrl(h.author);
+  const authorDisplayName = formatNameUpper(h.author);
+  const authorAvatar = getAvatarUrl(h.author);
 
   document.getElementById("hl-player-author-name").textContent = authorDisplayName;
   document.getElementById("hl-player-author-avatar").src = authorAvatar;
-  document.getElementById("hl-player-rank-badge").innerHTML = h.isCensored ? '<span class="badge-rank badge-rank-vip">&#128274; Anonym</span>' : getRankBadge(h.author, h.rank);
+  document.getElementById("hl-player-rank-badge").innerHTML = getRankBadge(h.author, h.rank);
 
   const container = document.getElementById("hl-player-video-container");
   if(h.videoType === "youtube") {
@@ -7741,7 +7742,7 @@ function openHighlightPlayer(highlightId) {
   if(h.isCensored) {
     const blurEl = document.createElement("div");
     blurEl.id = "hl-censor-blur";
-    blurEl.style.cssText = "position:absolute;top:0;right:0;width:34%;height:27%;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(5,7,12,0.7);pointer-events:none;z-index:50;border-radius:0 12px 0 12px;transition:.3s;";
+    blurEl.style.cssText = "position:absolute;top:0;right:0;width:34%;height:28%;backdrop-filter:blur(18px) saturate(0.1);-webkit-backdrop-filter:blur(18px) saturate(0.1);background:linear-gradient(to top left,rgba(4,6,10,0.85) 40%,rgba(4,6,10,0.35) 80%,transparent 100%);pointer-events:none;z-index:50;border-radius:0 12px 0 26px;transition:opacity .3s;";
     container.style.position = "relative";
     container.appendChild(blurEl);
   }
