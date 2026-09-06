@@ -8021,8 +8021,8 @@ function filterHighlights() {
     const cdw = weekClips[0] || null;
 
     if(cdw) {
-      const cdwAuthor = cdw.isCensored ? "&#128274; Anonym" : formatNameUpper(cdw.author);
-      const cdwAvatar = cdw.isCensored ? "https://api.dicebear.com/7.x/bottts/svg?seed=Incognito" : getAvatarUrl(cdw.author);
+      const cdwAuthor = formatNameUpper(cdw.author);
+      const cdwAvatar = getAvatarUrl(cdw.author);
       cdwBanner.style.display = "block";
       cdwBanner.innerHTML = '<div onclick="openHighlightPlayer(\'' + cdw.id + '\')" style="background:linear-gradient(135deg,#0f0a00,#1c1200,#0f0a00);border:1.5px solid rgba(229,169,60,0.55);border-radius:14px;padding:20px 22px;box-shadow:0 0 32px rgba(229,169,60,0.12);cursor:pointer;transition:.2s;" onmouseover="this.style.boxShadow=\'0 0 48px rgba(229,169,60,0.25)\'" onmouseout="this.style.boxShadow=\'0 0 32px rgba(229,169,60,0.12)\'">'
         + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">'
