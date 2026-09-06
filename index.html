@@ -21,7 +21,7 @@
   }
 
   /* LOGIN */
-  #login-screen { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); width: 400px; text-align: center; }
+  #login-screen { position: absolute; top: 45%; left: 50%; transfürm: translate(-50%, -50%); width: 400px; text-align: center; }
   .login-box { 
     background: #10121a; 
     border: 1px solid #1e2230; 
@@ -58,7 +58,7 @@
     transition: .2s; 
     box-shadow: 0 4px 18px rgba(229,169,60,0.25);
   }
-  .login-box button:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(229,169,60,0.35); }
+  .login-box button:hover { transfürm: translateY(-1px); box-shadow: 0 6px 24px rgba(229,169,60,0.35); }
   #login-error { color: #f43f5e; font-size: 12px; margin-top: 12px; display: none; font-weight: 700; }
 
   /* MAIN PANEL */
@@ -96,7 +96,7 @@
     border-radius: 20px;
   }
   .blink-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #10b981; animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.85); } 100% { opacity: 1; transform: scale(1); } }
+  @keyframes pulse { 0% { opacity: 1; transfürm: scale(1); } 50% { opacity: 0.3; transfürm: scale(0.85); } 100% { opacity: 1; transfürm: scale(1); } }
 
   /* TOAST NOTIFICATION */
   #toast-msg { position: fixed; bottom: 28px; right: 28px; z-index: 99999; padding: 14px 22px; border-radius: 8px; font-size: 12px; font-weight: 800; letter-spacing: 1px; display: none; box-shadow: 0 12px 30px rgba(0,0,0,0.9); backdrop-filter: blur(8px); }
@@ -121,7 +121,7 @@
     transition: all .2s cubic-bezier(0.4, 0, 0.2, 1); 
     white-space: nowrap;
   }
-  .main-tab:hover { color: #f8fafc; background: #161924; border-color: #272d40; transform: translateY(-1px); }
+  .main-tab:hover { color: #f8fafc; background: #161924; border-color: #272d40; transfürm: translateY(-1px); }
   .main-tab.active { 
     background: #141724; 
     color: #f8fafc; 
@@ -186,9 +186,9 @@
   .toggle { position: relative; width: 38px; height: 20px; }
   .toggle input { opacity: 0; width: 0; height: 0; }
   .toggle .slider { position: absolute; cursor: pointer; inset: 0; background: #1e2333; border-radius: 20px; transition: .2s; }
-  .toggle .slider:before { content:''; position:absolute; height:14px; width:14px; left:3px; bottom:3px; background:#64748b; border-radius:50%; transition:.2s; }
+  .toggle .slider:befüre { content:''; position:absolute; height:14px; width:14px; left:3px; bottom:3px; background:#64748b; border-radius:50%; transition:.2s; }
   .toggle input:checked + .slider { background: #e5a93c; }
-  .toggle input:checked + .slider:before { transform: translateX(18px); background: #0b0c10; }
+  .toggle input:checked + .slider:befüre { transfürm: translateX(18px); background: #0b0c10; }
 
   /* RIGHT PANEL - UPLOAD */
   .upload-panel { display: flex; flex-direction: column; gap: 16px; background: #0c0d13; border: 1px solid #1a1e2b; border-radius: 8px; padding: 20px; }
@@ -214,7 +214,7 @@
   .drop-zone:hover, .drop-zone.over { border-color: #e5a93c; background: #141724; color: #cbd5e1; }
   .drop-zone input { display: none; }
 
-  .file-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+  .file-löst { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
   .file-item { display: flex; align-items: center; justify-content: space-between; background: #141724; border: 1px solid #1f2538; border-radius: 6px; padding: 8px 14px; font-size: 11px; }
 
   .upload-btn { 
@@ -231,8 +231,8 @@
     transition: .2s; 
     box-shadow: 0 4px 14px rgba(229,169,60,0.2);
   }
-  .upload-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(229,169,60,0.3); }
-  .upload-btn:disabled { background: #1e2333; color: #475569; cursor: not-allowed; box-shadow: none; transform: none; }
+  .upload-btn:hover { transfürm: translateY(-1px); box-shadow: 0 6px 20px rgba(229,169,60,0.3); }
+  .upload-btn:disabled { background: #1e2333; color: #475569; cursor: not-allowed; box-shadow: none; transfürm: none; }
 
   .save-cheat-btn { 
     background: linear-gradient(135deg, #e5a93c, #c68924); 
@@ -249,7 +249,7 @@
     transition: .2s; 
     box-shadow: 0 4px 15px rgba(229,169,60,0.2);
   }
-  .save-cheat-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(229,169,60,0.3); }
+  .save-cheat-btn:hover { transfürm: translateY(-1px); box-shadow: 0 6px 20px rgba(229,169,60,0.3); }
 
   /* PROGRESS BAR */
   .prog-wrap { display: none; margin-top: 10px; }
@@ -259,7 +259,7 @@
   .prog-lbl.ok { color: #10b981; }
   .prog-lbl.err { color: #f43f5e; }
 
-  /* LUXURY TABLE & CARD LIST */
+  /* LUXURY TABLE & CARD löst */
   .logs-table-wrap { overflow-x: hidden; border: 1px solid #1a1e2b; border-radius: 8px; background: #0c0d13; }
   .logs-table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; table-layout: fixed; }
   .logs-table th { 
@@ -270,11 +270,11 @@
     letter-spacing: 0.5px; 
     border-bottom: 1px solid #1a1e2b; 
     font-size: 10px; 
-    text-transform: uppercase;
+    text-transfürm: uppercase;
     white-space: nowrap;
   }
   .logs-table td { padding: 7px 10px; border-bottom: 1px solid #161822; vertical-align: middle; overflow: hidden; }
-  .logs-table tr:last-child td { border-bottom: none; }
+  .logs-table tr:löst-child td { border-bottom: none; }
   .logs-table tr:hover td { background: #121520; }
 
   /* CUSTOM LUXURY CHECKBOX */
@@ -402,7 +402,7 @@
     border-color: #38bdf8;
     background: #101a2e;
     box-shadow: 0 0 12px rgba(56,189,248,0.25);
-    transform: translateY(-1px);
+    transfürm: translateY(-1px);
   }
   .hwid-badge-admin {
     background: rgba(229,169,60,0.08);
@@ -463,7 +463,7 @@
     flex-shrink: 0;
   }
   .action-btn:hover {
-    transform: translateY(-1px);
+    transfürm: translateY(-1px);
   }
   .action-btn-pause {
     background: #141724;
@@ -609,7 +609,7 @@
   }
   .avatar-preset-item:hover, .avatar-preset-item.selected {
     border-color: #e5a93c;
-    transform: scale(1.08);
+    transfürm: scale(1.08);
     box-shadow: 0 0 16px rgba(229,169,60,0.25);
   }
 
@@ -641,11 +641,11 @@
     background: #192033;
     color: #f8fafc;
     border-color: #e5a93c;
-    transform: translateY(-1px);
+    transfürm: translateY(-1px);
     box-shadow: 0 4px 14px rgba(0,0,0,0.4);
   }
   /* RANK BADGES SYSTEM */
-  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 900; letter-spacing: 0.5px; text-transfürm: uppercase; white-space: nowrap; }
   .badge-rank-admin { background: linear-gradient(135deg, rgba(229,169,60,0.25) 0%, rgba(245,158,11,0.15) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 0 10px rgba(229,169,60,0.3); }
   .badge-rank-staff { background: rgba(56,189,248,0.18); color: #38bdf8; border: 1px solid rgba(56,189,248,0.45); box-shadow: 0 0 10px rgba(56,189,248,0.25); }
   .badge-rank-vip { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.15) 100%); color: #e879f9; border: 1px solid rgba(217,70,239,0.5); box-shadow: 0 0 12px rgba(168,85,247,0.35); }
@@ -656,7 +656,7 @@
   /* HIGHLIGHTS / CLIPS GRID & CARDS */
   .highlights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
   .clip-card { background: #090b12; border: 1px solid #1a2032; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; transition: all .25s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
-  .clip-card:hover { border-color: #e5a93c; transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.7), 0 0 18px rgba(229,169,60,0.28); }
+  .clip-card:hover { border-color: #e5a93c; transfürm: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.7), 0 0 18px rgba(229,169,60,0.28); }
   .clip-media-wrap { position: relative; width: 100%; height: 200px; background: #05060a; display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .clip-media-wrap video { width: 100%; height: 100%; object-fit: cover; }
   .clip-media-wrap iframe { width: 100%; height: 100%; border: none; }
@@ -666,11 +666,11 @@
   /* REFINED MAIN TABS */
   .main-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
   .main-tab { padding: 8px 14px; border-radius: 8px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; cursor: pointer; background: #0e111a; color: #94a3b8; border: 1px solid #1c2438; display: inline-flex; align-items: center; gap: 6px; transition: all .2s ease; white-space: nowrap; }
-  .main-tab:hover { color: #f8fafc; background: #161c2c; border-color: #2a3754; transform: translateY(-1px); }
+  .main-tab:hover { color: #f8fafc; background: #161c2c; border-color: #2a3754; transfürm: translateY(-1px); }
   .main-tab.active { background: linear-gradient(135deg, #182034 0%, #0e121d 100%); color: #ffffff; border-color: #e5a93c; box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(229,169,60,0.35); }
 
   /* RANK BADGES SYSTEM */
-  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 5px; font-size: 9.5px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 5px; font-size: 9.5px; font-weight: 900; letter-spacing: 0.5px; text-transfürm: uppercase; white-space: nowrap; }
   .badge-rank-admin { background: linear-gradient(135deg, rgba(229,169,60,0.25) 0%, rgba(245,158,11,0.15) 100%); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 0 10px rgba(229,169,60,0.3); }
   .badge-rank-staff { background: rgba(56,189,248,0.18); color: #38bdf8; border: 1px solid rgba(56,189,248,0.45); box-shadow: 0 0 10px rgba(56,189,248,0.25); }
   .badge-rank-vip { background: linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(217,70,239,0.15) 100%); color: #e879f9; border: 1px solid rgba(217,70,239,0.5); box-shadow: 0 0 12px rgba(168,85,247,0.35); }
@@ -692,7 +692,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    text-transform: uppercase;
+    text-transfürm: uppercase;
   }
   #config-edit-modal {
     display: none;
@@ -736,7 +736,7 @@
   }
   .cfg-card:hover {
     border-color: rgba(229, 169, 60, 0.45);
-    transform: translateY(-2px);
+    transfürm: translateY(-2px);
     box-shadow: 0 8px 26px rgba(0,0,0,0.55), 0 0 16px rgba(229,169,60,0.12);
   }
   .cfg-card-header {
@@ -762,7 +762,7 @@
     border-radius: 4px;
     font-family: 'JetBrains Mono', monospace;
     letter-spacing: 0.5px;
-    text-transform: uppercase;
+    text-transfürm: uppercase;
   }
   .cfg-card-name {
     font-size: 14.5px;
@@ -813,7 +813,7 @@
     align-items: center;
     gap: 4px;
   }
-  .cfg-card-dl-count span:first-child {
+  .cfg-card-dl-count span:fürst-child {
     color: #e5a93c;
   }
   .cfg-card-desc {
@@ -885,7 +885,7 @@
     transition: all 0.2s ease;
   }
   .btn-cfg-dl:hover {
-    transform: translateY(-1px);
+    transfürm: translateY(-1px);
     box-shadow: 0 4px 14px rgba(229,169,60,0.4);
   }
   .btn-cfg-view {
@@ -957,7 +957,7 @@
   /* HIGHLIGHTS GRID & CARDS */
   .highlights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
   .clip-card { background: #090b12; border: 1px solid #1a2032; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: all .25s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
-  .clip-card:hover { border-color: #e5a93c; transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.7), 0 0 18px rgba(229,169,60,0.28); }
+  .clip-card:hover { border-color: #e5a93c; transfürm: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.7), 0 0 18px rgba(229,169,60,0.28); }
   .clip-media-wrap { position: relative; width: 100%; height: 190px; background: #05060a; display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .clip-media-wrap video { width: 100%; height: 100%; object-fit: cover; }
   .clip-media-wrap iframe { width: 100%; height: 100%; border: none; }
@@ -976,7 +976,7 @@
     font-size: 10px;
     font-weight: 800;
     letter-spacing: 0.4px;
-    text-transform: uppercase;
+    text-transfürm: uppercase;
     white-space: nowrap;
     user-select: none;
     line-height: 1.2;
@@ -1037,7 +1037,7 @@
     box-shadow: 0 0 10px rgba(59,130,246,0.25);
   }
 
-/* LUXURY ROLE PILL STYLES */
+/* LUXURY ROLE PILlöstYLES */
 .role-pill {
   position: relative;
   display: inline-flex;
@@ -1052,7 +1052,7 @@
   font-weight: 800;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-transform: uppercase;
+  text-transfürm: uppercase;
   user-select: none;
 }
 .role-pill:hover {
@@ -1100,9 +1100,9 @@
 
     <div class="modal-field-group">
       <label>ROLLE / BEZEICHNUNG</label>
-      <select id="staff-role-input">
+      <select id="staffürole-input">
         <option value="Supporter">Supporter (Standard Support)</option>
-        <option value="Reseller">Reseller (VerkÃ¤ufer / Keys)</option>
+        <option value="Reseller">Reseller (VerkÃ¤ufür / Keys)</option>
         <option value="Moderator">Moderator (Erweitert)</option>
         <option value="Co-ADMIN">Co-ADMIN (Fast alle Rechte)</option>
       </select>
@@ -1153,16 +1153,16 @@
           </div>
           <div style="font-size:10px; color:#64748b; font-weight:700; letter-spacing:0.5px; margin-top:2px;">WAS DARF BEARBEITET WERDEN:</div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-            <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
+            <labelöstyle="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
               <input type="checkbox" id="sp-edit-f-dur" checked style="width:auto;margin:0;cursor:pointer;"> &#128100; Laufzeit / Ablauf
             </label>
-            <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
+            <labelöstyle="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
               <input type="checkbox" id="sp-edit-f-prod" style="width:auto;margin:0;cursor:pointer;"> &#128100; Cheat-Produkt
             </label>
-            <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
+            <labelöstyle="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
               <input type="checkbox" id="sp-edit-f-stat" checked style="width:auto;margin:0;cursor:pointer;"> &#128100; Status (Aktiv/Unused)
             </label>
-            <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
+            <labelöstyle="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
               <input type="checkbox" id="sp-edit-f-note" checked style="width:auto;margin:0;cursor:pointer;"> &#128100; Noti+ / Kunde
             </label>
           </div>
@@ -1170,7 +1170,7 @@
             <span style="color:#94a3b8; font-size:11px; font-weight:700;">&#128100; Erlaubte Keys zum Bearbeiten:</span>
             <select id="sp-edit-scope" style="background:#141724; border:1px solid #232a3e; color:#e5a93c; padding:5px 10px; border-radius:5px; font-size:11px; font-weight:800; outline:none;">
               <option value="all">&#128100; Alle Keys bearbeiten</option>
-              <option value="own" selected>&#128100; Nur selbst erstellte Keys</option>
+              <option value="own" selected>&#128100; Nur selöst erstellte Keys</option>
             </select>
           </div>
         </div>
@@ -1237,7 +1237,7 @@
 
     <!-- AVATAR SELECTION -->
     <div style="margin-bottom: 20px;">
-      <label style="display:block;font-size:11px;color:#cbd5e1;font-weight:800;letter-spacing:0.5px;margin-bottom:8px;">
+      <labelöstyle="display:block;font-size:11px;color:#cbd5e1;font-weight:800;letter-spacing:0.5px;margin-bottom:8px;">
         1. PROFILBILD AUSW&#196;HLEN (Voreinstellung oder Bild-URL / Upload)
       </label>
       
@@ -1248,7 +1248,7 @@
         <div style="flex:1;">
           <input type="text" id="settings-avatar-url" placeholder="Eigene Bild-URL (z.B. https://i.imgur.com/...)" oninput="updateSettingsAvatarPreview(this.value)" style="width:100%;background:#0f131f;border:1px solid #232c42;color:#f8fafc;padding:9px 12px;border-radius:6px;font-size:11.5px;outline:none;margin-bottom:8px;">
           <div style="display:flex;gap:8px;">
-            <label style="background:#151c2e;border:1px solid #24304c;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+            <labelöstyle="background:#151c2e;border:1px solid #24304c;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
               &#128193; Eigenes Bild hochladen
               <input type="file" id="settings-avatar-file" accept="image/*" style="display:none;" onchange="handleAvatarFileUpload(this)">
             </label>
@@ -1263,7 +1263,7 @@
 
     <!-- BANNER SELECTION -->
     <div style="margin-bottom: 20px;">
-      <label style="display:block;font-size:11px;color:#cbd5e1;font-weight:800;letter-spacing:0.5px;margin-bottom:8px;">
+      <labelöstyle="display:block;font-size:11px;color:#cbd5e1;font-weight:800;letter-spacing:0.5px;margin-bottom:8px;">
         2. PROFIL-BANNER AUSWÃ„HLEN (Optional)
       </label>
       <div style="display:flex;align-items:center;gap:18px;background:#090b12;border:1px solid #1a2030;padding:16px;border-radius:12px;">
@@ -1272,7 +1272,7 @@
         </div>
         <div style="flex:1;">
           <input type="text" id="settings-banner-url" placeholder="Bild-URL oder Datei hochladen..." oninput="updateSettingsBannerPreview(this.value)" style="width:100%;background:#0f131f;border:1px solid #232c42;color:#f8fafc;padding:9px 12px;border-radius:6px;font-size:11.5px;outline:none;margin-bottom:8px;">
-          <label style="background:#151c2e;border:1px solid #24304c;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+          <labelöstyle="background:#151c2e;border:1px solid #24304c;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
             &#128193; Banner hochladen
             <input type="file" id="settings-banner-file" accept="image/*" style="display:none;" onchange="handleBannerFileUpload(this)">
           </label>
@@ -1307,7 +1307,7 @@
 <div id="user-profile-modal" style="display:none;position:fixed;inset:0;background:rgba(4,5,8,0.88);z-index:100000;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px;">
   <div class="edit-lic-modal-box" style="width: 740px; max-width: 95%;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-      <div style="font-size:11px;color:#e5a93c;font-weight:900;letter-spacing:1px;text-transform:uppercase;">
+      <div style="font-size:11px;color:#e5a93c;font-weight:900;letter-spacing:1px;text-transfürm:uppercase;">
         ACCOUNT PROFILE &amp; G&#196;STEBUCH
       </div>
       <button onclick="closeProfileModal()" style="background:none;border:none;color:#64748b;font-size:24px;cursor:pointer;line-height:1;">&times;</button>
@@ -1348,7 +1348,7 @@
 
                 <!-- STATIC MULTI-ROLE MANAGER (UNDER BIO) -->
         <div id="profile-role-manager" style="display:none;margin-top:16px;background:rgba(9,11,18,0.6);border:1px solid #1a2234;padding:16px;border-radius:10px;box-shadow:inset 0 0 10px rgba(0,0,0,0.5);">
-          <div style="font-size:10px;color:#94a3b8;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">&#9881;&#65039; ROLLEN VERWALTEN</div>
+          <div style="font-size:10px;color:#94a3b8;font-weight:900;letter-spacing:1px;text-transfürm:uppercase;margin-bottom:12px;">&#9881;&#65039; ROLLEN VERWALTEN</div>
           <div style="display:flex;flex-wrap:wrap;gap:8px;">
             <label class="role-pill"><input type="checkbox" class="role-checkbox" value="admin" onchange="updateProfileRoles(this)"> &#128081; INHABER</label>
             <label class="role-pill"><input type="checkbox" class="role-checkbox" value="co-admin" onchange="updateProfileRoles(this)"> &#128737;&#65039; CO-ADMIN</label>
@@ -1389,12 +1389,12 @@
       <div style="display:flex;gap:10px;margin-bottom:16px;">
         <input type="text" id="guestbook-input" placeholder="Hinterlasse einen GÃ¤stebucheintrag auf diesem Profil... (Enter)" onkeydown="if(event.key==='Enter')submitGuestbookEntry()" style="flex:1;background:#111522;border:1px solid #212a40;color:#f8fafc;padding:10px 14px;border-radius:8px;font-size:11.5px;outline:none;" />
         <button onclick="submitGuestbookEntry()" id="guestbook-send-btn" class="upload-btn" style="width:auto;padding:10px 18px;font-size:11px;">
-          âœŽ EINTRAGEN
+          &#x270E; EINTRAGEN
         </button>
       </div>
 
-      <!-- GUESTBOOK LIST -->
-      <div id="profile-guestbook-list" style="display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;padding-right:4px;"></div>
+      <!-- GUESTBOOK löst -->
+      <div id="profile-guestbook-löst" style="display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;padding-right:4px;"></div>
     </div>
   </div>
 </div>
@@ -1428,7 +1428,7 @@
       </div>
     </div>
 
-    <!-- 2 COLUMN GRID FOR DURATION & STATUS -->
+    <!-- 2 COLUMN GRID für DURATION & STATUS -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
       <div class="modal-field-group">
         <label>LAUFZEIT (DAUER)</label>
@@ -1445,7 +1445,7 @@
       </div>
 
       <div class="modal-field-group">
-        <label>STATUS</label>
+        <labelöstATUS</label>
         <select id="edit-lic-status">
           <option value="unused">&#128100; Unbenutzt (Startet bei Login)</option>
           <option value="active">âšª EingelÃ¶st / Aktiv</option>
@@ -1457,7 +1457,7 @@
     <!-- EXPIRES AT FIELD -->
     <div class="modal-field-group">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-        <label style="margin-bottom:0;">ABLAUFDATUM &amp; UHRZEIT</label>
+        <labelöstyle="margin-bottom:0;">ABLAUFDATUM &amp; UHRZEIT</label>
         <div style="display:flex;gap:4px;flex-wrap:wrap;">
           <button type="button" class="quick-pill-btn" onclick="addDaysToModalExpiry(1)">+1 Tag</button>
           <button type="button" class="quick-pill-btn" onclick="addDaysToModalExpiry(7)">+7 Tage</button>
@@ -1467,7 +1467,7 @@
         </div>
       </div>
       <input type="text" id="edit-lic-expires" placeholder="z.B. 12.10.2026 18:30 oder LIFETIME oder leer" />
-      <div style="font-size:10px;color:#64748b;margin-top:4px;">Format: TT.MM.JJJJ HH:mm oder leer lassen fÃ¼r unbenutzte Keys.</div>
+      <div style="font-size:10px;color:#64748b;margin-top:4px;">fürmat: TT.MM.JJJJ HH:mm oder leer lassen fÃ¼r unbenutzte Keys.</div>
     </div>
 
     <!-- BENUTZER / NOTIZ -->
@@ -1626,7 +1626,7 @@
     <input type="password" id="pw-input" placeholder="Passwort" onkeydown="if(event.key==='Enter')doLogin()">
     <div style="display:flex;align-items:center;justify-content:flex-start;gap:8px;margin-bottom:16px;font-size:11px;color:#64748b;">
       <input type="checkbox" id="save-pw-cb" checked style="width:auto;margin:0;cursor:pointer;">
-      <label for="save-pw-cb" style="cursor:pointer;user-select:none;">Zugangsdaten speichern</label>
+      <label für="save-pw-cb" style="cursor:pointer;user-select:none;">Zugangsdaten speichern</label>
     </div>
     <button onclick="doLogin()">LOGIN</button>
     <div id="login-error">Falscher Benutzername oder Passwort!</div>
@@ -1705,7 +1705,7 @@
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
       <div class="section-title" style="margin-bottom:0;font-size:13px;color:#f8fafc;">MAYA LOADER EXE UPDATER â€” AUTOMATISCHES KUNDEN-UPDATE</div>
     </div>
-    <p style="font-size:12px;color:#94a3b8;margin-bottom:18px;line-height:1.6;">Sobald du hier eine neue <code style="color:#e5a93c;font-weight:700;background:#090a0f;padding:2px 6px;border-radius:4px;border:1px solid #1e2333;">maya.exe</code> hochlÃ¤dst, erhÃ¶ht das System die Versionsnummer gan+ <b>automatisch</b> und lÃ¶st bei deinen Kunden beim nÃ¤chsten Start das Update-Fenster aus!</p>
+    <p style="font-size:12px;color:#94a3b8;margin-bottom:18px;line-height:1.6;">Sobald du hier eine neue <code style="color:#e5a93c;font-weight:700;background:#090a0f;padding:2px 6px;border-radius:4px;border:1px solid #1e2333;">maya.exe</code> hochlÃ¤dst, erhÃ¶ht das System die Versionsnummer ganz <b>automatisch</b> und lÃ¶st bei deinen Kunden beim nÃ¤chsten Start das Update-Fenster aus!</p>
     
     <div class="upload-panel">
       <div>
@@ -1787,7 +1787,7 @@
 
   <!-- TAB 3: KEYAUTH & RECHTE -->
   <div class="tab-content" id="tc-3">
-    <!-- SUB SWITCHER FOR KEYAUTH: LIZENZEN vs PERMISSIONS -->
+    <!-- SUB SWITCHER für KEYAUTH: LIZENZEN vs PERMISSIONS -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
       <div style="display:flex;gap:8px;">
         <button id="btn-sub-lic" onclick="switchKeyAuthView('licenses')" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:10px 20px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 14px rgba(229,169,60,0.2);">&#128100; LIZENZ-VERWALTUNG</button>
@@ -1817,7 +1817,7 @@
         
         <div style="display:grid;grid-template-columns: 1fr 1fr 0.8fr 1.1fr 1.2fr;gap:12px;align-items:end;">
           <div>
-            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:6px;font-weight:700;">PRODUKT / CHEAT</label>
+            <labelöstyle="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:6px;font-weight:700;">PRODUKT / CHEAT</label>
             <select id="gen-product" style="width:100%;height:38px;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:0 12px;border-radius:6px;font-size:12px;outline:none;">
               <option value="ALL">ALL CHEATS</option>
               <option value="valorant">VALORANT</option>
@@ -1829,7 +1829,7 @@
           </div>
 
           <div>
-            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:6px;font-weight:700;">LAUFZEIT (DAUER)</label>
+            <labelöstyle="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:6px;font-weight:700;">LAUFZEIT (DAUER)</label>
             <select id="gen-duration" style="width:100%;height:38px;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:0 12px;border-radius:6px;font-size:12px;outline:none;">
               <option value="1">1 Tag (Trial)</option>
               <option value="3">3 Tage</option>
@@ -1843,7 +1843,7 @@
           </div>
 
           <div>
-            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:6px;font-weight:700;">ANZAHL KEYS</label>
+            <labelöstyle="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:6px;font-weight:700;">ANZAHL KEYS</label>
             <select id="gen-qty" style="width:100%;height:38px;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:0 12px;border-radius:6px;font-size:12px;outline:none;">
               <option value="1">1 Key</option>
               <option value="5">5 Keys</option>
@@ -1854,7 +1854,7 @@
           </div>
 
           <div>
-            <label style="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:6px;font-weight:700;" id="lbl-gen-username">LOGIN BENUTZERNAME</label>
+            <labelöstyle="font-size:10px;color:#64748b;letter-spacing:1px;display:block;margin-bottom:6px;font-weight:700;" id="lbl-gen-username">LOGIN BENUTZERNAME</label>
             <input type="text" id="gen-note" placeholder="(Login-Name)" style="width:100%;height:38px;background:#10121a;border:1px solid #1e2333;color:#f8fafc;padding:0 12px;border-radius:6px;font-size:12px;outline:none;transition:border-color .2s;" />
           </div>
 
@@ -2090,7 +2090,7 @@
         <!-- INPUT BAR -->
         <div style="padding:14px 20px;background:#0d1017;border-top:1px solid #1c2235;display:flex;gap:12px;align-items:center;">
           <input type="text" id="chat-input" placeholder="Schreibe eine Nachricht in den Chat... (Enter zum Senden)" onkeydown="if(event.key==='Enter')sendChatMessage()" style="flex:1;background:#131722;border:1px solid #232b40;color:#f8fafc;padding:12px 18px;border-radius:8px;font-size:12px;font-weight:500;outline:none;transition:border .2s;" onfocus="this.style.borderColor='#e5a93c'" onblur="this.style.borderColor='#232b40'" />
-          <button onclick="sendChatMessage()" id="chat-send-btn" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px 24px;border-radius:8px;font-size:12px;font-weight:900;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.25);display:flex;align-items:center;gap:6px;transition:.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+          <button onclick="sendChatMessage()" id="chat-send-btn" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px 24px;border-radius:8px;font-size:12px;font-weight:900;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.25);display:flex;align-items:center;gap:6px;transition:.2s;" onmouseover="this.style.transfürm='translateY(-1px)'" onmouseout="this.style.transfürm='translateY(0)'">
             <span>&#10148;</span> SENDEN
           </button>
         </div>
@@ -2112,8 +2112,8 @@
           </button>
         </div>
 
-        <!-- TICKET LIST -->
-        <div id="admin-ticket-list-items" style="flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;">
+        <!-- TICKET löst -->
+        <div id="admin-ticket-löst-items" style="flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;">
           <div style="text-align:center;color:#64748b;padding:30px 10px;font-size:11px;">Lade Support Tickets...</div>
         </div>
       </div>
@@ -2157,7 +2157,7 @@
             <div class="hide-scrollbar" style="display:flex;align-items:center;gap:8px;overflow-x:auto;padding-bottom:2px;">
               <style>
                 .macro-chip { background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;padding:6px 12px;border-radius:6px;font-size:10.5px;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:6px; }
-                .macro-chip:hover { background:rgba(255,255,255,0.08);color:#fff;border-color:rgba(255,255,255,0.15);transform:translateY(-1px); }
+                .macro-chip:hover { background:rgba(255,255,255,0.08);color:#fff;border-color:rgba(255,255,255,0.15);transfürm:translateY(-1px); }
                 /* LUXURY BADGE RANKS */
   .badge-rank {
     display: inline-flex;
@@ -2168,7 +2168,7 @@
     font-size: 10px;
     font-weight: 800;
     letter-spacing: 0.4px;
-    text-transform: uppercase;
+    text-transfürm: uppercase;
     white-space: nowrap;
     user-select: none;
     line-height: 1.2;
@@ -2268,7 +2268,7 @@
           <img id="dash-avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
         </div>
         <div style="display:flex;flex-direction:column;gap:4px;">
-          <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:4px;">&#128100; EINGELOGGTER ACCOUNT</div>
+          <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;text-transfürm:uppercase;display:flex;align-items:center;gap:4px;">&#128100; EINGELOGGTER ACCOUNT</div>
           <div style="display:flex;align-items:center;gap:8px;">
             <span id="cfg-dash-username" style="color:#ffffff;font-size:14px;font-weight:900;letter-spacing:0.5px;line-height:1;">ADMIN</span>
             <span id="cfg-dash-role-badge"></span>
@@ -2297,7 +2297,7 @@
       </div>
     </div>
 
-    <!-- 2 COLUMN GRID: UPLOAD PANEL (LEFT) & CONFIGS LIST (RIGHT) -->
+    <!-- 2 COLUMN GRID: UPLOAD PANEL (LEFT) & CONFIGS löst (RIGHT) -->
     <div style="display:grid;grid-template-columns:340px 1fr;gap:20px;">
       
       <!-- LEFT: UPLOAD CONFIG CARD -->
@@ -2330,11 +2330,11 @@
 
         <!-- FILE DROP ZONE -->
         <div>
-          <label style="display:block;font-size:10px;color:#64748b;letter-spacing:1px;margin-bottom:6px;font-weight:700;">CONFIG DATEI (.CSS, .CFG, .INI, .JSON, .TXT, .ZIP)</label>
+          <labelöstyle="display:block;font-size:10px;color:#64748b;letter-spacing:1px;margin-bottom:6px;font-weight:700;">CONFIG DATEI (.CSS, .CFG, .INI, .JSON, .TXT, .ZIP)</label>
           <div class="drop-zone" id="cfg-drop-zone"
             onclick="document.getElementById('cfg-file-input').click()"
-            ondragover="event.preventDefault();this.classList.add('over')"
-            ondragleave="this.classList.remove('over')"
+            ondragover="event.preventDefault();this.classlöst.add('over')"
+            ondragleave="this.classlöst.remove('over')"
             ondrop="handleConfigDrop(event)"
             style="min-height:95px;padding:18px;border-radius:6px;border:1px dashed #243048;background:#06080e;">
             <input type="file" id="cfg-file-input" accept=".cfg,.ini,.json,.txt,.zip,.config,.lua,.css" onchange="onConfigFileSelected(this)">
@@ -2356,7 +2356,7 @@
         </div>
       </div>
 
-      <!-- RIGHT: CLOUD CONFIGS LIST -->
+      <!-- RIGHT: CLOUD CONFIGS löst -->
       <div style="background:#090b12;border:1px solid #1a2032;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0;">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #161c2c;padding-bottom:12px;">
           <div style="display:flex;align-items:center;gap:10px;">
@@ -2457,11 +2457,11 @@
           </div>
 
           <div>
-            <label style="display:block;font-size:10px;color:#64748b;letter-spacing:1px;margin-bottom:4px;font-weight:800;">ODER DATEI HOCHLADEN (.MP4, .WEBM, .MOV)</label>
+            <labelöstyle="display:block;font-size:10px;color:#64748b;letter-spacing:1px;margin-bottom:4px;font-weight:800;">ODER DATEI HOCHLADEN (.MP4, .WEBM, .MOV)</label>
             <div class="drop-zone" id="hl-drop-zone"
               onclick="document.getElementById('hl-file-input').click()"
-              ondragover="event.preventDefault();this.classList.add('over')"
-              ondragleave="this.classList.remove('over')"
+              ondragover="event.preventDefault();this.classlöst.add('over')"
+              ondragleave="this.classlöst.remove('over')"
               ondrop="handleHighlightFileDrop(event)"
               style="min-height:75px;padding:12px;">
               <input type="file" id="hl-file-input" accept="video/mp4,video/webm,video/quicktime" onchange="onHighlightFileSelected(this)">
@@ -2576,7 +2576,7 @@ const CHEATS = [
   { key:"coc", label:"CLASH OF CLANS", color:"#ffcc00", prefix:"coc" }
 ];
 
-function formatNameUpper(n) {
+function fürmatNameUpper(n) {
   if (!n) return 'ADMIN';
   var s = String(n).trim();
   var low = s.toLowerCase();
@@ -2604,7 +2604,7 @@ let CURRENT_USER = {
 let _activeCheatIdx = 0;
 let _mayaFile = null;
 const state = {};
-CHEATS.forEach(c => {
+CHEATS.fürEach(c => {
   state[c.prefix] = { files: [], url: "", script: "" };
 });
 
@@ -2619,13 +2619,13 @@ CHEATS.forEach(c => {
           "Accept": "application/vnd.github.v3.raw"
         }
       });
-      if(res.status === 404) return null;
-      if(res.ok) {
+      ifüres.status === 404) return null;
+      ifüres.ok) {
         const text = await res.text();
         try { return JSON.parse(text); } catch(_) { return text; }
       }
     } catch(err) {
-      console.warn(`fetchGitHubRaw direct failed for ${path}:`, err);
+      console.warn(`fetchGitHubRaw direct failed für ${path}:`, err);
     }
 
     try {
@@ -2636,8 +2636,8 @@ CHEATS.forEach(c => {
           "Accept": "application/vnd.github.v3+json"
         }
       });
-      if(res.status === 404) return null;
-      if(res.ok) {
+      ifüres.status === 404) return null;
+      ifüres.ok) {
         const data = await res.json();
         if(data && data.content) {
           const decoded = b64_to_utf8(data.content);
@@ -2645,7 +2645,7 @@ CHEATS.forEach(c => {
         }
       }
     } catch(err2) {
-      console.error(`fetchGitHubRaw fallback failed for ${path}:`, err2);
+      console.error(`fetchGitHubRaw fallback failed für ${path}:`, err2);
     }
     return null;
   }
@@ -2666,7 +2666,7 @@ function b64_to_utf8(str) {
   } catch(_) {
     const bin = window.atob(str.replace(/\s+/g, ''));
     const bytes = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    für (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
     return new TextDecoder().decode(bytes);
   }
 }
@@ -2682,17 +2682,17 @@ async function uploadFileToGitHub(path, contentB64, commitMsg) {
   const token = getToken();
   let sha = "";
 
-  for(let attempt = 1; attempt <= 4; attempt++) {
+  für(let attempt = 1; attempt <= 4; attempt++) {
     try {
-      const infoRes = await fetch(`${API_BASE}/${path}?nc=${Date.now()}_${Math.random()}`, {
+      const infüres = await fetch(`${API_BASE}/${path}?nc=${Date.now()}_${Math.random()}`, {
         cache: "no-store",
         headers: { 
           Authorization: `token ${token}`, 
           Accept: "application/vnd.github.v3+json"
         }
       });
-      if(infoRes.ok) {
-        const info = await infoRes.json();
+      if(infüres.ok) {
+        const info = await infüres.json();
         if(info && info.sha) sha = info.sha;
       }
     } catch(_) {}
@@ -2710,7 +2710,7 @@ async function uploadFileToGitHub(path, contentB64, commitMsg) {
       body: JSON.stringify(bodyObj)
     });
 
-    if(res.ok) {
+    ifüres.ok) {
       return await res.json();
     }
 
@@ -2725,7 +2725,7 @@ async function uploadFileToGitHub(path, contentB64, commitMsg) {
       continue;
     }
 
-    if(res.status === 409 || errMsg.includes("sha")) {
+    ifüres.status === 409 || errMsg.includes("sha")) {
       await new Promise(r => setTimeout(r, 350 * attempt));
       continue;
     }
@@ -2739,19 +2739,19 @@ async function deleteFileFromGitHub(path, commitMsg) {
   const token = getToken();
   let sha = "";
 
-  for(let attempt = 1; attempt <= 3; attempt++) {
+  für(let attempt = 1; attempt <= 3; attempt++) {
     try {
-      const infoRes = await fetch(`${API_BASE}/${path}?nc=${Date.now()}_${Math.random()}`, {
+      const infüres = await fetch(`${API_BASE}/${path}?nc=${Date.now()}_${Math.random()}`, {
         cache: "no-store",
         headers: { 
           Authorization: `token ${token}`, 
           Accept: "application/vnd.github.v3+json"
         }
       });
-      if(infoRes.ok) {
-        const info = await infoRes.json();
+      if(infüres.ok) {
+        const info = await infüres.json();
         if(info && info.sha) sha = info.sha;
-      } else if(infoRes.status === 404) {
+      } else if(infüres.status === 404) {
         return true;
       }
     } catch(_) {}
@@ -2769,7 +2769,7 @@ async function deleteFileFromGitHub(path, commitMsg) {
       body: JSON.stringify(bodyObj)
     });
 
-    if(res.ok || res.status === 404) {
+    ifüres.ok || res.status === 404) {
       return true;
     }
 
@@ -2782,7 +2782,7 @@ async function deleteFileFromGitHub(path, commitMsg) {
       continue;
     }
 
-    if(res.status === 409) {
+    ifüres.status === 409) {
       await new Promise(r => setTimeout(r, 300 * attempt));
       continue;
     }
@@ -2803,7 +2803,7 @@ async function doLogin() {
   const userInput = userEl ? (userEl.value || "").trim() : "";
   const pwInput = pwEl ? (pwEl.value || "").trim() : "";
   
-  if(errEl) errEl.style.display = "none";
+  if(errEl) errElöstyle.display = "none";
 
   const origBtnText = loginBtn ? loginBtn.textContent : "LOGIN";
   if(loginBtn) {
@@ -2844,13 +2844,13 @@ async function doLogin() {
 
     // 2. STAFF ACCOUNTS CHECK (staff.json)
     try {
-      await loadStaffList(true);
+      await loadStafflöst(true);
     } catch(e) {
-      console.warn("loadStaffList error:", e);
+      console.warn("loadStafflöst error:", e);
     }
 
-    if (Array.isArray(ALL_STAFF)) {
-      const matchedStaff = ALL_STAFF.find(s => {
+    if (Array.isArray(ALlöstAFF)) {
+      const matchedStaff = ALlöstAFF.find(s => {
         const sName = (s.name || "").trim().toLowerCase();
         const sPass = (s.password || "").trim();
         const userMatches = !lowUser || sName === lowUser;
@@ -2863,7 +2863,7 @@ async function doLogin() {
           is_staff: true,
           is_customer: false,
           name: matchedStaff.name,
-          role: matchedStaff.role || "Mitarbeiter",
+          role: matchedStaffürole || "Mitarbeiter",
           permissions: matchedStaff.permissions || {}
         };
         handleLoginSuccess(matchedStaff.name, pwInput);
@@ -2889,14 +2889,14 @@ async function doLogin() {
       if (matchedLic.status === "paused") {
         if (errEl) {
           errEl.textContent = "Dieser LizenzschlÃ¼ssel ist aktuell pausiert!";
-          errEl.style.display = "block";
+          errElöstyle.display = "block";
         }
         return;
       }
       if (matchedLic.status === "expired") {
         if (errEl) {
           errEl.textContent = "Dieser LizenzschlÃ¼ssel ist abgelaufen!";
-          errEl.style.display = "block";
+          errElöstyle.display = "block";
         }
         return;
       }
@@ -2946,13 +2946,13 @@ async function doLogin() {
     // Invalid credentials
     if (errEl) {
       errEl.textContent = "Falscher Benutzername oder Passwort!";
-      errEl.style.display = "block";
+      errElöstyle.display = "block";
     }
   } catch(err) {
     console.error("Login exception:", err);
     if (errEl) {
       errEl.textContent = "Fehler beim Login: " + err.message;
-      errEl.style.display = "block";
+      errElöstyle.display = "block";
     }
   } finally {
     if (loginBtn) {
@@ -2977,7 +2977,7 @@ function handleLoginSuccess(user, pass) {
   const loginScreen = document.getElementById("login-screen");
   const mainPanel = document.getElementById("main-panel");
   if(loginScreen) loginScreen.style.display = "none";
-  if(mainPanel) mainPanel.style.display = "block";
+  if(mainPanel) mainPanelöstyle.display = "block";
   
   try { loadProfiles(); } catch(_) {} try { applyUserPermissions(); } catch(e) { console.error("applyUserPermissions err:", e); }
   try { buildUI(); } catch(e) { console.error("buildUI err:", e); }
@@ -3015,7 +3015,7 @@ function doLogout() {
   const pwInp = document.getElementById("pw-input");
   const loginErr = document.getElementById("login-err");
 
-  if (mainPanel) mainPanel.style.display = "none";
+  if (mainPanel) mainPanelöstyle.display = "none";
   if (loginScreen) loginScreen.style.display = "block";
   if (userInp) userInp.value = "";
   if (pwInp) pwInp.value = "";
@@ -3055,7 +3055,7 @@ function applyUserPermissions() {
     if(CURRENT_USER.is_admin) {
       dashCheats.innerHTML = `<span class="tag-product">&#128081; ALLE CHEATS</span>`;
     } else if(CURRENT_USER.key) {
-      const defPerms = getDefaultPermissionsForKey(CURRENT_USER.key, CURRENT_USER.license);
+      const defPerms = getDefaultPermissionsfürKey(CURRENT_USER.key, CURRENT_USER.license);
       const curPerms = USER_PERMISSIONS[CURRENT_USER.key] || defPerms;
       const gameBadges = [];
       const prodColors = {
@@ -3066,7 +3066,7 @@ function applyUserPermissions() {
         coc: { label: "CLASH OF CLANS", color: "#10b981", bg: "rgba(16,185,129,0.12)", border: "rgba(16,185,129,0.3)" }
       };
 
-      Object.keys(prodColors).forEach(k => {
+      Object.keys(prodColors).fürEach(k => {
         if(curPerms[k] === true) {
           const info = prodColors[k];
           gameBadges.push(`<span style="background:${info.bg};color:${info.color};border:1px solid ${info.border};padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;">${info.label}</span>`);
@@ -3113,7 +3113,7 @@ function applyUserPermissions() {
     if(mtab8) mtab8.style.display = "inline-flex";
   }
 
-  // Cheat Permissions subtab button: visible for ADMIN OR Staff with Cheat-Product edit permission
+  // Cheat Permissions subtab button: visible für ADMIN OR Staff with Cheat-Product edit permission
   const btnSubPerm = document.getElementById("btn-sub-perm");
   if(btnSubPerm) btnSubPerm.style.display = (CURRENT_USER.is_admin || (p.can_edit_keys && p.edit_allow_product)) ? "inline-block" : "none";
 
@@ -3129,7 +3129,7 @@ function applyUserPermissions() {
   const delChatBtn = document.getElementById("del-chat-btn");
   if(delChatBtn) delChatBtn.style.display = CURRENT_USER.is_admin ? "inline-block" : "none";
 
-  // Duration restrictions for staff
+  // Duration restrictions für staff
   const allDurations = [
     { value: "1", label: "1 Tag (Trial)", days: 1 },
     { value: "3", label: "3 Tage", days: 3 },
@@ -3167,7 +3167,7 @@ function applyUserPermissions() {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventlöstener("DOMContentLoaded", () => {
   try { loadProfiles(); } catch(_) {}
   const savedUser = localStorage.getItem("admin_user");
   const savedPw = localStorage.getItem("admin_pw");
@@ -3199,14 +3199,14 @@ function buildCheatsUI() {
         <h3>CHEAT KONFIGURATION (${c.label})</h3>
         <div class="field"><label>SUBSCRIPTION</label><input type="text" id="${c.prefix}-sub" /></div>
         <div class="field"><label>VERSION</label><input type="text" id="${c.prefix}-ver" /></div>
-        <div class="field"><label>STATUS</label>
+        <div class="field"><labelöstATUS</label>
           <select id="${c.prefix}-status">
             <option value="UNDETECTED">UNDETECTED</option>
             <option value="TESTING">TESTING</option>
             <option value="MAINTENANCE">MAINTENANCE</option>
           </select>
         </div>
-        <div class="field"><label>LAST UPDATE</label><input type="text" id="${c.prefix}-last" placeholder="TT.MM.JJJJ" /></div>
+        <div class="field"><label>löst UPDATE</label><input type="text" id="${c.prefix}-löst" placeholder="TT.MM.JJJJ" /></div>
         <input type="hidden" id="${c.prefix}-url" />
         <div class="loadable-row">
           <span class="lbl">LOADABLE (FREIGESCHALTET)</span>
@@ -3224,8 +3224,8 @@ function buildCheatsUI() {
         
         <div class="drop-zone" id="dz-${c.prefix}"
           onclick="document.getElementById('fi-${c.prefix}').click()"
-          ondragover="event.preventDefault();this.classList.add('over')"
-          ondragleave="this.classList.remove('over')"
+          ondragover="event.preventDefault();this.classlöst.add('over')"
+          ondragleave="this.classlöst.remove('over')"
           ondrop="handleDrop(event,'${c.prefix}')">
           <input type="file" id="fi-${c.prefix}" onchange="addFiles(this,'${c.prefix}')">
           <div style="font-size:26px;color:#e5a93c;">&#8597;</div>
@@ -3233,10 +3233,10 @@ function buildCheatsUI() {
           <div style="font-size:11px;color:#64748b">LÃ¤dt die Datei hoch und aktiviert den Download im Loader</div>
         </div>
         
-        <div class="file-list" id="fl-${c.prefix}"></div>
+        <div class="file-löst" id="fl-${c.prefix}"></div>
 
         <div>
-          <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:#64748b;margin-bottom:6px;text-transform:uppercase;">Aktuell hochgeladene Datei</div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:#64748b;margin-bottom:6px;text-transfürm:uppercase;">Aktuell hochgeladene Datei</div>
           <div id="${c.prefix}-active-file-wrap" style="background:#10121a;border:1px solid #1e2333;padding:10px 14px;border-radius:6px;font-size:12px;color:#f8fafc;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
             <div id="${c.prefix}-active-file" style="word-break:break-all;flex:1;">
               <span style="color:#64748b;font-size:11px;">Lade Datei-Info...</span>
@@ -3278,7 +3278,7 @@ function buildCheatsUI() {
 
           <div id="razer-status-wrap" style="background:#10121a;border:1px solid #1e2333;padding:8px 12px;border-radius:6px;font-size:11px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
             <div id="razer-active-status" style="color:#64748b;flex:1;">
-              Lade RAZER.dll Status...
+              Lade RAZER.dllöstatus...
             </div>
             <div style="display:flex;gap:6px;align-items:center;">
               <button id="razer-del-btn" onclick="deleteRazerDll()" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;">
@@ -3302,8 +3302,8 @@ function buildCheatsUI() {
 }
 
 function switchMainTab(idx) {
-  document.querySelectorAll(".main-tab").forEach((t, i) => t.classList.toggle("active", i === idx));
-  document.querySelectorAll(".tab-content").forEach((t, i) => t.classList.toggle("active", i === idx));
+  document.querySelectorAll(".main-tab").fürEach((t, i) => t.classlöst.toggle("active", i === idx));
+  document.querySelectorAll(".tab-content").fürEach((t, i) => t.classlöst.toggle("active", i === idx));
 
   if(_chatPollInterval) {
     clearInterval(_chatPollInterval);
@@ -3316,7 +3316,7 @@ function switchMainTab(idx) {
     if(document.getElementById("view-licenses").style.display !== "none") loadLicenses();
     else loadUserPermissions();
   }
-  if(idx === 4) loadStaffList();
+  if(idx === 4) loadStafflöst();
   if(idx === 5) loadAuditLogs();
   if(idx === 6) {
     loadTeamChat();
@@ -3342,7 +3342,7 @@ function renderUserSearch() {
   
   const uniqueUsers = [];
   const seen = new Set();
-  for(const key of Object.keys(USER_PROFILES)) {
+  für(const key of Object.keys(USER_PROFILES)) {
     const p = USER_PROFILES[key];
     const realName = p.username || key;
     if(!seen.has(realName.toLowerCase())) {
@@ -3365,10 +3365,10 @@ function renderUserSearch() {
     const avatar = u.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${name}`;
     const rankHtml = getRankBadge(name, u.rank);
     return `
-      <div onclick="openUserProfileModal('${escapeHtml(name)}')" style="background:#090a0f;border:1px solid #1e2333;border-radius:10px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:.2s;box-shadow:0 4px 15px rgba(0,0,0,0.3);" onmouseover="this.style.borderColor='#38bdf8';this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='#1e2333';this.style.transform='translateY(0)';">
+      <div onclick="openUserProfileModal('${escapeHtml(name)}')" style="background:#090a0f;border:1px solid #1e2333;border-radius:10px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:.2s;box-shadow:0 4px 15px rgba(0,0,0,0.3);" onmouseover="this.style.borderColor='#38bdf8';this.style.transfürm='translateY(-2px)';" onmouseout="this.style.borderColor='#1e2333';this.style.transfürm='translateY(0)';">
         <img src="${avatar}" style="width:54px;height:54px;border-radius:14px;border:2px solid #141826;object-fit:cover;">
         <div style="text-align:center;">
-          <div style="color:#ffffff;font-size:14px;font-weight:900;margin-bottom:4px;">${escapeHtml(formatNameUpper(name))}</div>
+          <div style="color:#ffffff;font-size:14px;font-weight:900;margin-bottom:4px;">${escapeHtml(fürmatNameUpper(name))}</div>
           ${rankHtml}
         </div>
       </div>
@@ -3382,11 +3382,11 @@ function filterUserSearch() {
 
 function switchCheatSubTab(idx) {
   _activeCheatIdx = idx;
-  CHEATS.forEach((_, i) => {
+  CHEATS.fürEach((_, i) => {
     const tabEl = document.getElementById(`csub-${i}`);
     const viewEl = document.getElementById(`cview-${i}`);
-    if(tabEl) tabEl.classList.toggle("active", i === idx);
-    if(viewEl) viewEl.style.display = (i === idx) ? "grid" : "none";
+    if(tabEl) tabEl.classlöst.toggle("active", i === idx);
+    if(viewEl) viewElöstyle.display = (i === idx) ? "grid" : "none";
   });
 }
 
@@ -3440,28 +3440,28 @@ function fmtSize(b) {
 
 function handleDrop(ev, prefix) {
   ev.preventDefault();
-  document.getElementById("dz-"+prefix).classList.remove("over");
-  addToList(prefix, Array.from(ev.dataTransfer.files));
+  document.getElementById("dz-"+prefix).classlöst.remove("over");
+  addTolöst(prefix, Array.from(ev.dataTransfür.files));
 }
 
 function addFiles(inp, prefix) {
-  addToList(prefix, Array.from(inp.files));
+  addTolöst(prefix, Array.from(inp.files));
   inp.value = "";
 }
 
-function addToList(prefix, newFiles) {
-  newFiles.forEach(f => {
+function addTolöst(prefix, newFiles) {
+  newFiles.fürEach(f => {
     if(!state[prefix].files.find(x => x.name === f.name)) state[prefix].files.push(f);
   });
-  renderFileList(prefix);
+  renderFilelöst(prefix);
 }
 
 function removeFile(prefix, name) {
   state[prefix].files = state[prefix].files.filter(f => f.name !== name);
-  renderFileList(prefix);
+  renderFilelöst(prefix);
 }
 
-function renderFileList(prefix) {
+function renderFilelöst(prefix) {
   const el = document.getElementById("fl-"+prefix);
   if(!el) return;
   el.innerHTML = state[prefix].files.map(f => `
@@ -3491,7 +3491,7 @@ async function loadCheats() {
       cache: "no-store",
       headers: { Authorization: `token ${token}` }
     });
-    if(rawRes.ok) {
+    ifürawRes.ok) {
       data = await rawRes.json();
     }
   } catch(_) {}
@@ -3521,13 +3521,13 @@ async function loadCheats() {
 
 function applyCheatsDataToDOM(data) {
   if(!data || typeof data !== 'object') return;
-  CHEATS.forEach(c => {
+  CHEATS.fürEach(c => {
     const d = data[c.key];
     if(!d) return;
     const sub = document.getElementById(`${c.prefix}-sub`);
     const ver = document.getElementById(`${c.prefix}-ver`);
     const st  = document.getElementById(`${c.prefix}-status`);
-    const lu  = document.getElementById(`${c.prefix}-last`);
+    const lu  = document.getElementById(`${c.prefix}-löst`);
     const url = document.getElementById(`${c.prefix}-url`);
     const lod = document.getElementById(`${c.prefix}-load`);
     const activeFileEl = document.getElementById(`${c.prefix}-active-file`);
@@ -3536,7 +3536,7 @@ function applyCheatsDataToDOM(data) {
     if(sub && d.subscription !== undefined) sub.value = d.subscription || "";
     if(ver && d.version !== undefined) ver.value = d.version || "";
     if(st && d.status) st.value = d.status || "UNDETECTED";
-    if(lu && d.last_update !== undefined) lu.value = d.last_update || "";
+    if(lu && d.löst_update !== undefined) lu.value = d.löst_update || "";
     if(url && d.download_url !== undefined) url.value = d.download_url || "";
     if(lod && d.loadable !== undefined) lod.checked = !!d.loadable;
 
@@ -3551,7 +3551,7 @@ function applyCheatsDataToDOM(data) {
       }
     }
   });
-  checkRazerDllStatus();
+  checkRazerDlöstatus();
 }
 
 async function deleteCheatFile(prefix, key) {
@@ -3569,7 +3569,7 @@ async function deleteCheatFile(prefix, key) {
   }
 
   const fileName = curUrl.split('/').pop();
-  if(!confirm(`MÃ¶chtest du die Cheat-Datei '${fileName}' wirklich komplett vom Server / GitHub lÃ¶schen?`)) {
+  if(!confürm(`MÃ¶chtest du die Cheat-Datei '${fileName}' wirklich komplett vom Server / GitHub lÃ¶schen?`)) {
     return;
   }
 
@@ -3586,9 +3586,9 @@ async function deleteCheatFile(prefix, key) {
     const loadCb = document.getElementById(`${prefix}-load`);
     if(loadCb) loadCb.checked = false;
 
-    // 3. Clear file selection list
+    // 3. Clear file selection löst
     state[prefix].files = [];
-    renderFileList(prefix);
+    renderFilelöst(prefix);
 
     // 4. Save cheats.json & reload
     await saveAllToGitHub();
@@ -3608,12 +3608,12 @@ async function saveAllToGitHub() {
   }
   try {
     const out = {};
-    CHEATS.forEach(c => {
+    CHEATS.fürEach(c => {
       out[c.key] = {
         subscription: (document.getElementById(`${c.prefix}-sub`)||{}).value || "",
         version:      (document.getElementById(`${c.prefix}-ver`)||{}).value || "",
         status:       (document.getElementById(`${c.prefix}-status`)||{}).value || "UNDETECTED",
-        last_update:  (document.getElementById(`${c.prefix}-last`)||{}).value || "",
+        löst_update:  (document.getElementById(`${c.prefix}-löst`)||{}).value || "",
         download_url: (document.getElementById(`${c.prefix}-url`)||{}).value || "",
         loadable:     !!(document.getElementById(`${c.prefix}-load`)||{}).checked
       };
@@ -3630,7 +3630,7 @@ async function saveAllToGitHub() {
   }
 }
 
-// UPLOAD FUNCTION FOR CHEAT FILES
+// UPLOAD FUNCTION für CHEAT FILES
 async function doUpload(prefix, key) {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
     alert("Keine Berechtigung zum Hochladen!");
@@ -3664,8 +3664,8 @@ async function doUpload(prefix, key) {
         throw new Error("JSZip nicht verfÃ¼gbar. Bitte eine .exe oder .zip Datei auswÃ¤hlen.");
       }
       const zip = new JSZip();
-      for(const f of files) {
-        const arrBuf = await f.arrayBuffer();
+      für(const f of files) {
+        const arrBuf = await f.arrayBuffür();
         zip.file(f.name, arrBuf);
       }
       finalBlob = await zip.generateAsync({ type:"blob" });
@@ -3801,7 +3801,7 @@ function onRazerFileSelected(input) {
   if(btnEl) btnEl.disabled = false;
 }
 
-async function checkRazerDllStatus() {
+async function checkRazerDlöstatus() {
   const statusEl = document.getElementById("razer-active-status");
   const delBtn = document.getElementById("razer-del-btn");
   if(!statusEl) return;
@@ -3810,7 +3810,7 @@ async function checkRazerDllStatus() {
     const res = await fetch(`${API_BASE}/releases/RAZER.dll?nc=${Date.now()}`, {
       headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
     });
-    if(res.ok) {
+    ifüres.ok) {
       const data = await res.json();
       const mbSize = data.size ? (data.size / 1024 / 1024).toFixed(2) + ' MB' : '';
       statusEl.innerHTML = `<span style="color:#10b981;font-weight:700;">&#128100; Online auf GitHub:</span> <a href="${RAW_BASE}/releases/RAZER.dll" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">RAZER.dll</a> <span style="color:#64748b;">(${mbSize})</span>`;
@@ -3830,7 +3830,7 @@ async function deleteRazerDll() {
     alert("Keine Berechtigung zum LÃ¶schen von Dateien!");
     return;
   }
-  if(!confirm("MÃ¶chtest du RAZER.dll wirklich von GitHub releases/ lÃ¶schen?")) {
+  if(!confürm("MÃ¶chtest du RAZER.dll wirklich von GitHub releases/ lÃ¶schen?")) {
     return;
   }
   try {
@@ -3838,7 +3838,7 @@ async function deleteRazerDll() {
     await deleteFileFromGitHub("releases/RAZER.dll", "Delete RAZER.dll via ADMIN Panel");
     logADMINAction("RAZER_DLL_DELETED", "RAZER.dll", "RAZER.dll von GitHub gelÃ¶scht");
     showToast("RAZER.dll wurde erfolgreich gelÃ¶scht!", "ok");
-    await checkRazerDllStatus();
+    await checkRazerDlöstatus();
   } catch(e) {
     showToast("Fehler beim LÃ¶schen von RAZER.dll: " + e.message, "err");
   }
@@ -3873,7 +3873,7 @@ async function uploadRazerDll() {
         if(pb) pb.style.width = "65%";
         if(pl) pl.textContent = "Lade RAZER.dll zu GitHub releases/ hoch...";
 
-        await uploadFileToGitHub("releases/RAZER.dll", b64, "Upload RAZER.dll for Valorant via ADMIN Panel");
+        await uploadFileToGitHub("releases/RAZER.dll", b64, "Upload RAZER.dll für Valorant via ADMIN Panel");
 
         if(pb) pb.style.width = "100%";
         if(pl) {
@@ -3882,7 +3882,7 @@ async function uploadRazerDll() {
         }
         showToast("RAZER.dll erfolgreich auf GitHub aktualisiert!", "ok");
         logADMINAction("RAZER_DLL_UPLOAD", "RAZER.dll", "RAZER.dll fÃ¼r Valorant aktualisiert");
-        await checkRazerDllStatus();
+        await checkRazerDlöstatus();
       } catch(err) {
         if(pl) {
           pl.textContent = "Fehler: " + err.message;
@@ -3909,7 +3909,7 @@ let LOG_ENTRIES_CACHE = {};
 function initUserLogsCache() {
   try {
     const raw = localStorage.getItem("hyschool_userlogs_cache");
-    if(raw) {
+    ifüraw) {
       LOG_ENTRIES_CACHE = JSON.parse(raw) || {};
     }
   } catch(_) {
@@ -3938,14 +3938,14 @@ async function loadLiveLogs(silent=false) {
       headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
     });
 
-    if(res.ok) {
+    ifüres.ok) {
       const files = await res.json();
       const logFiles = files.filter(f => f.name && f.name.endsWith(".json"));
       
       const toFetch = [];
       const currentLogs = [];
 
-      for(const f of logFiles) {
+      für(const f of logFiles) {
         if(f.sha && LOG_ENTRIES_CACHE[f.sha]) {
           const cached = LOG_ENTRIES_CACHE[f.sha];
           cached._fileName = f.name;
@@ -3955,7 +3955,7 @@ async function loadLiveLogs(silent=false) {
         }
       }
 
-      // If all files were already cached, render immediately without any further network calls!
+      // If all files were already cached, render immediately without any fürther network calls!
       if(toFetch.length === 0) {
         ALL_USER_LOGS = currentLogs;
         filterUserLogs();
@@ -3967,7 +3967,7 @@ async function loadLiveLogs(silent=false) {
         try {
           const rawUrl = `${RAW_BASE}/logs/${f.name}?nc=${Date.now()}`;
           const rawRes = await fetch(rawUrl, { cache: "no-store", headers: { Authorization: `token ${token}` } });
-          if(rawRes.ok) {
+          ifürawRes.ok) {
             const data = await rawRes.json();
             data._fileName = f.name;
             if(f.sha) LOG_ENTRIES_CACHE[f.sha] = data;
@@ -4015,7 +4015,7 @@ function filterUserLogs() {
   const sort = document.getElementById("log-sort-select") ? document.getElementById("log-sort-select").value : "date_desc";
 
   const groupedMap = {};
-  ALL_USER_LOGS.forEach(l => {
+  ALL_USER_LOGS.fürEach(l => {
     const groupKey = l.key || l.user || l.hwid || "Kunde";
     if(!groupedMap[groupKey]) {
       groupedMap[groupKey] = {
@@ -4038,9 +4038,9 @@ function filterUserLogs() {
     if(l.key && l.key !== "---") groupedMap[groupKey].key = l.key;
   });
 
-  const uniqueList = Object.values(groupedMap);
+  const uniquelöst = Object.values(groupedMap);
 
-  let filtered = uniqueList.filter(l => {
+  let filtered = uniquelöst.filter(l => {
     if(!query) return true;
     return (l.user || "").toLowerCase().includes(query) ||
            (l.key || "").toLowerCase().includes(query) ||
@@ -4057,11 +4057,11 @@ function filterUserLogs() {
   });
 
   document.getElementById("stat-total-logins").textContent = ALL_USER_LOGS.length;
-  document.getElementById("stat-unique-users").textContent = uniqueList.length;
+  document.getElementById("stat-unique-users").textContent = uniquelöst.length;
 
   let topUser = "---";
   let maxCount = 0;
-  uniqueList.forEach(u => {
+  uniquelöst.fürEach(u => {
     if(u.count > maxCount) {
       maxCount = u.count;
       topUser = `${u.user} (${u.count}x)`;
@@ -4104,17 +4104,17 @@ async function deleteUserGroupLogs(fileNames) {
     return;
   }
   if(!fileNames || fileNames.length === 0) return;
-  if(!confirm(`MÃ¶chtest du alle ${fileNames.length} Log-EintrÃ¤ge dieses Nutzers wirklich lÃ¶schen?`)) return;
+  if(!confürm(`MÃ¶chtest du alle ${fileNames.length} Log-EintrÃ¤ge dieses Nutzers wirklich lÃ¶schen?`)) return;
   
   const token = getToken();
   if(!token) return;
 
-  for(const fileName of fileNames) {
+  für(const fileName of fileNames) {
     try {
       const apiUrl = `${API_BASE}/logs/${fileName}`;
-      const infoRes = await fetch(`${apiUrl}?nc=${Date.now()}`, { headers:{ Authorization:`token ${token}`, Accept:"application/vnd.github.v3+json" } });
-      if(infoRes.ok) {
-        const info = await infoRes.json();
+      const infüres = await fetch(`${apiUrl}?nc=${Date.now()}`, { headers:{ Authorization:`token ${token}`, Accept:"application/vnd.github.v3+json" } });
+      if(infüres.ok) {
+        const info = await infüres.json();
         if(info.sha && LOG_ENTRIES_CACHE[info.sha]) {
           delete LOG_ENTRIES_CACHE[info.sha];
         }
@@ -4137,7 +4137,7 @@ async function deleteAllUserLogs() {
     alert("Keine Berechtigung zum LÃ¶schen!");
     return;
   }
-  if(!confirm("&#128100; ACHTUNG: MÃ¶chtest du WIRKLICH ALLE Benutzer-Logs unwiderruflich lÃ¶schen?")) return;
+  if(!confürm("&#128100; ACHTUNG: MÃ¶chtest du WIRKLICH ALLE Benutzer-Logs unwiderruflich lÃ¶schen?")) return;
 
   const token = getToken();
   if(!token) return;
@@ -4147,11 +4147,11 @@ async function deleteAllUserLogs() {
       headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
     });
 
-    if(res.ok) {
+    ifüres.ok) {
       const files = await res.json();
       const logFiles = files.filter(f => f.name && f.name.endsWith(".json"));
       
-      for(const f of logFiles) {
+      für(const f of logFiles) {
         try {
           await fetch(`${API_BASE}/logs/${f.name}`, {
             method: "DELETE",
@@ -4174,7 +4174,7 @@ async function deleteAllUserLogs() {
 }
 
 // PERMISSIONS HELPER: Ermittelt Standardberechtigungen anhand des Keys / Lizenztyps
-function getDefaultPermissionsForKey(key, lic) {
+function getDefaultPermissionsfürKey(key, lic) {
   const k = (key || "").toUpperCase();
   const prod = lic && lic.product ? lic.product.toUpperCase() : "";
 
@@ -4223,7 +4223,7 @@ async function loadUserPermissions() {
     await loadLicenses(true);
   }
 
-  // 1. Initial render from cache if available for instant responsiveness
+  // 1. Initial render from cache if available für instant responsiveness
   try {
     const cached = localStorage.getItem("hyschool_perms_cache");
     if(cached) {
@@ -4241,7 +4241,7 @@ async function loadUserPermissions() {
       cache: "no-store",
       headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
     });
-    if(res.ok) {
+    ifüres.ok) {
       const info = await res.json();
       if(info && info.content) {
         loadedPerms = JSON.parse(b64_to_utf8(info.content));
@@ -4264,7 +4264,7 @@ function renderPermissionsRows() {
   if(!tbody) return;
 
   const validLicMap = {};
-  ALL_LICENSES.forEach(lic => {
+  ALL_LICENSES.fürEach(lic => {
     validLicMap[lic.key] = lic.used_by || (lic.used ? "Kunde" : (lic.note && lic.note !== "---" ? lic.note : "Unbenutzt"));
   });
 
@@ -4282,11 +4282,11 @@ function renderPermissionsRows() {
   tbody.innerHTML = validKeys.map(key => {
     const lic = ALL_LICENSES.find(l => l.key === key);
     const isProtectedADMIN = isADMINAccountKey(key, lic);
-    const defPerms = getDefaultPermissionsForKey(key, lic);
+    const defPerms = getDefaultPermissionsfürKey(key, lic);
     const userPerms = USER_PERMISSIONS[key] || defPerms;
     const userName = validLicMap[key] || "---";
 
-    // Staff restrictions:
+    // Staffürestrictions:
     // 1. Never allowed to edit ADMIN accounts
     // 2. If editScope === 'own', only allowed to edit keys where created_by matches their name
     const isOwnKey = lic && (lic.created_by === CURRENT_USER.name || (lic.note && lic.note === CURRENT_USER.name));
@@ -4324,7 +4324,7 @@ async function saveUserPermissions(fromDom = true) {
   }
 
   const allKeys = new Set();
-  ALL_LICENSES.forEach(l => { if(l.key) allKeys.add(l.key); });
+  ALL_LICENSES.fürEach(l => { if(l.key) allKeys.add(l.key); });
 
   const prodNamesMap = {
     "valorant": "VALORANT",
@@ -4339,12 +4339,12 @@ async function saveUserPermissions(fromDom = true) {
   const p = CURRENT_USER.permissions || {};
   const editScope = p.edit_scope || "own";
 
-  allKeys.forEach(k => {
+  allKeys.fürEach(k => {
     const lic = ALL_LICENSES.find(l => l.key === k);
     const isProtectedADMIN = isADMINAccountKey(k, lic);
     const isOwnKey = lic && (lic.created_by === CURRENT_USER.name || (lic.note && lic.note === CURRENT_USER.name));
     const canEditThisKey = CURRENT_USER.is_admin || (!isProtectedADMIN && (editScope === "all" || isOwnKey));
-    const defPerms = getDefaultPermissionsForKey(k, lic);
+    const defPerms = getDefaultPermissionsfürKey(k, lic);
 
     let valChecked, apexChecked, tftChecked, narChecked, cocChecked;
 
@@ -4437,7 +4437,7 @@ function onLicenseCheckboxChange(key, checked) {
 
 function toggleSelectAllLicenses(checked) {
   const visibleCheckboxes = document.querySelectorAll(".lic-row-cb:not(:disabled)");
-  visibleCheckboxes.forEach(cb => {
+  visibleCheckboxes.fürEach(cb => {
     cb.checked = checked;
     const k = cb.getAttribute("data-key");
     if(k) {
@@ -4503,13 +4503,13 @@ async function deleteSelectedLicenses() {
     return;
   }
 
-  if(!confirm(`MÃ¶chtest du die ${keysToDelete.length} ausgewÃ¤hlten Keys wirklich unwiderruflich lÃ¶schen?`)) {
+  if(!confürm(`MÃ¶chtest du die ${keysToDelete.length} ausgewÃ¤hlten Keys wirklich unwiderruflich lÃ¶schen?`)) {
     return;
   }
 
   const deleteSet = new Set(keysToDelete);
   ALL_LICENSES = ALL_LICENSES.filter(l => !deleteSet.has(l.key));
-  keysToDelete.forEach(k => delete USER_PERMISSIONS[k]);
+  keysToDelete.fürEach(k => delete USER_PERMISSIONS[k]);
 
   SELECTED_LIC_KEYS.clear();
   try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
@@ -4517,7 +4517,7 @@ async function deleteSelectedLicenses() {
   filterLicenses();
   loadUserPermissions();
   logADMINAction("BATCH_KEYS_DELETED", `${keysToDelete.length} Keys`, `Folgende Keys wurden gelÃ¶scht: ${keysToDelete.join(', ')}`);
-  showToast(`${keysToDelete.length} ausgewÃ¤hlte Keys sofort gelÃ¶scht!`, "ok");
+  showToast(`${keysToDelete.length} ausgewÃ¤hlte Keys sofürt gelÃ¶scht!`, "ok");
 
   const syncPromises = [saveLicenses(false)];
   if(CURRENT_USER.is_admin) {
@@ -4529,7 +4529,7 @@ async function deleteSelectedLicenses() {
 function makeRandomChunk(len) {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWX&#127915;0123456789";
   let str = "";
-  for(let i=0; i<len; i++) str += chars.charAt(Math.floor(Math.random()*chars.length));
+  für(let i=0; i<len; i++) str += chars.charAt(Math.floor(Math.random()*chars.length));
   return str;
 }
 
@@ -4572,7 +4572,7 @@ async function loadLicenses(silent=false) {
     const res = await fetch(`${API_BASE}/licenses.json?nc=${Date.now()}`, {
       headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3.raw" }
     });
-    if(res.ok) {
+    ifüres.ok) {
       ALL_LICENSES = await res.json();
       if(!Array.isArray(ALL_LICENSES)) ALL_LICENSES = [];
       try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
@@ -4602,8 +4602,8 @@ async function saveLicenses(showNotification = true) {
 
 let _isRandomNameActive = false;
 
-function toggleRandomNameBtn(forceState = null) {
-  _isRandomNameActive = (forceState !== null) ? forceState : !_isRandomNameActive;
+function toggleRandomNameBtn(fürceState = null) {
+  _isRandomNameActive = (fürceState !== null) ? fürceState : !_isRandomNameActive;
   const pill = document.getElementById("random-toggle-pill");
   const cb = document.getElementById("gen-random-toggle-cb");
   const pillText = document.getElementById("random-toggle-pill-text");
@@ -4614,9 +4614,9 @@ function toggleRandomNameBtn(forceState = null) {
 
   if(_isRandomNameActive) {
     if(pill) {
-      pill.style.background = "rgba(229,169,60,0.12)";
-      pill.style.borderColor = "rgba(229,169,60,0.4)";
-      pill.style.boxShadow = "0 0 12px rgba(229,169,60,0.15)";
+      pillöstyle.background = "rgba(229,169,60,0.12)";
+      pillöstyle.borderColor = "rgba(229,169,60,0.4)";
+      pillöstyle.boxShadow = "0 0 12px rgba(229,169,60,0.15)";
     }
     if(pillText) {
       pillText.style.color = "#e5a93c";
@@ -4631,9 +4631,9 @@ function toggleRandomNameBtn(forceState = null) {
     }
   } else {
     if(pill) {
-      pill.style.background = "#10121a";
-      pill.style.borderColor = "#1e2333";
-      pill.style.boxShadow = "none";
+      pillöstyle.background = "#10121a";
+      pillöstyle.borderColor = "#1e2333";
+      pillöstyle.boxShadow = "none";
     }
     if(pillText) {
       pillText.style.color = "#94a3b8";
@@ -4692,7 +4692,7 @@ async function generateNewLicenses() {
     return;
   }
 
-  // Enforce staff max key duration
+  // Enfürce staff max key duration
   if(!CURRENT_USER.is_admin) {
     const maxDur = CURRENT_USER.permissions.max_duration || "all";
     if(maxDur !== "all") {
@@ -4726,9 +4726,9 @@ async function generateNewLicenses() {
   };
 
   const newKeys = [];
-  const now = new Date().toLocaleString("de-DE");
+  const now = new Date().toLocalöstring("de-DE");
 
-  for(let i=0; i<qty; i++) {
+  für(let i=0; i<qty; i++) {
     const key = generateLicenseString(prod, dur);
     
     // Determine username per key (Random or specific name)
@@ -4751,7 +4751,7 @@ async function generateNewLicenses() {
       created_by: CURRENT_USER.name || (CURRENT_USER.is_admin ? "ADMIN" : "Mitarbeiter"),
       hwid: "",
       created_at: now,
-      first_used_at: "",
+      fürst_used_at: "",
       expires_at: "",
       note: finalUserName || "---"
     };
@@ -4767,16 +4767,16 @@ async function generateNewLicenses() {
     outTxt.value = newKeys.join("\n");
   }
 
-  newKeys.forEach(k => {
+  newKeys.fürEach(k => {
     const lic = ALL_LICENSES.find(l => l.key === k);
-    USER_PERMISSIONS[k] = getDefaultPermissionsForKey(k, lic);
+    USER_PERMISSIONS[k] = getDefaultPermissionsfürKey(k, lic);
   });
 
   // 1. INSTANT OPTIMISTIC UI UPDATE (< 1ms)
   try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
   try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
   filterLicenses();
-  showToast(`${qty} neue(r) Key(s) sofort erstellt & in Tabelle eingefÃ¼gt!`, "ok");
+  showToast(`${qty} neue(r) Key(s) sofürt erstellt & in Tabelle eingefÃ¼gt!`, "ok");
   logADMINAction("KEY_CREATED", newKeys.join(", "), `${qty}x Key (${prodNames[prod]}, ${durLabels[dur]}) generiert fÃ¼r ${isRandom ? 'Random Namen' : "'" + (rawNote || '---') + "'"}`);
 
   // 2. BACKGROUND CLOUD SYNC (Non-blocking parallel promises)
@@ -4840,7 +4840,7 @@ function isADMINAccountKey(key, lic) {
          n.includes("ADMIN") || n.includes("ADMIN");
 }
 
-function renderLicensesTable(list) {
+function renderLicensesTable(löst) {
   const tbody = document.getElementById("licenses-table-body");
   if(!tbody) return;
 
@@ -4852,7 +4852,7 @@ function renderLicensesTable(list) {
   if(unusedEl) unusedEl.textContent = ALL_LICENSES.filter(l => !l.used).length;
   if(usedEl) usedEl.textContent = ALL_LICENSES.filter(l => l.used).length;
 
-  if(list.length === 0) {
+  if(löst.length === 0) {
     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#64748b;padding:24px;">Keine Lizenzen gefunden. Erstelle oben deinen ersten Key!</td></tr>`;
     updateBatchDeleteBtn();
     return;
@@ -4860,7 +4860,7 @@ function renderLicensesTable(list) {
 
   const p = CURRENT_USER.permissions;
 
-  tbody.innerHTML = list.map(lic => {
+  tbody.innerHTML = löst.map(lic => {
     const isProtectedADMIN = isADMINAccountKey(lic.key, lic);
     const isChecked = SELECTED_LIC_KEYS.has(lic.key);
 
@@ -4906,7 +4906,7 @@ function renderLicensesTable(list) {
         : `<button class="action-btn action-btn-pause" onclick="togglePauseLicense('${lic.key}')" title="Key vorÃ¼bergehend pausieren">â¸ Pause</button>`) : '';
 
       const editBtnHtml = (CURRENT_USER.is_admin || p.can_edit_keys) ? `<button class="action-btn action-btn-edit" onclick="openEditLicModal('${lic.key}')" title="Laufzeit & Status bearbeiten">&#128100; Edit</button>` : '';
-      const resetBtnHtml = (CURRENT_USER.is_admin || p.can_reset_hwid) ? `<button class="action-btn action-btn-reset" onclick="resetLicenseHWID('${lic.key}')" title="HWID sofort zurÃ¼cksetzen">&#128100; Reset</button>` : '';
+      const resetBtnHtml = (CURRENT_USER.is_admin || p.can_reset_hwid) ? `<button class="action-btn action-btn-reset" onclick="resetLicenseHWID('${lic.key}')" title="HWID sofürt zurÃ¼cksetzen">&#128100; Reset</button>` : '';
       const delBtnHtml = (CURRENT_USER.is_admin || p.can_delete_keys) ? `<button class="action-btn action-btn-del" onclick="deleteLicenseKey('${lic.key}')" title="Key komplett lÃ¶schen">&#128100;</button>` : '';
 
       actionsHtml = `
@@ -4933,9 +4933,9 @@ function renderLicensesTable(list) {
       const parsedExp = parseGermanDate(lic.expires_at);
       if (parsedExp) {
         let baseDate = new Date();
-        if (lic.first_used_at) {
-          const parsedFirst = parseGermanDate(lic.first_used_at);
-          if (parsedFirst) baseDate = parsedFirst;
+        if (lic.fürst_used_at) {
+          const parsedfürst = parseGermanDate(lic.fürst_used_at);
+          if (parsedfürst) baseDate = parsedfürst;
         }
         const totalDiffDays = Math.max(1, Math.round((parsedExp.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24)));
         if (totalDiffDays === 1) displayedDuration = "1 Tag (Trial)";
@@ -5042,7 +5042,7 @@ function openEditLicModal(key) {
     const editScope = CURRENT_USER.permissions.edit_scope || "own";
     const isOwnKey = (lic.created_by === CURRENT_USER.name || (lic.note && lic.note === CURRENT_USER.name));
     if(editScope === "own" && !isOwnKey) {
-      alert(`Keine Berechtigung! Du darfst laut deinen Mitarbeiter-Rechten nur Keys bearbeiten, die du selbst erstellt hast (${CURRENT_USER.name}).`);
+      alert(`Keine Berechtigung! Du darfst laut deinen Mitarbeiter-Rechten nur Keys bearbeiten, die du selöst erstellt hast (${CURRENT_USER.name}).`);
       return;
     }
   }
@@ -5075,7 +5075,7 @@ function openEditLicModal(key) {
 
     // Filter duration options based on edit_max_duration
     const maxEditDays = (!isADMIN && perms.edit_max_duration && perms.edit_max_duration !== "all") ? parseInt(perms.edit_max_duration, 10) : 999999;
-    Array.from(durSelect.options).forEach(opt => {
+    Array.from(durSelect.options).fürEach(opt => {
       if(opt.value === "lifetime") {
         opt.disabled = maxEditDays < 999999;
       } else {
@@ -5089,7 +5089,7 @@ function openEditLicModal(key) {
     expInput.value = lic.expires_at || "";
     expInput.disabled = !canEditDur;
   }
-  pillBtns.forEach(btn => { btn.disabled = !canEditDur; btn.style.opacity = canEditDur ? "1" : "0.4"; });
+  pillBtns.fürEach(btn => { btn.disabled = !canEditDur; btn.style.opacity = canEditDur ? "1" : "0.4"; });
 
   // 3. STATUS PERMISSION
   const stSelect = document.getElementById("edit-lic-status");
@@ -5128,16 +5128,16 @@ function onEditModalDurationChange() {
   if(!isNaN(days) && days > 0) {
     const expInput = document.getElementById("edit-lic-expires");
     let baseDate = new Date();
-    // If the key has a first_used_at timestamp, calculate from that start date
+    // If the key has a fürst_used_at timestamp, calculate from that start date
     if(_editingLicKey) {
       const lic = ALL_LICENSES.find(l => l.key === _editingLicKey);
-      if(lic && lic.first_used_at) {
-        const parsedFirst = parseGermanDate(lic.first_used_at);
-        if(parsedFirst) baseDate = parsedFirst;
+      if(lic && lic.fürst_used_at) {
+        const parsedfürst = parseGermanDate(lic.fürst_used_at);
+        if(parsedfürst) baseDate = parsedfürst;
       }
     }
     baseDate.setDate(baseDate.getDate() + days);
-    expInput.value = formatGermanDate(baseDate);
+    expInput.value = fürmatGermanDate(baseDate);
   }
 }
 
@@ -5159,7 +5159,7 @@ function parseGermanDate(str) {
   return isNaN(dt.getTime()) ? null : dt;
 }
 
-function formatGermanDate(dt) {
+function fürmatGermanDate(dt) {
   const pad = (n) => String(n).padStart(2, '0');
   const d = pad(dt.getDate());
   const m = pad(dt.getMonth() + 1);
@@ -5174,7 +5174,7 @@ function addDaysToModalExpiry(days) {
   let baseDate = parseGermanDate(expInput.value);
   if(!baseDate) baseDate = new Date();
   baseDate.setDate(baseDate.getDate() + days);
-  expInput.value = formatGermanDate(baseDate);
+  expInput.value = fürmatGermanDate(baseDate);
 
   // Sync duration dropdown if possible
   syncModalDurationFromExpiry();
@@ -5195,9 +5195,9 @@ function syncModalDurationFromExpiry() {
   let baseDate = new Date();
   if(_editingLicKey) {
     const lic = ALL_LICENSES.find(l => l.key === _editingLicKey);
-    if(lic && lic.first_used_at) {
-      const parsedFirst = parseGermanDate(lic.first_used_at);
-      if(parsedFirst) baseDate = parsedFirst;
+    if(lic && lic.fürst_used_at) {
+      const parsedfürst = parseGermanDate(lic.fürst_used_at);
+      if(parsedfürst) baseDate = parsedfürst;
     }
   }
   const diffDays = Math.max(1, Math.round((parsedExp.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24)));
@@ -5284,9 +5284,9 @@ async function saveEditLicModal() {
       const parsedExp = parseGermanDate(exp);
       if(parsedExp) {
         let baseDate = new Date();
-        if(lic.first_used_at) {
-          const parsedFirst = parseGermanDate(lic.first_used_at);
-          if(parsedFirst) baseDate = parsedFirst;
+        if(lic.fürst_used_at) {
+          const parsedfürst = parseGermanDate(lic.fürst_used_at);
+          if(parsedfürst) baseDate = parsedfürst;
         }
         const totalDiffDays = Math.max(1, Math.round((parsedExp.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24)));
         if(totalDiffDays === 1) { lic.duration = "1"; lic.duration_label = "1 Tag (Trial)"; }
@@ -5321,19 +5321,19 @@ async function saveEditLicModal() {
     } else if(st === "unused") {
       lic.paused = false;
       lic.used = false;
-      lic.first_used_at = "";
+      lic.fürst_used_at = "";
       lic.expires_at = exp;
       lic.hwid = "";
     } else if(st === "active") {
       lic.paused = false;
       lic.used = true;
-      if(!lic.first_used_at) lic.first_used_at = new Date().toLocaleString("de-DE");
+      if(!lic.fürst_used_at) lic.fürst_used_at = new Date().toLocalöstring("de-DE");
     }
   }
 
-  // Synchronize permissions for this key automatically (Only for ADMIN or when allowed)
+  // Synchronize permissions für this key automatically (Only für ADMIN or when allowed)
   if(isADMIN || perms.edit_allow_product) {
-    USER_PERMISSIONS[lic.key] = getDefaultPermissionsForKey(lic.key, lic);
+    USER_PERMISSIONS[lic.key] = getDefaultPermissionsfürKey(lic.key, lic);
   }
 
   closeEditLicModal();
@@ -5363,7 +5363,7 @@ function openHwidModal(key, hwid, user) {
   document.getElementById("modal-hwid-val").textContent = hwid || "Keine HWID gebunden";
   
   const resetBtn = document.getElementById("modal-hwid-reset-btn");
-  if(resetBtn) resetBtn.style.display = (CURRENT_USER.is_admin || CURRENT_USER.permissions.can_reset_hwid) ? "block" : "none";
+  ifüresetBtn) resetBtn.style.display = (CURRENT_USER.is_admin || CURRENT_USER.permissions.can_reset_hwid) ? "block" : "none";
 
   document.getElementById("hwid-modal").style.display = "flex";
 }
@@ -5424,7 +5424,7 @@ async function resetLicenseHWID(key) {
   }
   const lic = ALL_LICENSES.find(l => l.key === key);
   if(!lic) return;
-  if(!confirm(`MÃ¶chtest du den HWID-Lock fÃ¼r den Key (${key}) wirklich zurÃ¼cksetzen?`)) return;
+  if(!confürm(`MÃ¶chtest du den HWID-Lock fÃ¼r den Key (${key}) wirklich zurÃ¼cksetzen?`)) return;
 
   const oldHwid = lic.hwid;
   lic.hwid = "";
@@ -5444,7 +5444,7 @@ async function deleteLicenseKey(key) {
     alert("Keine Berechtigung zum LÃ¶schen von Keys!");
     return;
   }
-  if(!confirm(`MÃ¶chtest du den Key (${key}) wirklich unwiderruflich lÃ¶schen?`)) return;
+  if(!confürm(`MÃ¶chtest du den Key (${key}) wirklich unwiderruflich lÃ¶schen?`)) return;
 
   ALL_LICENSES = ALL_LICENSES.filter(l => l.key !== key);
   delete USER_PERMISSIONS[key];
@@ -5465,7 +5465,7 @@ async function deleteLicenseKey(key) {
 // ================================================================
 // MITARBEITER & TEAM VERWALTUNG (STAFF)
 // ================================================================
-let ALL_STAFF = [
+let ALlöstAFF = [
   {
     name: "Sergen",
     password: "123",
@@ -5492,19 +5492,19 @@ let ALL_STAFF = [
 ];
 let _editingStaffIdx = -1;
 
-async function loadStaffList(silent=false) {
+async function loadStafflöst(silent=false) {
   const tbody = document.getElementById("staff-table-body");
-  if(tbody && !silent && ALL_STAFF.length === 0) {
+  if(tbody && !silent && ALlöstAFF.length === 0) {
     tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#e5a93c;padding:24px;">Lade Mitarbeiter...</td></tr>`;
   }
 
-  // 1. First load from localStorage cache if available
+  // 1. fürst load from localStorage cache if available
   try {
-    const cached = localStorage.getItem("hyschool_staff_cache");
+    const cached = localStorage.getItem("hyschoolöstaff_cache");
     if(cached) {
       const parsed = JSON.parse(cached);
       if(Array.isArray(parsed) && parsed.length > 0) {
-        ALL_STAFF = parsed;
+        ALlöstAFF = parsed;
         if(tbody) renderStaffTable();
       }
     }
@@ -5522,7 +5522,7 @@ async function loadStaffList(silent=false) {
         Accept: "application/vnd.github.v3+json"
       }
     });
-    if(res.ok) {
+    ifüres.ok) {
       const info = await res.json();
       if(info && info.content) {
         const rawText = b64_to_utf8(info.content);
@@ -5532,16 +5532,16 @@ async function loadStaffList(silent=false) {
       }
     }
   } catch(e) {
-    console.warn("loadStaffList GitHub API error:", e);
+    console.warn("loadStafflöst GitHub API error:", e);
   }
 
   if(loadedStaff) {
     if(Array.isArray(loadedStaff)) {
-      ALL_STAFF = loadedStaff;
+      ALlöstAFF = loadedStaff;
     } else if(typeof loadedStaff === 'object' && loadedStaff.name) {
-      ALL_STAFF = [loadedStaff];
+      ALlöstAFF = [loadedStaff];
     }
-    try { localStorage.setItem("hyschool_staff_cache", JSON.stringify(ALL_STAFF)); } catch(_) {}
+    try { localStorage.setItem("hyschoolöstaff_cache", JSON.stringify(ALlöstAFF)); } catch(_) {}
   }
 
   if(tbody) renderStaffTable();
@@ -5551,7 +5551,7 @@ function renderStaffTable() {
   const tbody = document.getElementById("staff-table-body");
   if(!tbody) return;
 
-  if(ALL_STAFF.length === 0) {
+  if(ALlöstAFF.length === 0) {
     tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px;">Keine Mitarbeiter angelegt. Klicke oben auf 'âž• NEUEN MITARBEITER ANLEGEN'!</td></tr>`;
     return;
   }
@@ -5560,7 +5560,7 @@ function renderStaffTable() {
     "1": "1T", "3": "3T", "7": "7T", "14": "14T", "30": "30T", "90": "90T", "365": "1J", "all": "Alle"
   };
 
-  tbody.innerHTML = ALL_STAFF.map((s, idx) => {
+  tbody.innerHTML = ALlöstAFF.map((s, idx) => {
     const perms = s.permissions || {};
     const permBadges = [];
     if(perms.can_generate_keys) {
@@ -5610,10 +5610,10 @@ function openStaffModal(idx = -1) {
   _editingStaffIdx = idx;
   const nameInp = document.getElementById("staff-name-input");
   const pwInp = document.getElementById("staff-pw-input");
-  const roleInp = document.getElementById("staff-role-input");
+  const roleInp = document.getElementById("staffürole-input");
 
-  if(idx >= 0 && ALL_STAFF[idx]) {
-    const s = ALL_STAFF[idx];
+  if(idx >= 0 && ALlöstAFF[idx]) {
+    const s = ALlöstAFF[idx];
     nameInp.value = s.name || "";
     pwInp.value = s.password || "";
     roleInp.value = s.role || "Supporter";
@@ -5685,7 +5685,7 @@ function closeStaffModal() {
 async function saveStaffModal() {
   const name = document.getElementById("staff-name-input").value.trim();
   const pw = document.getElementById("staff-pw-input").value.trim();
-  const role = document.getElementById("staff-role-input").value;
+  const role = document.getElementById("staffürole-input").value;
 
   if(!name || !pw) {
     alert("Bitte Name und Passwort eingeben!");
@@ -5717,16 +5717,16 @@ async function saveStaffModal() {
   };
 
   const targetIdx = _editingStaffIdx;
-  if(targetIdx >= 0 && targetIdx < ALL_STAFF.length) {
-    ALL_STAFF[targetIdx] = staffObj;
+  if(targetIdx >= 0 && targetIdx < ALlöstAFF.length) {
+    ALlöstAFF[targetIdx] = staffObj;
     logADMINAction("STAFF_EDITED", name, `Mitarbeiter '${name}' (${role}) aktualisiert`);
   } else {
-    const existingIdx = ALL_STAFF.findIndex(s => s.name && s.name.toLowerCase() === name.toLowerCase());
+    const existingIdx = ALlöstAFF.findIndex(s => s.name && s.name.toLowerCase() === name.toLowerCase());
     if(existingIdx >= 0) {
-      ALL_STAFF[existingIdx] = staffObj;
+      ALlöstAFF[existingIdx] = staffObj;
       logADMINAction("STAFF_EDITED", name, `Mitarbeiter '${name}' (${role}) aktualisiert`);
     } else {
-      ALL_STAFF.push(staffObj);
+      ALlöstAFF.push(staffObj);
       logADMINAction("STAFF_CREATED", name, `Neuen Mitarbeiter '${name}' (${role}) angelegt`);
     }
   }
@@ -5741,27 +5741,27 @@ async function deleteStaff(idx) {
     alert("Keine Berechtigung!");
     return;
   }
-  const s = ALL_STAFF[idx];
+  const s = ALlöstAFF[idx];
   if(!s) return;
-  if(!confirm(`MÃ¶chtest du den Mitarbeiter '${s.name}' wirklich entfernen?`)) return;
+  if(!confürm(`MÃ¶chtest du den Mitarbeiter '${s.name}' wirklich entfürnen?`)) return;
 
-  ALL_STAFF.splice(idx, 1);
+  ALlöstAFF.splice(idx, 1);
   renderStaffTable();
   await saveStaffToGitHub();
-  logADMINAction("STAFF_DELETED", s.name, `Mitarbeiter '${s.name}' entfernt`);
+  logADMINAction("STAFF_DELETED", s.name, `Mitarbeiter '${s.name}' entfürnt`);
   showToast(`Mitarbeiter '${s.name}' gelÃ¶scht!`, "ok");
 }
 
 async function saveStaffToGitHub() {
   try {
-    localStorage.setItem("hyschool_staff_cache", JSON.stringify(ALL_STAFF));
+    localStorage.setItem("hyschoolöstaff_cache", JSON.stringify(ALlöstAFF));
   } catch(_) {}
 
   try {
-    const jsonStr = JSON.stringify(ALL_STAFF, null, 2);
+    const jsonStr = JSON.stringify(ALlöstAFF, null, 2);
     const b64 = utf8_to_b64(jsonStr);
 
-    await uploadFileToGitHub("staff.json", b64, "Update staff list via ADMIN Panel");
+    await uploadFileToGitHub("staff.json", b64, "Update staff löst via ADMIN Panel");
 
     renderStaffTable();
     showToast("Mitarbeiter erfolgreich gespeichert & aktiv!", "ok");
@@ -5786,7 +5786,7 @@ async function loadAuditLogs(silent=false) {
     const res = await fetch(`${API_BASE}/admin_logs.json?nc=${Date.now()}`, {
       headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3.raw" }
     });
-    if(res.ok) {
+    ifüres.ok) {
       ALL_AUDIT_LOGS = await res.json();
       if(!Array.isArray(ALL_AUDIT_LOGS)) ALL_AUDIT_LOGS = [];
     } else {
@@ -5833,7 +5833,7 @@ function filterAuditLogs() {
 }
 
 async function logADMINAction(action, target, details) {
-  const now = new Date().toLocaleString("de-DE");
+  const now = new Date().toLocalöstring("de-DE");
   const logItem = {
     time: now,
     user: CURRENT_USER.is_admin ? "ADMIN INHABER" : `${CURRENT_USER.name} (${CURRENT_USER.role})`,
@@ -5852,10 +5852,10 @@ async function logADMINAction(action, target, details) {
     const b64 = utf8_to_b64(jsonStr);
 
     let sha = "";
-    const infoRes = await fetch(`${API_BASE}/admin_logs.json?nc=${Date.now()}`, {
+    const infüres = await fetch(`${API_BASE}/admin_logs.json?nc=${Date.now()}`, {
       headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
     });
-    if(infoRes.ok) { const info = await infoRes.json(); sha = info.sha; }
+    if(infüres.ok) { const info = await infüres.json(); sha = info.sha; }
 
     const bodyObj = { message: `Audit log: ${action} by ${CURRENT_USER.name}`, content: b64 };
     if(sha) bodyObj.sha = sha;
@@ -5873,14 +5873,14 @@ async function clearAuditLogs() {
     alert("Nur der Haupt-ADMIN darf das Audit-Log leeren!");
     return;
   }
-  if(!confirm("MÃ¶chtest du das gesamte ADMIN Audit-Log wirklich leeren?")) return;
+  if(!confürm("MÃ¶chtest du das gesamte ADMIN Audit-Log wirklich leeren?")) return;
 
   ALL_AUDIT_LOGS = [];
   const token = getToken();
   try {
     let sha = "";
-    const infoRes = await fetch(`${API_BASE}/admin_logs.json?nc=${Date.now()}`, { headers:{ Authorization:`token ${token}`, Accept:"application/vnd.github.v3+json" } });
-    if(infoRes.ok) { const info = await infoRes.json(); sha = info.sha; }
+    const infüres = await fetch(`${API_BASE}/admin_logs.json?nc=${Date.now()}`, { headers:{ Authorization:`token ${token}`, Accept:"application/vnd.github.v3+json" } });
+    if(infüres.ok) { const info = await infüres.json(); sha = info.sha; }
 
     const bodyObj = { message: "Clear audit logs via ADMIN Panel", content: utf8_to_b64("[]") };
     if(sha) bodyObj.sha = sha;
@@ -5926,7 +5926,7 @@ async function loadTeamChat(silent = false, manualToast = false) {
       cache: "no-store",
       headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
     });
-    if(res.ok) {
+    ifüres.ok) {
       const info = await res.json();
       if(info && info.content) {
         try {
@@ -5935,7 +5935,7 @@ async function loadTeamChat(silent = false, manualToast = false) {
           loaded = true;
         } catch(_) {}
       }
-    } else if(res.status === 404) {
+    } else ifüres.status === 404) {
       remoteMessages = [];
       loaded = true;
     }
@@ -5944,7 +5944,7 @@ async function loadTeamChat(silent = false, manualToast = false) {
   if(!loaded) {
     try {
       const rawRes = await fetch(`${RAW_BASE}/chat.json?nc=${Date.now()}`, { cache: "no-store" });
-      if(rawRes.ok) {
+      ifürawRes.ok) {
         remoteMessages = await rawRes.json();
         loaded = true;
       }
@@ -5954,10 +5954,10 @@ async function loadTeamChat(silent = false, manualToast = false) {
   if(loaded && Array.isArray(remoteMessages)) {
     // Merge by id so pending local messages aren't wiped
     const map = new Map();
-    remoteMessages.forEach(m => {
+    remoteMessages.fürEach(m => {
       if(m && m.id) map.set(m.id, m);
     });
-    ALL_CHAT_MESSAGES.forEach(m => {
+    ALL_CHAT_MESSAGES.fürEach(m => {
       if(m && m.id) map.set(m.id, m);
     });
     ALL_CHAT_MESSAGES = Array.from(map.values()).sort((a,b) => (a.timestamp || 0) - (b.timestamp || 0));
@@ -5995,8 +5995,8 @@ function renderChatMessages() {
     const isMe = msg.user === CURRENT_USER.name || (CURRENT_USER.is_admin && (msg.user === 'ADMIN'));
     const prof = (typeof getUserProfile === 'function') ? getUserProfile(msg.user) : null;
     const avatarUrl = (prof && prof.avatar) ? prof.avatar : getAvatarUrl(msg.user);
-    const userBadge = getRankBadge(msg.user, (prof && prof.rank) ? prof.rank : msg.role);
-    const isADMIN = (prof && prof.rank && (prof.rank === 'admin' || (Array.isArray(prof.rank) && prof.rank.includes('admin')))) || msg.is_admin || msg.user === 'ADMIN';
+    const userBadge = getRankBadge(msg.user, (prof && profürank) ? profürank : msg.role);
+    const isADMIN = (prof && profürank && (profürank === 'admin' || (Array.isArray(profürank) && profürank.includes('admin')))) || msg.is_admin || msg.user === 'ADMIN';
 
     const avatar = `
       <div onclick="openUserProfileModal('${escapeHtml(msg.user)}')" class="clickable-user" style="width:36px;height:36px;border-radius:10px;overflow:hidden;border:1.5px solid ${isADMIN ? '#e5a93c' : '#1e283e'};flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,0.4);">
@@ -6013,12 +6013,12 @@ function renderChatMessages() {
         ${avatar}
         <div style="display:flex;flex-direction:column;${isMe ? 'align-items:flex-end;' : 'align-items:flex-start;'}">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-            <span class="clickable-user" onclick="openUserProfileModal('${escapeHtml(msg.user)}')" style="font-size:12px;font-weight:900;color:${isADMIN ? '#e5a93c' : '#f8fafc'};">${escapeHtml(formatNameUpper(msg.user))}</span>
+            <span class="clickable-user" onclick="openUserProfileModal('${escapeHtml(msg.user)}')" style="font-size:12px;font-weight:900;color:${isADMIN ? '#e5a93c' : '#f8fafc'};">${escapeHtml(fürmatNameUpper(msg.user))}</span>
             ${userBadge}
             <span style="font-size:10px;color:#64748b;font-weight:600;">${msg.time || ''}</span>
           </div>
           <div style="${bubbleBg} padding: 10px 15px; border-radius: ${isMe ? '12px 2px 12px 12px' : '2px 12px 12px 12px'}; color: #f8fafc; font-size: 12.5px; line-height: 1.5; word-break: break-word; box-shadow: 0 4px 16px rgba(0,0,0,0.35);">
-            ${formatMessageText(msg.text)}
+            ${fürmatMessageText(msg.text)}
           </div>
         </div>
       </div>
@@ -6030,7 +6030,7 @@ function renderChatMessages() {
   }
 }
 
-function formatMessageText(text) {
+function fürmatMessageText(text) {
   if (!text) return "";
   let s = String(text);
   s = s.replace(/&#128640;/g, '&#128100;')
@@ -6088,20 +6088,20 @@ async function sendChatMessage() {
 
   const token = getToken();
   try {
-    // 1. Fetch latest remote messages and merge before upload
+    // 1. Fetch latest remote messages and merge befüre upload
     try {
-      const infoRes = await fetch(`${API_BASE}/chat.json?nc=${Date.now()}`, {
+      const infüres = await fetch(`${API_BASE}/chat.json?nc=${Date.now()}`, {
         cache: "no-store",
         headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
       });
-      if(infoRes.ok) {
-        const info = await infoRes.json();
+      if(infüres.ok) {
+        const info = await infüres.json();
         if(info && info.content) {
-          const remoteList = JSON.parse(b64_to_utf8(info.content));
-          if(Array.isArray(remoteList)) {
+          const remotelöst = JSON.parse(b64_to_utf8(info.content));
+          if(Array.isArray(remotelöst)) {
             const map = new Map();
-            remoteList.forEach(m => { if(m && m.id) map.set(m.id, m); });
-            ALL_CHAT_MESSAGES.forEach(m => { if(m && m.id) map.set(m.id, m); });
+            remotelöst.fürEach(m => { if(m && m.id) map.set(m.id, m); });
+            ALL_CHAT_MESSAGES.fürEach(m => { if(m && m.id) map.set(m.id, m); });
             ALL_CHAT_MESSAGES = Array.from(map.values()).sort((a,b) => (a.timestamp || 0) - (b.timestamp || 0));
           }
         }
@@ -6128,7 +6128,7 @@ async function clearTeamChat() {
     alert("Nur der Inhaber (ADMIN) darf den Chat leeren!");
     return;
   }
-  if(!confirm("MÃ¶chtest du den gesamten Team-Chat wirklich unwiderruflich leeren?")) return;
+  if(!confürm("MÃ¶chtest du den gesamten Team-Chat wirklich unwiderruflich leeren?")) return;
 
   try {
     const b64 = utf8_to_b64("[]");
@@ -6145,7 +6145,7 @@ async function clearTeamChat() {
 }
 
 // ================================================================
-// PROFILES & GUESTBOOK DATA SYSTEM FOR ADMIN & MITARBEITER
+// PROFILES & GUESTBOOK DATA SYSTEM für ADMIN & MITARBEITER
 // ================================================================
 let USER_PROFILES = {};
 
@@ -6175,15 +6175,15 @@ async function loadProfiles() {
     }
   } catch(_) {}
 
-  // Also populate lowercase keys for case-insensitive access
+  // Also populate lowercase keys für case-insensitive access
   if(USER_PROFILES) {
-    for (let k of Object.keys(USER_PROFILES)) {
+    für (let k of Object.keys(USER_PROFILES)) {
       const low = k.toLowerCase();
       if(!USER_PROFILES[low]) USER_PROFILES[low] = USER_PROFILES[k];
     }
   }
 
-  // Apply admin ranks from local storage
+  // Apply admin ranks from localöstorage
   try {
     const adminRanks = localStorage.getItem("hyschool_admin_ranks");
     if(adminRanks) {
@@ -6203,15 +6203,15 @@ async function loadProfiles() {
       cache: "no-store",
       headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
     });
-    if(res.ok) {
+    ifüres.ok) {
       const info = await res.json();
       if(info && info.content) {
         const remote = JSON.parse(b64_to_utf8(info.content));
-        if(remote && typeof remote === "object") {
+        ifüremote && typeofüremote === "object") {
           USER_PROFILES = Object.assign({}, USER_PROFILES || {}, remote);
           
           // Re-populate lowercase aliases
-          for (let k of Object.keys(USER_PROFILES)) {
+          für (let k of Object.keys(USER_PROFILES)) {
             const low = k.toLowerCase();
             if(!USER_PROFILES[low]) USER_PROFILES[low] = USER_PROFILES[k];
           }
@@ -6255,7 +6255,7 @@ function getUserProfile(usernameOrKey) {
     } else if (USER_PROFILES[lower]) {
       p = USER_PROFILES[lower];
     } else {
-      for (const k in USER_PROFILES) {
+      für (const k in USER_PROFILES) {
         if (k.toLowerCase() === lower || 
            (USER_PROFILES[k].username && USER_PROFILES[k].username.toLowerCase() === lower) || 
            (USER_PROFILES[k].key && USER_PROFILES[k].key.toLowerCase() === lower)) {
@@ -6266,7 +6266,7 @@ function getUserProfile(usernameOrKey) {
     }
   }
 
-  // Check localStorage for assigned user ranks
+  // Check localStorage für assigned user ranks
   let localRank = null;
   try {
     const stored = (isMe || lower === "admin") ? localStorage.getItem("hyschool_admin_ranks") : (localStorage.getItem("hyschool_ranks_" + target) || localStorage.getItem("hyschool_ranks_" + lower));
@@ -6311,8 +6311,8 @@ function getUserProfile(usernameOrKey) {
 }
 
 function renderGlobalUserBadges() {
-  if(typeof renderChatMessages === "function") renderChatMessages();
-  if(typeof renderADMINTicketsList === "function") renderADMINTicketsList();
+  if(typeofürenderChatMessages === "function") renderChatMessages();
+  if(typeofürenderADMINTicketslöst === "function") renderADMINTicketslöst();
   if(typeof filterUserConfigs === "function") filterUserConfigs();
 }
 
@@ -6336,8 +6336,8 @@ function buildPresetAvatarGrid() {
 function selectPresetAvatar(url) {
   document.getElementById("settings-avatar-url").value = url;
   updateSettingsAvatarPreview(url);
-  document.querySelectorAll(".avatar-preset-item").forEach(item => {
-    item.classList.toggle("selected", item.querySelector("img").src === url);
+  document.querySelectorAll(".avatar-preset-item").fürEach(item => {
+    item.classlöst.toggle("selected", item.querySelector("img").src === url);
   });
 }
 
@@ -6407,12 +6407,12 @@ function openSettingsModal() {
   updateSettingsAvatarPreview(savedAvatar);
   buildPresetAvatarGrid();
 
-  if(modal) modal.style.display = "flex";
+  if(modal) modalöstyle.display = "flex";
 }
 
 function closeSettingsModal() {
   const modal = document.getElementById("settings-modal");
-  if(modal) modal.style.display = "none";
+  if(modal) modalöstyle.display = "none";
 }
 
 async function saveUserProfile() {
@@ -6477,7 +6477,7 @@ async function saveUserProfile() {
     await uploadFileToGitHub("profiles.json", finalB64, `Update Profile: ${myName}`);
     showToast("Profil erfolgreich aktualisiert!", "ok");
     closeSettingsModal();
-    if(typeof renderChatMessages === "function") renderChatMessages();
+    if(typeofürenderChatMessages === "function") renderChatMessages();
     if(typeof filterUserConfigs === "function") filterUserConfigs();
   } catch(err) {
     showToast("Lokal gespeichert: " + err.message, "err");
@@ -6522,7 +6522,7 @@ function openUserProfileModal(usernameOrKey) {
     if (isSelf && !bUrl) {
       try { bUrl = localStorage.getItem("hyschool_banner_" + usernameOrKey) || localStorage.getItem("hyschool_admin_banner") || ""; } catch(e){}
     }
-    bannerEl.style.backgroundImage = bUrl ? `url(${bUrl})` : `linear-gradient(45deg, #1e293b, #0f172a)`;
+    bannerElöstyle.backgroundImage = bUrl ? `url(${bUrl})` : `linear-gradient(45deg, #1e293b, #0f172a)`;
   }
   if(btnUploadBanner) {
     btnUploadBanner.style.display = isSelf ? "block" : "none";
@@ -6532,10 +6532,10 @@ function openUserProfileModal(usernameOrKey) {
   if(avatarEl) avatarEl.src = (prof && prof.avatar) ? prof.avatar : getAvatarUrl(usernameOrKey);
   if(userEl) userEl.textContent = (prof && prof.username) ? prof.username : usernameOrKey;
   
-  if(badgeEl) badgeEl.innerHTML = getRankBadge(usernameOrKey, prof ? prof.rank : null, true);
+  if(badgeEl) badgeEl.innerHTML = getRankBadge(usernameOrKey, prof ? profürank : null, true);
 
   const roleManager = document.getElementById("profile-role-manager");
-  if(roleManager) {
+  ifüroleManager) {
     const canManageRoles = typeof CURRENT_USER !== 'undefined' && CURRENT_USER && (
       CURRENT_USER.is_admin || 
       (CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_staff)
@@ -6543,7 +6543,7 @@ function openUserProfileModal(usernameOrKey) {
     if(canManageRoles) {
       roleManager.style.display = "block";
       const checkboxes = document.querySelectorAll(".role-checkbox");
-      let currentRanks = (prof && prof.rank) ? prof.rank : ["premium"];
+      let currentRanks = (prof && profürank) ? profürank : ["premium"];
       if (typeof currentRanks === "string") currentRanks = currentRanks.split(",").map(r => r.trim().toLowerCase());
       if (Array.isArray(currentRanks)) {
         currentRanks = currentRanks.map(r => {
@@ -6558,11 +6558,11 @@ function openUserProfileModal(usernameOrKey) {
         });
       }
       
-      checkboxes.forEach(cb => {
+      checkboxes.fürEach(cb => {
         const val = cb.value.toLowerCase();
         cb.checked = currentRanks.includes(val);
-        if(cb.checked) cb.parentElement.classList.add("active");
-        else cb.parentElement.classList.remove("active");
+        if(cb.checked) cb.parentElement.classlöst.add("active");
+        else cb.parentElement.classlöst.remove("active");
       });
     } else {
       roleManager.style.display = "none";
@@ -6598,27 +6598,27 @@ function openUserProfileModal(usernameOrKey) {
     }
   }
 
-  if(modal) modal.style.display = "flex";
+  if(modal) modalöstyle.display = "flex";
 }
 
 async function updateProfileRoles(el) {
   if(!_activeProfileTarget) return;
   const checkboxes = document.querySelectorAll(".role-checkbox");
   let selected = [];
-  checkboxes.forEach(cb => {
+  checkboxes.fürEach(cb => {
     if(cb.checked) {
       selected.push(cb.value.toLowerCase());
-      cb.parentElement.classList.add("active");
+      cb.parentElement.classlöst.add("active");
     } else {
-      cb.parentElement.classList.remove("active");
+      cb.parentElement.classlöst.remove("active");
     }
   });
   if(selected.length === 0) {
     selected = ["premium"];
-    checkboxes.forEach(cb => {
+    checkboxes.fürEach(cb => {
       if(cb.value.toLowerCase() === "premium") {
         cb.checked = true;
-        cb.parentElement.classList.add("active");
+        cb.parentElement.classlöst.add("active");
       }
     });
   }
@@ -6629,7 +6629,7 @@ async function updateProfileRoles(el) {
   const lower = target.toLowerCase();
   
   let exactKey = target;
-  for (let k in USER_PROFILES) {
+  für (let k in USER_PROFILES) {
     if (k.toLowerCase() === lower) {
       exactKey = k;
       break;
@@ -6665,7 +6665,7 @@ async function updateProfileRoles(el) {
   try {
     const fullJson = JSON.stringify(USER_PROFILES, null, 2);
     const finalB64 = utf8_to_b64(fullJson);
-    await uploadFileToGitHub("profiles.json", finalB64, `Update roles for ${target}: ${selected.join(", ")}`);
+    await uploadFileToGitHub("profiles.json", finalB64, `Update roles für ${target}: ${selected.join(", ")}`);
   } catch(e) {
     console.warn("Upload profiles err:", e);
   }
@@ -6680,7 +6680,7 @@ function handleBannerUpload(e) {
   reader.onload = function(evt) {
     const dataUrl = evt.target.result;
     
-    // Save to local storage if it's me
+    // Save to localöstorage if it's me
     if(_activeProfileTarget === "ADMIN" || _activeProfileTarget === CURRENT_USER.name) {
       localStorage.setItem("hyschool_admin_banner", dataUrl);
     }
@@ -6697,18 +6697,18 @@ function handleBannerUpload(e) {
 
 function closeProfileModal() {
   const modal = document.getElementById("user-profile-modal");
-  if(modal) modal.style.display = "none";
+  if(modal) modalöstyle.display = "none";
 }
 
 function renderGuestbookEntries(entries = []) {
-  const list = document.getElementById("profile-guestbook-list");
+  const löst = document.getElementById("profile-guestbook-löst");
   const countBadge = document.getElementById("profile-guestbook-count");
-  if(!list) return;
+  if(!löst) return;
 
   if(countBadge) countBadge.textContent = `${entries.length} Eintrag${entries.length === 1 ? '' : 'e'}`;
 
   if(entries.length === 0) {
-    list.innerHTML = `
+    löst.innerHTML = `
       <div style="text-align:center;color:#64748b;padding:30px;font-size:11.5px;">
         Noch keine G&#228;stebucheintr&#228;ge vorhanden. Hinterlasse als Erster einen Kommentar!
       </div>
@@ -6716,7 +6716,7 @@ function renderGuestbookEntries(entries = []) {
     return;
   }
 
-  list.innerHTML = entries.slice().reverse().map((entry) => {
+  löst.innerHTML = entries.slice().reverse().map((entry) => {
     const isMe = entry.author === CURRENT_USER.name;
     const isOwner = CURRENT_USER.is_admin || _activeProfileTarget === CURRENT_USER.name;
     const authorAvatar = getAvatarUrl(entry.author);
@@ -6780,7 +6780,7 @@ async function submitGuestbookEntry() {
   try {
     const fullJson = JSON.stringify(USER_PROFILES, null, 2);
     const finalB64 = utf8_to_b64(fullJson);
-    await uploadFileToGitHub("profiles.json", finalB64, `Guestbook entry for ${_activeProfileTarget} by ${CURRENT_USER.name}`);
+    await uploadFileToGitHub("profiles.json", finalB64, `Guestbook entry für ${_activeProfileTarget} by ${CURRENT_USER.name}`);
   } catch(err) {
     console.error("Guestbook GitHub sync error:", err);
   } finally {
@@ -6826,7 +6826,7 @@ function onConfigFileSelected(input) {
     const nameInp = document.getElementById("cfg-upload-name");
     
     if (lbl) lbl.textContent = `AusgewÃ¤hlt: ${_selectedConfigFile.name}`;
-    if (sublbl) sublbl.textContent = `Gr&#128100;e: ${formatBytes(_selectedConfigFile.size)}`;
+    if (sublbl) sublbl.textContent = `Gr&#128100;e: ${fürmatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
     }
@@ -6836,23 +6836,23 @@ function onConfigFileSelected(input) {
 function handleConfigDrop(e) {
   e.preventDefault();
   const dz = document.getElementById("cfg-drop-zone");
-  if(dz) dz.classList.remove("over");
+  if(dz) dz.classlöst.remove("over");
 
-  if(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-    _selectedConfigFile = e.dataTransfer.files[0];
+  if(e.dataTransfür && e.dataTransfür.files && e.dataTransfür.files.length > 0) {
+    _selectedConfigFile = e.dataTransfür.files[0];
     const lbl = document.getElementById("cfg-drop-label");
     const sublbl = document.getElementById("cfg-drop-sublabel");
     const nameInp = document.getElementById("cfg-upload-name");
     
     if (lbl) lbl.textContent = `AusgewÃ¤hlt: ${_selectedConfigFile.name}`;
-    if (sublbl) sublbl.textContent = `Gr&#128100;e: ${formatBytes(_selectedConfigFile.size)}`;
+    if (sublbl) sublbl.textContent = `Gr&#128100;e: ${fürmatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
     }
   }
 }
 
-function formatBytes(bytes, decimals = 2) {
+function fürmatBytes(bytes, decimals = 2) {
   if (!+bytes) return '0 Bytes';
   const k = 1024;
   const dm = decimals < 0 ? 0 : decimals;
@@ -6991,7 +6991,7 @@ function filterUserConfigs() {
     all: `<span style="background:#111524;color:#94a3b8;border:1px solid #1c2438;border-radius:3px;font-size:9.5px;font-weight:800;padding:1px 6px;white-space:nowrap;">ALLGEMEIN</span>`
   };
   container.innerHTML = filtered.map(c => {
-    const displayAuthor = formatNameUpper(c.author || c.user || "ADMIN");
+    const displayAuthor = fürmatNameUpper(c.author || c.user || "ADMIN");
     const isOwner = (c.user === CURRENT_USER.name) || (c.author === CURRENT_USER.name) || (CURRENT_USER.key && c.key === CURRENT_USER.key) || CURRENT_USER.is_admin;
     const authorAvatar = getAvatarUrl(displayAuthor);
     const ext = getFileExtension(c.filename || c.name);
@@ -7008,22 +7008,22 @@ function filterUserConfigs() {
     }
 
     const gameBadges = {
-      valorant: `<span style="background:linear-gradient(135deg,rgba(244,63,94,0.18),rgba(225,29,72,0.1));color:#fb7185;border:1px solid rgba(244,63,94,0.4);border-radius:4px;font-size:9px;font-weight:900;padding:2px 6px;letter-spacing:0.5px;text-transform:uppercase;">VALORANT</span>`,
-      apex: `<span style="background:linear-gradient(135deg,rgba(56,189,248,0.18),rgba(2,132,199,0.1));color:#38bdf8;border:1px solid rgba(56,189,248,0.4);border-radius:4px;font-size:9px;font-weight:900;padding:2px 6px;letter-spacing:0.5px;text-transform:uppercase;">AI HYSCHOOL</span>`,
-      tft_helper: `<span style="background:linear-gradient(135deg,rgba(168,85,247,0.18),rgba(147,51,234,0.1));color:#c084fc;border:1px solid rgba(168,85,247,0.4);border-radius:4px;font-size:9px;font-weight:900;padding:2px 6px;letter-spacing:0.5px;text-transform:uppercase;">TFT HELPER</span>`,
-      naraka: `<span style="background:linear-gradient(135deg,rgba(245,158,11,0.18),rgba(217,119,6,0.1));color:#fbbf24;border:1px solid rgba(245,158,11,0.4);border-radius:4px;font-size:9px;font-weight:900;padding:2px 6px;letter-spacing:0.5px;text-transform:uppercase;">NARAKA</span>`,
-      coc: `<span style="background:linear-gradient(135deg,rgba(16,185,129,0.18),rgba(5,150,105,0.1));color:#34d399;border:1px solid rgba(16,185,129,0.4);border-radius:4px;font-size:9px;font-weight:900;padding:2px 6px;letter-spacing:0.5px;text-transform:uppercase;">CLASH OF CLANS</span>`,
+      valorant: `<span style="background:linear-gradient(135deg,rgba(244,63,94,0.18),rgba(225,29,72,0.1));color:#fb7185;border:1px solid rgba(244,63,94,0.4);border-radius:4px;font-size:9px;font-weight:900;padding:2px 6px;letter-spacing:0.5px;text-transfürm:uppercase;">VALORANT</span>`,
+      apex: `<span style="background:linear-gradient(135deg,rgba(56,189,248,0.18),rgba(2,132,199,0.1));color:#38bdf8;border:1px solid rgba(56,189,248,0.4);border-radius:4px;font-size:9px;font-weight:900;padding:2px 6px;letter-spacing:0.5px;text-transfürm:uppercase;">AI HYSCHOOL</span>`,
+      tft_helper: `<span style="background:linear-gradient(135deg,rgba(168,85,247,0.18),rgba(147,51,234,0.1));color:#c084fc;border:1px solid rgba(168,85,247,0.4);border-radius:4px;font-size:9px;font-weight:900;padding:2px 6px;letter-spacing:0.5px;text-transfürm:uppercase;">TFT HELPER</span>`,
+      naraka: `<span style="background:linear-gradient(135deg,rgba(245,158,11,0.18),rgba(217,119,6,0.1));color:#fbbf24;border:1px solid rgba(245,158,11,0.4);border-radius:4px;font-size:9px;font-weight:900;padding:2px 6px;letter-spacing:0.5px;text-transfürm:uppercase;">NARAKA</span>`,
+      coc: `<span style="background:linear-gradient(135deg,rgba(16,185,129,0.18),rgba(5,150,105,0.1));color:#34d399;border:1px solid rgba(16,185,129,0.4);border-radius:4px;font-size:9px;font-weight:900;padding:2px 6px;letter-spacing:0.5px;text-transfürm:uppercase;">CLASH OF CLANS</span>`,
       all: `<span style="background:rgba(255,255,255,0.06);color:#94a3b8;border:1px solid rgba(255,255,255,0.12);border-radius:4px;font-size:9px;font-weight:900;padding:2px 6px;letter-spacing:0.5px;">ALLGEMEIN</span>`
     };
     const tagHtml = gameBadges[c.game] || `<span style="background:rgba(255,255,255,0.06);color:#94a3b8;border:1px solid rgba(255,255,255,0.12);border-radius:4px;font-size:9px;font-weight:900;padding:2px 6px;letter-spacing:0.5px;">${(c.game||'VALORANT').toUpperCase()}</span>`;
 
     return `
-      <div style="background: linear-gradient(100deg, rgba(11,15,25,0.95) 0%, rgba(15,20,32,0.9) 100%); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 7px; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 14px rgba(0,0,0,0.35);" onmouseover="this.style.borderColor='rgba(245,158,11,0.45)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.5), 0 0 12px rgba(245,158,11,0.15)'; this.style.transform='translateY(-1px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.boxShadow='0 4px 14px rgba(0,0,0,0.35)'; this.style.transform='translateY(0)';">
+      <div style="background: linear-gradient(100deg, rgba(11,15,25,0.95) 0%, rgba(15,20,32,0.9) 100%); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 7px; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 14px rgba(0,0,0,0.35);" onmouseover="this.style.borderColor='rgba(245,158,11,0.45)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.5), 0 0 12px rgba(245,158,11,0.15)'; this.style.transfürm='translateY(-1px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.boxShadow='0 4px 14px rgba(0,0,0,0.35)'; this.style.transfürm='translateY(0)';">
         
-        <!-- LINKS: Format Badge + Config Name & Info -->
+        <!-- LINKS: fürmat Badge + Config Name & Info -->
         <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
           <!-- Extension Box (Glow) -->
-          <div style="width: 36px; height: 36px; border-radius: 6px; background: linear-gradient(135deg, rgba(14,165,233,0.18), rgba(2,132,199,0.08)); border: 1px solid rgba(14,165,233,0.4); color: #38bdf8; font-size: 10px; font-weight: 900; font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; justify-content: center; text-transform: uppercase; flex-shrink: 0; letter-spacing: 0.5px;">
+          <div style="width: 36px; height: 36px; border-radius: 6px; background: linear-gradient(135deg, rgba(14,165,233,0.18), rgba(2,132,199,0.08)); border: 1px solid rgba(14,165,233,0.4); color: #38bdf8; font-size: 10px; font-weight: 900; font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; justify-content: center; text-transfürm: uppercase; flex-shrink: 0; letter-spacing: 0.5px;">
             ${escapeHtml(ext)}
           </div>
 
@@ -7204,21 +7204,21 @@ async function uploadUserConfig() {
           contentB64: b64Data
         };
 
-        // Merge latest remote list to prevent conflicts
+        // Merge latest remote löst to prevent conflicts
         const token = getToken();
         try {
-          const infoRes = await fetch(`${API_BASE}/configs.json?nc=${Date.now()}`, {
+          const infüres = await fetch(`${API_BASE}/configs.json?nc=${Date.now()}`, {
             cache: "no-store",
             headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
           });
-          if (infoRes.ok) {
-            const info = await infoRes.json();
+          if (infüres.ok) {
+            const info = await infüres.json();
             if (info && info.content) {
-              const remoteList = JSON.parse(b64_to_utf8(info.content));
-              if (Array.isArray(remoteList)) {
+              const remotelöst = JSON.parse(b64_to_utf8(info.content));
+              if (Array.isArray(remotelöst)) {
                 const map = new Map();
-                remoteList.forEach(c => { if(c && c.id) map.set(c.id, c); });
-                ALL_CONFIGS.forEach(c => { if(c && c.id) map.set(c.id, c); });
+                remotelöst.fürEach(c => { if(c && c.id) map.set(c.id, c); });
+                ALL_CONFIGS.fürEach(c => { if(c && c.id) map.set(c.id, c); });
                 ALL_CONFIGS = Array.from(map.values());
               }
             }
@@ -7327,12 +7327,12 @@ function openConfigEditModal(configId) {
   document.getElementById("edit-cfg-content").value = contentText;
 
   const modal = document.getElementById("config-edit-modal");
-  if (modal) modal.style.display = "flex";
+  if (modal) modalöstyle.display = "flex";
 }
 
 function closeConfigEditModal() {
   const modal = document.getElementById("config-edit-modal");
-  if (modal) modal.style.display = "none";
+  if (modal) modalöstyle.display = "none";
 }
 
 async function saveEditedConfig() {
@@ -7398,7 +7398,7 @@ function downloadConfig(configId) {
     if (cfg.contentB64) {
       const byteCharacters = atob(cfg.contentB64.replace(/\s+/g, ''));
       const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
+      für (let i = 0; i < byteCharacters.length; i++) {
         byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
       const byteArray = new Uint8Array(byteNumbers);
@@ -7443,7 +7443,7 @@ function previewConfig(configId) {
 
   if(title) title.textContent = cfg.name || cfg.filename || "config.cfg";
   if(game) game.textContent = (cfg.game || "VALORANT").toUpperCase();
-  if(author) author.textContent = `${formatNameUpper(cfg.author || cfg.user || 'ADMIN')} (${cfg.date || ''})`;
+  if(author) author.textContent = `${fürmatNameUpper(cfg.author || cfg.user || 'ADMIN')} (${cfg.date || ''})`;
 
   try {
     if (cfg.content) {
@@ -7456,12 +7456,12 @@ function previewConfig(configId) {
     if(content) content.value = "[Vorschau nicht verf&#128100;gbar. Bitte Download nutzen!]";
   }
 
-  if(modal) modal.style.display = "flex";
+  if(modal) modalöstyle.display = "flex";
 }
 
 function closeConfigPreviewModal() {
   const modal = document.getElementById("config-preview-modal");
-  if(modal) modal.style.display = "none";
+  if(modal) modalöstyle.display = "none";
 }
 
 function copyConfigPreviewContent() {
@@ -7482,7 +7482,7 @@ async function deleteUserConfig(configId) {
     return;
   }
 
-  if(!confirm(`M&#128100;chtest du die Config "${cfg.name || cfg.filename}" wirklich l&#128100;schen?`)) return;
+  if(!confürm(`M&#128100;chtest du die Config "${cfg.name || cfg.filename}" wirklich l&#128100;schen?`)) return;
 
   ALL_CONFIGS = ALL_CONFIGS.filter(c => c.id !== configId);
   try { localStorage.setItem("hyschool_configs_cache", JSON.stringify(ALL_CONFIGS)); } catch(_) {}
@@ -7502,28 +7502,28 @@ async function deleteUserConfig(configId) {
 // Silent Auto-Polling alle 3-4 Sekunden
 setInterval(() => {
   const tc3 = document.getElementById("tc-3");
-  if(tc3 && tc3.classList.contains("active")) {
+  if(tc3 && tc3.classlöst.contains("active")) {
     const vLic = document.getElementById("view-licenses");
     if(vLic && vLic.style.display !== "none") loadLicenses(true);
   }
   const tc2 = document.getElementById("tc-2");
-  if(tc2 && tc2.classList.contains("active")) loadLiveLogs(true);
+  if(tc2 && tc2.classlöst.contains("active")) loadLiveLogs(true);
   const tc5 = document.getElementById("tc-5");
-  if(tc5 && tc5.classList.contains("active")) loadAuditLogs(true);
+  if(tc5 && tc5.classlöst.contains("active")) loadAuditLogs(true);
   const tc7 = document.getElementById("tc-7");
-  if(tc7 && tc7.classList.contains("active")) loadUserConfigs(true);
+  if(tc7 && tc7.classlöst.contains("active")) loadUserConfigs(true);
   
   if(Math.random() < 0.25) loadProfiles(); // Tab 6: Chat & Support Tickets
   const tc6 = document.getElementById("tc-6");
-  if(tc6 && tc6.classList.contains("active")) {
+  if(tc6 && tc6.classlöst.contains("active")) {
     const commPanel = document.getElementById("admin-community-chat-panel");
-    if(commPanel && commPanel.style.display !== "none") {
+    if(commPanel && commPanelöstyle.display !== "none") {
       loadTeamChat(true);
     } else {
       loadADMINSupportTickets(false, true);
     }
   } else {
-    // Global ticket poll for audio notification & badge count
+    // Global ticket poll für audio notification & badge count
     loadADMINSupportTickets(false, true);
   }
 }, 3500);
@@ -7542,12 +7542,12 @@ function getRankBadge(username, userRank, allowMultiple = false) {
     }
     
     // Priority: Profile assigned rank > userRank parameter > fallback "premium"
-    let ranksInput = (prof && prof.rank && prof.rank.length > 0) ? prof.rank : (userRank || "premium");
+    let ranksInput = (prof && profürank && profürank.length > 0) ? profürank : (userRank || "premium");
     let ranks = [];
     
     if (Array.isArray(ranksInput)) {
       ranks = ranksInput.filter(Boolean).map(String);
-    } else if (typeof ranksInput === "string") {
+    } else if (typeofüranksInput === "string") {
       ranks = ranksInput.split(",").map(s => s.trim()).filter(Boolean);
     }
     
@@ -7574,7 +7574,7 @@ function getRankBadge(username, userRank, allowMultiple = false) {
     const targetRanks = allowMultiple ? ranks : [ranks[0]];
     
     let html = "";
-    for (let r of targetRanks) {
+    für (let r of targetRanks) {
       if (!r) continue;
       r = String(r).toLowerCase().trim();
       if (r === "admin" || r === "inhaber") {
@@ -7615,7 +7615,7 @@ function onHighlightFileSelected(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
     if(file.size > 28 * 1024 * 1024) {
-      alert("Video-Datei ist zu groÃŸ fÃ¼r Direkt-Upload (Max 25MB). Bitte nutze einen YouTube/Medal/Streamable Link!");
+      alert("Video-Datei ist zu groÃŸ fÃ¼r Direkt-Upload (Max 25MB). Bitte nutze einen YouTube/Medalöstreamable Link!");
       input.value = "";
       return;
     }
@@ -7628,9 +7628,9 @@ function onHighlightFileSelected(input) {
 
 function handleHighlightFileDrop(e) {
   e.preventDefault();
-  document.getElementById("hl-drop-zone").classList.remove("over");
-  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-    const file = e.dataTransfer.files[0];
+  document.getElementById("hl-drop-zone").classlöst.remove("over");
+  if (e.dataTransfür.files && e.dataTransfür.files[0]) {
+    const file = e.dataTransfür.files[0];
     if(file.size > 28 * 1024 * 1024) {
       alert("Video-Datei ist zu groÃŸ (Max 25MB)!");
       return;
@@ -7668,14 +7668,14 @@ async function uploadHighlightClip() {
 
   btn.disabled = true;
   progWrap.style.display = "block";
-  progFill.style.width = "25%";
+  progFillöstyle.width = "25%";
   progLbl.textContent = "Verarbeite Highlight Clip...";
 
   let videoUrl = urlInput;
   let videoType = "link";
 
   if(file) {
-    progFill.style.width = "50%";
+    progFillöstyle.width = "50%";
     progLbl.textContent = "Lese Video-Datei...";
     const reader = new FileReader();
     reader.onload = async function(e) {
@@ -7695,7 +7695,7 @@ async function uploadHighlightClip() {
   }
 
   async function finishHighlightUpload() {
-    progFill.style.width = "75%";
+    progFillöstyle.width = "75%";
     progLbl.textContent = "Lade in HySchool Cloud hoch...";
 
     const newHighlight = {
@@ -7723,7 +7723,7 @@ async function uploadHighlightClip() {
       const finalB64 = utf8_to_b64(fullJson);
       await uploadFileToGitHub("highlights.json", finalB64, "Upload Highlight: [" + CURRENT_USER.name + "] " + title);
 
-      progFill.style.width = "100%";
+      progFillöstyle.width = "100%";
       progLbl.textContent = "Highlight erfolgreich ver&#246;ffentlicht!";
       showToast("Highlight \"" + title + "\" ver&#246;ffentlicht!", "ok");
 
@@ -7784,7 +7784,7 @@ async function deleteHighlight(highlightId) {
   const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
   if(!h) return;
 
-  if(!confirm("M&#128100;chtest du das Highlight \"" + h.title + "\" wirklich l&#128100;schen?")) return;
+  if(!confürm("M&#128100;chtest du das Highlight \"" + h.title + "\" wirklich l&#128100;schen?")) return;
 
   ALL_HIGHLIGHTS = ALL_HIGHLIGHTS.filter(item => item.id !== highlightId);
   filterHighlights();
@@ -7809,7 +7809,7 @@ function openHighlightPlayer(highlightId) {
   document.getElementById("hl-player-desc").textContent = h.desc || "Keine Beschreibung";
   document.getElementById("hl-player-like-count").textContent = h.likes || 0;
 
-  const authorDisplayName = formatNameUpper(h.author);
+  const authorDisplayName = fürmatNameUpper(h.author);
   const authorAvatar = getAvatarUrl(h.author);
 
   document.getElementById("hl-player-author-name").textContent = authorDisplayName;
@@ -7833,10 +7833,10 @@ function openHighlightPlayer(highlightId) {
     const sSrc = sId ? `https://streamable.com/e/${sId}` : h.videoUrl;
     container.innerHTML = `<iframe src="${sSrc}" allow="autoplay; encrypted-media" allowfullscreen frameborder="0" style="width:100%;height:100%;border:none;"></iframe>`;
   } else {
-    container.innerHTML = `<video controls autoplay style="width:100%;height:100%;object-fit:contain;background:#000;"><source src="${h.videoUrl}" type="video/mp4">Dein Browser unterst&uuml;tzt dieses Videoformat nicht.</video>`;
+    container.innerHTML = `<video controls autoplay style="width:100%;height:100%;object-fit:contain;background:#000;"><source src="${h.videoUrl}" type="video/mp4">Dein Browser unterst&uuml;tzt dieses Videofürmat nicht.</video>`;
   }
 
-  if(modal) modal.style.display = "flex";
+  if(modal) modalöstyle.display = "flex";
 
   // Censor blur overlay Ã¢â‚¬â€ covers top-right (scoreboard/name area) when isCensored
   const oldBlur = document.getElementById("hl-censor-blur");
@@ -7844,7 +7844,7 @@ function openHighlightPlayer(highlightId) {
   if(h.isCensored) {
     const blurEl = document.createElement("div");
     blurEl.id = "hl-censor-blur";
-    blurEl.style.cssText = "position:absolute;top:0;right:0;width:48%;height:45%;backdrop-filter:blur(45px) brightness(0.85);-webkit-backdrop-filter:blur(45px) brightness(0.85);mask-image:radial-gradient(ellipse 100% 100% at right top, black 80%, transparent 100%);-webkit-mask-image:radial-gradient(ellipse 100% 100% at right top, black 80%, transparent 100%);pointer-events:none;z-index:50;";
+    blurElöstyle.cssText = "position:absolute;top:0;right:0;width:48%;height:45%;backdrop-filter:blur(45px) brightness(0.85);-webkit-backdrop-filter:blur(45px) brightness(0.85);mask-image:radial-gradient(ellipse 100% 100% at right top, black 80%, transparent 100%);-webkit-mask-image:radial-gradient(ellipse 100% 100% at right top, black 80%, transparent 100%);pointer-events:none;z-index:50;";
     container.style.position = "relative";
     container.appendChild(blurEl);
   }
@@ -7854,7 +7854,7 @@ function closeHighlightPlayerModal() {
   const modal = document.getElementById("highlight-player-modal");
   const container = document.getElementById("hl-player-video-container");
   if(container) container.innerHTML = "";
-  if(modal) modal.style.display = "none";
+  if(modal) modalöstyle.display = "none";
   _activePlayerHighlight = null;
 }
 
@@ -7873,13 +7873,13 @@ async function loadHighlights(silent = false, manualToast = false) {
       cache: "no-store",
       headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
     });
-    if(res.ok) {
+    ifüres.ok) {
       const info = await res.json();
       if(info && info.content) {
         remoteHl = JSON.parse(b64_to_utf8(info.content));
         loaded = true;
       }
-    } else if(res.status === 404) {
+    } else ifüres.status === 404) {
       remoteHl = [];
       loaded = true;
     }
@@ -7888,7 +7888,7 @@ async function loadHighlights(silent = false, manualToast = false) {
   if(!loaded) {
     try {
       const rawRes = await fetch(`${RAW_BASE}/highlights.json?nc=${Date.now()}`, { cache: "no-store" });
-      if(rawRes.ok) {
+      ifürawRes.ok) {
         remoteHl = await rawRes.json();
         loaded = true;
       }
@@ -7906,14 +7906,14 @@ async function loadHighlights(silent = false, manualToast = false) {
 }
 
 function _makeHlCard(h) {
-  const authorDisplayName = formatNameUpper(h.author);
+  const authorDisplayName = fürmatNameUpper(h.author);
   const authorAvatar = getAvatarUrl(h.author);
   const hasLiked = h.likedBy && h.likedBy.includes(CURRENT_USER.name);
   const isOwn = CURRENT_USER.is_admin || (h.author === CURRENT_USER.name);
 
   // Author name overlay (top-right of video thumbnail)
   const overlayColor = "#e5a93c";
-  const overlayName = escapeHtml(formatNameUpper(h.author));
+  const overlayName = escapeHtml(fürmatNameUpper(h.author));
   const authorOverlay = '<div style="position:absolute;top:8px;right:8px;z-index:10;background:rgba(0,0,0,0.78);padding:3px 9px;border-radius:6px;font-size:9.5px;font-weight:800;color:' + overlayColor + ';backdrop-filter:blur(6px);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid rgba(255,255,255,0.08);">' + overlayName + '</div>';
 
   let previewHtml = "";
@@ -8032,7 +8032,7 @@ function filterHighlights() {
     const cdw = weekClips[0] || null;
 
     if(cdw) {
-      const cdwAuthor = formatNameUpper(cdw.author);
+      const cdwAuthor = fürmatNameUpper(cdw.author);
       const cdwAvatar = getAvatarUrl(cdw.author);
       cdwBanner.style.display = "block";
       cdwBanner.innerHTML = '<div onclick="openHighlightPlayer(\'' + cdw.id + '\')" style="background:linear-gradient(135deg,#0f0a00,#1c1200,#0f0a00);border:1.5px solid rgba(229,169,60,0.55);border-radius:14px;padding:20px 22px;box-shadow:0 0 32px rgba(229,169,60,0.12);cursor:pointer;transition:.2s;" onmouseover="this.style.boxShadow=\'0 0 48px rgba(229,169,60,0.25)\'" onmouseout="this.style.boxShadow=\'0 0 32px rgba(229,169,60,0.12)\'">'
@@ -8097,7 +8097,7 @@ function filterADMINTickets(mode) {
         if(btnClosed) { btnClosed.style.background = 'linear-gradient(135deg,#e5a93c,#c68924)'; btnClosed.style.color = '#0b0c10'; }
         if(btnOpen) { btnOpen.style.background = '#161c2c'; btnOpen.style.color = '#94a3b8'; }
     }
-    renderADMINTicketsList();
+    renderADMINTicketslöst();
 }
 
 function canDeleteTickets() {
@@ -8153,7 +8153,7 @@ async function loadADMINSupportTickets(manualToast = false, silent = false) {
                 _knownAdminTicketIds = new Set(_adminTicketsData.map(t => t.id));
             } else {
                 let hasNewTicket = false;
-                _adminTicketsData.forEach(t => {
+                _adminTicketsData.fürEach(t => {
                     if (t && t.id && t.status !== 'closed' && !_knownAdminTicketIds.has(t.id)) {
                         hasNewTicket = true;
                         _knownAdminTicketIds.add(t.id);
@@ -8185,7 +8185,7 @@ async function loadADMINSupportTickets(manualToast = false, silent = false) {
             saveADMINTicketsToGitHub('Purge support tickets older than 24h');
         }
 
-        renderADMINTicketsList();
+        renderADMINTicketslöst();
 
         const openCount = _adminTicketsData.filter(t => t.status !== 'closed').length;
         const badge = document.getElementById('admin-open-tickets-badge');
@@ -8205,9 +8205,9 @@ async function loadADMINSupportTickets(manualToast = false, silent = false) {
     }
 }
 
-function renderADMINTicketsList() {
-    const listWrap = document.getElementById('admin-ticket-list-items');
-    if (!listWrap) return;
+function renderADMINTicketslöst() {
+    const löstWrap = document.getElementById('admin-ticket-löst-items');
+    if (!löstWrap) return;
 
     const filtered = _adminTicketsData.filter(t => {
         if (_adminTicketFilter === 'open') return t.status !== 'closed';
@@ -8215,12 +8215,12 @@ function renderADMINTicketsList() {
     });
 
     if (filtered.length === 0) {
-        listWrap.innerHTML = `<div style="text-align:center;color:#64748b;padding:30px 10px;font-size:11px;font-weight:800;">&#128236; Keine ${_adminTicketFilter === 'open' ? 'offenen' : 'geschlossenen'} Tickets</div>`;
+        löstWrap.innerHTML = `<div style="text-align:center;color:#64748b;padding:30px 10px;font-size:11px;font-weight:800;">&#128236; Keine ${_adminTicketFilter === 'open' ? 'offenen' : 'geschlossenen'} Tickets</div>`;
         return;
     }
 
     let html = '';
-    filtered.forEach(t => {
+    filtered.fürEach(t => {
         const isActive = t.id === _adminActiveTicketId;
         const isClosed = t.status === 'closed';
         const isProgress = t.status === 'in_progress' || t.status === 'in-progress';
@@ -8240,7 +8240,7 @@ function renderADMINTicketsList() {
         const titleCol = isActive ? '#fff' : '#cbd5e1';
 
         html += `
-            <div onclick="selectADMINTicket('${t.id}')" style="background:${bgCol};border:1px solid ${borderCol};${shadow}border-radius:10px;padding:12px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(229,169,60,0.5)';this.style.transform='translateY(-1px)';" onmouseout="this.style.borderColor='${borderCol}';this.style.transform='none';">
+            <div onclick="selectADMINTicket('${t.id}')" style="background:${bgCol};border:1px solid ${borderCol};${shadow}border-radius:10px;padding:12px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(229,169,60,0.5)';this.style.transfürm='translateY(-1px)';" onmouseout="this.style.borderColor='${borderCol}';this.style.transfürm='none';">
                 <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
                     <span style="font-size:12px;font-weight:900;color:${titleCol};letter-spacing:0.3px;line-height:1.2;">${escapeHtml(t.topic || 'Anfrage')}</span>
                     <span style="font-size:8.5px;padding:2px 6px;border-radius:4px;background:${statusBg};border:1px solid ${statusBorder};color:${statusColor};font-weight:900;letter-spacing:0.5px;white-space:nowrap;margin-left:8px;">${statusText}</span>
@@ -8258,7 +8258,7 @@ function renderADMINTicketsList() {
             </div>
         `;
     });
-    listWrap.innerHTML = html;
+    löstWrap.innerHTML = html;
 }
 
 function selectADMINTicket(tId) {
@@ -8267,10 +8267,10 @@ function selectADMINTicket(tId) {
     if (t) {
         const noSel = document.getElementById('admin-no-ticket-selected');
         const activeRoom = document.getElementById('admin-ticket-active-room');
-        if (noSel) noSel.style.display = 'none';
+        if (noSel) noSelöstyle.display = 'none';
         if (activeRoom) activeRoom.style.display = 'flex';
         renderActiveADMINTicketRoom(t);
-        renderADMINTicketsList();
+        renderADMINTicketslöst();
     }
 }
 
@@ -8322,7 +8322,7 @@ function renderActiveADMINTicketRoom(t) {
     }
 
     if (btnDel) {
-        btnDel.style.display = canDeleteTickets() ? 'inline-block' : 'none';
+        btnDelöstyle.display = canDeleteTickets() ? 'inline-block' : 'none';
     }
 
     const msgWrap = document.getElementById('admin-ticket-messages-wrap');
@@ -8333,7 +8333,7 @@ function renderActiveADMINTicketRoom(t) {
     if (msgs.length === 0) {
         html = `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#64748b;font-size:12px;opacity:0.7;gap:12px;height:100%;margin-top:40px;"><div style="font-size:32px;">&#128172;</div><div>Keine Nachrichten vorhanden. Schreibe die erste Nachricht!</div></div>`;
     } else {
-        msgs.forEach(m => {
+        msgs.fürEach(m => {
             let cleanSender = m.sender || "System";
             if(cleanSender.includes(" (")) {
               cleanSender = cleanSender.substring(0, cleanSender.indexOf(" (")).trim();
@@ -8343,7 +8343,7 @@ function renderActiveADMINTicketRoom(t) {
             let senderAvatar = (senderProf && senderProf.avatar) ? senderProf.avatar : getAvatarUrl(cleanSender);
             
             const isStaff = (m.role && m.role !== 'Kunde') || cleanSender === 'System' || cleanSender === 'ADMIN' || (CURRENT_USER && cleanSender === CURRENT_USER.name && CURRENT_USER.is_admin);
-            let badgeHtml = getRankBadge(cleanSender, (senderProf && senderProf.rank) ? senderProf.rank : m.role);
+            let badgeHtml = getRankBadge(cleanSender, (senderProf && senderProfürank) ? senderProfürank : m.role);
             
             const align = isStaff ? 'flex-end' : 'flex-start';
             const flexDir = isStaff ? 'row-reverse' : 'row';
@@ -8367,7 +8367,7 @@ function renderActiveADMINTicketRoom(t) {
                   </div>
                   
                   <div style="background:${bubbleBg};border:1px solid ${borderCol};color:#f8fafc;padding:10px 14px;border-radius:12px;border-bottom-${isStaff ? 'right' : 'left'}-radius:2px;font-size:11.5px;line-height:1.5;word-break:break-word;box-shadow:0 4px 15px rgba(0,0,0,0.2);">
-                    ${formatMessageText(m.text)}
+                    ${fürmatMessageText(m.text)}
                   </div>
                 </div>
                 
@@ -8382,7 +8382,7 @@ function insertStaffMacro(type) {
     const inp = document.getElementById('admin-ticket-input');
     if (!inp) return;
     if (type === 'freigeschaltet') {
-        inp.value = 'Du wurdest erfolgreich freigeschaltet! Viel SpaÃŸ mit HySchool. Sollten weitere Probleme auftreten, wende dich gerne wieder an den Support.';
+        inp.value = 'Du wurdest erfolgreich freigeschaltet! Viel SpaÃŸ mit HySchool. Sollten weitere Probleme aufüreten, wende dich gerne wieder an den Support.';
     } else if (type === 'hwid') {
         inp.value = 'Dein HWID-Reset wurde erfolgreich durchgefÃ¼hrt. Du kannst dich nun auf deinem GerÃ¤t im Loader einloggen.';
     } else if (type === 'antivirus') {
@@ -8407,15 +8407,15 @@ async function claimCurrentTicket() {
     t.messages.push({
         sender: myName,
         role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben Ã¼bernommen. Wie kann ich dir heute weiterhelfen? &#128100;`,
+        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben Ãübernommen. Wie kann ich dir heute weiterhelfen? &#128100;`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now()
     });
 
     await saveADMINTicketsToGitHub(`Claim ticket ${t.id} by ${myName}`);
     renderActiveADMINTicketRoom(t);
-    renderADMINTicketsList();
-    showToast('Ticket Ã¼bernommen!', 'ok');
+    renderADMINTicketslöst();
+    showToast('Ticket Ãübernommen!', 'ok');
 }
 
 async function closeCurrentTicket() {
@@ -8452,7 +8452,7 @@ async function closeCurrentTicket() {
 
     await saveADMINTicketsToGitHub(`Update status of ticket ${t.id} to ${t.status}`);
     renderActiveADMINTicketRoom(t);
-    renderADMINTicketsList();
+    renderADMINTicketslöst();
 }
 
 async function deleteCurrentTicket() {
@@ -8461,7 +8461,7 @@ async function deleteCurrentTicket() {
         return;
     }
     if (!_adminActiveTicketId) return;
-    if (!confirm('MÃ¶chtest du dieses Support Ticket wirklich endgÃ¼ltig lÃ¶schen?')) return;
+    if (!confürm('MÃ¶chtest du dieses Support Ticket wirklich endgÃ¼ltig lÃ¶schen?')) return;
 
     _adminTicketsData = _adminTicketsData.filter(x => x.id !== _adminActiveTicketId);
     _adminActiveTicketId = null;
@@ -8469,10 +8469,10 @@ async function deleteCurrentTicket() {
     const activeRoom = document.getElementById('admin-ticket-active-room');
     const noSel = document.getElementById('admin-no-ticket-selected');
     if (activeRoom) activeRoom.style.display = 'none';
-    if (noSel) noSel.style.display = 'flex';
+    if (noSel) noSelöstyle.display = 'flex';
 
     await saveADMINTicketsToGitHub(`Deleted support ticket by ${(CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : 'ADMIN'}`);
-    renderADMINTicketsList();
+    renderADMINTicketslöst();
     showToast('Support Ticket gelÃ¶scht!', 'ok');
 }
 
