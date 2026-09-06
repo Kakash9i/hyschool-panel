@@ -1448,7 +1448,7 @@
         <label>STATUS</label>
         <select id="edit-lic-status">
           <option value="unused">&#128100; Unbenutzt (Startet bei Login)</option>
-          <option value="active">âšª Eingel&#246;st / Aktiv</option>
+          <option value="active">&#x1F511; Eingel&#246;st / Aktiv</option>
           <option value="paused">&#128100; Pausiert</option>
         </select>
       </div>
@@ -1868,7 +1868,7 @@
         <!-- GENERATED OUTPUT BOX -->
         <div id="gen-output-box" style="display:none;margin-top:16px;background:#090a0f;border:1px solid #232a3e;border-radius:8px;padding:14px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-            <span style="font-size:11px;color:#e5a93c;font-weight:900;letter-spacing:0.5px;">âœ… NEU GENERIERTE KEYS:</span>
+            <span style="font-size:11px;color:#e5a93c;font-weight:900;letter-spacing:0.5px;">&#x2728; NEU GENERIERTE KEYS:</span>
             <button onclick="copyGeneratedKeys()" style="background:#141724;border:1px solid #232a3e;color:#e5a93c;padding:5px 12px;border-radius:4px;font-size:11px;font-weight:800;cursor:pointer;">&#128100; In Zwischenablage kopieren</button>
           </div>
           <textarea id="gen-keys-textarea" readonly style="width:100%;height:80px;background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;font-family:'JetBrains Mono',monospace;font-size:12px;padding:10px;border-radius:6px;resize:none;outline:none;line-height:1.6;"></textarea>
@@ -1934,7 +1934,7 @@
               <th style="width:36px;text-align:center;">
                 <label class="custom-cb-wrap" title="Alle ausw&#228;hlen">
                   <input type="checkbox" id="lic-select-all-cb" onchange="toggleSelectAllLicenses(this.checked)">
-                  <span class="custom-cb-box">âœ“</span>
+                  <span class="custom-cb-box">&#10003;</span>
                 </label>
               </th>
               <th style="width:25%;">LIZENZ-SCHL&#220;SSEL &amp; AKTIVE CHEATS</th>
@@ -1988,7 +1988,7 @@
         <div class="section-title" style="margin-bottom:4px;font-size:13px;color:#f8fafc;">&#128100; MITARBEITER &amp; TEAM-VERWALTUNG</div>
         <p style="font-size:12px;color:#94a3b8;margin:0;">Verwalte deine Mitarbeiter, erstelle Zug&#228;nge und lege individuelle Rechte fest.</p>
       </div>
-      <button id="add-staff-btn" onclick="openStaffModal()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">âž• NEUEN MITARBEITER ANLEGEN</button>
+      <button id="add-staff-btn" onclick="openStaffModal()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#x2795; NEUEN MITARBEITER ANLEGEN</button>
     </div>
 
     <div class="logs-table-wrap">
@@ -3816,7 +3816,7 @@ async function checkRazerDllStatus() {
       statusEl.innerHTML = `<span style="color:#10b981;font-weight:700;">&#128100; Online auf GitHub:</span> <a href="${RAW_BASE}/releases/RAZER.dll" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">RAZER.dll</a> <span style="color:#64748b;">(${mbSize})</span>`;
       if(delBtn) delBtn.style.display = "inline-flex";
     } else {
-      statusEl.innerHTML = `<span style="color:#f43f5e;font-weight:700;">âšª Nicht vorhanden</span>`;
+      statusEl.innerHTML = `<span style="color:#f43f5e;font-weight:700;">&#x1F511; Nicht vorhanden</span>`;
       if(delBtn) delBtn.style.display = "none";
     }
   } catch(e) {
@@ -4973,7 +4973,7 @@ function renderLicensesTable(list) {
         <td style="text-align:center;">
           <label class="custom-cb-wrap" title="${(!CURRENT_USER.is_admin && isProtectedADMIN) ? 'Gesch&#252;tzter ADMIN Account' : 'Ausw&#228;hlen'}">
             <input type="checkbox" class="lic-row-cb" data-key="${lic.key}" onchange="onLicenseCheckboxChange('${lic.key}', this.checked)" ${isChecked ? 'checked' : ''} ${cbDisabled}>
-            <span class="custom-cb-box">âœ“</span>
+            <span class="custom-cb-box">&#10003;</span>
           </label>
         </td>
 
@@ -5552,7 +5552,7 @@ function renderStaffTable() {
   if(!tbody) return;
 
   if(ALL_STAFF.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px;">Keine Mitarbeiter angelegt. Klicke oben auf 'âž• NEUEN MITARBEITER ANLEGEN'!</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px;">Keine Mitarbeiter angelegt. Klicke oben auf '&#x2795; NEUEN MITARBEITER ANLEGEN'!</td></tr>`;
     return;
   }
 
@@ -6303,7 +6303,7 @@ function getUserProfile(usernameOrKey) {
     rank: fallbackRanks,
     avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(target)}`,
     banner: isOwner ? (localStorage.getItem("hyschool_admin_banner") || "") : "",
-    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugef&uuml;gt.",
+    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugef&#252;gt.",
     discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "Nicht angegeben",
     joined: "01.01.2026",
     guestbook: []
@@ -6569,7 +6569,7 @@ function openUserProfileModal(usernameOrKey) {
     }
   }
 
-  if(bioEl) bioEl.textContent = (prof && prof.bio) ? prof.bio : "Dieser User hat noch keine Bio hinzugefÃƒÂ¼gt.";
+  if(bioEl) bioEl.textContent = (prof && prof.bio) ? prof.bio : "Dieser User hat noch keine Bio hinzugef&#252;gt.";
   if(joinedEl) joinedEl.textContent = (prof && prof.joined) ? prof.joined : "01.01.2026";
   if(discordEl) discordEl.textContent = (prof && prof.discord) ? prof.discord : "Nicht angegeben";
   if(cfgCountEl) cfgCountEl.textContent = `${userConfigs.length} Configs`;
@@ -7838,7 +7838,7 @@ function openHighlightPlayer(highlightId) {
 
   if(modal) modal.style.display = "flex";
 
-  // Censor blur overlay Ã¢â‚¬â€ covers top-right (scoreboard/name area) when isCensored
+  // Censor blur overlay Ã¢â‚¬ covers top-right (scoreboard/name area) when isCensored
   const oldBlur = document.getElementById("hl-censor-blur");
   if(oldBlur) oldBlur.remove();
   if(h.isCensored) {
@@ -8016,7 +8016,7 @@ function filterHighlights() {
     }
   }
 
-  // Clip der Woche Ã¢â‚¬â€ most liked clip from current ISO week
+  // Clip der Woche Ã¢â‚¬ most liked clip from current ISO week
   const cdwBanner = document.getElementById("cdw-banner");
   if(cdwBanner && ALL_HIGHLIGHTS.length > 0) {
     const now = new Date();
