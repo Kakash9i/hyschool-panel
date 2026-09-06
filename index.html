@@ -1216,6 +1216,21 @@
         <span>&#128100; Team verwalten</span>
         <label class="toggle"><input type="checkbox" id="sp-staff"><span class="slider"></span></label>
       </div>
+      
+      <div class="perm-item" style="grid-column: 1 / -1; display:flex; flex-direction:column; align-items:flex-start; gap:8px;">
+        <div style="font-weight:900;font-size:11px;color:#e5a93c;">&#128081; DARF FOLGENDE ROLLEN VERGEBEN:</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;" id="sp-assignable-roles">
+          <label class="role-pill"><input type="checkbox" class="assign-role-cb" value="admin" onchange="this.parentElement.classList.toggle(`active`, this.checked)"> Inhaber</label>
+          <label class="role-pill"><input type="checkbox" class="assign-role-cb" value="co-admin" onchange="this.parentElement.classList.toggle(`active`, this.checked)"> Co-Admin</label>
+          <label class="role-pill"><input type="checkbox" class="assign-role-cb" value="developer" onchange="this.parentElement.classList.toggle(`active`, this.checked)"> Developer</label>
+          <label class="role-pill"><input type="checkbox" class="assign-role-cb" value="moderator" onchange="this.parentElement.classList.toggle(`active`, this.checked)"> Moderator</label>
+          <label class="role-pill"><input type="checkbox" class="assign-role-cb" value="supporter" onchange="this.parentElement.classList.toggle(`active`, this.checked)"> Supporter</label>
+          <label class="role-pill"><input type="checkbox" class="assign-role-cb" value="elite" onchange="this.parentElement.classList.toggle(`active`, this.checked)"> Elite</label>
+          <label class="role-pill"><input type="checkbox" class="assign-role-cb" value="vip" onchange="this.parentElement.classList.toggle(`active`, this.checked)"> VIP</label>
+          <label class="role-pill"><input type="checkbox" class="assign-role-cb" value="donator" onchange="this.parentElement.classList.toggle(`active`, this.checked)"> Donator</label>
+          <label class="role-pill"><input type="checkbox" class="assign-role-cb" value="premium" onchange="this.parentElement.classList.toggle(`active`, this.checked)"> Premium</label>
+        </div>
+      </div>
     </div>
 
     <div style="display:flex;gap:10px;margin-top:22px;">
@@ -5659,6 +5674,12 @@ function openStaffModal(idx = -1) {
     document.getElementById("sp-cheat").checked = !!p.can_manage_cheats;
     document.getElementById("sp-logs").checked = !!p.can_view_logs;
     document.getElementById("sp-staff").checked = !!p.can_manage_staff;
+    const assignable = p.assignable_roles || [];
+    document.querySelectorAll(".assign-role-cb").forEach(cb => {
+      cb.checked = assignable.includes(cb.value.toLowerCase());
+      if(cb.checked) cb.parentElement.classList.add("active");
+      else cb.parentElement.classList.remove("active");
+    });
   } else {
     nameInp.value = "";
     pwInp.value = "";
@@ -5686,6 +5707,10 @@ function openStaffModal(idx = -1) {
     document.getElementById("sp-cheat").checked = false;
     document.getElementById("sp-logs").checked = true;
     document.getElementById("sp-staff").checked = false;
+    document.querySelectorAll(".assign-role-cb").forEach(cb => {
+      cb.checked = false;
+      cb.parentElement.classList.remove("active");
+    });
   }
 
   document.getElementById("staff-modal").style.display = "flex";
@@ -5726,7 +5751,8 @@ async function saveStaffModal() {
       can_delete_keys: document.getElementById("sp-del").checked,
       can_manage_cheats: document.getElementById("sp-cheat").checked,
       can_view_logs: document.getElementById("sp-logs").checked,
-      can_manage_staff: document.getElementById("sp-staff").checked
+      can_manage_staff: document.getElementById("sp-staff").checked,
+      assignable_roles: Array.from(document.querySelectorAll(".assign-role-cb:checked")).map(cb => cb.value.toLowerCase())
     }
   };
 
