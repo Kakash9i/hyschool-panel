@@ -8465,23 +8465,6 @@ function renderActiveADMINTicketRoom(t) {
     msgWrap.innerHTML = html;
 }
 
-function insertStaffMacro(type) {
-    const inp = document.getElementById('admin-ticket-input');
-    if (!inp) return;
-    if (type === 'freigeschaltet') {
-        inp.value = 'Du wurdest erfolgreich freigeschaltet! Viel Spa&#223; mit HySchool. Sollten weitere Probleme auftreten, wende dich gerne wieder an den Support.';
-    } else if (type === 'hwid') {
-        inp.value = 'Dein HWID-Reset wurde erfolgreich durchgef&#252;hrt. Du kannst dich nun auf deinem Ger&#228;t im Loader einloggen.';
-    } else if (type === 'antivirus') {
-        inp.value = 'Bitte stelle sicher, dass du deinen Windows Defender bzw. Antivirus deaktiviert oder eine Ausnahme f&#252;r den Loader-Ordner hinzugefÃ¼gt hast.';
-    } else if (type === 'config') {
-        inp.value = 'Deine Cloud-Configs findest du im Tab "Meine Configs". Dort kannst du sie direkt herunterladen oder mit einem Klick in den Cheat-Ordner laden.';
-    } else if (type === 'solved') {
-        inp.value = 'Dein Anliegen wurde erfolgreich gel&#246;st. Dieses Ticket wird nun geschlossen und f&#252;r 24 Stunden archiviert. Bei weiteren Fragen erstelle bitte einfach ein neues Ticket!';
-    }
-    inp.focus();
-}
-
 async function claimCurrentTicket() {
     if (!_adminActiveTicketId) return;
     const t = _adminTicketsData.find(x => x.id === _adminActiveTicketId);
