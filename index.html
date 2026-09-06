@@ -2933,7 +2933,7 @@ function handleLoginSuccess(user, pass) {
   if(loginScreen) loginScreen.style.display = "none";
   if(mainPanel) mainPanel.style.display = "block";
   
-  try { applyUserPermissions(); } catch(e) { console.error("applyUserPermissions err:", e); }
+  try { loadProfiles(); } catch(_) {} try { applyUserPermissions(); } catch(e) { console.error("applyUserPermissions err:", e); }
   try { buildUI(); } catch(e) { console.error("buildUI err:", e); }
   
   try {
@@ -3121,7 +3121,7 @@ function applyUserPermissions() {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", () => { loadProfiles();
   const savedUser = localStorage.getItem("admin_user");
   const savedPw = localStorage.getItem("admin_pw");
   if (savedPw) {
@@ -6070,22 +6070,56 @@ const PRESET_AVATARS = [
 async function loadProfiles() {
   try {
     const cached = localStorage.getItem("hyschool_profiles_cache");
-    if(cached) USER_PROFILES = JSON.parse(cached);
+    if(cached) {
+      const parsed = JSON.parse(cached);
+      if(parsed && typeof parsed === "object") {
+        USER_PROFILES = Object.assign({}, USER_PROFILES || {}, parsed);
+      }
+    }
+  } catch(_) {}
+
+  // Apply admin ranks from local storage
+  try {
+    const adminRanks = localStorage.getItem("hyschool_admin_ranks");
+    if(adminRanks) {
+      const parsed = JSON.parse(adminRanks);
+      if(Array.isArray(parsed) && parsed.length > 0) {
+        if(!USER_PROFILES) USER_PROFILES = {};
+        if(!USER_PROFILES["ADMIN"]) USER_PROFILES["ADMIN"] = { username: "ADMIN" };
+        USER_PROFILES["ADMIN"].rank = parsed;
+        USER_PROFILES["admin"] = USER_PROFILES["ADMIN"];
+      }
+    }
   } catch(_) {}
 
   const token = getToken();
   try {
-    const res = await fetch(`${API_BASE}/profiles.json?nc=${Date.now()}`, {
+    const res = await fetch(${API_BASE}/profiles.json?nc=, {
       cache: "no-store",
-      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+      headers: { Authorization: 	oken , Accept: "application/vnd.github.v3+json" }
     });
     if(res.ok) {
       const info = await res.json();
       if(info && info.content) {
         const remote = JSON.parse(b64_to_utf8(info.content));
         if(remote && typeof remote === "object") {
-          USER_PROFILES = Object.assign({}, USER_PROFILES, remote);
+          USER_PROFILES = Object.assign({}, USER_PROFILES || {}, remote);
+          
+          // Re-apply admin ranks override if set
+          const adminRanks = localStorage.getItem("hyschool_admin_ranks");
+          if(adminRanks) {
+            try {
+              const parsed = JSON.parse(adminRanks);
+              if(Array.isArray(parsed) && parsed.length > 0) {
+                if(!USER_PROFILES["ADMIN"]) USER_PROFILES["ADMIN"] = { username: "ADMIN" };
+                USER_PROFILES["ADMIN"].rank = parsed;
+                USER_PROFILES["admin"] = USER_PROFILES["ADMIN"];
+              }
+            } catch(_) {}
+          }
+          
           try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
+          if(typeof renderGlobalUserBadges === "function") renderGlobalUserBadges();
         }
       }
     }
@@ -6098,9 +6132,9 @@ function getUserProfile(usernameOrKey) {
   const lower = target.toLowerCase();
   
   const isMe = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && (
-    (CURRENT_USER.is_admin && (lower === "admin" || target === CURRENT_USER.name)) ||
-    (target === CURRENT_USER.name) ||
-    (CURRENT_USER.key && target === CURRENT_USER.key)
+    (CURRENT_USER.is_admin && (lower === "admin" || target.toLowerCase() === CURRENT_USER.name.toLowerCase())) ||
+    (target.toLowerCase() === CURRENT_USER.name.toLowerCase()) ||
+    (CURRENT_USER.key && target.toLowerCase() === CURRENT_USER.key.toLowerCase())
   ));
 
   let p = null;
@@ -6125,21 +6159,37 @@ function getUserProfile(usernameOrKey) {
       const myBanner = localStorage.getItem("hyschool_banner_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_banner") : null);
       const myBio = localStorage.getItem("hyschool_bio_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_bio") : null);
       const myDiscord = localStorage.getItem("hyschool_discord_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_discord") : null);
+      const myRanks = (CURRENT_USER.is_admin || lower === "admin") ? localStorage.getItem("hyschool_admin_ranks") : (localStorage.getItem("hyschool_ranks_" + target) || localStorage.getItem("hyschool_ranks_" + lower));
       
       if (myAvatar) p.avatar = myAvatar;
       if (myBanner) p.banner = myBanner;
       if (myBio) p.bio = myBio;
       if (myDiscord !== null && myDiscord !== undefined) p.discord = myDiscord;
+      if (myRanks) {
+        try {
+          const parsed = JSON.parse(myRanks);
+          if (Array.isArray(parsed) && parsed.length > 0) p.rank = parsed;
+        } catch(_) {}
+      }
     }
     return p;
   }
 
   const isOwner = (lower === "admin" || (CURRENT_USER && CURRENT_USER.is_admin && isMe));
+  let fallbackRanks = isOwner ? ["admin"] : ["premium"];
+  try {
+    const stored = (isOwner || isMe) ? (localStorage.getItem("hyschool_admin_ranks") || localStorage.getItem("hyschool_ranks_" + target)) : localStorage.getItem("hyschool_ranks_" + target);
+    if(stored) {
+      const parsed = JSON.parse(stored);
+      if(Array.isArray(parsed) && parsed.length > 0) fallbackRanks = parsed;
+    }
+  } catch(_) {}
+
   return {
     username: isOwner ? "ADMIN" : target,
     key: isOwner ? "MASTER-ADMIN" : (CURRENT_USER && isMe ? (CURRENT_USER.key || "") : ""),
-    rank: isOwner ? ["admin"] : ["premium"],
-    avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(target)}`,
+    rank: fallbackRanks,
+    avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : https://api.dicebear.com/7.x/bottts/svg?seed=,
     banner: isOwner ? (localStorage.getItem("hyschool_admin_banner") || "") : "",
     bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugef&uuml;gt.",
     discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "Nicht angegeben",
@@ -6417,7 +6467,7 @@ async function updateProfileRoles(el) {
   let selected = [];
   checkboxes.forEach(cb => {
     if(cb.checked) {
-      selected.push(cb.value);
+      selected.push(cb.value.toLowerCase());
       cb.parentElement.classList.add("active");
     } else {
       cb.parentElement.classList.remove("active");
@@ -6426,7 +6476,7 @@ async function updateProfileRoles(el) {
   if(selected.length === 0) {
     selected = ["premium"];
     checkboxes.forEach(cb => {
-      if(cb.value === "premium") {
+      if(cb.value.toLowerCase() === "premium") {
         cb.checked = true;
         cb.parentElement.classList.add("active");
       }
@@ -6434,46 +6484,54 @@ async function updateProfileRoles(el) {
   }
   
   if(!USER_PROFILES) USER_PROFILES = {};
-  if(!USER_PROFILES[_activeProfileTarget]) {
-    USER_PROFILES[_activeProfileTarget] = { username: _activeProfileTarget };
-  }
-  USER_PROFILES[_activeProfileTarget].rank = selected;
   
-  const isMe = (_activeProfileTarget === "ADMIN" || (CURRENT_USER && _activeProfileTarget === CURRENT_USER.name));
-  if(isMe) {
+  const target = _activeProfileTarget;
+  const lower = target.toLowerCase();
+  let exactKey = target;
+  for (let k in USER_PROFILES) {
+    if (k.toLowerCase() === lower) {
+      exactKey = k;
+      break;
+    }
+  }
+  
+  if(!USER_PROFILES[exactKey]) {
+    USER_PROFILES[exactKey] = { username: exactKey };
+  }
+  USER_PROFILES[exactKey].rank = selected;
+  USER_PROFILES[lower] = USER_PROFILES[exactKey];
+  USER_PROFILES[target] = USER_PROFILES[exactKey];
+  
+  const isMe = (target.toUpperCase() === "ADMIN" || (CURRENT_USER && target.toLowerCase() === CURRENT_USER.name.toLowerCase()));
+  if(isMe || lower === "admin") {
     localStorage.setItem("hyschool_admin_ranks", JSON.stringify(selected));
-    const userBadge = document.getElementById("user-badge");
-    if(userBadge) userBadge.innerHTML = getRankBadge(_activeProfileTarget, selected);
-    const dashRole = document.getElementById("cfg-dash-role-badge");
-    if(dashRole) dashRole.innerHTML = getRankBadge(_activeProfileTarget, selected);
+    if(CURRENT_USER) CURRENT_USER.rank = selected;
   }
   
-  try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
+  try {
+    localStorage.setItem("hyschool_ranks_" + target, JSON.stringify(selected));
+    localStorage.setItem("hyschool_ranks_" + lower, JSON.stringify(selected));
+    localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES));
+  } catch(_) {}
   
-  const badgeEl = document.getElementById("profile-modal-badge-wrap");
-  if(badgeEl) badgeEl.innerHTML = getRankBadge(_activeProfileTarget, selected, true);
-  
-  if(typeof renderStaffTable === "function") renderStaffTable();
-  if(typeof filterUserConfigs === "function") filterUserConfigs();
-  if(typeof renderChatMessages === "function") renderChatMessages();
-  if(typeof renderADMINTicketsList === "function") renderADMINTicketsList();
-  if(_adminActiveTicketId && typeof _adminTicketsData !== 'undefined') {
-    const activeT = _adminTicketsData.find(x => x.id === _adminActiveTicketId);
-    if(activeT && typeof renderActiveADMINTicketRoom === "function") renderActiveADMINTicketRoom(activeT);
+  const badgeWrap = document.getElementById("profile-modal-badge-wrap");
+  if(badgeWrap) {
+    badgeWrap.innerHTML = getRankBadge(target, selected, true);
   }
-
+  
   showToast("Rollen aktualisiert!", "ok");
-
+  
   try {
     const fullJson = JSON.stringify(USER_PROFILES, null, 2);
     const finalB64 = utf8_to_b64(fullJson);
-    await uploadFileToGitHub("profiles.json", finalB64, `Update roles for ${_activeProfileTarget}: ${selected.join(", ")}`);
+    await uploadFileToGitHub("profiles.json", finalB64, Update roles for : );
   } catch(e) {
     console.warn("Upload profiles err:", e);
   }
+  
+  renderGlobalUserBadges();
+  if(typeof renderChatMessages === "function") renderChatMessages();
 }
-
-
 
 function handleBannerUpload(e) {
   const file = e.target.files[0];
@@ -7315,7 +7373,7 @@ setInterval(() => {
   const tc7 = document.getElementById("tc-7");
   if(tc7 && tc7.classList.contains("active")) loadUserConfigs(true);
   
-  // Tab 6: Chat & Support Tickets
+  if(Math.random() < 0.25) loadProfiles(); // Tab 6: Chat & Support Tickets
   const tc6 = document.getElementById("tc-6");
   if(tc6 && tc6.classList.contains("active")) {
     const commPanel = document.getElementById("admin-community-chat-panel");
