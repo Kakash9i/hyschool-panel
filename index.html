@@ -2702,9 +2702,11 @@ function b64_to_utf8(str) {
 
 function showToast(msg, type="ok") {
   const el = document.getElementById("toast-msg");
-  el.textContent = msg;
+  if(!el) return;
+  el.innerHTML = msg;
   el.className = type;
-  setTimeout(() => { el.className = ""; }, 4000);
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => { el.className = ""; }, 4000);
 }
 
 async function uploadFileToGitHub(path, contentB64, commitMsg) {
@@ -3026,7 +3028,7 @@ function handleLoginSuccess(user, pass) {
   try { switchMainTab(initialTab); } catch(e) { console.error("switchMainTab err:", e); }
 
   try { logADMINAction("LOGIN", "-", `${CURRENT_USER.name} (${CURRENT_USER.role}) hat sich eingeloggt`); } catch(_) {}
-  try { showToast(`Willkommen zur&#252;ck, ${user}!`, "ok"); } catch(_) {}
+  try { showToast(`Willkommen zur&#252;ck, ${CURRENT_USER.name || user}!`, "ok"); } catch(_) {}
 }
 
 function doLogout() {
@@ -3066,7 +3068,9 @@ function applyUserPermissions() {
   if(dashUser) dashUser.textContent = CURRENT_USER.is_admin ? "ADMIN" : CURRENT_USER.name;
   if(dashRole) dashRole.innerHTML = getRankBadge(CURRENT_USER.name, CURRENT_USER.role);
   if(userBadge) {
-    userBadge.innerHTML = CURRENT_USER.is_admin ? '<span class="badge-rank badge-rank-admin">&#128081; INHABER ADMIN</span>' : `${getRankBadge(CURRENT_USER.name, CURRENT_USER.role)} ${escapeHtml(CURRENT_USER.name)}`;
+    const uname = CURRENT_USER.is_admin ? "ADMIN" : CURRENT_USER.name;
+    const urole = CURRENT_USER.is_admin ? "admin" : CURRENT_USER.role;
+    userBadge.innerHTML = getRankBadge(uname, urole, false, true);
   }
 
   if(dashExpiry) {
@@ -7564,7 +7568,7 @@ let ALL_HIGHLIGHTS = [];
 let _uploadedHighlightFile = null;
 let _activePlayerHighlight = null;
 
-function getRankBadge(username, userRank, allowMultiple = false) {
+function getRankBadge(username, userRank, allowMultiple = false, includeName = false) {
   try {
     let prof = null;
     if (typeof getUserProfile === 'function' && username) {
@@ -7604,34 +7608,35 @@ function getRankBadge(username, userRank, allowMultiple = false) {
     });
     
     const targetRanks = allowMultiple ? ranks : [ranks[0]];
+    const nameSuffix = (includeName && username) ? (" " + escapeHtml(String(username).toUpperCase())) : "";
     
     let html = "";
     for (let r of targetRanks) {
       if (!r) continue;
       r = String(r).toLowerCase().trim();
       if (r === "admin" || r === "inhaber") {
-        html += '<span class="badge-rank badge-rank-admin">&#128081; INHABER</span>';
+        html += '<span class="badge-rank badge-rank-admin">&#128081; INHABER' + nameSuffix + '</span>';
       } else if (r === "co-admin" || r.includes("co-admin") || r === "coadmin") {
-        html += '<span class="badge-rank badge-rank-coadmin">&#128737;&#65039; CO-ADMIN</span>';
+        html += '<span class="badge-rank badge-rank-coadmin">&#128737;&#65039; CO-ADMIN' + nameSuffix + '</span>';
       } else if (r === "developer" || r.includes("dev")) {
-        html += '<span class="badge-rank badge-rank-dev">&#128187; DEVELOPER</span>';
+        html += '<span class="badge-rank badge-rank-dev">&#128187; DEVELOPER' + nameSuffix + '</span>';
       } else if (r === "moderator" || r.includes("mod")) {
-        html += '<span class="badge-rank badge-rank-mod">&#128737;&#65039; MODERATOR</span>';
+        html += '<span class="badge-rank badge-rank-mod">&#128737;&#65039; MODERATOR' + nameSuffix + '</span>';
       } else if (r === "supporter" || r.includes("support")) {
-        html += '<span class="badge-rank badge-rank-supporter">&#128737;&#65039; SUPPORTER</span>';
+        html += '<span class="badge-rank badge-rank-supporter">&#129489; SUPPORTER' + nameSuffix + '</span>';
       } else if (r === "elite") {
-        html += '<span class="badge-rank badge-rank-elite">&#9889; ELITE</span>';
+        html += '<span class="badge-rank badge-rank-elite">&#9889; ELITE' + nameSuffix + '</span>';
       } else if (r === "vip") {
-        html += '<span class="badge-rank badge-rank-vip">&#11088; VIP</span>';
+        html += '<span class="badge-rank badge-rank-vip">&#11088; VIP' + nameSuffix + '</span>';
       } else if (r === "donator" || r.includes("donat")) {
-        html += '<span class="badge-rank badge-rank-donator">&#128150; DONATOR</span>';
+        html += '<span class="badge-rank badge-rank-donator">&#128150; DONATOR' + nameSuffix + '</span>';
       } else if (r === "premium" || r === "kunde") {
-        html += '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
+        html += '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM' + nameSuffix + '</span>';
       } else {
-        html += '<span class="badge-rank badge-rank-premium">&#128142; ' + escapeHtml(r.toUpperCase()) + '</span>';
+        html += '<span class="badge-rank badge-rank-premium">&#128142; ' + escapeHtml(r.toUpperCase()) + nameSuffix + '</span>';
       }
     }
-    return html.trim() || '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
+    return html.trim() || ('<span class="badge-rank badge-rank-premium">&#128142; PREMIUM' + nameSuffix + '</span>');
   } catch(e) {
     return '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
   }
