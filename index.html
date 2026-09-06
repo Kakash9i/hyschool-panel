@@ -3121,7 +3121,8 @@ function applyUserPermissions() {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => { loadProfiles();
+window.addEventListener("DOMContentLoaded", () => {
+  try { loadProfiles(); } catch(_) {}
   const savedUser = localStorage.getItem("admin_user");
   const savedPw = localStorage.getItem("admin_pw");
   if (savedPw) {
@@ -6094,9 +6095,9 @@ async function loadProfiles() {
 
   const token = getToken();
   try {
-    const res = await fetch(${API_BASE}/profiles.json?nc=, {
+    const res = await fetch(`${API_BASE}/profiles.json?nc=${Date.now()}`, {
       cache: "no-store",
-      headers: { Authorization: 	oken , Accept: "application/vnd.github.v3+json" }
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
     });
     if(res.ok) {
       const info = await res.json();
@@ -6189,7 +6190,7 @@ function getUserProfile(usernameOrKey) {
     username: isOwner ? "ADMIN" : target,
     key: isOwner ? "MASTER-ADMIN" : (CURRENT_USER && isMe ? (CURRENT_USER.key || "") : ""),
     rank: fallbackRanks,
-    avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : https://api.dicebear.com/7.x/bottts/svg?seed=,
+    avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(target)}`,
     banner: isOwner ? (localStorage.getItem("hyschool_admin_banner") || "") : "",
     bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugef&uuml;gt.",
     discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "Nicht angegeben",
@@ -6524,7 +6525,7 @@ async function updateProfileRoles(el) {
   try {
     const fullJson = JSON.stringify(USER_PROFILES, null, 2);
     const finalB64 = utf8_to_b64(fullJson);
-    await uploadFileToGitHub("profiles.json", finalB64, Update roles for : );
+    await uploadFileToGitHub("profiles.json", finalB64, `Update roles for ${target}: ${selected.join(", ")}`);
   } catch(e) {
     console.warn("Upload profiles err:", e);
   }
