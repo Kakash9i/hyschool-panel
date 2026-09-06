@@ -1117,9 +1117,9 @@
           <label class="toggle"><input type="checkbox" id="sp-gen" onchange="document.getElementById('sp-max-dur-wrap').style.display=this.checked?'flex':'none'"><span class="slider"></span></label>
         </div>
         <div id="sp-max-dur-wrap" style="background:#050608; border:1px solid #1a1e2b; padding:8px 12px; border-radius:6px; display:flex; align-items:center; justify-content:space-between;">
-          <span style="color:#94a3b8; font-size:11px; font-weight:700;">&#128100; Max. erlaubte Erstellungs-Laufzeit:</span>
+          <span style="color:#94a3b8; font-size:11px; font-weight:700;">&#9200; Max. erlaubte Erstellungs-Laufzeit:</span>
           <select id="sp-max-duration" style="background:#141724; border:1px solid #232a3e; color:#f8fafc; padding:6px 10px; border-radius:5px; font-size:11px; outline:none;">
-            <option value="all">&#128100; Alle Laufzeiten (inkl. Lifetime)</option>
+            <option value="all">&#9200; Alle Laufzeiten (inkl. Lifetime)</option>
             <option value="1">Max. 1 Tag (Trial)</option>
             <option value="3">Max. 3 Tage</option>
             <option value="7">Max. 7 Tage (Woche)</option>
@@ -1139,9 +1139,9 @@
         </div>
         <div id="sp-edit-sub-wrap" style="background:#050608; border:1px solid #1a1e2b; padding:10px 12px; border-radius:6px; display:flex; flex-direction:column; gap:8px;">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2px;">
-            <span style="color:#94a3b8; font-size:11px; font-weight:700;">&#128100; Max. erlaubte Edit-Laufzeit:</span>
+            <span style="color:#94a3b8; font-size:11px; font-weight:700;">&#9200; Max. erlaubte Edit-Laufzeit:</span>
             <select id="sp-edit-max-dur" style="background:#141724; border:1px solid #232a3e; color:#f8fafc; padding:5px 10px; border-radius:5px; font-size:11px; outline:none;">
-              <option value="all">&#128100; Alle Laufzeiten (inkl. Lifetime)</option>
+              <option value="all">&#9200; Alle Laufzeiten (inkl. Lifetime)</option>
               <option value="1">Max. 1 Tag (Trial)</option>
               <option value="3">Max. 3 Tage</option>
               <option value="7">Max. 7 Tage (Woche)</option>
@@ -1154,23 +1154,23 @@
           <div style="font-size:10px; color:#64748b; font-weight:700; letter-spacing:0.5px; margin-top:2px;">WAS DARF BEARBEITET WERDEN:</div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
             <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
-              <input type="checkbox" id="sp-edit-f-dur" checked style="width:auto;margin:0;cursor:pointer;"> &#128100; Laufzeit / Ablauf
+              <input type="checkbox" id="sp-edit-f-dur" checked style="width:auto;margin:0;cursor:pointer;"> &#8987; Laufzeit / Ablauf
             </label>
             <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
-              <input type="checkbox" id="sp-edit-f-prod" style="width:auto;margin:0;cursor:pointer;"> &#128100; Cheat-Produkt
+              <input type="checkbox" id="sp-edit-f-prod" style="width:auto;margin:0;cursor:pointer;"> &#9889; Cheat-Produkt
             </label>
             <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
-              <input type="checkbox" id="sp-edit-f-stat" checked style="width:auto;margin:0;cursor:pointer;"> &#128100; Status (Aktiv/Unused)
+              <input type="checkbox" id="sp-edit-f-stat" checked style="width:auto;margin:0;cursor:pointer;"> &#128204; Status (Aktiv/Unused)
             </label>
             <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:#cbd5e1; cursor:pointer;">
-              <input type="checkbox" id="sp-edit-f-note" checked style="width:auto;margin:0;cursor:pointer;"> &#128100; Noti+ / Kunde
+              <input type="checkbox" id="sp-edit-f-note" checked style="width:auto;margin:0;cursor:pointer;"> &#128172; Noti+ / Kunde
             </label>
           </div>
           <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px; padding-top:6px; border-top:1px solid #1a1e2b;">
-            <span style="color:#94a3b8; font-size:11px; font-weight:700;">&#128100; Erlaubte Keys zum Bearbeiten:</span>
+            <span style="color:#94a3b8; font-size:11px; font-weight:700;">&#128273; Erlaubte Keys zum Bearbeiten:</span>
             <select id="sp-edit-scope" style="background:#141724; border:1px solid #232a3e; color:#e5a93c; padding:5px 10px; border-radius:5px; font-size:11px; font-weight:800; outline:none;">
-              <option value="all">&#128100; Alle Keys bearbeiten</option>
-              <option value="own" selected>&#128100; Nur selbst erstellte Keys</option>
+              <option value="all">&#128273; Alle Keys bearbeiten</option>
+              <option value="own" selected>&#128273; Nur selbst erstellte Keys</option>
             </select>
           </div>
         </div>
@@ -1185,7 +1185,7 @@
         <div id="sp-pause-dur-wrap" style="background:#050608; border:1px solid #1a1e2b; padding:8px 12px; border-radius:6px; display:flex; align-items:center; justify-content:space-between;">
           <span style="color:#94a3b8; font-size:11px; font-weight:700;">&#9203; Max. erlaubte Pausierungsdauer:</span>
           <select id="sp-pause-max-dur" style="background:#141724; border:1px solid #232a3e; color:#f8fafc; padding:6px 10px; border-radius:5px; font-size:11px; outline:none;">
-            <option value="all">&#128100; Unbegrenzt pausieren</option>
+            <option value="all">&#9208;&#65039; Unbegrenzt pausieren</option>
             <option value="1">Max. 1 Tag pausieren</option>
             <option value="3">Max. 3 Tage pausieren</option>
             <option value="7" selected>Max. 7 Tage pausieren</option>
@@ -1462,9 +1462,9 @@
       <div class="modal-field-group">
         <label>STATUS</label>
         <select id="edit-lic-status">
-          <option value="unused">&#128100; Unbenutzt (Startet bei Login)</option>
+          <option value="unused">&#128260; Unbenutzt (Startet bei Login)</option>
           <option value="active">&#x1F511; Eingel&#246;st / Aktiv</option>
-          <option value="paused">&#128100; Pausiert</option>
+          <option value="paused">&#9208;&#65039; Pausiert</option>
         </select>
       </div>
     </div>
@@ -1477,8 +1477,8 @@
           <button type="button" class="quick-pill-btn" onclick="addDaysToModalExpiry(1)">+1 Tag</button>
           <button type="button" class="quick-pill-btn" onclick="addDaysToModalExpiry(7)">+7 Tage</button>
           <button type="button" class="quick-pill-btn" onclick="addDaysToModalExpiry(30)">+30 Tage</button>
-          <button type="button" class="quick-pill-btn" onclick="setModalExpiryLifetime()">&#128100; Lifetime</button>
-          <button type="button" class="quick-pill-btn" onclick="resetModalExpiryToUnused()">&#128100; Unbenutzt</button>
+          <button type="button" class="quick-pill-btn" onclick="setModalExpiryLifetime()">&#9854; Lifetime</button>
+          <button type="button" class="quick-pill-btn" onclick="resetModalExpiryToUnused()">&#128260; Unbenutzt</button>
         </div>
       </div>
       <input type="text" id="edit-lic-expires" placeholder="z.B. 12.10.2026 18:30 oder LIFETIME oder leer" />
@@ -1748,7 +1748,7 @@
       
       <!-- SUCHLEISTE UND SORTIERUNG -->
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-        <input type="text" id="log-search-input" placeholder="&#128100; Name, Key, HWID, IP suchen..." oninput="filterUserLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:9px 14px;border-radius:6px;font-size:12px;outline:none;width:240px;" />
+        <input type="text" id="log-search-input" placeholder="&#128269; Name, Key, HWID, IP suchen..." oninput="filterUserLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:9px 14px;border-radius:6px;font-size:12px;outline:none;width:240px;" />
         
         <select id="log-sort-select" onchange="filterUserLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#cbd5e1;padding:9px 12px;border-radius:6px;font-size:12px;outline:none;">
           <option value="date_desc">Neueste zuerst</option>
@@ -1757,8 +1757,8 @@
           <option value="name_asc">Name (A-Z)</option>
         </select>
 
-        <button onclick="loadLiveLogs()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; AKTUALISIEREN</button>
-        <button id="del-all-userlogs-btn" onclick="deleteAllUserLogs()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; ALLE L&#214;SCHEN</button>
+        <button onclick="loadLiveLogs()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128260; AKTUALISIEREN</button>
+        <button id="del-all-userlogs-btn" onclick="deleteAllUserLogs()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128465;&#65039; ALLE L&#214;SCHEN</button>
       </div>
     </div>
 
@@ -1805,13 +1805,13 @@
     <!-- SUB SWITCHER FOR KEYAUTH: LIZENZEN vs PERMISSIONS -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
       <div style="display:flex;gap:8px;">
-        <button id="btn-sub-lic" onclick="switchKeyAuthView('licenses')" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:10px 20px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 14px rgba(229,169,60,0.2);">&#128100; LIZENZ-VERWALTUNG</button>
-        <button id="btn-sub-perm" onclick="switchKeyAuthView('permissions')" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:10px 20px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:800;">&#128100; CHEAT-PERMISSIONS</button>
+        <button id="btn-sub-lic" onclick="switchKeyAuthView('licenses')" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:10px 20px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 14px rgba(229,169,60,0.2);">&#128273; LIZENZ-VERWALTUNG</button>
+        <button id="btn-sub-perm" onclick="switchKeyAuthView('permissions')" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:10px 20px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:800;">&#128737;&#65039; CHEAT-PERMISSIONS</button>
       </div>
       
       <div style="display:flex;gap:8px;" id="keyauth-action-btns">
-        <button id="btn-keyauth-refresh" onclick="loadLicenses()" style="background:#141724;border:1px solid #1f2538;color:#f8fafc;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; AKTUALISIEREN</button>
-        <button id="btn-copy-unused" onclick="copyAllUnusedLicenses()" style="background:rgba(229,169,60,0.1);border:1px solid rgba(229,169,60,0.3);color:#e5a93c;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; UNBENUTZTE KOPIEREN</button>
+        <button id="btn-keyauth-refresh" onclick="loadLicenses()" style="background:#141724;border:1px solid #1f2538;color:#f8fafc;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128260; AKTUALISIEREN</button>
+        <button id="btn-copy-unused" onclick="copyAllUnusedLicenses()" style="background:rgba(229,169,60,0.1);border:1px solid rgba(229,169,60,0.3);color:#e5a93c;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128203; UNBENUTZTE KOPIEREN</button>
       </div>
     </div>
 
@@ -1824,7 +1824,7 @@
             <span style="color:#e5a93c;">&#9889;</span> NEUE LICENSE KEYS GENERIEREN
           </div>
           <div onclick="toggleRandomNameBtn()" id="random-toggle-pill" style="display:flex;align-items:center;gap:10px;background:#10121a;border:1px solid #1e2333;padding:6px 14px;border-radius:20px;cursor:pointer;user-select:none;transition:all .2s;">
-            <span style="font-size:12px;">&#128100;</span>
+            <span style="font-size:12px;">&#128084;</span>
             <span style="font-size:11px;font-weight:800;color:#94a3b8;" id="random-toggle-pill-text">Zuf&#228;llige Namen</span>
             <label class="toggle" style="pointer-events:none;margin:0;"><input type="checkbox" id="gen-random-toggle-cb"><span class="slider"></span></label>
           </div>
@@ -1884,7 +1884,7 @@
         <div id="gen-output-box" style="display:none;margin-top:16px;background:#090a0f;border:1px solid #232a3e;border-radius:8px;padding:14px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
             <span style="font-size:11px;color:#e5a93c;font-weight:900;letter-spacing:0.5px;">&#x2728; NEU GENERIERTE KEYS:</span>
-            <button onclick="copyGeneratedKeys()" style="background:#141724;border:1px solid #232a3e;color:#e5a93c;padding:5px 12px;border-radius:4px;font-size:11px;font-weight:800;cursor:pointer;">&#128100; In Zwischenablage kopieren</button>
+            <button onclick="copyGeneratedKeys()" style="background:#141724;border:1px solid #232a3e;color:#e5a93c;padding:5px 12px;border-radius:4px;font-size:11px;font-weight:800;cursor:pointer;">&#128203; In Zwischenablage kopieren</button>
           </div>
           <textarea id="gen-keys-textarea" readonly style="width:100%;height:80px;background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;font-family:'JetBrains Mono',monospace;font-size:12px;padding:10px;border-radius:6px;resize:none;outline:none;line-height:1.6;"></textarea>
         </div>
@@ -1893,7 +1893,7 @@
       <!-- FILTER & STATS BAR -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
         <div style="display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap;">
-          <input type="text" id="lic-search-input" placeholder="&#128100; Key, Benutzer, HWID, Noti+ suchen..." oninput="filterLicenses()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:8px 14px;border-radius:6px;font-size:12px;outline:none;width:260px;" />
+          <input type="text" id="lic-search-input" placeholder="&#128269; Key, Benutzer, HWID, Noti+ suchen..." oninput="filterLicenses()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:8px 14px;border-radius:6px;font-size:12px;outline:none;width:260px;" />
           
           <select id="lic-filter-status" onchange="filterLicenses()" style="background:#0c0d13;border:1px solid #1e2333;color:#cbd5e1;padding:8px 12px;border-radius:6px;font-size:12px;outline:none;">
             <option value="all">Alle Status</option>
@@ -1971,7 +1971,7 @@
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
         <p style="font-size:12px;color:#94a3b8;margin:0;">Hier kannst du festlegen, welche Cheats f&#252;r die jeweiligen License Keys freigeschaltet sind.</p>
         <div style="display:flex;align-items:center;gap:10px;">
-          <button onclick="saveUserPermissions()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128100; RECHTE SPEICHERN &amp; ANWENDEN</button>
+          <button onclick="saveUserPermissions()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128190; RECHTE SPEICHERN &amp; ANWENDEN</button>
         </div>
       </div>
 
@@ -2033,9 +2033,9 @@
       </div>
       
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <input type="text" id="audit-search-input" placeholder="&#128100; Suche in Aktionen, Nutzer, Key..." oninput="filterAuditLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:9px 14px;border-radius:6px;font-size:12px;outline:none;width:240px;" />
-        <button onclick="loadAuditLogs()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; AKTUALISIEREN</button>
-        <button id="del-audit-btn" onclick="clearAuditLogs()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; LOGS LEEREN</button>
+        <input type="text" id="audit-search-input" placeholder="&#128269; Suche in Aktionen, Nutzer, Key..." oninput="filterAuditLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;padding:9px 14px;border-radius:6px;font-size:12px;outline:none;width:240px;" />
+        <button onclick="loadAuditLogs()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128260; AKTUALISIEREN</button>
+        <button id="del-audit-btn" onclick="clearAuditLogs()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128465;&#65039; LOGS LEEREN</button>
       </div>
     </div>
 
@@ -4900,7 +4900,7 @@ function renderLicensesTable(list) {
     }
 
     const expireText = lic.duration === 'lifetime'
-      ? `<span style="color:#e5a93c;font-weight:800;font-size:11px;">&#128100; LIFETIME</span>`
+      ? `<span style="color:#e5a93c;font-weight:800;font-size:11px;">&#9854; LIFETIME</span>`
       : (lic.expires_at ? `<span style="color:#f8fafc;font-size:11px;font-weight:700;">${lic.expires_at}</span>` : `<span style="color:#64748b;font-size:11px;">Startet bei Login</span>`);
 
     let hwidHtml = "";
@@ -4925,7 +4925,7 @@ function renderLicensesTable(list) {
 
     let actionsHtml = "";
     if(!CURRENT_USER.is_admin && isProtectedADMIN) {
-      actionsHtml = `<span class="hwid-badge-admin" style="font-size:10px;padding:4px 10px;">&#128100; ADMIN GESCH&#220;TZT</span>`;
+      actionsHtml = `<span class="hwid-badge-admin" style="font-size:10px;padding:4px 10px;">&#128081; ADMIN GESCH&#220;TZT</span>`;
     } else {
       const pauseBtnHtml = (CURRENT_USER.is_admin || p.can_pause_keys) ? (lic.paused
         ? `<button class="action-btn action-btn-resume" onclick="togglePauseLicense('${lic.key}')" title="Key wieder aktivieren">&#9654; Start</button>`
@@ -5435,7 +5435,7 @@ async function togglePauseLicense(key) {
   try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
   filterLicenses();
   logADMINAction(lic.paused ? "KEY_PAUSED" : "KEY_UNPAUSED", key, `Key Status ge&#228;ndert auf ${lic.paused ? 'Pausiert' : 'Aktiv'}${pauseNote}`);
-  showToast(`Key '${key}' ist jetzt ${lic.paused ? 'PAUSIERT &#128100;' + pauseNote : 'AKTIV &#128100;'}!`, "ok");
+  showToast(`Key '${key}' ist jetzt ${lic.paused ? 'PAUSIERT &#9208;&#65039;' + pauseNote : 'AKTIV &#128994;'}!`, "ok");
   saveLicenses(false);
 }
 
@@ -5611,7 +5611,7 @@ function renderStaffTable() {
       <tr>
         <td style="font-weight:800;color:#f8fafc;"><span style="color:#38bdf8;margin-right:6px;">&#129489;</span> ${s.name}</td>
         <td><span class="tag-product">${s.role || 'Supporter'}</span></td>
-        <td style="font-family:'JetBrains Mono',monospace;color:#64748b;">${s.password ? '&#128100;' : '---'}</td>
+        <td style="font-family:'JetBrains Mono',monospace;color:#64748b;">${s.password ? '&#128274;' : '---'}</td>
         <td>
           <div style="display:flex;gap:4px;flex-wrap:wrap;">
             ${permBadges.length > 0 ? permBadges.join("") : '<span style="color:#64748b;font-size:11px;">Keine Rechte</span>'}
@@ -7652,7 +7652,7 @@ function onHighlightFileSelected(input) {
       return;
     }
     _uploadedHighlightFile = file;
-    document.getElementById("hl-drop-label").textContent = "&#128100; " + file.name;
+    document.getElementById("hl-drop-label").textContent = "&#127916; " + file.name;
     document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB gew&#228;hlt";
     document.getElementById("hl-upload-url").value = "";
   }
@@ -7668,7 +7668,7 @@ function handleHighlightFileDrop(e) {
       return;
     }
     _uploadedHighlightFile = file;
-    document.getElementById("hl-drop-label").textContent = "&#128100; " + file.name;
+    document.getElementById("hl-drop-label").textContent = "&#127916; " + file.name;
     document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB abgelegt";
     document.getElementById("hl-upload-url").value = "";
   }
