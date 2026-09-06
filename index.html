@@ -1179,7 +1179,7 @@
       <!-- 3. KEYS PAUSIEREN (MIT MAX PAUSE DAUER) -->
       <div class="perm-item" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; align-items: stretch;">
         <div style="display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-weight:700;">&#23F8;&#65039; Keys pausieren</span>
+          <span style="font-weight:700;">&#9208;&#65039; Keys pausieren</span>
           <label class="toggle"><input type="checkbox" id="sp-pause" onchange="document.getElementById('sp-pause-dur-wrap').style.display=this.checked?'flex':'none'"><span class="slider"></span></label>
         </div>
         <div id="sp-pause-dur-wrap" style="background:#050608; border:1px solid #1a1e2b; padding:8px 12px; border-radius:6px; display:flex; align-items:center; justify-content:space-between;">
@@ -1395,7 +1395,7 @@
     <div style="background:#090b12;border:1px solid #1a2030;border-radius:12px;padding:20px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <h4 style="color:#ffffff;font-size:13px;font-weight:900;letter-spacing:0.5px;display:flex;align-items:center;gap:8px;margin:0;">
-          <span style="color:#e5a93c;">&#128100;</span> G&#196;STEBUCH & REPUTATION
+          <span style="color:#e5a93c;">&#128214;</span> G&#196;STEBUCH &amp; REPUTATION
           <span id="profile-guestbook-count" style="background:#131828;color:#94a3b8;border:1px solid #202a40;padding:2px 8px;border-radius:10px;font-size:10px;">0 Eintr&#228;ge</span>
         </h4>
       </div>
@@ -3573,7 +3573,7 @@ function applyCheatsDataToDOM(data) {
     if(activeFileEl) {
       if(d.download_url && d.download_url.trim()) {
         const fileName = d.download_url.split('/').pop();
-        activeFileEl.innerHTML = `<span style="color:#10b981;font-weight:700;">&#128100; Online:</span> <a href="${d.download_url}" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">${fileName}</a>`;
+        activeFileEl.innerHTML = `<span style="color:#10b981;font-weight:700;">&#128994; Online:</span> <a href="${d.download_url}" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">${fileName}</a>`;
         if(delBtn) delBtn.style.display = "inline-flex";
       } else {
         activeFileEl.innerHTML = `<span style="color:#64748b;font-size:11px;">Keine Datei hinterlegt</span>`;
@@ -3843,7 +3843,7 @@ async function checkRazerDllStatus() {
     if(res.ok) {
       const data = await res.json();
       const mbSize = data.size ? (data.size / 1024 / 1024).toFixed(2) + ' MB' : '';
-      statusEl.innerHTML = `<span style="color:#10b981;font-weight:700;">&#128100; Online auf GitHub:</span> <a href="${RAW_BASE}/releases/RAZER.dll" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">RAZER.dll</a> <span style="color:#64748b;">(${mbSize})</span>`;
+      statusEl.innerHTML = `<span style="color:#10b981;font-weight:700;">&#128994; Online auf GitHub:</span> <a href="${RAW_BASE}/releases/RAZER.dll" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">RAZER.dll</a> <span style="color:#64748b;">(${mbSize})</span>`;
       if(delBtn) delBtn.style.display = "inline-flex";
     } else {
       statusEl.innerHTML = `<span style="color:#f43f5e;font-weight:700;">&#x1F511; Nicht vorhanden</span>`;
@@ -4167,7 +4167,7 @@ async function deleteAllUserLogs() {
     alert("Keine Berechtigung zum L&#246;schen!");
     return;
   }
-  if(!confirm("&#128100; ACHTUNG: M&#246;chtest du WIRKLICH ALLE Benutzer-Logs unwiderruflich l&#246;schen?")) return;
+  if(!confirm("&#9888;&#65039; ACHTUNG: M&#246;chtest du WIRKLICH ALLE Benutzer-Logs unwiderruflich l&#246;schen?")) return;
 
   const token = getToken();
   if(!token) return;
@@ -4325,7 +4325,7 @@ function renderPermissionsRows() {
 
     let labelExtra = "";
     if (isProtectedADMIN) {
-      labelExtra = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;margin-left:6px;">&#128100; ADMIN</span>`;
+      labelExtra = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;margin-left:6px;">&#128081; ADMIN</span>`;
     } else if (isStaff && !canEditThisKey) {
       labelExtra = `<span style="background:#141724;color:#64748b;border:1px solid #1f2538;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;margin-left:6px;">&#128100; Fremder Key</span>`;
     }
@@ -4653,7 +4653,7 @@ function toggleRandomNameBtn(forceState = null) {
       pillText.textContent = "Zuf&#228;llige Namen: AN";
     }
     if(noteInp) {
-      noteInp.placeholder = "&#128100; Automatisch zuf&#228;llig (Pr&#228;fix optional)";
+      noteInp.placeholder = "&#127922; Automatisch zuf&#228;llig (Pr&#228;fix optional)";
       noteInp.style.borderColor = "rgba(229,169,60,0.4)";
     }
     if(lbl) {
@@ -4712,7 +4712,7 @@ async function generateNewLicenses() {
   const isRandom = _isRandomNameActive;
 
   if(!rawNote && !isRandom) {
-    alert("Bitte gib einen Login-Benutzernamen an oder klicke auf '&#128100; Random'!");
+    alert("Bitte gib einen Login-Benutzernamen an oder klicke auf '&#127922; Random'!");
     const noteInp = document.getElementById("gen-note");
     if(noteInp) {
       noteInp.focus();
@@ -4812,7 +4812,7 @@ async function generateNewLicenses() {
   // 2. BACKGROUND CLOUD SYNC (Non-blocking parallel promises)
   const syncPromises = [saveLicenses(false), saveUserPermissions(false)];
   Promise.all(syncPromises).then(() => {
-    showToast(`&#128100; Cloud-Sync abgeschlossen: ${qty} Key(s) online gesichert!`, "ok");
+    showToast(`&#128640; Cloud-Sync abgeschlossen: ${qty} Key(s) online gesichert!`, "ok");
   }).catch(err => {
     console.warn("Background license sync error:", err);
   });
@@ -4909,19 +4909,19 @@ function renderLicensesTable(list) {
 
     let hwidHtml = "";
     if(!lic.hwid) {
-      hwidHtml = `<span class="hwid-badge-empty"><span>&#128100;</span> Nicht gebunden</span>`;
+      hwidHtml = `<span class="hwid-badge-empty"><span>&#128275;</span> Nicht gebunden</span>`;
     } else {
       const shortHwid = lic.hwid.substring(0, 8) + "...";
       if (!CURRENT_USER.is_admin && isProtectedADMIN) {
         hwidHtml = `
           <span class="hwid-badge-admin" title="Gesch&#252;tzter ADMIN Account">
-            <span>&#128100;</span> ${shortHwid}
+            <span>&#128187;</span> ${shortHwid}
           </span>
         `;
       } else {
         hwidHtml = `
           <button class="hwid-badge-bound" onclick="openHwidModal('${lic.key}', '${lic.hwid}', '${lic.used_by||'User'}')" title="Klicken f&#252;r voll&#246;st&#228;ndige HWID & Details">
-            <span>&#128100;</span> <span>${shortHwid}</span>
+            <span>&#128187;</span> <span>${shortHwid}</span>
           </button>
         `;
       }
@@ -5022,9 +5022,9 @@ function renderLicensesTable(list) {
 
         <td style="vertical-align:middle;">
           <div style="color:#f8fafc;font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-            <span style="color:#e5a93c;flex-shrink:0;">&#128100;</span> 
+            <span style="color:#e5a93c;flex-shrink:0;">&#128084;</span> 
             <span>${lic.used_by || (lic.used ? 'Kunde' : '<span style="color:#64748b;font-weight:normal;">Noch unbenutzt</span>')}</span>
-            ${isProtectedADMIN ? '<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;white-space:nowrap;">&#128100; ADMIN</span>' : ''}
+            ${isProtectedADMIN ? '<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;white-space:nowrap;">&#128081; ADMIN</span>' : ''}
           </div>
           ${noteText}
         </td>
@@ -5603,7 +5603,7 @@ function renderStaffTable() {
     }
     if(perms.can_pause_keys) {
       const pauseD = perms.max_pause_duration ? (durTextMap[perms.max_pause_duration] || perms.max_pause_duration) : "Alle";
-      permBadges.push(`<span class="tag-duration" style="color:#a78bfa;">&#23F8;&#65039; Pause (${pauseD})</span>`);
+      permBadges.push(`<span class="tag-duration" style="color:#a78bfa;">&#9208;&#65039; Pause (${pauseD})</span>`);
     }
     if(perms.can_reset_hwid) permBadges.push(`<span class="tag-duration">&#128187; HWID Reset</span>`);
     if(perms.can_delete_keys) permBadges.push(`<span class="tag-duration" style="color:#f43f5e;">&#128465;&#65039; Delete</span>`);
@@ -5864,7 +5864,7 @@ function filterAuditLogs() {
     return `
       <tr>
         <td style="color:#64748b;font-size:11px;">${l.time || '---'}</td>
-        <td style="color:#f8fafc;font-weight:800;"><span style="color:#e5a93c;margin-right:5px;">&#128100;</span> ${l.user || 'ADMIN'}</td>
+        <td style="color:#f8fafc;font-weight:800;"><span style="color:#e5a93c;margin-right:5px;">&#129489;</span> ${l.user || 'ADMIN'}</td>
         <td><span class="tag-product">${l.action || 'ACTION'}</span></td>
         <td><span class="tag-key-box" style="font-size:11px;">${l.target || '---'}</span></td>
         <td style="color:#cbd5e1;font-size:11px;">${l.details || '---'}</td>
@@ -6862,7 +6862,7 @@ function onConfigFileSelected(input) {
     const nameInp = document.getElementById("cfg-upload-name");
     
     if (lbl) lbl.textContent = `Ausgew&#228;hlt: ${_selectedConfigFile.name}`;
-    if (sublbl) sublbl.textContent = `Gr&#128100;e: ${formatBytes(_selectedConfigFile.size)}`;
+    if (sublbl) sublbl.textContent = `Gr&#246;&#223;e: ${formatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
     }
@@ -6881,7 +6881,7 @@ function handleConfigDrop(e) {
     const nameInp = document.getElementById("cfg-upload-name");
     
     if (lbl) lbl.textContent = `Ausgew&#228;hlt: ${_selectedConfigFile.name}`;
-    if (sublbl) sublbl.textContent = `Gr&#128100;e: ${formatBytes(_selectedConfigFile.size)}`;
+    if (sublbl) sublbl.textContent = `Gr&#246;&#223;e: ${formatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
     }
@@ -7012,7 +7012,7 @@ function filterUserConfigs() {
       <div style="text-align:center;color:#64748b;padding:32px 20px;background:#0b0e17;border:1px dashed #1c2438;border-radius:6px;">
         <div style="font-size:24px;margin-bottom:6px;">&#128193;</div>
         <div style="font-size:12px;font-weight:800;color:#94a3b8;">Keine Cloud-Configs gefunden</div>
-        <div style="font-size:11px;color:#475569;margin-top:2px;">Lade links eine neue Config hoch oder &#128100;ndere deine Filter.</div>
+        <div style="font-size:11px;color:#475569;margin-top:2px;">Lade links eine neue Config hoch oder &#196;ndere deine Filter.</div>
       </div>
     `;
     return;
@@ -7188,7 +7188,7 @@ async function loadUserConfigs(silent = false, manualToast = false) {
 
 async function uploadUserConfig() {
   if (!_selectedConfigFile) {
-    alert("Bitte w&#128100;hle zuerst eine Config-Datei aus (.cfg, .ini, .json, .txt, .zip, .css)!");
+    alert("Bitte w&#228;hle zuerst eine Config-Datei aus (.cfg, .ini, .json, .txt, .zip, .css)!");
     return;
   }
 
@@ -7279,7 +7279,7 @@ async function uploadUserConfig() {
         }
 
         showToast(`Config "${newConfig.name}" erfolgreich hochgeladen!`, "ok");
-        logADMINAction("CONFIG_UPLOAD", newConfig.filename, `Config "${newConfig.name}" f&#128100;r ${newConfig.game} hochgeladen von ${newConfig.user}`);
+        logADMINAction("CONFIG_UPLOAD", newConfig.filename, `Config "${newConfig.name}" f&#252;r ${newConfig.game} hochgeladen von ${newConfig.user}`);
 
         // Reset inputs
         _selectedConfigFile = null;
@@ -7287,7 +7287,7 @@ async function uploadUserConfig() {
         if(descInp) descInp.value = "";
         const lbl = document.getElementById("cfg-drop-label");
         const sublbl = document.getElementById("cfg-drop-sublabel");
-        if(lbl) lbl.textContent = "Datei ausw&#128100;hlen oder ablegen";
+        if(lbl) lbl.textContent = "Datei ausw&#228;hlen oder ablegen";
         if(sublbl) sublbl.textContent = "Erlaubt: .css, .cfg, .ini, .json, .txt, .zip, .lua";
         const fileInput = document.getElementById("cfg-file-input");
         if(fileInput) fileInput.value = "";
@@ -7489,7 +7489,7 @@ function previewConfig(configId) {
       if(content) content.value = decoded;
     }
   } catch(_) {
-    if(content) content.value = "[Vorschau nicht verf&#128100;gbar. Bitte Download nutzen!]";
+    if(content) content.value = "[Vorschau nicht verf&#252;gbar. Bitte Download nutzen!]";
   }
 
   if(modal) modal.style.display = "flex";
@@ -7514,23 +7514,23 @@ async function deleteUserConfig(configId) {
 
   const canDelete = CURRENT_USER.is_admin || (cfg.user === CURRENT_USER.name) || (CURRENT_USER.key && cfg.key === CURRENT_USER.key);
   if(!canDelete) {
-    alert("Du kannst nur deine eigenen Configs l&#128100;schen!");
+    alert("Du kannst nur deine eigenen Configs l&#246;schen!");
     return;
   }
 
-  if(!confirm(`M&#128100;chtest du die Config "${cfg.name || cfg.filename}" wirklich l&#128100;schen?`)) return;
+  if(!confirm(`M&#246;chtest du die Config "${cfg.name || cfg.filename}" wirklich l&#246;schen?`)) return;
 
   ALL_CONFIGS = ALL_CONFIGS.filter(c => c.id !== configId);
   try { localStorage.setItem("hyschool_configs_cache", JSON.stringify(ALL_CONFIGS)); } catch(_) {}
   filterUserConfigs();
-  showToast("Config gel&#128100;scht!", "ok");
+  showToast("Config gel&#246;scht!", "ok");
 
   try {
     const token = getToken();
     const fullJson = JSON.stringify(ALL_CONFIGS, null, 2);
     const finalB64 = utf8_to_b64(fullJson);
     await uploadFileToGitHub("configs.json", finalB64, `Delete Config: [${cfg.user}] ${cfg.name}`);
-    logADMINAction("CONFIG_DELETED", cfg.filename, `Config "${cfg.name}" wurde gel&#128100;scht`);
+    logADMINAction("CONFIG_DELETED", cfg.filename, `Config "${cfg.name}" wurde gel&#246;scht`);
   } catch(e) {
     showToast("Cloud-Sync Fehler: " + e.message, "err");
   }
@@ -7682,8 +7682,8 @@ function handleHighlightFileDrop(e) {
 function onHighlightUrlChanged(val) {
   if(val && val.trim()) {
     _uploadedHighlightFile = null;
-    document.getElementById("hl-drop-label").textContent = "&#128100; Video hier ablegen oder klicken";
-    document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (f&#252;r gr&#128100;ere Clips bitte Link nutzen)";
+    document.getElementById("hl-drop-label").textContent = "&#127916; Video hier ablegen oder klicken";
+    document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (f&#252;r gr&#246;&#223;ere Clips bitte Link nutzen)";
   }
 }
 
@@ -7775,7 +7775,7 @@ async function uploadHighlightClip() {
             toggleHighlightUploadCard();
     } catch(err) {
       console.error(err);
-      showToast("Fehler beim Ver&#128100;ffentlichen: " + err.message, "err");
+      showToast("Fehler beim Ver&#246;ffentlichen: " + err.message, "err");
     } finally {
       setTimeout(() => {
         progWrap.style.display = "none";
@@ -7821,11 +7821,11 @@ async function deleteHighlight(highlightId) {
   const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
   if(!h) return;
 
-  if(!confirm("M&#128100;chtest du das Highlight \"" + h.title + "\" wirklich l&#128100;schen?")) return;
+  if(!confirm("M&#246;chtest du das Highlight \"" + h.title + "\" wirklich l&#246;schen?")) return;
 
   ALL_HIGHLIGHTS = ALL_HIGHLIGHTS.filter(item => item.id !== highlightId);
   filterHighlights();
-  showToast("Highlight gel&#128100;scht!", "ok");
+  showToast("Highlight gel&#246;scht!", "ok");
 
   try {
     const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
