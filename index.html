@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -2509,9 +2509,24 @@
       </div>
     </div>
 
-    <!-- HIGHLIGHTS GRID -->
+    <!-- HIGHLIGHTS GRID (ADMIN & TEAM CLIPS) -->
     <div class="highlights-grid" id="highlights-grid-container">
       <div style="grid-column: 1/-1;text-align:center;color:#64748b;padding:40px;font-size:12px;">Lade Highlight Clips...</div>
+    </div>
+
+    <!-- CLIP DER WOCHE BANNER -->
+    <div id="cdw-banner" style="margin-top:28px;display:none;"></div>
+
+    <!-- USER CLIPS SECTION -->
+    <div id="user-clips-section" style="margin-top:32px;display:none;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #1a2234;">
+        <span style="font-size:18px;">&#128101;</span>
+        <div style="font-size:13px;font-weight:900;color:#f8fafc;letter-spacing:1px;">USER CLIPS</div>
+        <span style="font-size:10px;color:#64748b;font-weight:700;" id="user-clips-count"></span>
+      </div>
+      <div class="highlights-grid" id="user-clips-grid">
+        <div style="grid-column:1/-1;text-align:center;color:#64748b;padding:20px;font-size:12px;">Noch keine User Clips vorhanden.</div>
+      </div>
     </div>
   </div>
 </div>
@@ -7589,6 +7604,7 @@ async function uploadHighlightClip() {
       isCensored: isCensored,
       censoredName: "[Zensiert &#128274;]",
       rank: CURRENT_USER.role ? CURRENT_USER.role.toLowerCase() : "ADMIN",
+      isUserClip: !CURRENT_USER.is_admin,
       videoUrl: videoUrl,
       videoType: videoType,
       date: new Date().toLocaleDateString("de-DE") + " " + new Date().toLocaleTimeString("de-DE", {hour:'2-digit', minute:'2-digit'}),
@@ -7703,13 +7719,18 @@ function openHighlightPlayer(highlightId) {
     if(h.videoUrl.includes("v=")) ytId = h.videoUrl.split("v=")[1].split("&")[0];
     else if(h.videoUrl.includes("youtu.be/")) ytId = h.videoUrl.split("youtu.be/")[1].split("?")[0];
     container.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+  } else if(h.videoType === "medal") {
+    const mParts = h.videoUrl.split("/clips/");
+    const mId = mParts[1] ? mParts[1].split("?")[0].split("/")[0] : "";
+    const mSrc = mId ? `https://medal.tv/clip/${mId}?autoplay=1&loop=0&cta=0` : h.videoUrl;
+    container.innerHTML = `<iframe src="${mSrc}" allow="autoplay; encrypted-media" allowfullscreen frameborder="0" style="width:100%;height:100%;border:none;"></iframe>`;
+  } else if(h.videoType === "streamable") {
+    const sParts = h.videoUrl.split("streamable.com/");
+    const sId = sParts[1] ? sParts[1].split("?")[0] : "";
+    const sSrc = sId ? `https://streamable.com/e/${sId}` : h.videoUrl;
+    container.innerHTML = `<iframe src="${sSrc}" allow="autoplay; encrypted-media" allowfullscreen frameborder="0" style="width:100%;height:100%;border:none;"></iframe>`;
   } else {
-    container.innerHTML = `
-      <video controls autoplay style="width:100%;height:100%;object-fit:contain;background:#000;">
-        <source src="${h.videoUrl}" type="video/mp4">
-        Dein Browser unterst&#128100;tzt dieses Videoformat nicht.
-      </video>
-    `;
+    container.innerHTML = `<video controls autoplay style="width:100%;height:100%;object-fit:contain;background:#000;"><source src="${h.videoUrl}" type="video/mp4">Dein Browser unterst&uuml;tzt dieses Videoformat nicht.</video>`;
   }
 
   if(modal) modal.style.display = "flex";
@@ -7770,6 +7791,53 @@ async function loadHighlights(silent = false, manualToast = false) {
   }
 }
 
+function _makeHlCard(h) {
+  const authorDisplayName = h.isCensored ? "&#128274; [Zensiert / Anonym]" : formatNameUpper(h.author);
+  const authorAvatar = h.isCensored ? "https://api.dicebear.com/7.x/bottts/svg?seed=Incognito" : getAvatarUrl(h.author);
+  const hasLiked = h.likedBy && h.likedBy.includes(CURRENT_USER.name);
+  const isOwn = CURRENT_USER.is_admin || (!h.isCensored && h.author === CURRENT_USER.name);
+
+  // Author name overlay (top-right of video thumbnail)
+  const overlayColor = h.isCensored ? "#94a3b8" : "#e5a93c";
+  const overlayName = h.isCensored ? "&#128274; Anonym" : escapeHtml(formatNameUpper(h.author));
+  const authorOverlay = '<div style="position:absolute;top:8px;right:8px;z-index:10;background:rgba(0,0,0,0.78);padding:3px 9px;border-radius:6px;font-size:9.5px;font-weight:800;color:' + overlayColor + ';backdrop-filter:blur(6px);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid rgba(255,255,255,0.08);">' + overlayName + '</div>';
+
+  let previewHtml = "";
+  if(h.videoType === "youtube") {
+    let ytId = "";
+    if(h.videoUrl.includes("v=")) ytId = h.videoUrl.split("v=")[1].split("&")[0];
+    else if(h.videoUrl.includes("youtu.be/")) ytId = h.videoUrl.split("youtu.be/")[1].split("?")[0];
+    previewHtml = '<iframe src="https://www.youtube-nocookie.com/embed/' + ytId + '" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>' + authorOverlay;
+  } else if(h.videoType === "medal" || h.videoType === "streamable" || h.videoType === "link") {
+    const typeLabel = h.videoType === "medal" ? "&#127885; MEDAL" : h.videoType === "streamable" ? "&#9654; STREAMABLE" : "&#128279; LINK";
+    previewHtml = '<div onclick="openHighlightPlayer(\'' + h.id + '\')" style="position:absolute;inset:0;background:linear-gradient(135deg,#05070c,#0e1220);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:8px;transition:.2s;" onmouseover="this.style.background=\'linear-gradient(135deg,#0e1220,#152038)\'" onmouseout="this.style.background=\'linear-gradient(135deg,#05070c,#0e1220)\'">'
+      + '<div style="width:46px;height:46px;border-radius:50%;background:rgba(229,169,60,0.9);display:flex;align-items:center;justify-content:center;color:#07080c;font-size:18px;box-shadow:0 0 20px rgba(229,169,60,0.5);">&#9654;</div>'
+      + '<span style="font-size:9px;color:#64748b;font-weight:700;">' + typeLabel + '</span>'
+      + '</div>' + authorOverlay;
+  } else {
+    previewHtml = '<video preload="metadata" muted playsinline onclick="openHighlightPlayer(\'' + h.id + '\')" style="cursor:pointer;width:100%;height:100%;object-fit:cover;"><source src="' + h.videoUrl + '" type="video/mp4"></video>'
+      + '<div onclick="openHighlightPlayer(\'' + h.id + '\')" style="position:absolute;inset:0;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;" onmouseover="this.style.background=\'rgba(0,0,0,0.1)\'" onmouseout="this.style.background=\'rgba(0,0,0,0.3)\'"><div style="width:46px;height:46px;border-radius:50%;background:rgba(229,169,60,0.9);display:flex;align-items:center;justify-content:center;color:#07080c;font-size:18px;box-shadow:0 0 20px rgba(229,169,60,0.5);">&#9654;</div></div>'
+      + authorOverlay;
+  }
+
+  const likeStyle = hasLiked ? 'background:rgba(244,63,94,0.2);color:#f43f5e;border-color:#f43f5e;' : '';
+  const likeIcon = hasLiked ? '&#10084;&#65039;' : '&#129293;';
+  const deleteBtn = isOwn ? '<button onclick="deleteHighlight(\'' + h.id + '\')" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:4px 8px;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;">&#128465;&#65039;</button>' : '';
+  const profileClick = h.isCensored ? '' : 'onclick="openUserProfileModal(\'' + escapeHtml(h.author) + '\')"';
+  const rankHtml = h.isCensored ? '<span class="badge-rank badge-rank-vip">&#128274; Anonym</span>' : getRankBadge(h.author, h.rank);
+
+  return '<div class="clip-card">'
+    + '<div class="clip-media-wrap" style="position:relative;height:180px;background:#05070c;overflow:hidden;border-radius:10px 10px 0 0;">' + previewHtml + '</div>'
+    + '<div class="clip-body" style="padding:14px;">'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;"><span class="tag-product">' + (h.game || 'VALORANT').toUpperCase() + '</span><span style="font-size:10.5px;color:#64748b;">' + (h.date || '') + '</span></div>'
+    + '<div class="clip-title" style="font-size:13px;font-weight:900;color:#f8fafc;margin-bottom:4px;">' + escapeHtml(h.title) + '</div>'
+    + '<p style="font-size:11.5px;color:#94a3b8;line-height:1.4;margin:0 0 12px 0;">' + escapeHtml(h.desc || '') + '</p>'
+    + '<div class="clip-footer" style="display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid #1a2234;padding-top:10px;">'
+    + '<div style="display:flex;align-items:center;gap:8px;"><img src="' + authorAvatar + '" style="width:24px;height:24px;border-radius:6px;object-fit:cover;border:1px solid #243048;" alt="Avatar"><div><div style="display:flex;align-items:center;gap:6px;"><b style="color:#f8fafc;font-size:11px;cursor:pointer;" ' + profileClick + '>' + escapeHtml(authorDisplayName) + '</b>' + rankHtml + '</div></div></div>'
+    + '<div style="display:flex;align-items:center;gap:6px;"><button onclick="toggleHighlightLike(\'' + h.id + '\')" class="quick-pill-btn" style="display:flex;align-items:center;gap:4px;padding:4px 8px;font-size:11px;' + likeStyle + '"><span>' + likeIcon + '</span> <span>' + (h.likes || 0) + '</span></button>' + deleteBtn + '</div>'
+    + '</div></div></div>';
+}
+
 function filterHighlights() {
   const searchInput = document.getElementById("hl-search-input");
   const gameSelect = document.getElementById("hl-filter-game");
@@ -7798,73 +7866,65 @@ function filterHighlights() {
     filtered.sort((a, b) => (b.id || "").localeCompare(a.id || ""));
   }
 
-  if(filtered.length === 0) {
-    container.innerHTML = `<div style="grid-column: 1/-1;text-align:center;color:#64748b;padding:40px;font-size:12px;">Keine Highlight Clips gefunden. Sei der Erste und lade einen Clip hoch!</div>`;
-    return;
+  // Split: admin/team clips vs user clips
+  const adminClips = filtered.filter(h => !h.isUserClip);
+  const userClips  = filtered.filter(h =>  h.isUserClip);
+
+  // Render admin/team clips
+  if(adminClips.length === 0) {
+    container.innerHTML = '<div style="grid-column: 1/-1;text-align:center;color:#64748b;padding:40px;font-size:12px;">Keine Highlight Clips gefunden. Sei der Erste und lade einen Clip hoch!</div>';
+  } else {
+    container.innerHTML = adminClips.map(h => _makeHlCard(h)).join("");
   }
 
-  container.innerHTML = filtered.map(h => {
-    const authorDisplayName = h.isCensored ? "&#128274; [Zensiert / Anonym]" : formatNameUpper(h.author);
-    const authorAvatar = h.isCensored ? "https://api.dicebear.com/7.x/bottts/svg?seed=Incognito" : getAvatarUrl(h.author);
-    const hasLiked = h.likedBy && h.likedBy.includes(CURRENT_USER.name);
-    const isOwn = CURRENT_USER.is_admin || (!h.isCensored && h.author === CURRENT_USER.name);
-
-    let previewHtml = "";
-    if(h.videoType === "youtube") {
-      let ytId = "";
-      if(h.videoUrl.includes("v=")) ytId = h.videoUrl.split("v=")[1].split("&")[0];
-      else if(h.videoUrl.includes("youtu.be/")) ytId = h.videoUrl.split("youtu.be/")[1].split("?")[0];
-      previewHtml = `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+  // Render user clips section
+  const userSection = document.getElementById("user-clips-section");
+  const userGrid    = document.getElementById("user-clips-grid");
+  const userCount   = document.getElementById("user-clips-count");
+  if(userSection && userGrid) {
+    if(userClips.length > 0) {
+      userSection.style.display = "block";
+      if(userCount) userCount.textContent = "(" + userClips.length + " Clip" + (userClips.length !== 1 ? "s" : "") + ")";
+      userGrid.innerHTML = userClips.map(h => _makeHlCard(h)).join("");
     } else {
-      previewHtml = `
-        <video preload="metadata" muted playsinline onclick="openHighlightPlayer('${h.id}')" style="cursor:pointer;width:100%;height:100%;object-fit:cover;">
-          <source src="${h.videoUrl}" type="video/mp4">
-        </video>
-        <div onclick="openHighlightPlayer('${h.id}')" style="position:absolute;inset:0;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;" onmouseover="this.style.background='rgba(0,0,0,0.1)'" onmouseout="this.style.background='rgba(0,0,0,0.3)'">
-          <div style="width:46px;height:46px;border-radius:50%;background:rgba(229,169,60,0.9);display:flex;align-items:center;justify-content:center;color:#07080c;font-size:18px;box-shadow:0 0 20px rgba(229,169,60,0.5);">&#9654;</div>
-        </div>
-      `;
+      userSection.style.display = "none";
     }
+  }
 
-    return `
-      <div class="clip-card">
-        <div class="clip-media-wrap" style="position:relative;height:180px;background:#05070c;overflow:hidden;border-radius:10px 10px 0 0;">
-          ${previewHtml}
-        </div>
-        <div class="clip-body" style="padding:14px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;">
-            <span class="tag-product">${(h.game || 'VALORANT').toUpperCase()}</span>
-            <span style="font-size:10.5px;color:#64748b;">${h.date || ''}</span>
-          </div>
-          <div class="clip-title" style="font-size:13px;font-weight:900;color:#f8fafc;margin-bottom:4px;">${escapeHtml(h.title)}</div>
-          <p style="font-size:11.5px;color:#94a3b8;line-height:1.4;margin:0 0 12px 0;">${escapeHtml(h.desc || '')}</p>
-          
-          <div class="clip-footer" style="display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid #1a2234;padding-top:10px;">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <img src="${authorAvatar}" style="width:24px;height:24px;border-radius:6px;object-fit:cover;border:1px solid #243048;" alt="Avatar">
-              <div>
-                <div style="display:flex;align-items:center;gap:6px;">
-                  <b style="color:#f8fafc;font-size:11px;cursor:pointer;" ${h.isCensored ? '' : `onclick="openUserProfileModal('${escapeHtml(h.author)}')"`}>${escapeHtml(authorDisplayName)}</b>
-                  ${h.isCensored ? '<span class="badge-rank badge-rank-vip">&#128274; Anonym</span>' : getRankBadge(h.author, h.rank)}
-                </div>
-              </div>
-            </div>
+  // Clip der Woche â€” most liked clip from current ISO week
+  const cdwBanner = document.getElementById("cdw-banner");
+  if(cdwBanner && ALL_HIGHLIGHTS.length > 0) {
+    const now = new Date();
+    const dow = now.getDay() === 0 ? 6 : now.getDay() - 1;
+    const weekStart = new Date(now); weekStart.setHours(0,0,0,0); weekStart.setDate(now.getDate() - dow);
+    const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 7);
 
-            <div style="display:flex;align-items:center;gap:6px;">
-              <button onclick="toggleHighlightLike('${h.id}')" class="quick-pill-btn" style="display:flex;align-items:center;gap:4px;padding:4px 8px;font-size:11px;${hasLiked ? 'background:rgba(244,63,94,0.2);color:#f43f5e;border-color:#f43f5e;' : ''}">
-                <span>${hasLiked ? '&#10084;&#65039;' : '&#129293;'}</span> <span>${h.likes || 0}</span>
-              </button>
-              ${isOwn ? `
-                <button onclick="deleteHighlight('${h.id}')" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:4px 8px;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;">
-                  &#128465;&#65039;
-                </button>
-              ` : ''}
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join("");
+    const weekClips = ALL_HIGHLIGHTS.filter(h => {
+      const ts = parseInt((h.id || "").replace("hl_","")) || 0;
+      return ts > 0 && new Date(ts) >= weekStart && new Date(ts) < weekEnd;
+    });
+    weekClips.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+    const cdw = weekClips[0] || null;
+
+    if(cdw) {
+      const cdwAuthor = cdw.isCensored ? "&#128274; Anonym" : formatNameUpper(cdw.author);
+      const cdwAvatar = cdw.isCensored ? "https://api.dicebear.com/7.x/bottts/svg?seed=Incognito" : getAvatarUrl(cdw.author);
+      cdwBanner.style.display = "block";
+      cdwBanner.innerHTML = '<div onclick="openHighlightPlayer(\'' + cdw.id + '\')" style="background:linear-gradient(135deg,#0f0a00,#1c1200,#0f0a00);border:1.5px solid rgba(229,169,60,0.55);border-radius:14px;padding:20px 22px;box-shadow:0 0 32px rgba(229,169,60,0.12);cursor:pointer;transition:.2s;" onmouseover="this.style.boxShadow=\'0 0 48px rgba(229,169,60,0.25)\'" onmouseout="this.style.boxShadow=\'0 0 32px rgba(229,169,60,0.12)\'">'
+        + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">'
+        + '<span style="font-size:22px;">&#127942;</span>'
+        + '<div><div style="font-size:10px;font-weight:900;color:#e5a93c;letter-spacing:2.5px;">CLIP DER WOCHE</div>'
+        + '<div style="font-size:9px;color:#64748b;margin-top:2px;">Meistgelikter Clip dieser Woche &nbsp;&#183;&nbsp; ' + (cdw.likes || 0) + ' &#10084;</div></div></div>'
+        + '<div style="display:flex;align-items:center;gap:14px;">'
+        + '<img src="' + cdwAvatar + '" style="width:38px;height:38px;border-radius:9px;border:2px solid rgba(229,169,60,0.45);flex-shrink:0;" alt="avatar">'
+        + '<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:900;color:#ffffff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escapeHtml(cdw.title) + '</div>'
+        + '<div style="font-size:10px;color:#94a3b8;margin-top:3px;">' + cdwAuthor + ' &nbsp;&#183;&nbsp; ' + (cdw.game || '').toUpperCase() + '</div></div>'
+        + '<div style="flex-shrink:0;width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#e5a93c,#c68924);display:flex;align-items:center;justify-content:center;color:#07080c;font-size:16px;box-shadow:0 0 18px rgba(229,169,60,0.5);">&#9654;</div>'
+        + '</div></div>';
+    } else {
+      cdwBanner.style.display = "none";
+    }
+  }
 }
 
 
