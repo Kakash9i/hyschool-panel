@@ -1234,7 +1234,7 @@
     </div>
 
     <div style="display:flex;gap:10px;margin-top:22px;">
-      <button onclick="saveStaffModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128100; MITARBEITER SPEICHERN</button>
+      <button onclick="saveStaffModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#129495; MITARBEITER SPEICHERN</button>
       <button onclick="closeStaffModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Abbrechen</button>
     </div>
   </div>
@@ -1681,22 +1681,22 @@
       <span style="font-size:13px;color:#e5a93c;">&#9889;</span> CHEATS
     </div>
     <div class="main-tab" onclick="switchMainTab(1)" id="mtab-1">
-      <span style="font-size:13px;color:#cbd5e1;">&#128100;</span> MAYA UPDATER
+      <span style="font-size:13px;color:#cbd5e1;">&#128640;</span> MAYA UPDATER
     </div>
     <div class="main-tab" onclick="switchMainTab(2)" id="mtab-2">
-      <span style="font-size:13px;color:#cbd5e1;">&#128202;</span> USER LOGS
+      <span style="font-size:13px;color:#cbd5e1;">&#128203;</span> USER LOGS
     </div>
     <div class="main-tab" onclick="switchMainTab(3)" id="mtab-3">
-      <span style="font-size:13px;color:#cbd5e1;">&#128273;</span> KEYAUTH &amp; RECHTE
+      <span style="font-size:13px;color:#e5a93c;">&#128273;</span> KEYAUTH &amp; RECHTE
     </div>
     <div class="main-tab" onclick="switchMainTab(4)" id="mtab-4">
-      <span style="font-size:13px;color:#cbd5e1;">&#128737;</span> MITARBEITER &amp; RECHTE
+      <span style="font-size:13px;color:#38bdf8;">&#129489;</span> MITARBEITER &amp; RECHTE
     </div>
     <div class="main-tab" onclick="switchMainTab(5)" id="mtab-5">
-      <span style="font-size:13px;color:#cbd5e1;">&#128220;</span> ADMIN AUDIT LOGS
+      <span style="font-size:13px;color:#f43f5e;">&#128221;</span> ADMIN AUDIT LOGS
     </div>
     <div class="main-tab" onclick="switchMainTab(6)" id="mtab-6">
-      <span style="font-size:13px;color:#cbd5e1;">&#128172;</span> CHAT
+      <span style="font-size:13px;color:#4ade80;">&#128172;</span> CHAT
     </div>
     <div class="main-tab" onclick="switchMainTab(7)" id="mtab-7">
       <span style="font-size:13px;color:#e5a93c;">&#128193;</span> USER CONFIG'S
@@ -2000,7 +2000,7 @@
   <div class="tab-content" id="tc-4">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
       <div>
-        <div class="section-title" style="margin-bottom:4px;font-size:13px;color:#f8fafc;">&#128100; MITARBEITER &amp; TEAM-VERWALTUNG</div>
+        <div class="section-title" style="margin-bottom:4px;font-size:13px;color:#f8fafc;">&#129495; MITARBEITER &amp; TEAM-VERWALTUNG</div>
         <p style="font-size:12px;color:#94a3b8;margin:0;">Verwalte deine Mitarbeiter, erstelle Zug&#228;nge und lege individuelle Rechte fest.</p>
       </div>
       <button id="add-staff-btn" onclick="openStaffModal()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#x2795; NEUEN MITARBEITER ANLEGEN</button>
@@ -2283,7 +2283,7 @@
           <img id="dash-avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
         </div>
         <div style="display:flex;flex-direction:column;gap:4px;">
-          <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:4px;">&#128100; EINGELOGGTER ACCOUNT</div>
+          <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:4px;">&#128084; EINGELOGGTER ACCOUNT</div>
           <div style="display:flex;align-items:center;gap:8px;">
             <span id="cfg-dash-username" style="color:#ffffff;font-size:14px;font-weight:900;letter-spacing:0.5px;line-height:1;">ADMIN</span>
             <span id="cfg-dash-role-badge"></span>
@@ -3066,7 +3066,7 @@ function applyUserPermissions() {
   if(dashUser) dashUser.textContent = CURRENT_USER.is_admin ? "ADMIN" : CURRENT_USER.name;
   if(dashRole) dashRole.innerHTML = getRankBadge(CURRENT_USER.name, CURRENT_USER.role);
   if(userBadge) {
-    userBadge.innerHTML = CURRENT_USER.is_admin ? '<span class="badge-rank badge-rank-admin">&#128100; INHABER ADMIN</span>' : `${getRankBadge(CURRENT_USER.name, CURRENT_USER.role)} ${escapeHtml(CURRENT_USER.name)}`;
+    userBadge.innerHTML = CURRENT_USER.is_admin ? '<span class="badge-rank badge-rank-admin">&#128081; INHABER ADMIN</span>' : `${getRankBadge(CURRENT_USER.name, CURRENT_USER.role)} ${escapeHtml(CURRENT_USER.name)}`;
   }
 
   if(dashExpiry) {
