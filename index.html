@@ -8494,7 +8494,7 @@ async function claimCurrentTicket() {
     t.messages.push({
         sender: myName,
         role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben &#252;bernommen. Wie kann ich dir heute weiterhelfen? &#128075;`,
+        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben Ã¼bernommen. Wie kann ich dir heute weiterhelfen? &#128075;`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now()
     });
@@ -8502,7 +8502,7 @@ async function claimCurrentTicket() {
     await saveADMINTicketsToGitHub(`Claim ticket ${t.id} by ${myName}`);
     renderActiveADMINTicketRoom(t);
     renderADMINTicketsList();
-    showToast('Ticket &#252;bernommen!', 'ok');
+    showToast('Ticket Ã¼bernommen!', 'ok');
 }
 
 async function closeCurrentTicket() {
@@ -8519,18 +8519,18 @@ async function closeCurrentTicket() {
         t.messages.push({
             sender: myName,
             role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-            text: `[Info: Ticket wurde von ${myName} wiederer&#246;ffnet]`,
+            text: `[Info: Ticket wurde von ${myName} wiedererÃ¶ffnet]`,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             timestamp: Date.now()
         });
-        showToast('Ticket wiederer&#246;ffnet!', 'ok');
+        showToast('Ticket wiedererÃ¶ffnet!', 'ok');
     } else {
         t.status = 'closed';
         t.closedAt = new Date().toISOString();
         t.messages.push({
             sender: myName,
             role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-            text: `[Info: Ticket wurde geschlossen und wird nach 24h gel&#246;scht]`,
+            text: `[Info: Ticket wurde geschlossen und wird nach 24h gelÃ¶scht]`,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             timestamp: Date.now()
         });
@@ -8544,11 +8544,11 @@ async function closeCurrentTicket() {
 
 async function deleteCurrentTicket() {
     if (!canDeleteTickets()) {
-        showToast('Nur ADMINs und Moderatoren d&#252;rfen Tickets l&#246;schen!', 'err');
+        showToast('Nur ADMINs und Moderatoren dÃ¼rfen Tickets lÃ¶schen!', 'err');
         return;
     }
     if (!_adminActiveTicketId) return;
-    if (!confirm('M&#246;chtest du dieses Support Ticket wirklich endg&#252;ltig l&#246;schen?')) return;
+    if (!confirm('MÃ¶chtest du dieses Support Ticket wirklich endgÃ¼ltig lÃ¶schen?')) return;
 
     _adminTicketsData = _adminTicketsData.filter(x => x.id !== _adminActiveTicketId);
     _adminActiveTicketId = null;
@@ -8560,7 +8560,7 @@ async function deleteCurrentTicket() {
 
     await saveADMINTicketsToGitHub(`Deleted support ticket by ${(CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : 'ADMIN'}`);
     renderADMINTicketsList();
-    showToast('Support Ticket gel&#246;scht!', 'ok');
+    showToast('Support Ticket gelÃ¶scht!', 'ok');
 }
 
 async function sendADMINTicketMsg() {
