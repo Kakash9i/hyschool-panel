@@ -7091,7 +7091,7 @@ function filterUserConfigs() {
           <div class="clickable-user" onclick="openUserProfileModal('${escapeHtml(displayAuthor)}')" style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 20px; transition: all 0.2s ease;" onmouseover="this.style.borderColor='rgba(245,158,11,0.4)'; this.style.background='rgba(245,158,11,0.05)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.background='rgba(255,255,255,0.03)';">
             <img src="${authorAvatar}" style="width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid rgba(245,158,11,0.5); object-fit: cover;" alt="Avatar">
             <span style="font-weight: 900; color: #f8fafc; font-size: 11px; letter-spacing: 0.3px;">${escapeHtml(displayAuthor)}</span>
-            <span class="badge-rank badge-rank-admin" style="font-size: 8.5px; padding: 1.5px 6px; border-radius: 4px; background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.15)); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); font-weight: 900; letter-spacing: 0.3px; white-space: nowrap;">&#128081; INHABER</span>
+            ' + getRankBadge(c.author || c.user || "ADMIN") + '
           </div>
         </div>
 
