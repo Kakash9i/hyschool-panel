@@ -1113,7 +1113,7 @@
       <!-- 1. KEYS GENERIEREN -->
       <div class="perm-item" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; align-items: stretch;">
         <div style="display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-weight:700;">âš¡ Keys generieren</span>
+          <span style="font-weight:700;">&#9889; Keys generieren</span>
           <label class="toggle"><input type="checkbox" id="sp-gen" onchange="document.getElementById('sp-max-dur-wrap').style.display=this.checked?'flex':'none'"><span class="slider"></span></label>
         </div>
         <div id="sp-max-dur-wrap" style="background:#050608; border:1px solid #1a1e2b; padding:8px 12px; border-radius:6px; display:flex; align-items:center; justify-content:space-between;">
@@ -1553,7 +1553,7 @@
   <div class="config-preview-modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
-        <span style="color:#e5a93c;">&#128100;</span> CONFIG VORSCHAU â€” <span id="cfg-preview-title" style="color:#e5a93c;">config.cfg</span>
+        <span style="color:#e5a93c;">&#128100;</span> CONFIG VORSCHAU &mdash; <span id="cfg-preview-title" style="color:#e5a93c;">config.cfg</span>
       </h3>
       <button onclick="closeConfigPreviewModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
     </div>
@@ -1806,7 +1806,7 @@
       <div id="key-gen-card" style="background:#0c0d13;border:1px solid #1a1e2b;border-radius:8px;padding:20px;margin-bottom:22px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
           <div style="font-size:12px;font-weight:900;color:#f8fafc;letter-spacing:1px;display:flex;align-items:center;gap:8px;">
-            <span style="color:#e5a93c;">âš¡</span> NEUE LICENSE KEYS GENERIEREN
+            <span style="color:#e5a93c;">&#9889;</span> NEUE LICENSE KEYS GENERIEREN
           </div>
           <div onclick="toggleRandomNameBtn()" id="random-toggle-pill" style="display:flex;align-items:center;gap:10px;background:#10121a;border:1px solid #1e2333;padding:6px 14px;border-radius:20px;cursor:pointer;user-select:none;transition:all .2s;">
             <span style="font-size:12px;">&#128100;</span>
@@ -1860,7 +1860,7 @@
 
           <div>
             <button id="gen-keys-btn" onclick="generateNewLicenses()" style="width:100%;height:38px;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:0 14px;border-radius:6px;font-size:11.5px;font-weight:900;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;">
-              <span>âš¡</span> <span>KEYS ERSTELLEN</span>
+              <span>&#9889;</span> <span>KEYS ERSTELLEN</span>
             </button>
           </div>
         </div>
@@ -1910,7 +1910,7 @@
       <!-- FLOATING MULTI-SELECT ACTION BAR -->
       <div id="batch-action-bar" style="display:none;background:linear-gradient(135deg, #141824, #0f121c);border:1px solid #e5a93c;border-radius:8px;padding:10px 18px;margin-bottom:14px;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(229,169,60,0.15);">
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="color:#e5a93c;font-size:14px;">âœ¨</span>
+          <span style="color:#e5a93c;font-size:14px;">&#10024;</span>
           <span style="font-weight:900;font-size:12px;color:#f8fafc;"><span id="batch-del-count" style="color:#e5a93c;">0</span> Keys ausgew&#228;hlt</span>
         </div>
         <div style="display:flex;gap:8px;align-items:center;">
@@ -3261,7 +3261,7 @@ function buildCheatsUI() {
         <!-- DEDICATED RAZER.DLL UPLOAD SECTION -->
         <div style="margin-top:14px;padding-top:14px;border-top:1px solid #1a1e2b;display:flex;flex-direction:column;gap:10px;">
           <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div class="section-title" style="margin-bottom:0;color:#10b981;">âš¡ RAZER.DLL HOCHLADEN (AUTO-INJECTION DATEI)</div>
+            <div class="section-title" style="margin-bottom:0;color:#10b981;">&#9889; RAZER.DLL HOCHLADEN (AUTO-INJECTION DATEI)</div>
             <span style="font-size:10px;color:#64748b;font-family:'JetBrains Mono',monospace;">C:\\Program Files\\Razer\\RazerAppEngine\\RAZER.dll</span>
           </div>
           <div style="font-size:11px;color:#94a3b8;line-height:1.4;">
@@ -4902,8 +4902,8 @@ function renderLicensesTable(list) {
       actionsHtml = `<span class="hwid-badge-admin" style="font-size:10px;padding:4px 10px;">&#128100; ADMIN GESCH&#220;TZT</span>`;
     } else {
       const pauseBtnHtml = (CURRENT_USER.is_admin || p.can_pause_keys) ? (lic.paused
-        ? `<button class="action-btn action-btn-resume" onclick="togglePauseLicense('${lic.key}')" title="Key wieder aktivieren">â–¶ Start</button>`
-        : `<button class="action-btn action-btn-pause" onclick="togglePauseLicense('${lic.key}')" title="Key vor&#252;bergehend pausieren">â¸ Pause</button>`) : '';
+        ? `<button class="action-btn action-btn-resume" onclick="togglePauseLicense('${lic.key}')" title="Key wieder aktivieren">&#9654; Start</button>`
+        : `<button class="action-btn action-btn-pause" onclick="togglePauseLicense('${lic.key}')" title="Key vor&#252;bergehend pausieren">&#9208; Pause</button>`) : '';
 
       const editBtnHtml = (CURRENT_USER.is_admin || p.can_edit_keys) ? `<button class="action-btn action-btn-edit" onclick="openEditLicModal('${lic.key}')" title="Laufzeit & Status bearbeiten">&#128100; Edit</button>` : '';
       const resetBtnHtml = (CURRENT_USER.is_admin || p.can_reset_hwid) ? `<button class="action-btn action-btn-reset" onclick="resetLicenseHWID('${lic.key}')" title="HWID sofort zur&#252;cksetzen">&#128100; Reset</button>` : '';
@@ -4951,7 +4951,7 @@ function renderLicensesTable(list) {
 
     let productBadgesHtml = "";
     if (lic.product === "ALL" || (lic.product_name && lic.product_name.toUpperCase().includes("ALL CHEATS"))) {
-      productBadgesHtml = `<span class="tag-product" style="background:rgba(229,169,60,0.15);color:#e5a93c;border-color:rgba(229,169,60,0.35);font-weight:900;">âš¡ ALL CHEATS (ALLE SPIELE)</span>`;
+      productBadgesHtml = `<span class="tag-product" style="background:rgba(229,169,60,0.15);color:#e5a93c;border-color:rgba(229,169,60,0.35);font-weight:900;">&#9889; ALL CHEATS (ALLE SPIELE)</span>`;
     } else if (lic.product === "NONE") {
       productBadgesHtml = `<span class="tag-product" style="background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.35);">&#128100; GESPERRT</span>`;
     } else {
@@ -5565,7 +5565,7 @@ function renderStaffTable() {
     const permBadges = [];
     if(perms.can_generate_keys) {
       const maxD = perms.max_duration ? (durTextMap[perms.max_duration] || perms.max_duration) : "Alle";
-      permBadges.push(`<span class="tag-duration" style="color:#e5a93c;">âš¡ Keys (${maxD})</span>`);
+      permBadges.push(`<span class="tag-duration" style="color:#e5a93c;">&#9889; Keys (${maxD})</span>`);
     }
     if(perms.can_edit_keys) {
       const editD = perms.edit_max_duration ? (durTextMap[perms.edit_max_duration] || perms.edit_max_duration) : "Alle";
