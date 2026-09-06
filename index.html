@@ -1521,7 +1521,7 @@
       <div id="modal-hwid-val" style="background:#090a0f;border:1px solid #1e2333;padding:12px 14px;border-radius:6px;color:#e5a93c;font-family:'JetBrains Mono',monospace;font-size:11px;word-break:break-all;line-height:1.5;"></div>
     </div>
     <div style="display:flex;gap:10px;margin-top:22px;">
-      <button id="modal-hwid-reset-btn" onclick="executeHwidResetFromModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128100; HWID JETZT ZUR&#220;CKSETZEN</button>
+      <button id="modal-hwid-reset-btn" onclick="executeHwidResetFromModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128187; HWID JETZT ZUR&#220;CKSETZEN</button>
       <button onclick="closeHwidModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Schlie&#223;en</button>
     </div>
   </div>
@@ -1580,7 +1580,7 @@
       <textarea id="cfg-preview-content" readonly style="width:100%;height:320px;background:#090a0f;border:1px solid #1e2333;color:#e5a93c;font-family:'JetBrains Mono',monospace;font-size:11px;padding:12px;border-radius:8px;resize:vertical;outline:none;line-height:1.5;box-sizing:border-box;white-space:pre;"></textarea>
     </div>
     <div style="display:flex;gap:10px;">
-      <button onclick="copyConfigPreviewContent()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:11px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128100; INHALT KOPIEREN</button>
+      <button onclick="copyConfigPreviewContent()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:11px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128203; INHALT KOPIEREN</button>
       <button onclick="closeConfigPreviewModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:11px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Schlie&#223;en</button>
     </div>
   </div>
@@ -4121,7 +4121,7 @@ function filterUserLogs() {
           </div>
         </td>
         <td style="text-align:center;">
-          <button class="action-btn action-btn-del" onclick="deleteUserGroupLogs(${filesJson})" style="height:24px;padding:0 8px;font-size:10.5px;" title="Alle Logins dieses Nutzers l&#246;schen">&#128100; L&#246;schen</button>
+          <button class="action-btn action-btn-del" onclick="deleteUserGroupLogs(${filesJson})" style="height:24px;padding:0 8px;font-size:10.5px;" title="Alle Logins dieses Nutzers l&#246;schen">&#128465;&#65039; L&#246;schen</button>
         </td>
       </tr>
     `;
@@ -4327,7 +4327,7 @@ function renderPermissionsRows() {
     if (isProtectedADMIN) {
       labelExtra = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;margin-left:6px;">&#128081; ADMIN</span>`;
     } else if (isStaff && !canEditThisKey) {
-      labelExtra = `<span style="background:#141724;color:#64748b;border:1px solid #1f2538;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;margin-left:6px;">&#128100; Fremder Key</span>`;
+      labelExtra = `<span style="background:#141724;color:#64748b;border:1px solid #1f2538;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;margin-left:6px;">&#128274; Fremder Key</span>`;
     }
 
     return `
@@ -4935,9 +4935,9 @@ function renderLicensesTable(list) {
         ? `<button class="action-btn action-btn-resume" onclick="togglePauseLicense('${lic.key}')" title="Key wieder aktivieren">&#9654; Start</button>`
         : `<button class="action-btn action-btn-pause" onclick="togglePauseLicense('${lic.key}')" title="Key vor&#252;bergehend pausieren">&#9208; Pause</button>`) : '';
 
-      const editBtnHtml = (CURRENT_USER.is_admin || p.can_edit_keys) ? `<button class="action-btn action-btn-edit" onclick="openEditLicModal('${lic.key}')" title="Laufzeit & Status bearbeiten">&#128100; Edit</button>` : '';
-      const resetBtnHtml = (CURRENT_USER.is_admin || p.can_reset_hwid) ? `<button class="action-btn action-btn-reset" onclick="resetLicenseHWID('${lic.key}')" title="HWID sofort zur&#252;cksetzen">&#128100; Reset</button>` : '';
-      const delBtnHtml = (CURRENT_USER.is_admin || p.can_delete_keys) ? `<button class="action-btn action-btn-del" onclick="deleteLicenseKey('${lic.key}')" title="Key komplett l&#246;schen">&#128100;</button>` : '';
+      const editBtnHtml = (CURRENT_USER.is_admin || p.can_edit_keys) ? `<button class="action-btn action-btn-edit" onclick="openEditLicModal('${lic.key}')" title="Laufzeit & Status bearbeiten">&#9998;&#65039; Edit</button>` : '';
+      const resetBtnHtml = (CURRENT_USER.is_admin || p.can_reset_hwid) ? `<button class="action-btn action-btn-reset" onclick="resetLicenseHWID('${lic.key}')" title="HWID sofort zur&#252;cksetzen">&#128260; Reset</button>` : '';
+      const delBtnHtml = (CURRENT_USER.is_admin || p.can_delete_keys) ? `<button class="action-btn action-btn-del" onclick="deleteLicenseKey('${lic.key}')" title="Key komplett l&#246;schen">&#128465;&#65039;</button>` : '';
 
       actionsHtml = `
         <div class="action-btn-group">
@@ -4953,7 +4953,7 @@ function renderLicensesTable(list) {
       ? `alert('Das ist der ADMIN Account! Hier darfst du nichts &#228;ndern!');`
       : ((CURRENT_USER.is_admin || p.can_edit_keys) ? `openEditLicModal('${lic.key}')` : '');
 
-    const noteText = lic.note && lic.note !== '---' ? `<div style="color:#64748b;font-size:11px;margin-top:3px;display:flex;align-items:center;gap:4px;"><span>&#128100;</span> ${lic.note}</div>` : '';
+    const noteText = lic.note && lic.note !== '---' ? `<div style="color:#64748b;font-size:11px;margin-top:3px;display:flex;align-items:center;gap:4px;"><span>&#128221;</span> ${lic.note}</div>` : '';
     const cbDisabled = (!CURRENT_USER.is_admin && isProtectedADMIN) ? 'disabled' : '';
 
     let displayedDuration = lic.duration_label || lic.duration;
@@ -4983,7 +4983,7 @@ function renderLicensesTable(list) {
     if (lic.product === "ALL" || (lic.product_name && lic.product_name.toUpperCase().includes("ALL CHEATS"))) {
       productBadgesHtml = `<span class="tag-product" style="background:rgba(229,169,60,0.15);color:#e5a93c;border-color:rgba(229,169,60,0.35);font-weight:900;">&#9889; ALL CHEATS (ALLE SPIELE)</span>`;
     } else if (lic.product === "NONE") {
-      productBadgesHtml = `<span class="tag-product" style="background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.35);">&#128100; GESPERRT</span>`;
+      productBadgesHtml = `<span class="tag-product" style="background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.35);">&#128683; GESPERRT</span>`;
     } else {
       const items = (lic.product_name || lic.product || "").split("+").map(s => s.trim()).filter(Boolean);
       productBadgesHtml = items.map(pName => {
@@ -5032,7 +5032,7 @@ function renderLicensesTable(list) {
         <td onclick="${onRowEditClick}" style="cursor:${onRowEditClick ? 'pointer' : 'default'};overflow:hidden;" title="Klicken um Status, Dauer & Ablaufzeit zu bearbeiten">
           <div style="display:flex;align-items:center;gap:6px;">
             <div>${statusBadge}</div>
-            ${(CURRENT_USER.is_admin || p.can_edit_keys) && !(!CURRENT_USER.is_admin && isProtectedADMIN) ? `<span style="color:#e5a93c;font-size:10px;opacity:0.8;">&#128100;</span>` : ''}
+            ${(CURRENT_USER.is_admin || p.can_edit_keys) && !(!CURRENT_USER.is_admin && isProtectedADMIN) ? `<span style="color:#e5a93c;font-size:10px;opacity:0.8;">&#9998;</span>` : ''}
           </div>
           <div style="margin-top:6px;font-size:11px;color:#64748b;">${expireText}</div>
         </td>
@@ -5623,8 +5623,8 @@ function renderStaffTable() {
         </td>
         <td style="text-align:right;">
           <div style="display:flex;gap:6px;justify-content:flex-end;">
-            <button onclick="openStaffModal(${idx})" style="background:#141724;border:1px solid #232a3e;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; Edit</button>
-            <button onclick="deleteStaff(${idx})" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100;</button>
+            <button onclick="openStaffModal(${idx})" style="background:#141724;border:1px solid #232a3e;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#9998;&#65039; Edit</button>
+            <button onclick="deleteStaff(${idx})" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128465;&#65039;</button>
           </div>
         </td>
       </tr>
@@ -7117,7 +7117,7 @@ function filterUserConfigs() {
 
           <!-- Delete Button -->
           ${isOwner ? `
-            <button onclick="deleteUserConfig('${c.id}')" style="width: 28px; height: 28px; border-radius: 4px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #f87171; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='rgba(239,68,68,0.25)';" onmouseout="this.style.background='rgba(239,68,68,0.08)';" title="L&#128100;schen">
+            <button onclick="deleteUserConfig('${c.id}')" style="width: 28px; height: 28px; border-radius: 4px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #f87171; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='rgba(239,68,68,0.25)';" onmouseout="this.style.background='rgba(239,68,68,0.08)';" title="L&#246;schen">
               &#128465;&#65039;
             </button>
           ` : ''}
@@ -8334,7 +8334,7 @@ function renderADMINTicketsList() {
                 </div>
                 
                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-                  <div style="width:16px;height:16px;border-radius:4px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:9px;">&#128100;</div>
+                  <div style="width:16px;height:16px;border-radius:4px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:9px;">&#127915;</div>
                   <span style="font-size:11px;color:#94a3b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;"><b style="color:#e2e8f0;">${escapeHtml(t.customerName || 'Kunde')}</b>: ${escapeHtml(t.description || '')}</span>
                 </div>
                 
@@ -8494,7 +8494,7 @@ async function claimCurrentTicket() {
     t.messages.push({
         sender: myName,
         role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben &#252;bernommen. Wie kann ich dir heute weiterhelfen? &#128100;`,
+        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben &#252;bernommen. Wie kann ich dir heute weiterhelfen? &#128075;`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now()
     });
