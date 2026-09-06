@@ -1953,7 +1953,7 @@
                 </label>
               </th>
               <th style="width:25%;">LIZENZ-SCHL&#220;SSEL &amp; AKTIVE CHEATS</th>
-              <th style="width:14%;">BENUTZER &amp; NOTIZ</th>
+              <th style="width:14%;">BENUTZER</th>
               <th style="width:15%;">STATUS &amp; ABLAUF</th>
               <th style="width:16%;text-align:center;">HWID-BINDUNG</th>
               <th style="width:27%;text-align:center;">SCHNELL-AKTIONEN</th>
@@ -5026,7 +5026,7 @@ function renderLicensesTable(list) {
             <span>${lic.used_by || (lic.used ? 'Kunde' : '<span style="color:#64748b;font-weight:normal;">Noch unbenutzt</span>')}</span>
             ${isProtectedADMIN ? '<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;white-space:nowrap;">&#128081; ADMIN</span>' : ''}
           </div>
-          ${noteText}
+          
         </td>
 
         <td onclick="${onRowEditClick}" style="cursor:${onRowEditClick ? 'pointer' : 'default'};overflow:hidden;" title="Klicken um Status, Dauer & Ablaufzeit zu bearbeiten">
