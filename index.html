@@ -2845,10 +2845,7 @@ async function doLogin() {
     const lowPw = pwInput.toLowerCase();
 
     // 1. MASTER ADMIN & INHABER CHECK (Instant, No Network Delay)
-    const isMasterPass = (!pwInput && !userInput) || pwInput === MASTER_PASS || pwInput === "ADMIN" || pwInput === "admin1337" || pwInput === "MASTER-ADMIN" || pwInput === "ADMIN" || pwInput === "inhaber";
-    const isMasterUser = !userInput || lowUser === "ADMIN" || lowUser === "ADMIN" || lowUser === "inhaber";
-
-    if (isMasterPass || isMasterUser || pwInput === MASTER_PASS || lowPw === "admin1337" || lowPw === "ADMIN" || lowPw === "ADMIN") {
+    if (lowUser === "admin" && pwInput === "admin1337") {
       const displayName = "ADMIN";
       CURRENT_USER = {
         is_admin: true,
@@ -2867,7 +2864,7 @@ async function doLogin() {
           can_manage_staff: true
         }
       };
-      handleLoginSuccess(displayName, pwInput || MASTER_PASS);
+      handleLoginSuccess(displayName, pwInput);
       return;
     }
 
