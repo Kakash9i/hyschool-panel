@@ -6331,7 +6331,7 @@ function getUserProfile(usernameOrKey) {
     rank: fallbackRanks,
     avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(target)}`,
     banner: isOwner ? (localStorage.getItem("hyschool_admin_banner") || "") : "",
-    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugef&#252;gt.",
+    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugefÃ¼gt.",
     discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "Nicht angegeben",
     joined: "01.01.2026",
     guestbook: []
@@ -6605,7 +6605,7 @@ async function openUserProfileModal(usernameOrKey) {
     }
   }
 
-  if(bioEl) bioEl.textContent = (prof && prof.bio) ? prof.bio : "Dieser User hat noch keine Bio hinzugef&#252;gt.";
+  if(bioEl) bioEl.textContent = (prof && prof.bio) ? prof.bio : "Dieser User hat noch keine Bio hinzugefÃ¼gt.";
   if(joinedEl) joinedEl.textContent = (prof && prof.joined) ? prof.joined : "01.01.2026";
   if(discordEl) discordEl.textContent = (prof && prof.discord) ? prof.discord : "Nicht angegeben";
   if(cfgCountEl) cfgCountEl.textContent = `${userConfigs.length} Configs`;
@@ -6811,7 +6811,7 @@ async function submitGuestbookEntry() {
   input.value = "";
   renderGuestbookEntries(targetProf.guestbook);
   try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
-  showToast("G&#228;stebuch-Eintrag hinzugef&#252;gt!", "ok");
+  showToast("G&#228;stebuch-Eintrag hinzugefÃ¼gt!", "ok");
 
   try {
     const fullJson = JSON.stringify(USER_PROFILES, null, 2);
@@ -6862,7 +6862,7 @@ function onConfigFileSelected(input) {
     const nameInp = document.getElementById("cfg-upload-name");
     
     if (lbl) lbl.textContent = `Ausgew&#228;hlt: ${_selectedConfigFile.name}`;
-    if (sublbl) sublbl.textContent = `Gr&#246;&#223;e: ${formatBytes(_selectedConfigFile.size)}`;
+    if (sublbl) sublbl.textContent = `GrÃ¶ÃŸe: ${formatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
     }
@@ -6881,7 +6881,7 @@ function handleConfigDrop(e) {
     const nameInp = document.getElementById("cfg-upload-name");
     
     if (lbl) lbl.textContent = `Ausgew&#228;hlt: ${_selectedConfigFile.name}`;
-    if (sublbl) sublbl.textContent = `Gr&#246;&#223;e: ${formatBytes(_selectedConfigFile.size)}`;
+    if (sublbl) sublbl.textContent = `GrÃ¶ÃŸe: ${formatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
     }
@@ -7287,7 +7287,7 @@ async function uploadUserConfig() {
         if(descInp) descInp.value = "";
         const lbl = document.getElementById("cfg-drop-label");
         const sublbl = document.getElementById("cfg-drop-sublabel");
-        if(lbl) lbl.textContent = "Datei ausw&#228;hlen oder ablegen";
+        if(lbl) lbl.textContent = "Datei auswÃ¤hlen oder ablegen";
         if(sublbl) sublbl.textContent = "Erlaubt: .css, .cfg, .ini, .json, .txt, .zip, .lua";
         const fileInput = document.getElementById("cfg-file-input");
         if(fileInput) fileInput.value = "";
@@ -7683,7 +7683,7 @@ function onHighlightUrlChanged(val) {
   if(val && val.trim()) {
     _uploadedHighlightFile = null;
     document.getElementById("hl-drop-label").textContent = "&#127916; Video hier ablegen oder klicken";
-    document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (f&#252;r gr&#246;&#223;ere Clips bitte Link nutzen)";
+    document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (fÃ¼r grÃ¶ÃŸere Clips bitte Link nutzen)";
   }
 }
 
@@ -7770,7 +7770,7 @@ async function uploadHighlightClip() {
       document.getElementById("hl-file-input").value = "";
       document.getElementById("hl-censor-name-cb").checked = false;
       document.getElementById("hl-drop-label").textContent = "&#127916; Video hier ablegen oder klicken";
-      document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (f&#252;r gr&#246;&#223;ere Clips bitte Link nutzen)";
+      document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (fÃ¼r grÃ¶ÃŸere Clips bitte Link nutzen)";
       _uploadedHighlightFile = null;
             toggleHighlightUploadCard();
     } catch(err) {
@@ -8473,7 +8473,7 @@ function insertStaffMacro(type) {
     } else if (type === 'hwid') {
         inp.value = 'Dein HWID-Reset wurde erfolgreich durchgef&#252;hrt. Du kannst dich nun auf deinem Ger&#228;t im Loader einloggen.';
     } else if (type === 'antivirus') {
-        inp.value = 'Bitte stelle sicher, dass du deinen Windows Defender bzw. Antivirus deaktiviert oder eine Ausnahme f&#252;r den Loader-Ordner hinzugef&#252;gt hast.';
+        inp.value = 'Bitte stelle sicher, dass du deinen Windows Defender bzw. Antivirus deaktiviert oder eine Ausnahme f&#252;r den Loader-Ordner hinzugefÃ¼gt hast.';
     } else if (type === 'config') {
         inp.value = 'Deine Cloud-Configs findest du im Tab "Meine Configs". Dort kannst du sie direkt herunterladen oder mit einem Klick in den Cheat-Ordner laden.';
     } else if (type === 'solved') {
