@@ -1824,7 +1824,7 @@
             <span style="color:#e5a93c;">&#9889;</span> NEUE LICENSE KEYS GENERIEREN
           </div>
           <div onclick="toggleRandomNameBtn()" id="random-toggle-pill" style="display:flex;align-items:center;gap:10px;background:#10121a;border:1px solid #1e2333;padding:6px 14px;border-radius:20px;cursor:pointer;user-select:none;transition:all .2s;">
-            <span style="font-size:12px;">&#128084;</span>
+            <span style="font-size:12px;">&#127922;</span>
             <span style="font-size:11px;font-weight:800;color:#94a3b8;" id="random-toggle-pill-text">Zuf&#228;llige Namen</span>
             <label class="toggle" style="pointer-events:none;margin:0;"><input type="checkbox" id="gen-random-toggle-cb"><span class="slider"></span></label>
           </div>
@@ -5011,7 +5011,7 @@ function renderLicensesTable(list) {
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:nowrap;">
             <div class="tag-key-box" onclick="navigator.clipboard.writeText('${lic.key}');showToast('Key kopiert: ${lic.key}','ok');" title="Klicken zum Kopieren">
               <span>${lic.key}</span> 
-              <span style="font-size:11px;color:#64748b;">&#128084;</span>
+              <span style="font-size:11px;color:#64748b;">&#128221;</span>
             </div>
             <span class="tag-duration" style="white-space:nowrap;">${displayedDuration}</span>
           </div>
@@ -5022,7 +5022,7 @@ function renderLicensesTable(list) {
 
         <td style="vertical-align:middle;">
           <div style="color:#f8fafc;font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-            <span style="color:#e5a93c;flex-shrink:0;">&#128084;</span> 
+             
             <span>${lic.used_by || (lic.used ? 'Kunde' : '<span style="color:#64748b;font-weight:normal;">Noch unbenutzt</span>')}</span>
             ${isProtectedADMIN ? '<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;white-space:nowrap;">&#128081; ADMIN</span>' : ''}
           </div>
