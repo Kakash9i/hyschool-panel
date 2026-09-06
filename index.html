@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -1102,7 +1102,7 @@
       <label>ROLLE / BEZEICHNUNG</label>
       <select id="staff-role-input">
         <option value="Supporter">Supporter (Standard Support)</option>
-        <option value="Reseller">Reseller (Verkäufer / Keys)</option>
+        <option value="Reseller">Reseller (VerkÃ¤ufer / Keys)</option>
         <option value="Moderator">Moderator (Erweitert)</option>
         <option value="Co-ADMIN">Co-ADMIN (Fast alle Rechte)</option>
       </select>
@@ -1113,7 +1113,7 @@
       <!-- 1. KEYS GENERIEREN -->
       <div class="perm-item" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; align-items: stretch;">
         <div style="display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-weight:700;">⚡ Keys generieren</span>
+          <span style="font-weight:700;">âš¡ Keys generieren</span>
           <label class="toggle"><input type="checkbox" id="sp-gen" onchange="document.getElementById('sp-max-dur-wrap').style.display=this.checked?'flex':'none'"><span class="slider"></span></label>
         </div>
         <div id="sp-max-dur-wrap" style="background:#050608; border:1px solid #1a1e2b; padding:8px 12px; border-radius:6px; display:flex; align-items:center; justify-content:space-between;">
@@ -1183,7 +1183,7 @@
           <label class="toggle"><input type="checkbox" id="sp-pause" onchange="document.getElementById('sp-pause-dur-wrap').style.display=this.checked?'flex':'none'"><span class="slider"></span></label>
         </div>
         <div id="sp-pause-dur-wrap" style="background:#050608; border:1px solid #1a1e2b; padding:8px 12px; border-radius:6px; display:flex; align-items:center; justify-content:space-between;">
-          <span style="color:#94a3b8; font-size:11px; font-weight:700;">⏳ Max. erlaubte Pausierungsdauer:</span>
+          <span style="color:#94a3b8; font-size:11px; font-weight:700;">â³ Max. erlaubte Pausierungsdauer:</span>
           <select id="sp-pause-max-dur" style="background:#141724; border:1px solid #232a3e; color:#f8fafc; padding:6px 10px; border-radius:5px; font-size:11px; outline:none;">
             <option value="all">&#128100; Unbegrenzt pausieren</option>
             <option value="1">Max. 1 Tag pausieren</option>
@@ -1201,7 +1201,7 @@
         <label class="toggle"><input type="checkbox" id="sp-hwid"><span class="slider"></span></label>
       </div>
       <div class="perm-item">
-        <span>&#128100; Keys löschen</span>
+        <span>&#128100; Keys lÃ¶schen</span>
         <label class="toggle"><input type="checkbox" id="sp-del"><span class="slider"></span></label>
       </div>
       <div class="perm-item">
@@ -1264,7 +1264,7 @@
     <!-- BANNER SELECTION -->
     <div style="margin-bottom: 20px;">
       <label style="display:block;font-size:11px;color:#cbd5e1;font-weight:800;letter-spacing:0.5px;margin-bottom:8px;">
-        2. PROFIL-BANNER AUSWÄHLEN (Optional)
+        2. PROFIL-BANNER AUSWÃ„HLEN (Optional)
       </label>
       <div style="display:flex;align-items:center;gap:18px;background:#090b12;border:1px solid #1a2030;padding:16px;border-radius:12px;">
         <div id="settings-banner-preview-wrap" style="width:120px;height:45px;border-radius:8px;border:1px solid #e5a93c;overflow:hidden;background:#151a28;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(229,169,60,0.25);flex-shrink:0;">
@@ -1319,7 +1319,7 @@
       <!-- BANNER AREA -->
       <div id="profile-modal-banner" style="width:100%;height:180px;background:linear-gradient(45deg, #1e293b, #0f172a);background-size:cover;background-position:center;position:relative;mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);-webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);">
         <button id="btn-upload-banner" onclick="document.getElementById('banner-upload-input').click()" style="display:none;position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:6px 12px;border-radius:6px;font-size:10px;font-weight:800;cursor:pointer;backdrop-filter:blur(4px); transition: all .2s ease;z-index:10;">
-          &#128247; BANNER ÄNDERN
+          &#128247; BANNER Ã„NDERN
         </button>
         <input type="file" id="banner-upload-input" style="display:none;" accept="image/*" onchange="handleBannerUpload(event)">
       </div>
@@ -1369,20 +1369,20 @@
         </div>
       </div>
     </div>
-    <!-- GUESTBOOK SECTION (GÄSTEBUCH) -->
+    <!-- GUESTBOOK SECTION (GÃ„STEBUCH) -->
     <div style="background:#090b12;border:1px solid #1a2030;border-radius:12px;padding:20px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <h4 style="color:#ffffff;font-size:13px;font-weight:900;letter-spacing:0.5px;display:flex;align-items:center;gap:8px;margin:0;">
-          <span style="color:#e5a93c;">&#128100;</span> GÄSTEBUCH & REPUTATION
-          <span id="profile-guestbook-count" style="background:#131828;color:#94a3b8;border:1px solid #202a40;padding:2px 8px;border-radius:10px;font-size:10px;">0 Einträge</span>
+          <span style="color:#e5a93c;">&#128100;</span> GÃ„STEBUCH & REPUTATION
+          <span id="profile-guestbook-count" style="background:#131828;color:#94a3b8;border:1px solid #202a40;padding:2px 8px;border-radius:10px;font-size:10px;">0 EintrÃ¤ge</span>
         </h4>
       </div>
 
       <!-- WRITE GUESTBOOK ENTRY -->
       <div style="display:flex;gap:10px;margin-bottom:16px;">
-        <input type="text" id="guestbook-input" placeholder="Hinterlasse einen Gästebucheintrag auf diesem Profil... (Enter)" onkeydown="if(event.key==='Enter')submitGuestbookEntry()" style="flex:1;background:#111522;border:1px solid #212a40;color:#f8fafc;padding:10px 14px;border-radius:8px;font-size:11.5px;outline:none;" />
+        <input type="text" id="guestbook-input" placeholder="Hinterlasse einen GÃ¤stebucheintrag auf diesem Profil... (Enter)" onkeydown="if(event.key==='Enter')submitGuestbookEntry()" style="flex:1;background:#111522;border:1px solid #212a40;color:#f8fafc;padding:10px 14px;border-radius:8px;font-size:11.5px;outline:none;" />
         <button onclick="submitGuestbookEntry()" id="guestbook-send-btn" class="upload-btn" style="width:auto;padding:10px 18px;font-size:11px;">
-          ✎ EINTRAGEN
+          âœŽ EINTRAGEN
         </button>
       </div>
 
@@ -1441,7 +1441,7 @@
         <label>STATUS</label>
         <select id="edit-lic-status">
           <option value="unused">&#128100; Unbenutzt (Startet bei Login)</option>
-          <option value="active">⚪ Eingelöst / Aktiv</option>
+          <option value="active">âšª EingelÃ¶st / Aktiv</option>
           <option value="paused">&#128100; Pausiert</option>
         </select>
       </div>
@@ -1460,7 +1460,7 @@
         </div>
       </div>
       <input type="text" id="edit-lic-expires" placeholder="z.B. 12.10.2026 18:30 oder LIFETIME oder leer" />
-      <div style="font-size:10px;color:#64748b;margin-top:4px;">Format: TT.MM.JJJJ HH:mm oder leer lassen für unbenutzte Keys.</div>
+      <div style="font-size:10px;color:#64748b;margin-top:4px;">Format: TT.MM.JJJJ HH:mm oder leer lassen fÃ¼r unbenutzte Keys.</div>
     </div>
 
     <!-- BENUTZER / NOTIZ -->
@@ -1482,7 +1482,7 @@
   <div class="hwid-modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
       <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;">
-        <span style="color:#e5a93c;">&#128100;</span> HWID-GERÄTEBINDUNG
+        <span style="color:#e5a93c;">&#128100;</span> HWID-GERÃ„TEBINDUNG
       </h3>
       <button onclick="closeHwidModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
     </div>
@@ -1499,8 +1499,8 @@
       <div id="modal-hwid-val" style="background:#090a0f;border:1px solid #1e2333;padding:12px 14px;border-radius:6px;color:#e5a93c;font-family:'JetBrains Mono',monospace;font-size:11px;word-break:break-all;line-height:1.5;"></div>
     </div>
     <div style="display:flex;gap:10px;margin-top:22px;">
-      <button id="modal-hwid-reset-btn" onclick="executeHwidResetFromModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128100; HWID JETZT ZURÜCKSETZEN</button>
-      <button onclick="closeHwidModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Schließen</button>
+      <button id="modal-hwid-reset-btn" onclick="executeHwidResetFromModal()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128100; HWID JETZT ZURÃœCKSETZEN</button>
+      <button onclick="closeHwidModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">SchlieÃŸen</button>
     </div>
   </div>
 </div>
@@ -1546,7 +1546,7 @@
   <div class="config-preview-modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
-        <span style="color:#e5a93c;">&#128100;</span> CONFIG VORSCHAU — <span id="cfg-preview-title" style="color:#e5a93c;">config.cfg</span>
+        <span style="color:#e5a93c;">&#128100;</span> CONFIG VORSCHAU â€” <span id="cfg-preview-title" style="color:#e5a93c;">config.cfg</span>
       </h3>
       <button onclick="closeConfigPreviewModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
     </div>
@@ -1559,7 +1559,7 @@
     </div>
     <div style="display:flex;gap:10px;">
       <button onclick="copyConfigPreviewContent()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:11px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128100; INHALT KOPIEREN</button>
-      <button onclick="closeConfigPreviewModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:11px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Schließen</button>
+      <button onclick="closeConfigPreviewModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:11px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">SchlieÃŸen</button>
     </div>
   </div>
 </div>
@@ -1630,9 +1630,9 @@
 
 <div id="main-panel">
     <div class="header">
-    <div style="display:flex;align-items:center;gap:12px;">
+    <div style="display:flex;flex-direction:column;gap:4px;">
       <h1 style="margin:0;font-size:18px;font-weight:900;letter-spacing:1px;color:#f8fafc;display:flex;align-items:center;gap:8px;"><span style="color:#e5a93c;">&#9889;</span> HYSCHOOL ADMIN PANEL</h1>
-      <span id="user-badge" style="margin-left:4px;"></span>
+      <div id="user-badge" style="font-size:11px;margin-left:26px;"></div>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
       <div class="status-indicator" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#10b981;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:6px;">
@@ -1682,6 +1682,9 @@
     <div class="main-tab" onclick="switchMainTab(8)" id="mtab-8">
       <span style="font-size:13px;color:#e879f9;">&#127916;</span> HIGHLIGHTS
     </div>
+    <div class="main-tab" onclick="switchMainTab(9)" id="mtab-9">
+      <span style="font-size:13px;color:#38bdf8;">&#128269;</span> SUCHEN
+    </div>
   </div>
 
 <!-- TAB 0: CHEATS -->
@@ -1693,9 +1696,9 @@
   <!-- TAB 1: MAYA UPDATER -->
   <div class="tab-content" id="tc-1">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
-      <div class="section-title" style="margin-bottom:0;font-size:13px;color:#f8fafc;">MAYA LOADER EXE UPDATER — AUTOMATISCHES KUNDEN-UPDATE</div>
+      <div class="section-title" style="margin-bottom:0;font-size:13px;color:#f8fafc;">MAYA LOADER EXE UPDATER â€” AUTOMATISCHES KUNDEN-UPDATE</div>
     </div>
-    <p style="font-size:12px;color:#94a3b8;margin-bottom:18px;line-height:1.6;">Sobald du hier eine neue <code style="color:#e5a93c;font-weight:700;background:#090a0f;padding:2px 6px;border-radius:4px;border:1px solid #1e2333;">maya.exe</code> hochlädst, erhöht das System die Versionsnummer gan+ <b>automatisch</b> und löst bei deinen Kunden beim nächsten Start das Update-Fenster aus!</p>
+    <p style="font-size:12px;color:#94a3b8;margin-bottom:18px;line-height:1.6;">Sobald du hier eine neue <code style="color:#e5a93c;font-weight:700;background:#090a0f;padding:2px 6px;border-radius:4px;border:1px solid #1e2333;">maya.exe</code> hochlÃ¤dst, erhÃ¶ht das System die Versionsnummer gan+ <b>automatisch</b> und lÃ¶st bei deinen Kunden beim nÃ¤chsten Start das Update-Fenster aus!</p>
     
     <div class="upload-panel">
       <div>
@@ -1707,7 +1710,7 @@
         </div>
       </div>
       <div>
-        <button class="upload-btn" id="maya-upload-btn" onclick="uploadMayaExe()">&#8593; Neue maya.exe Hochladen &amp; Kunden-Update Auslösen</button>
+        <button class="upload-btn" id="maya-upload-btn" onclick="uploadMayaExe()">&#8593; Neue maya.exe Hochladen &amp; Kunden-Update AuslÃ¶sen</button>
         <div class="prog-wrap" id="mup-prog-wrap">
           <div class="prog-bar"><div class="bar" id="mup-fill"></div></div>
           <div class="prog-lbl" id="mup-lbl"></div>
@@ -1719,7 +1722,7 @@
   <!-- TAB 2: USER LOGS -->
   <div class="tab-content" id="tc-2">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
-      <div class="section-title" style="margin-bottom:0;font-size:13px;color:#f8fafc;">KEYAUTH BENUTZER-AKTIVITÄT &amp; ECHTZEIT-LOGINS</div>
+      <div class="section-title" style="margin-bottom:0;font-size:13px;color:#f8fafc;">KEYAUTH BENUTZER-AKTIVITÃ„T &amp; ECHTZEIT-LOGINS</div>
       
       <!-- SUCHLEISTE UND SORTIERUNG -->
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
@@ -1727,13 +1730,13 @@
         
         <select id="log-sort-select" onchange="filterUserLogs()" style="background:#0c0d13;border:1px solid #1e2333;color:#cbd5e1;padding:9px 12px;border-radius:6px;font-size:12px;outline:none;">
           <option value="date_desc">Neueste zuerst</option>
-          <option value="date_asc">Älteste zuerst</option>
-          <option value="logins_desc">Häufigste Logins</option>
+          <option value="date_asc">Ã„lteste zuerst</option>
+          <option value="logins_desc">HÃ¤ufigste Logins</option>
           <option value="name_asc">Name (A-Z)</option>
         </select>
 
         <button onclick="loadLiveLogs()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; AKTUALISIEREN</button>
-        <button id="del-all-userlogs-btn" onclick="deleteAllUserLogs()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; ALLE LÖSCHEN</button>
+        <button id="del-all-userlogs-btn" onclick="deleteAllUserLogs()" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:9px 16px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128100; ALLE LÃ–SCHEN</button>
       </div>
     </div>
 
@@ -1796,11 +1799,11 @@
       <div id="key-gen-card" style="background:#0c0d13;border:1px solid #1a1e2b;border-radius:8px;padding:20px;margin-bottom:22px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
           <div style="font-size:12px;font-weight:900;color:#f8fafc;letter-spacing:1px;display:flex;align-items:center;gap:8px;">
-            <span style="color:#e5a93c;">⚡</span> NEUE LICENSE KEYS GENERIEREN
+            <span style="color:#e5a93c;">âš¡</span> NEUE LICENSE KEYS GENERIEREN
           </div>
           <div onclick="toggleRandomNameBtn()" id="random-toggle-pill" style="display:flex;align-items:center;gap:10px;background:#10121a;border:1px solid #1e2333;padding:6px 14px;border-radius:20px;cursor:pointer;user-select:none;transition:all .2s;">
             <span style="font-size:12px;">&#128100;</span>
-            <span style="font-size:11px;font-weight:800;color:#94a3b8;" id="random-toggle-pill-text">Zufällige Namen</span>
+            <span style="font-size:11px;font-weight:800;color:#94a3b8;" id="random-toggle-pill-text">ZufÃ¤llige Namen</span>
             <label class="toggle" style="pointer-events:none;margin:0;"><input type="checkbox" id="gen-random-toggle-cb"><span class="slider"></span></label>
           </div>
         </div>
@@ -1850,7 +1853,7 @@
 
           <div>
             <button id="gen-keys-btn" onclick="generateNewLicenses()" style="width:100%;height:38px;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:0 14px;border-radius:6px;font-size:11.5px;font-weight:900;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;">
-              <span>⚡</span> <span>KEYS ERSTELLEN</span>
+              <span>âš¡</span> <span>KEYS ERSTELLEN</span>
             </button>
           </div>
         </div>
@@ -1858,7 +1861,7 @@
         <!-- GENERATED OUTPUT BOX -->
         <div id="gen-output-box" style="display:none;margin-top:16px;background:#090a0f;border:1px solid #232a3e;border-radius:8px;padding:14px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-            <span style="font-size:11px;color:#e5a93c;font-weight:900;letter-spacing:0.5px;">✅ NEU GENERIERTE KEYS:</span>
+            <span style="font-size:11px;color:#e5a93c;font-weight:900;letter-spacing:0.5px;">âœ… NEU GENERIERTE KEYS:</span>
             <button onclick="copyGeneratedKeys()" style="background:#141724;border:1px solid #232a3e;color:#e5a93c;padding:5px 12px;border-radius:4px;font-size:11px;font-weight:800;cursor:pointer;">&#128100; In Zwischenablage kopieren</button>
           </div>
           <textarea id="gen-keys-textarea" readonly style="width:100%;height:80px;background:#0c0d13;border:1px solid #1e2333;color:#f8fafc;font-family:'JetBrains Mono',monospace;font-size:12px;padding:10px;border-radius:6px;resize:none;outline:none;line-height:1.6;"></textarea>
@@ -1873,7 +1876,7 @@
           <select id="lic-filter-status" onchange="filterLicenses()" style="background:#0c0d13;border:1px solid #1e2333;color:#cbd5e1;padding:8px 12px;border-radius:6px;font-size:12px;outline:none;">
             <option value="all">Alle Status</option>
             <option value="unused">Nur Unbenutzt (Aktiv)</option>
-            <option value="used">Nur Eingelöst</option>
+            <option value="used">Nur EingelÃ¶st</option>
             <option value="expired">Nur Abgelaufen</option>
           </select>
 
@@ -1892,7 +1895,7 @@
           <div style="display:flex;align-items:center;gap:16px;font-size:11px;color:#94a3b8;background:#0c0d13;padding:8px 16px;border-radius:6px;border:1px solid #1a1e2b;">
             <div>GESAMT: <b id="stat-lic-total" style="color:#f8fafc;">0</b></div>
             <div>UNBENUTZT: <b id="stat-lic-unused" style="color:#e5a93c;">0</b></div>
-            <div>EINGELÖST: <b id="stat-lic-used" style="color:#f8fafc;">0</b></div>
+            <div>EINGELÃ–ST: <b id="stat-lic-used" style="color:#f8fafc;">0</b></div>
           </div>
         </div>
       </div>
@@ -1900,15 +1903,15 @@
       <!-- FLOATING MULTI-SELECT ACTION BAR -->
       <div id="batch-action-bar" style="display:none;background:linear-gradient(135deg, #141824, #0f121c);border:1px solid #e5a93c;border-radius:8px;padding:10px 18px;margin-bottom:14px;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(229,169,60,0.15);">
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="color:#e5a93c;font-size:14px;">✨</span>
-          <span style="font-weight:900;font-size:12px;color:#f8fafc;"><span id="batch-del-count" style="color:#e5a93c;">0</span> Keys ausgewählt</span>
+          <span style="color:#e5a93c;font-size:14px;">âœ¨</span>
+          <span style="font-weight:900;font-size:12px;color:#f8fafc;"><span id="batch-del-count" style="color:#e5a93c;">0</span> Keys ausgewÃ¤hlt</span>
         </div>
         <div style="display:flex;gap:8px;align-items:center;">
           <button onclick="copySelectedLicenses()" style="background:#1c2234;border:1px solid #2b354f;color:#e5a93c;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-            &#128100; Ausgewählte kopieren
+            &#128100; AusgewÃ¤hlte kopieren
           </button>
           <button onclick="deleteSelectedLicenses()" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.4);color:#f43f5e;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-            &#128100; Ausgewählte löschen
+            &#128100; AusgewÃ¤hlte lÃ¶schen
           </button>
           <button onclick="clearLicenseSelection()" style="background:none;border:none;color:#64748b;font-size:11px;font-weight:700;cursor:pointer;padding:6px 8px;">
             Auswahl aufheben
@@ -1922,12 +1925,12 @@
           <thead>
             <tr>
               <th style="width:36px;text-align:center;">
-                <label class="custom-cb-wrap" title="Alle auswählen">
+                <label class="custom-cb-wrap" title="Alle auswÃ¤hlen">
                   <input type="checkbox" id="lic-select-all-cb" onchange="toggleSelectAllLicenses(this.checked)">
-                  <span class="custom-cb-box">✓</span>
+                  <span class="custom-cb-box">âœ“</span>
                 </label>
               </th>
-              <th style="width:25%;">LIZENZ-SCHLÜSSEL &amp; AKTIVE CHEATS</th>
+              <th style="width:25%;">LIZENZ-SCHLÃœSSEL &amp; AKTIVE CHEATS</th>
               <th style="width:14%;">BENUTZER &amp; NOTIZ</th>
               <th style="width:15%;">STATUS &amp; ABLAUF</th>
               <th style="width:16%;text-align:center;">HWID-BINDUNG</th>
@@ -1935,7 +1938,7 @@
             </tr>
           </thead>
           <tbody id="licenses-table-body">
-            <tr><td colspan="6" style="text-align:center;color:#64748b;padding:24px;">Lade Lizenzschlüssel...</td></tr>
+            <tr><td colspan="6" style="text-align:center;color:#64748b;padding:24px;">Lade LizenzschlÃ¼ssel...</td></tr>
           </tbody>
         </table>
       </div>
@@ -1944,7 +1947,7 @@
     <!-- VIEW 2: PERMISSIONS -->
     <div id="view-permissions" style="display:none;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
-        <p style="font-size:12px;color:#94a3b8;margin:0;">Hier kannst du festlegen, welche Cheats für die jeweiligen License Keys freigeschaltet sind.</p>
+        <p style="font-size:12px;color:#94a3b8;margin:0;">Hier kannst du festlegen, welche Cheats fÃ¼r die jeweiligen License Keys freigeschaltet sind.</p>
         <div style="display:flex;align-items:center;gap:10px;">
           <button onclick="saveUserPermissions()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128100; RECHTE SPEICHERN &amp; ANWENDEN</button>
         </div>
@@ -1976,9 +1979,9 @@
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
       <div>
         <div class="section-title" style="margin-bottom:4px;font-size:13px;color:#f8fafc;">&#128100; MITARBEITER &amp; TEAM-VERWALTUNG</div>
-        <p style="font-size:12px;color:#94a3b8;margin:0;">Verwalte deine Mitarbeiter, erstelle Zugänge und lege individuelle Rechte fest.</p>
+        <p style="font-size:12px;color:#94a3b8;margin:0;">Verwalte deine Mitarbeiter, erstelle ZugÃ¤nge und lege individuelle Rechte fest.</p>
       </div>
-      <button id="add-staff-btn" onclick="openStaffModal()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">➕ NEUEN MITARBEITER ANLEGEN</button>
+      <button id="add-staff-btn" onclick="openStaffModal()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">âž• NEUEN MITARBEITER ANLEGEN</button>
     </div>
 
     <div class="logs-table-wrap">
@@ -2004,7 +2007,7 @@
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
       <div>
         <div class="section-title" style="margin-bottom:4px;font-size:13px;color:#f8fafc;">&#128100; ADMIN &amp; TEAM AUDIT-LOG</div>
-        <p style="font-size:12px;color:#94a3b8;margin:0;">Voll&#246;ständiges Protokoll aller durchgeführten Aktionen im ADMIN Panel.</p>
+        <p style="font-size:12px;color:#94a3b8;margin:0;">Voll&#246;stÃ¤ndiges Protokoll aller durchgefÃ¼hrten Aktionen im ADMIN Panel.</p>
       </div>
       
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
@@ -2019,7 +2022,7 @@
         <thead>
           <tr>
             <th style="width:16%;">ZEITSTEMPEL</th>
-            <th style="width:16%;">AUSFÜHRENDER</th>
+            <th style="width:16%;">AUSFÃœHRENDER</th>
             <th style="width:20%;">AKTION</th>
             <th style="width:20%;">ZIEL / KEY</th>
             <th style="width:28%;">DETAILS</th>
@@ -2532,6 +2535,26 @@
   </div>
 </div>
 
+<div class="tab-content" id="tc-9">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+    <div>
+      <h2 style="margin:0;font-size:22px;font-weight:900;color:#f8fafc;letter-spacing:1px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:26px;">&#128269;</span> USER VERZEICHNIS
+      </h2>
+      <p style="margin:6px 0 0 0;font-size:12px;color:#94a3b8;line-height:1.5;">Hier findest du alle aktiven User und deren Profile.</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <input type="text" id="user-search-input" placeholder="User suchen..." oninput="filterUserSearch()" style="background:#0e121e;border:1px solid #1d253a;color:#cbd5e1;padding:8px 14px;border-radius:8px;font-size:12px;outline:none;width:220px;">
+      <button onclick="renderUserSearch()" class="btn-nav-action" style="background:#121624;border:1px solid rgba(56,189,248,0.4);color:#38bdf8;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;">
+        &#128260; AKTUALISIEREN
+      </button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:16px;" id="user-search-grid">
+    <!-- Rendered by JS -->
+  </div>
+</div>
+
 <script>
 const MASTER_PASS = "admin1337";
 const REPO        = "Kakash9i/loader";
@@ -2858,14 +2881,14 @@ async function doLogin() {
     if (matchedLic) {
       if (matchedLic.status === "paused") {
         if (errEl) {
-          errEl.textContent = "Dieser Lizenzschlüssel ist aktuell pausiert!";
+          errEl.textContent = "Dieser LizenzschlÃ¼ssel ist aktuell pausiert!";
           errEl.style.display = "block";
         }
         return;
       }
       if (matchedLic.status === "expired") {
         if (errEl) {
-          errEl.textContent = "Dieser Lizenzschlüssel ist abgelaufen!";
+          errEl.textContent = "Dieser LizenzschlÃ¼ssel ist abgelaufen!";
           errEl.style.display = "block";
         }
         return;
@@ -2970,7 +2993,7 @@ function handleLoginSuccess(user, pass) {
   try { switchMainTab(initialTab); } catch(e) { console.error("switchMainTab err:", e); }
 
   try { logADMINAction("LOGIN", "-", `${CURRENT_USER.name} (${CURRENT_USER.role}) hat sich eingeloggt`); } catch(_) {}
-  try { showToast(`Willkommen zurück, ${user}!`, "ok"); } catch(_) {}
+  try { showToast(`Willkommen zurÃ¼ck, ${user}!`, "ok"); } catch(_) {}
 }
 
 function doLogout() {
@@ -3200,7 +3223,7 @@ function buildCheatsUI() {
           <input type="file" id="fi-${c.prefix}" onchange="addFiles(this,'${c.prefix}')">
           <div style="font-size:26px;color:#e5a93c;">&#8597;</div>
           <div style="font-weight:800;color:#f8fafc;font-size:13px;">${c.label} Datei hier reinziehen oder klicken</div>
-          <div style="font-size:11px;color:#64748b">Lädt die Datei hoch und aktiviert den Download im Loader</div>
+          <div style="font-size:11px;color:#64748b">LÃ¤dt die Datei hoch und aktiviert den Download im Loader</div>
         </div>
         
         <div class="file-list" id="fl-${c.prefix}"></div>
@@ -3212,7 +3235,7 @@ function buildCheatsUI() {
               <span style="color:#64748b;font-size:11px;">Lade Datei-Info...</span>
             </div>
             <button id="${c.prefix}-del-file-btn" onclick="deleteCheatFile('${c.prefix}','${c.key}')" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;">
-              &#128100; DATEI LÖSCHEN
+              &#128100; DATEI LÃ–SCHEN
             </button>
           </div>
         </div>
@@ -3231,7 +3254,7 @@ function buildCheatsUI() {
         <!-- DEDICATED RAZER.DLL UPLOAD SECTION -->
         <div style="margin-top:14px;padding-top:14px;border-top:1px solid #1a1e2b;display:flex;flex-direction:column;gap:10px;">
           <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div class="section-title" style="margin-bottom:0;color:#10b981;">⚡ RAZER.DLL HOCHLADEN (AUTO-INJECTION DATEI)</div>
+            <div class="section-title" style="margin-bottom:0;color:#10b981;">âš¡ RAZER.DLL HOCHLADEN (AUTO-INJECTION DATEI)</div>
             <span style="font-size:10px;color:#64748b;font-family:'JetBrains Mono',monospace;">C:\\Program Files\\Razer\\RazerAppEngine\\RAZER.dll</span>
           </div>
           <div style="font-size:11px;color:#94a3b8;line-height:1.4;">
@@ -3241,9 +3264,9 @@ function buildCheatsUI() {
           <div style="display:flex;gap:10px;align-items:center;">
             <input type="file" id="razer-file-input" accept=".dll" style="display:none;" onchange="onRazerFileSelected(this)">
             <button onclick="document.getElementById('razer-file-input').click()" style="background:#141724;border:1px solid #283046;color:#cbd5e1;padding:8px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;">
-              &#128100; RAZER.dll AUSWÄHLEN
+              &#128100; RAZER.dll AUSWÃ„HLEN
             </button>
-            <span id="razer-file-name" style="font-size:11px;color:#e5a93c;font-weight:700;">Keine neue Datei gewählt</span>
+            <span id="razer-file-name" style="font-size:11px;color:#e5a93c;font-weight:700;">Keine neue Datei gewÃ¤hlt</span>
           </div>
 
           <div id="razer-status-wrap" style="background:#10121a;border:1px solid #1e2333;padding:8px 12px;border-radius:6px;font-size:11px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
@@ -3252,7 +3275,7 @@ function buildCheatsUI() {
             </div>
             <div style="display:flex;gap:6px;align-items:center;">
               <button id="razer-del-btn" onclick="deleteRazerDll()" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;">
-                &#128100; RAZER.dll LÖSCHEN
+                &#128100; RAZER.dll LÃ–SCHEN
               </button>
               <button id="razer-upload-btn" onclick="uploadRazerDll()" disabled style="background:linear-gradient(135deg, #10b981, #059669);border:none;color:#0b0c10;padding:6px 14px;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;">
                 &#128100; RAZER.dll PUSHEN
@@ -3298,6 +3321,56 @@ function switchMainTab(idx) {
   if(idx === 8) {
     loadHighlights();
   }
+  if(idx === 9) {
+    renderUserSearch();
+  }
+}
+
+function renderUserSearch() {
+  const grid = document.getElementById("user-search-grid");
+  if(!grid) return;
+  const q = (document.getElementById("user-search-input")?.value || "").toLowerCase().trim();
+  
+  if(!USER_PROFILES) return;
+  
+  const uniqueUsers = [];
+  const seen = new Set();
+  for(const key of Object.keys(USER_PROFILES)) {
+    const p = USER_PROFILES[key];
+    const realName = p.username || key;
+    if(!seen.has(realName.toLowerCase())) {
+      seen.add(realName.toLowerCase());
+      uniqueUsers.push(p);
+    }
+  }
+  
+  uniqueUsers.sort((a,b) => (a.username||"").localeCompare(b.username||""));
+  
+  const filtered = uniqueUsers.filter(u => (u.username||"").toLowerCase().includes(q));
+  
+  if(filtered.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#64748b;padding:30px;font-size:12px;">Keine User gefunden.</div>';
+    return;
+  }
+  
+  grid.innerHTML = filtered.map(u => {
+    const name = u.username || "Unbekannt";
+    const avatar = u.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${name}`;
+    const rankHtml = getRankBadge(name, u.rank);
+    return `
+      <div onclick="openUserProfileModal('${escapeHtml(name)}')" style="background:#090a0f;border:1px solid #1e2333;border-radius:10px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:.2s;box-shadow:0 4px 15px rgba(0,0,0,0.3);" onmouseover="this.style.borderColor='#38bdf8';this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='#1e2333';this.style.transform='translateY(0)';">
+        <img src="${avatar}" style="width:54px;height:54px;border-radius:14px;border:2px solid #141826;object-fit:cover;">
+        <div style="text-align:center;">
+          <div style="color:#ffffff;font-size:14px;font-weight:900;margin-bottom:4px;">${escapeHtml(formatNameUpper(name))}</div>
+          ${rankHtml}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function filterUserSearch() {
+  renderUserSearch();
 }
 
 function switchCheatSubTab(idx) {
@@ -3476,7 +3549,7 @@ function applyCheatsDataToDOM(data) {
 
 async function deleteCheatFile(prefix, key) {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
-    alert("Keine Berechtigung zum Löschen von Cheat-Dateien!");
+    alert("Keine Berechtigung zum LÃ¶schen von Cheat-Dateien!");
     return;
   }
 
@@ -3484,17 +3557,17 @@ async function deleteCheatFile(prefix, key) {
   const curUrl = (urlInput ? urlInput.value : "").trim();
   
   if(!curUrl) {
-    alert("Keine Datei für diesen Cheat hinterlegt!");
+    alert("Keine Datei fÃ¼r diesen Cheat hinterlegt!");
     return;
   }
 
   const fileName = curUrl.split('/').pop();
-  if(!confirm(`Möchtest du die Cheat-Datei '${fileName}' wirklich komplett vom Server / GitHub löschen?`)) {
+  if(!confirm(`MÃ¶chtest du die Cheat-Datei '${fileName}' wirklich komplett vom Server / GitHub lÃ¶schen?`)) {
     return;
   }
 
   try {
-    showToast(`Lösche ${fileName} von GitHub...`, "ok");
+    showToast(`LÃ¶sche ${fileName} von GitHub...`, "ok");
     
     // 1. Delete release file on GitHub
     try {
@@ -3514,16 +3587,16 @@ async function deleteCheatFile(prefix, key) {
     await saveAllToGitHub();
     await loadCheats();
 
-    logADMINAction("CHEAT_FILE_DELETED", fileName, `Cheat-Datei '${fileName}' für ${key} restlos gelöscht`);
-    showToast(`Cheat-Datei '${fileName}' wurde erfolgreich gelöscht!`, "ok");
+    logADMINAction("CHEAT_FILE_DELETED", fileName, `Cheat-Datei '${fileName}' fÃ¼r ${key} restlos gelÃ¶scht`);
+    showToast(`Cheat-Datei '${fileName}' wurde erfolgreich gelÃ¶scht!`, "ok");
   } catch(e) {
-    showToast("Fehler beim Löschen: " + e.message, "err");
+    showToast("Fehler beim LÃ¶schen: " + e.message, "err");
   }
 }
 
 async function saveAllToGitHub() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
-    alert("Keine Berechtigung zum Ändern der Cheats!");
+    alert("Keine Berechtigung zum Ã„ndern der Cheats!");
     return;
   }
   try {
@@ -3558,7 +3631,7 @@ async function doUpload(prefix, key) {
   }
   const files = state[prefix].files;
   if(!files || files.length === 0) {
-    alert("Bitte wähle mindestens eine Datei zum Hochladen aus!");
+    alert("Bitte wÃ¤hle mindestens eine Datei zum Hochladen aus!");
     return;
   }
 
@@ -3581,7 +3654,7 @@ async function doUpload(prefix, key) {
       finalFileName = files[0].name;
     } else {
       if(typeof JSZip === "undefined") {
-        throw new Error("JSZip nicht verfügbar. Bitte eine .exe oder .zip Datei auswählen.");
+        throw new Error("JSZip nicht verfÃ¼gbar. Bitte eine .exe oder .zip Datei auswÃ¤hlen.");
       }
       const zip = new JSZip();
       for(const f of files) {
@@ -3617,7 +3690,7 @@ async function doUpload(prefix, key) {
         await loadCheats();
 
         showToast(`${finalFileName} erfolgreich hochgeladen & aktiviert!`, "ok");
-        logADMINAction("CHEAT_UPLOAD", finalFileName, `Neues Cheat-Paket hochgeladen für ${key}`);
+        logADMINAction("CHEAT_UPLOAD", finalFileName, `Neues Cheat-Paket hochgeladen fÃ¼r ${key}`);
       } catch(err) {
         pl.textContent = "Fehler: " + err.message;
         pl.className = "prog-lbl err";
@@ -3641,7 +3714,7 @@ async function uploadMayaExe() {
     return;
   }
   if(!_mayaFile) {
-    alert("Bitte wähle zuerst eine neue maya.exe aus!");
+    alert("Bitte wÃ¤hle zuerst eine neue maya.exe aus!");
     return;
   }
 
@@ -3668,7 +3741,7 @@ async function uploadMayaExe() {
         await uploadFileToGitHub("releases/maya.exe", b64, "Release new maya.exe via ADMIN Panel");
 
         pb.style.width = "85%";
-        pl.textContent = "Erhöhe Versionsnummer in version.json...";
+        pl.textContent = "ErhÃ¶he Versionsnummer in version.json...";
 
         let curVer = 150;
         try {
@@ -3692,7 +3765,7 @@ async function uploadMayaExe() {
         pb.style.width = "100%";
         pl.textContent = `Erfolgreich! Maya Loader v${nextVer} ist jetzt live!`;
         pl.className = "prog-lbl ok";
-        showToast(`maya.exe erfolgreich veröffentlicht (v${nextVer})!`, "ok");
+        showToast(`maya.exe erfolgreich verÃ¶ffentlicht (v${nextVer})!`, "ok");
         logADMINAction("MAYA_UPDATE", "maya.exe", `Maya Loader auf Version ${nextVer} aktualisiert`);
       } catch(err) {
         pl.textContent = "Fehler: " + err.message;
@@ -3736,7 +3809,7 @@ async function checkRazerDllStatus() {
       statusEl.innerHTML = `<span style="color:#10b981;font-weight:700;">&#128100; Online auf GitHub:</span> <a href="${RAW_BASE}/releases/RAZER.dll" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">RAZER.dll</a> <span style="color:#64748b;">(${mbSize})</span>`;
       if(delBtn) delBtn.style.display = "inline-flex";
     } else {
-      statusEl.innerHTML = `<span style="color:#f43f5e;font-weight:700;">⚪ Nicht vorhanden</span>`;
+      statusEl.innerHTML = `<span style="color:#f43f5e;font-weight:700;">âšª Nicht vorhanden</span>`;
       if(delBtn) delBtn.style.display = "none";
     }
   } catch(e) {
@@ -3747,20 +3820,20 @@ async function checkRazerDllStatus() {
 
 async function deleteRazerDll() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
-    alert("Keine Berechtigung zum Löschen von Dateien!");
+    alert("Keine Berechtigung zum LÃ¶schen von Dateien!");
     return;
   }
-  if(!confirm("Möchtest du RAZER.dll wirklich von GitHub releases/ löschen?")) {
+  if(!confirm("MÃ¶chtest du RAZER.dll wirklich von GitHub releases/ lÃ¶schen?")) {
     return;
   }
   try {
-    showToast("Lösche RAZER.dll von GitHub...", "ok");
+    showToast("LÃ¶sche RAZER.dll von GitHub...", "ok");
     await deleteFileFromGitHub("releases/RAZER.dll", "Delete RAZER.dll via ADMIN Panel");
-    logADMINAction("RAZER_DLL_DELETED", "RAZER.dll", "RAZER.dll von GitHub gelöscht");
-    showToast("RAZER.dll wurde erfolgreich gelöscht!", "ok");
+    logADMINAction("RAZER_DLL_DELETED", "RAZER.dll", "RAZER.dll von GitHub gelÃ¶scht");
+    showToast("RAZER.dll wurde erfolgreich gelÃ¶scht!", "ok");
     await checkRazerDllStatus();
   } catch(e) {
-    showToast("Fehler beim Löschen von RAZER.dll: " + e.message, "err");
+    showToast("Fehler beim LÃ¶schen von RAZER.dll: " + e.message, "err");
   }
 }
 
@@ -3770,7 +3843,7 @@ async function uploadRazerDll() {
     return;
   }
   if(!_selectedRazerFile) {
-    alert("Bitte wähle zuerst eine RAZER.dll Datei aus!");
+    alert("Bitte wÃ¤hle zuerst eine RAZER.dll Datei aus!");
     return;
   }
 
@@ -3801,7 +3874,7 @@ async function uploadRazerDll() {
           pl.className = "prog-lbl ok";
         }
         showToast("RAZER.dll erfolgreich auf GitHub aktualisiert!", "ok");
-        logADMINAction("RAZER_DLL_UPLOAD", "RAZER.dll", "RAZER.dll für Valorant aktualisiert");
+        logADMINAction("RAZER_DLL_UPLOAD", "RAZER.dll", "RAZER.dll fÃ¼r Valorant aktualisiert");
         await checkRazerDllStatus();
       } catch(err) {
         if(pl) {
@@ -4011,7 +4084,7 @@ function filterUserLogs() {
           </div>
         </td>
         <td style="text-align:center;">
-          <button class="action-btn action-btn-del" onclick="deleteUserGroupLogs(${filesJson})" style="height:24px;padding:0 8px;font-size:10.5px;" title="Alle Logins dieses Nutzers löschen">&#128100; Löschen</button>
+          <button class="action-btn action-btn-del" onclick="deleteUserGroupLogs(${filesJson})" style="height:24px;padding:0 8px;font-size:10.5px;" title="Alle Logins dieses Nutzers lÃ¶schen">&#128100; LÃ¶schen</button>
         </td>
       </tr>
     `;
@@ -4020,11 +4093,11 @@ function filterUserLogs() {
 
 async function deleteUserGroupLogs(fileNames) {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
-    alert("Keine Berechtigung zum Löschen!");
+    alert("Keine Berechtigung zum LÃ¶schen!");
     return;
   }
   if(!fileNames || fileNames.length === 0) return;
-  if(!confirm(`Möchtest du alle ${fileNames.length} Log-Einträge dieses Nutzers wirklich löschen?`)) return;
+  if(!confirm(`MÃ¶chtest du alle ${fileNames.length} Log-EintrÃ¤ge dieses Nutzers wirklich lÃ¶schen?`)) return;
   
   const token = getToken();
   if(!token) return;
@@ -4047,17 +4120,17 @@ async function deleteUserGroupLogs(fileNames) {
     } catch(_) {}
   }
   try { localStorage.setItem("hyschool_userlogs_cache", JSON.stringify(LOG_ENTRIES_CACHE)); } catch(_) {}
-  showToast("Nutzer-Logs erfolgreich gelöscht!", "ok");
-  logADMINAction("DELETE_USER_LOG", "-", `${fileNames.length} Login-Logs gelöscht`);
+  showToast("Nutzer-Logs erfolgreich gelÃ¶scht!", "ok");
+  logADMINAction("DELETE_USER_LOG", "-", `${fileNames.length} Login-Logs gelÃ¶scht`);
   loadLiveLogs();
 }
 
 async function deleteAllUserLogs() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
-    alert("Keine Berechtigung zum Löschen!");
+    alert("Keine Berechtigung zum LÃ¶schen!");
     return;
   }
-  if(!confirm("&#128100; ACHTUNG: Möchtest du WIRKLICH ALLE Benutzer-Logs unwiderruflich löschen?")) return;
+  if(!confirm("&#128100; ACHTUNG: MÃ¶chtest du WIRKLICH ALLE Benutzer-Logs unwiderruflich lÃ¶schen?")) return;
 
   const token = getToken();
   if(!token) return;
@@ -4081,15 +4154,15 @@ async function deleteAllUserLogs() {
         } catch(_) {}
       }
 
-      showToast("Alle Benutzer-Logs wurden erfolgreich gelöscht!", "ok");
-      logADMINAction("DELETE_ALL_USER_LOGS", "-", "Alle Benutzer-Logs unwiderruflich gelöscht");
+      showToast("Alle Benutzer-Logs wurden erfolgreich gelÃ¶scht!", "ok");
+      logADMINAction("DELETE_ALL_USER_LOGS", "-", "Alle Benutzer-Logs unwiderruflich gelÃ¶scht");
       LOG_ENTRIES_CACHE = {};
       try { localStorage.removeItem("hyschool_userlogs_cache"); } catch(_) {}
       ALL_USER_LOGS = [];
       loadLiveLogs();
     }
   } catch(e) {
-    showToast("Fehler beim Löschen: " + e.message, "err");
+    showToast("Fehler beim LÃ¶schen: " + e.message, "err");
   }
 }
 
@@ -4191,7 +4264,7 @@ function renderPermissionsRows() {
   const validKeys = Object.keys(validLicMap);
 
   if(validKeys.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#64748b;padding:24px;">Keine aktiven Lizenzschlüssel vorhanden. Erstelle zuerst einen Key in der Lizenz-Verwaltung!</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#64748b;padding:24px;">Keine aktiven LizenzschlÃ¼ssel vorhanden. Erstelle zuerst einen Key in der Lizenz-Verwaltung!</td></tr>`;
     return;
   }
 
@@ -4398,32 +4471,32 @@ function clearLicenseSelection() {
 function copySelectedLicenses() {
   const selected = ALL_LICENSES.filter(l => SELECTED_LIC_KEYS.has(l.key)).map(l => `${l.key} | ${l.product_name} | ${l.duration_label} | ${l.used_by || 'Unbenutzt'}`);
   if(selected.length === 0) {
-    alert("Keine Keys ausgewählt!");
+    alert("Keine Keys ausgewÃ¤hlt!");
     return;
   }
   navigator.clipboard.writeText(selected.join("\n"));
-  showToast(`${selected.length} ausgewählte Keys kopiert!`, "ok");
+  showToast(`${selected.length} ausgewÃ¤hlte Keys kopiert!`, "ok");
 }
 
 async function deleteSelectedLicenses() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
-    alert("Keine Berechtigung zum Löschen von Keys!");
+    alert("Keine Berechtigung zum LÃ¶schen von Keys!");
     return;
   }
   const count = SELECTED_LIC_KEYS.size;
   if(count === 0) {
-    alert("Bitte wähle mindestens einen Key zum Löschen aus!");
+    alert("Bitte wÃ¤hle mindestens einen Key zum LÃ¶schen aus!");
     return;
   }
 
   // Exclude protected admin account if user is not admin
   const keysToDelete = Array.from(SELECTED_LIC_KEYS).filter(k => CURRENT_USER.is_admin || !isADMINAccountKey(k));
   if(keysToDelete.length === 0) {
-    alert("Die ausgewählten Keys gehören zum geschützten ADMIN-Account und können nicht gelöscht werden!");
+    alert("Die ausgewÃ¤hlten Keys gehÃ¶ren zum geschÃ¼tzten ADMIN-Account und kÃ¶nnen nicht gelÃ¶scht werden!");
     return;
   }
 
-  if(!confirm(`Möchtest du die ${keysToDelete.length} ausgewählten Keys wirklich unwiderruflich löschen?`)) {
+  if(!confirm(`MÃ¶chtest du die ${keysToDelete.length} ausgewÃ¤hlten Keys wirklich unwiderruflich lÃ¶schen?`)) {
     return;
   }
 
@@ -4436,8 +4509,8 @@ async function deleteSelectedLicenses() {
   try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
   filterLicenses();
   loadUserPermissions();
-  logADMINAction("BATCH_KEYS_DELETED", `${keysToDelete.length} Keys`, `Folgende Keys wurden gelöscht: ${keysToDelete.join(', ')}`);
-  showToast(`${keysToDelete.length} ausgewählte Keys sofort gelöscht!`, "ok");
+  logADMINAction("BATCH_KEYS_DELETED", `${keysToDelete.length} Keys`, `Folgende Keys wurden gelÃ¶scht: ${keysToDelete.join(', ')}`);
+  showToast(`${keysToDelete.length} ausgewÃ¤hlte Keys sofort gelÃ¶scht!`, "ok");
 
   const syncPromises = [saveLicenses(false)];
   if(CURRENT_USER.is_admin) {
@@ -4540,10 +4613,10 @@ function toggleRandomNameBtn(forceState = null) {
     }
     if(pillText) {
       pillText.style.color = "#e5a93c";
-      pillText.textContent = "Zufällige Namen: AN";
+      pillText.textContent = "ZufÃ¤llige Namen: AN";
     }
     if(noteInp) {
-      noteInp.placeholder = "&#128100; Automatisch zufällig (Präfix optional)";
+      noteInp.placeholder = "&#128100; Automatisch zufÃ¤llig (PrÃ¤fix optional)";
       noteInp.style.borderColor = "rgba(229,169,60,0.4)";
     }
     if(lbl) {
@@ -4557,7 +4630,7 @@ function toggleRandomNameBtn(forceState = null) {
     }
     if(pillText) {
       pillText.style.color = "#94a3b8";
-      pillText.textContent = "Zufällige Namen";
+      pillText.textContent = "ZufÃ¤llige Namen";
     }
     if(noteInp) {
       noteInp.placeholder = "(Login-Name)";
@@ -4696,8 +4769,8 @@ async function generateNewLicenses() {
   try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
   try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
   filterLicenses();
-  showToast(`${qty} neue(r) Key(s) sofort erstellt & in Tabelle eingefügt!`, "ok");
-  logADMINAction("KEY_CREATED", newKeys.join(", "), `${qty}x Key (${prodNames[prod]}, ${durLabels[dur]}) generiert für ${isRandom ? 'Random Namen' : "'" + (rawNote || '---') + "'"}`);
+  showToast(`${qty} neue(r) Key(s) sofort erstellt & in Tabelle eingefÃ¼gt!`, "ok");
+  logADMINAction("KEY_CREATED", newKeys.join(", "), `${qty}x Key (${prodNames[prod]}, ${durLabels[dur]}) generiert fÃ¼r ${isRandom ? 'Random Namen' : "'" + (rawNote || '---') + "'"}`);
 
   // 2. BACKGROUND CLOUD SYNC (Non-blocking parallel promises)
   const syncPromises = [saveLicenses(false), saveUserPermissions(false)];
@@ -4790,7 +4863,7 @@ function renderLicensesTable(list) {
     } else if(!lic.used) {
       statusBadge = `<span style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#10b981;border-radius:50%;"></span> UNBENUTZT</span>`;
     } else {
-      statusBadge = `<span style="background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid rgba(255,255,255,0.15);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#cbd5e1;border-radius:50%;"></span> EINGELÖST</span>`;
+      statusBadge = `<span style="background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid rgba(255,255,255,0.15);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#cbd5e1;border-radius:50%;"></span> EINGELÃ–ST</span>`;
     }
 
     const expireText = lic.duration === 'lifetime'
@@ -4804,13 +4877,13 @@ function renderLicensesTable(list) {
       const shortHwid = lic.hwid.substring(0, 8) + "...";
       if (!CURRENT_USER.is_admin && isProtectedADMIN) {
         hwidHtml = `
-          <span class="hwid-badge-admin" title="Geschützter ADMIN Account">
+          <span class="hwid-badge-admin" title="GeschÃ¼tzter ADMIN Account">
             <span>&#128100;</span> ${shortHwid}
           </span>
         `;
       } else {
         hwidHtml = `
-          <button class="hwid-badge-bound" onclick="openHwidModal('${lic.key}', '${lic.hwid}', '${lic.used_by||'User'}')" title="Klicken für voll&#246;ständige HWID & Details">
+          <button class="hwid-badge-bound" onclick="openHwidModal('${lic.key}', '${lic.hwid}', '${lic.used_by||'User'}')" title="Klicken fÃ¼r voll&#246;stÃ¤ndige HWID & Details">
             <span>&#128100;</span> <span>${shortHwid}</span>
           </button>
         `;
@@ -4819,15 +4892,15 @@ function renderLicensesTable(list) {
 
     let actionsHtml = "";
     if(!CURRENT_USER.is_admin && isProtectedADMIN) {
-      actionsHtml = `<span class="hwid-badge-admin" style="font-size:10px;padding:4px 10px;">&#128100; ADMIN GESCHÜTZT</span>`;
+      actionsHtml = `<span class="hwid-badge-admin" style="font-size:10px;padding:4px 10px;">&#128100; ADMIN GESCHÃœTZT</span>`;
     } else {
       const pauseBtnHtml = (CURRENT_USER.is_admin || p.can_pause_keys) ? (lic.paused
-        ? `<button class="action-btn action-btn-resume" onclick="togglePauseLicense('${lic.key}')" title="Key wieder aktivieren">▶ Start</button>`
-        : `<button class="action-btn action-btn-pause" onclick="togglePauseLicense('${lic.key}')" title="Key vorübergehend pausieren">⏸ Pause</button>`) : '';
+        ? `<button class="action-btn action-btn-resume" onclick="togglePauseLicense('${lic.key}')" title="Key wieder aktivieren">â–¶ Start</button>`
+        : `<button class="action-btn action-btn-pause" onclick="togglePauseLicense('${lic.key}')" title="Key vorÃ¼bergehend pausieren">â¸ Pause</button>`) : '';
 
       const editBtnHtml = (CURRENT_USER.is_admin || p.can_edit_keys) ? `<button class="action-btn action-btn-edit" onclick="openEditLicModal('${lic.key}')" title="Laufzeit & Status bearbeiten">&#128100; Edit</button>` : '';
-      const resetBtnHtml = (CURRENT_USER.is_admin || p.can_reset_hwid) ? `<button class="action-btn action-btn-reset" onclick="resetLicenseHWID('${lic.key}')" title="HWID sofort zurücksetzen">&#128100; Reset</button>` : '';
-      const delBtnHtml = (CURRENT_USER.is_admin || p.can_delete_keys) ? `<button class="action-btn action-btn-del" onclick="deleteLicenseKey('${lic.key}')" title="Key komplett löschen">&#128100;</button>` : '';
+      const resetBtnHtml = (CURRENT_USER.is_admin || p.can_reset_hwid) ? `<button class="action-btn action-btn-reset" onclick="resetLicenseHWID('${lic.key}')" title="HWID sofort zurÃ¼cksetzen">&#128100; Reset</button>` : '';
+      const delBtnHtml = (CURRENT_USER.is_admin || p.can_delete_keys) ? `<button class="action-btn action-btn-del" onclick="deleteLicenseKey('${lic.key}')" title="Key komplett lÃ¶schen">&#128100;</button>` : '';
 
       actionsHtml = `
         <div class="action-btn-group">
@@ -4840,7 +4913,7 @@ function renderLicensesTable(list) {
     }
 
     const onRowEditClick = (!CURRENT_USER.is_admin && isProtectedADMIN)
-      ? `alert('Das ist der ADMIN Account! Hier darfst du nichts ändern!');`
+      ? `alert('Das ist der ADMIN Account! Hier darfst du nichts Ã¤ndern!');`
       : ((CURRENT_USER.is_admin || p.can_edit_keys) ? `openEditLicModal('${lic.key}')` : '');
 
     const noteText = lic.note && lic.note !== '---' ? `<div style="color:#64748b;font-size:11px;margin-top:3px;display:flex;align-items:center;gap:4px;"><span>&#128100;</span> ${lic.note}</div>` : '';
@@ -4871,7 +4944,7 @@ function renderLicensesTable(list) {
 
     let productBadgesHtml = "";
     if (lic.product === "ALL" || (lic.product_name && lic.product_name.toUpperCase().includes("ALL CHEATS"))) {
-      productBadgesHtml = `<span class="tag-product" style="background:rgba(229,169,60,0.15);color:#e5a93c;border-color:rgba(229,169,60,0.35);font-weight:900;">⚡ ALL CHEATS (ALLE SPIELE)</span>`;
+      productBadgesHtml = `<span class="tag-product" style="background:rgba(229,169,60,0.15);color:#e5a93c;border-color:rgba(229,169,60,0.35);font-weight:900;">âš¡ ALL CHEATS (ALLE SPIELE)</span>`;
     } else if (lic.product === "NONE") {
       productBadgesHtml = `<span class="tag-product" style="background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.35);">&#128100; GESPERRT</span>`;
     } else {
@@ -4891,9 +4964,9 @@ function renderLicensesTable(list) {
     return `
       <tr style="${isChecked ? 'background:rgba(229,169,60,0.06);' : ''}">
         <td style="text-align:center;">
-          <label class="custom-cb-wrap" title="${(!CURRENT_USER.is_admin && isProtectedADMIN) ? 'Geschützter ADMIN Account' : 'Auswählen'}">
+          <label class="custom-cb-wrap" title="${(!CURRENT_USER.is_admin && isProtectedADMIN) ? 'GeschÃ¼tzter ADMIN Account' : 'AuswÃ¤hlen'}">
             <input type="checkbox" class="lic-row-cb" data-key="${lic.key}" onchange="onLicenseCheckboxChange('${lic.key}', this.checked)" ${isChecked ? 'checked' : ''} ${cbDisabled}>
-            <span class="custom-cb-box">✓</span>
+            <span class="custom-cb-box">âœ“</span>
           </label>
         </td>
 
@@ -4949,7 +5022,7 @@ function openEditLicModal(key) {
   if(!lic) return;
 
   if(!CURRENT_USER.is_admin && isADMINAccountKey(key, lic)) {
-    alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
+    alert("Das ist der ADMIN Account! Hier darfst du nichts Ã¤ndern!");
     return;
   }
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_edit_keys) {
@@ -4980,7 +5053,7 @@ function openEditLicModal(key) {
     prodSelect.value = lic.product || "ALL";
     const canEditProd = isADMIN || perms.edit_allow_product;
     prodSelect.disabled = !canEditProd;
-    prodSelect.title = canEditProd ? "" : "Keine Berechtigung zum Ändern des Cheat-Produkts.";
+    prodSelect.title = canEditProd ? "" : "Keine Berechtigung zum Ã„ndern des Cheat-Produkts.";
   }
 
   // 2. DURATION PERMISSION & MAX DURATION FILTER
@@ -5140,7 +5213,7 @@ function resetModalExpiryToUnused() {
 async function saveEditLicModal() {
   if(!_editingLicKey) return;
   if(!CURRENT_USER.is_admin && isADMINAccountKey(_editingLicKey)) {
-    alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
+    alert("Das ist der ADMIN Account! Hier darfst du nichts Ã¤ndern!");
     return;
   }
   const lic = ALL_LICENSES.find(l => l.key === _editingLicKey);
@@ -5274,7 +5347,7 @@ async function saveEditLicModal() {
 // HWID MODAL HANDLERS
 function openHwidModal(key, hwid, user) {
   if(!CURRENT_USER.is_admin && isADMINAccountKey(key)) {
-    alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
+    alert("Das ist der ADMIN Account! Hier darfst du nichts Ã¤ndern!");
     return;
   }
   _activeModalKey = key;
@@ -5302,7 +5375,7 @@ async function executeHwidResetFromModal() {
 
 async function togglePauseLicense(key) {
   if(!CURRENT_USER.is_admin && isADMINAccountKey(key)) {
-    alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
+    alert("Das ist der ADMIN Account! Hier darfst du nichts Ã¤ndern!");
     return;
   }
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_pause_keys) {
@@ -5328,43 +5401,43 @@ async function togglePauseLicense(key) {
 
   try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
   filterLicenses();
-  logADMINAction(lic.paused ? "KEY_PAUSED" : "KEY_UNPAUSED", key, `Key Status geändert auf ${lic.paused ? 'Pausiert' : 'Aktiv'}${pauseNote}`);
+  logADMINAction(lic.paused ? "KEY_PAUSED" : "KEY_UNPAUSED", key, `Key Status geÃ¤ndert auf ${lic.paused ? 'Pausiert' : 'Aktiv'}${pauseNote}`);
   showToast(`Key '${key}' ist jetzt ${lic.paused ? 'PAUSIERT &#128100;' + pauseNote : 'AKTIV &#128100;'}!`, "ok");
   saveLicenses(false);
 }
 
 async function resetLicenseHWID(key) {
   if(!CURRENT_USER.is_admin && isADMINAccountKey(key)) {
-    alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
+    alert("Das ist der ADMIN Account! Hier darfst du nichts Ã¤ndern!");
     return;
   }
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_reset_hwid) {
-    alert("Keine Berechtigung für HWID-Reset!");
+    alert("Keine Berechtigung fÃ¼r HWID-Reset!");
     return;
   }
   const lic = ALL_LICENSES.find(l => l.key === key);
   if(!lic) return;
-  if(!confirm(`Möchtest du den HWID-Lock für den Key (${key}) wirklich zurücksetzen?`)) return;
+  if(!confirm(`MÃ¶chtest du den HWID-Lock fÃ¼r den Key (${key}) wirklich zurÃ¼cksetzen?`)) return;
 
   const oldHwid = lic.hwid;
   lic.hwid = "";
   try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
   filterLicenses();
-  logADMINAction("HWID_RESET", key, `HWID Bindung gelöscht (vorher: ${oldHwid || '---'})`);
-  showToast(`HWID für Key '${key}' erfolgreich zurückgesetzt!`, "ok");
+  logADMINAction("HWID_RESET", key, `HWID Bindung gelÃ¶scht (vorher: ${oldHwid || '---'})`);
+  showToast(`HWID fÃ¼r Key '${key}' erfolgreich zurÃ¼ckgesetzt!`, "ok");
   saveLicenses(false);
 }
 
 async function deleteLicenseKey(key) {
   if(!CURRENT_USER.is_admin && isADMINAccountKey(key)) {
-    alert("Das ist der ADMIN Account! Hier darfst du nichts ändern!");
+    alert("Das ist der ADMIN Account! Hier darfst du nichts Ã¤ndern!");
     return;
   }
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
-    alert("Keine Berechtigung zum Löschen von Keys!");
+    alert("Keine Berechtigung zum LÃ¶schen von Keys!");
     return;
   }
-  if(!confirm(`Möchtest du den Key (${key}) wirklich unwiderruflich löschen?`)) return;
+  if(!confirm(`MÃ¶chtest du den Key (${key}) wirklich unwiderruflich lÃ¶schen?`)) return;
 
   ALL_LICENSES = ALL_LICENSES.filter(l => l.key !== key);
   delete USER_PERMISSIONS[key];
@@ -5372,8 +5445,8 @@ async function deleteLicenseKey(key) {
   try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
   filterLicenses();
   loadUserPermissions();
-  logADMINAction("KEY_DELETED", key, "Key und alle zugehörigen Cheat-Permissions restlos gelöscht");
-  showToast(`Key '${key}' erfolgreich gelöscht!`, "ok");
+  logADMINAction("KEY_DELETED", key, "Key und alle zugehÃ¶rigen Cheat-Permissions restlos gelÃ¶scht");
+  showToast(`Key '${key}' erfolgreich gelÃ¶scht!`, "ok");
 
   const syncPromises = [saveLicenses(false)];
   if(CURRENT_USER.is_admin) {
@@ -5472,7 +5545,7 @@ function renderStaffTable() {
   if(!tbody) return;
 
   if(ALL_STAFF.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px;">Keine Mitarbeiter angelegt. Klicke oben auf '➕ NEUEN MITARBEITER ANLEGEN'!</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px;">Keine Mitarbeiter angelegt. Klicke oben auf 'âž• NEUEN MITARBEITER ANLEGEN'!</td></tr>`;
     return;
   }
 
@@ -5485,7 +5558,7 @@ function renderStaffTable() {
     const permBadges = [];
     if(perms.can_generate_keys) {
       const maxD = perms.max_duration ? (durTextMap[perms.max_duration] || perms.max_duration) : "Alle";
-      permBadges.push(`<span class="tag-duration" style="color:#e5a93c;">⚡ Keys (${maxD})</span>`);
+      permBadges.push(`<span class="tag-duration" style="color:#e5a93c;">âš¡ Keys (${maxD})</span>`);
     }
     if(perms.can_edit_keys) {
       const editD = perms.edit_max_duration ? (durTextMap[perms.edit_max_duration] || perms.edit_max_duration) : "Alle";
@@ -5663,13 +5736,13 @@ async function deleteStaff(idx) {
   }
   const s = ALL_STAFF[idx];
   if(!s) return;
-  if(!confirm(`Möchtest du den Mitarbeiter '${s.name}' wirklich entfernen?`)) return;
+  if(!confirm(`MÃ¶chtest du den Mitarbeiter '${s.name}' wirklich entfernen?`)) return;
 
   ALL_STAFF.splice(idx, 1);
   renderStaffTable();
   await saveStaffToGitHub();
   logADMINAction("STAFF_DELETED", s.name, `Mitarbeiter '${s.name}' entfernt`);
-  showToast(`Mitarbeiter '${s.name}' gelöscht!`, "ok");
+  showToast(`Mitarbeiter '${s.name}' gelÃ¶scht!`, "ok");
 }
 
 async function saveStaffToGitHub() {
@@ -5793,7 +5866,7 @@ async function clearAuditLogs() {
     alert("Nur der Haupt-ADMIN darf das Audit-Log leeren!");
     return;
   }
-  if(!confirm("Möchtest du das gesamte ADMIN Audit-Log wirklich leeren?")) return;
+  if(!confirm("MÃ¶chtest du das gesamte ADMIN Audit-Log wirklich leeren?")) return;
 
   ALL_AUDIT_LOGS = [];
   const token = getToken();
@@ -6048,7 +6121,7 @@ async function clearTeamChat() {
     alert("Nur der Inhaber (ADMIN) darf den Chat leeren!");
     return;
   }
-  if(!confirm("Möchtest du den gesamten Team-Chat wirklich unwiderruflich leeren?")) return;
+  if(!confirm("MÃ¶chtest du den gesamten Team-Chat wirklich unwiderruflich leeren?")) return;
 
   try {
     const b64 = utf8_to_b64("[]");
@@ -6489,7 +6562,7 @@ function openUserProfileModal(usernameOrKey) {
     }
   }
 
-  if(bioEl) bioEl.textContent = (prof && prof.bio) ? prof.bio : "Dieser User hat noch keine Bio hinzugefÃ¼gt.";
+  if(bioEl) bioEl.textContent = (prof && prof.bio) ? prof.bio : "Dieser User hat noch keine Bio hinzugefÃƒÂ¼gt.";
   if(joinedEl) joinedEl.textContent = (prof && prof.joined) ? prof.joined : "01.01.2026";
   if(discordEl) discordEl.textContent = (prof && prof.discord) ? prof.discord : "Nicht angegeben";
   if(cfgCountEl) cfgCountEl.textContent = `${userConfigs.length} Configs`;
@@ -6713,7 +6786,7 @@ let _selectedConfigFile = null;
 function copyCurrentLicenseKey() {
   const key = CURRENT_USER.key || (CURRENT_USER.license && CURRENT_USER.license.key) || "MASTER-ADMIN";
   navigator.clipboard.writeText(key);
-  showToast("Lizenzschlüssel kopiert!", "ok");
+  showToast("LizenzschlÃ¼ssel kopiert!", "ok");
 }
 
 function onConfigFileSelected(input) {
@@ -6723,7 +6796,7 @@ function onConfigFileSelected(input) {
     const sublbl = document.getElementById("cfg-drop-sublabel");
     const nameInp = document.getElementById("cfg-upload-name");
     
-    if (lbl) lbl.textContent = `Ausgewählt: ${_selectedConfigFile.name}`;
+    if (lbl) lbl.textContent = `AusgewÃ¤hlt: ${_selectedConfigFile.name}`;
     if (sublbl) sublbl.textContent = `Gr&#128100;e: ${formatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
@@ -6742,7 +6815,7 @@ function handleConfigDrop(e) {
     const sublbl = document.getElementById("cfg-drop-sublabel");
     const nameInp = document.getElementById("cfg-upload-name");
     
-    if (lbl) lbl.textContent = `Ausgewählt: ${_selectedConfigFile.name}`;
+    if (lbl) lbl.textContent = `AusgewÃ¤hlt: ${_selectedConfigFile.name}`;
     if (sublbl) sublbl.textContent = `Gr&#128100;e: ${formatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
@@ -7513,13 +7586,13 @@ function onHighlightFileSelected(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
     if(file.size > 28 * 1024 * 1024) {
-      alert("Video-Datei ist zu groß für Direkt-Upload (Max 25MB). Bitte nutze einen YouTube/Medal/Streamable Link!");
+      alert("Video-Datei ist zu groÃŸ fÃ¼r Direkt-Upload (Max 25MB). Bitte nutze einen YouTube/Medal/Streamable Link!");
       input.value = "";
       return;
     }
     _uploadedHighlightFile = file;
     document.getElementById("hl-drop-label").textContent = "&#128100; " + file.name;
-    document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB gewählt";
+    document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB gewÃ¤hlt";
     document.getElementById("hl-upload-url").value = "";
   }
 }
@@ -7530,7 +7603,7 @@ function handleHighlightFileDrop(e) {
   if (e.dataTransfer.files && e.dataTransfer.files[0]) {
     const file = e.dataTransfer.files[0];
     if(file.size > 28 * 1024 * 1024) {
-      alert("Video-Datei ist zu groß (Max 25MB)!");
+      alert("Video-Datei ist zu groÃŸ (Max 25MB)!");
       return;
     }
     _uploadedHighlightFile = file;
@@ -7544,7 +7617,7 @@ function onHighlightUrlChanged(val) {
   if(val && val.trim()) {
     _uploadedHighlightFile = null;
     document.getElementById("hl-drop-label").textContent = "&#128100; Video hier ablegen oder klicken";
-    document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (für gr&#128100;ere Clips bitte Link nutzen)";
+    document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (fÃ¼r gr&#128100;ere Clips bitte Link nutzen)";
   }
 }
 
@@ -7556,8 +7629,8 @@ async function uploadHighlightClip() {
   const isCensored = document.getElementById("hl-censor-name-cb").checked;
   const file = _uploadedHighlightFile;
 
-  if(!title) { alert("Bitte gib einen Titel für das Highlight ein!"); return; }
-  if(!urlInput && !file) { alert("Bitte gib einen Video-Link ein oder wähle eine Videodatei aus!"); return; }
+  if(!title) { alert("Bitte gib einen Titel fÃ¼r das Highlight ein!"); return; }
+  if(!urlInput && !file) { alert("Bitte gib einen Video-Link ein oder wÃ¤hle eine Videodatei aus!"); return; }
 
   const btn = document.getElementById("hl-submit-btn");
   const progWrap = document.getElementById("hl-prog-wrap");
@@ -7736,7 +7809,7 @@ function openHighlightPlayer(highlightId) {
 
   if(modal) modal.style.display = "flex";
 
-  // Censor blur overlay â€” covers top-right (scoreboard/name area) when isCensored
+  // Censor blur overlay Ã¢â‚¬â€ covers top-right (scoreboard/name area) when isCensored
   const oldBlur = document.getElementById("hl-censor-blur");
   if(oldBlur) oldBlur.remove();
   if(h.isCensored) {
@@ -7804,8 +7877,8 @@ async function loadHighlights(silent = false, manualToast = false) {
 }
 
 function _makeHlCard(h) {
-  const authorDisplayName = h.isCensored ? "&#128274; [Zensiert / Anonym]" : formatNameUpper(h.author);
-  const authorAvatar = h.isCensored ? "https://api.dicebear.com/7.x/bottts/svg?seed=Incognito" : getAvatarUrl(h.author);
+  const authorDisplayName = formatNameUpper(h.author);
+  const authorAvatar = getAvatarUrl(h.author);
   const hasLiked = h.likedBy && h.likedBy.includes(CURRENT_USER.name);
   const isOwn = CURRENT_USER.is_admin || (!h.isCensored && h.author === CURRENT_USER.name);
 
@@ -7835,8 +7908,8 @@ function _makeHlCard(h) {
   const likeStyle = hasLiked ? 'background:rgba(244,63,94,0.2);color:#f43f5e;border-color:#f43f5e;' : '';
   const likeIcon = hasLiked ? '&#10084;&#65039;' : '&#129293;';
   const deleteBtn = isOwn ? '<button onclick="deleteHighlight(\'' + h.id + '\')" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:4px 8px;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;">&#128465;&#65039;</button>' : '';
-  const profileClick = h.isCensored ? '' : 'onclick="openUserProfileModal(\'' + escapeHtml(h.author) + '\')"';
-  const rankHtml = h.isCensored ? '<span class="badge-rank badge-rank-vip">&#128274; Anonym</span>' : getRankBadge(h.author, h.rank);
+  const profileClick = 'onclick="openUserProfileModal(\'' + escapeHtml(h.author) + '\')"';
+  const rankHtml = getRankBadge(h.author, h.rank);
 
   return '<div class="clip-card">'
     + '<div class="clip-media-wrap" style="position:relative;height:180px;background:#05070c;overflow:hidden;border-radius:10px 10px 0 0;">' + previewHtml + '</div>'
@@ -7903,7 +7976,7 @@ function filterHighlights() {
     }
   }
 
-  // Clip der Woche â€” most liked clip from current ISO week
+  // Clip der Woche Ã¢â‚¬â€ most liked clip from current ISO week
   const cdwBanner = document.getElementById("cdw-banner");
   if(cdwBanner && ALL_HIGHLIGHTS.length > 0) {
     const now = new Date();
@@ -8269,15 +8342,15 @@ function insertStaffMacro(type) {
     const inp = document.getElementById('admin-ticket-input');
     if (!inp) return;
     if (type === 'freigeschaltet') {
-        inp.value = 'Du wurdest erfolgreich freigeschaltet! Viel Spaß mit HySchool. Sollten weitere Probleme auftreten, wende dich gerne wieder an den Support.';
+        inp.value = 'Du wurdest erfolgreich freigeschaltet! Viel SpaÃŸ mit HySchool. Sollten weitere Probleme auftreten, wende dich gerne wieder an den Support.';
     } else if (type === 'hwid') {
-        inp.value = 'Dein HWID-Reset wurde erfolgreich durchgeführt. Du kannst dich nun auf deinem Gerät im Loader einloggen.';
+        inp.value = 'Dein HWID-Reset wurde erfolgreich durchgefÃ¼hrt. Du kannst dich nun auf deinem GerÃ¤t im Loader einloggen.';
     } else if (type === 'antivirus') {
-        inp.value = 'Bitte stelle sicher, dass du deinen Windows Defender bzw. Antivirus deaktiviert oder eine Ausnahme für den Loader-Ordner hinzugefügt hast.';
+        inp.value = 'Bitte stelle sicher, dass du deinen Windows Defender bzw. Antivirus deaktiviert oder eine Ausnahme fÃ¼r den Loader-Ordner hinzugefÃ¼gt hast.';
     } else if (type === 'config') {
         inp.value = 'Deine Cloud-Configs findest du im Tab "Meine Configs". Dort kannst du sie direkt herunterladen oder mit einem Klick in den Cheat-Ordner laden.';
     } else if (type === 'solved') {
-        inp.value = 'Dein Anliegen wurde erfolgreich gelöst. Dieses Ticket wird nun geschlossen und für 24 Stunden archiviert. Bei weiteren Fragen erstelle bitte einfach ein neues Ticket!';
+        inp.value = 'Dein Anliegen wurde erfolgreich gelÃ¶st. Dieses Ticket wird nun geschlossen und fÃ¼r 24 Stunden archiviert. Bei weiteren Fragen erstelle bitte einfach ein neues Ticket!';
     }
     inp.focus();
 }
@@ -8294,7 +8367,7 @@ async function claimCurrentTicket() {
     t.messages.push({
         sender: myName,
         role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben übernommen. Wie kann ich dir heute weiterhelfen? &#128100;`,
+        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben Ã¼bernommen. Wie kann ich dir heute weiterhelfen? &#128100;`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now()
     });
@@ -8302,7 +8375,7 @@ async function claimCurrentTicket() {
     await saveADMINTicketsToGitHub(`Claim ticket ${t.id} by ${myName}`);
     renderActiveADMINTicketRoom(t);
     renderADMINTicketsList();
-    showToast('Ticket übernommen!', 'ok');
+    showToast('Ticket Ã¼bernommen!', 'ok');
 }
 
 async function closeCurrentTicket() {
@@ -8319,18 +8392,18 @@ async function closeCurrentTicket() {
         t.messages.push({
             sender: myName,
             role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-            text: `[Info: Ticket wurde von ${myName} wiedereröffnet]`,
+            text: `[Info: Ticket wurde von ${myName} wiedererÃ¶ffnet]`,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             timestamp: Date.now()
         });
-        showToast('Ticket wiedereröffnet!', 'ok');
+        showToast('Ticket wiedererÃ¶ffnet!', 'ok');
     } else {
         t.status = 'closed';
         t.closedAt = new Date().toISOString();
         t.messages.push({
             sender: myName,
             role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-            text: `[Info: Ticket wurde geschlossen und wird nach 24h gelöscht]`,
+            text: `[Info: Ticket wurde geschlossen und wird nach 24h gelÃ¶scht]`,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             timestamp: Date.now()
         });
@@ -8344,11 +8417,11 @@ async function closeCurrentTicket() {
 
 async function deleteCurrentTicket() {
     if (!canDeleteTickets()) {
-        showToast('Nur ADMINs und Moderatoren dürfen Tickets löschen!', 'err');
+        showToast('Nur ADMINs und Moderatoren dÃ¼rfen Tickets lÃ¶schen!', 'err');
         return;
     }
     if (!_adminActiveTicketId) return;
-    if (!confirm('Möchtest du dieses Support Ticket wirklich endgültig löschen?')) return;
+    if (!confirm('MÃ¶chtest du dieses Support Ticket wirklich endgÃ¼ltig lÃ¶schen?')) return;
 
     _adminTicketsData = _adminTicketsData.filter(x => x.id !== _adminActiveTicketId);
     _adminActiveTicketId = null;
@@ -8360,7 +8433,7 @@ async function deleteCurrentTicket() {
 
     await saveADMINTicketsToGitHub(`Deleted support ticket by ${(CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : 'ADMIN'}`);
     renderADMINTicketsList();
-    showToast('Support Ticket gelöscht!', 'ok');
+    showToast('Support Ticket gelÃ¶scht!', 'ok');
 }
 
 async function sendADMINTicketMsg() {
