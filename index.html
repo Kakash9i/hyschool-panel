@@ -1516,7 +1516,7 @@
       <button onclick="closeHighlightPlayerModal()" style="background:none;border:none;color:#64748b;font-size:24px;cursor:pointer;line-height:1;">&times;</button>
     </div>
     
-    <div id="hl-player-video-container" style="width:100%;height:480px;background:#05070c;border-radius:12px;overflow:hidden;border:1px solid #1f273e;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"></div>
+    <div id="hl-player-video-container" style="width:100%;height:480px;background:#05070c;border-radius:12px;overflow:hidden;border:1px solid #1f273e;display:flex;align-items:center;justify-content:center;margin-bottom:14px;position:relative;"></div>
 
     <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:#090b12;border:1px solid #182030;padding:14px 18px;border-radius:10px;">
       <div style="display:flex;align-items:center;gap:12px;">
@@ -7734,6 +7734,17 @@ function openHighlightPlayer(highlightId) {
   }
 
   if(modal) modal.style.display = "flex";
+
+  // Censor blur overlay â€” covers top-right (scoreboard/name area) when isCensored
+  const oldBlur = document.getElementById("hl-censor-blur");
+  if(oldBlur) oldBlur.remove();
+  if(h.isCensored) {
+    const blurEl = document.createElement("div");
+    blurEl.id = "hl-censor-blur";
+    blurEl.style.cssText = "position:absolute;top:0;right:0;width:34%;height:27%;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(5,7,12,0.7);pointer-events:none;z-index:50;border-radius:0 12px 0 12px;transition:.3s;";
+    container.style.position = "relative";
+    container.appendChild(blurEl);
+  }
 }
 
 function closeHighlightPlayerModal() {
