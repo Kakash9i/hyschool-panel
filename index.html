@@ -6079,6 +6079,14 @@ async function loadProfiles() {
     }
   } catch(_) {}
 
+  // Also populate lowercase keys for case-insensitive access
+  if(USER_PROFILES) {
+    for (let k of Object.keys(USER_PROFILES)) {
+      const low = k.toLowerCase();
+      if(!USER_PROFILES[low]) USER_PROFILES[low] = USER_PROFILES[k];
+    }
+  }
+
   // Apply admin ranks from local storage
   try {
     const adminRanks = localStorage.getItem("hyschool_admin_ranks");
@@ -6106,6 +6114,12 @@ async function loadProfiles() {
         if(remote && typeof remote === "object") {
           USER_PROFILES = Object.assign({}, USER_PROFILES || {}, remote);
           
+          // Re-populate lowercase aliases
+          for (let k of Object.keys(USER_PROFILES)) {
+            const low = k.toLowerCase();
+            if(!USER_PROFILES[low]) USER_PROFILES[low] = USER_PROFILES[k];
+          }
+
           // Re-apply admin ranks override if set
           const adminRanks = localStorage.getItem("hyschool_admin_ranks");
           if(adminRanks) {
@@ -6120,7 +6134,7 @@ async function loadProfiles() {
           }
           
           try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
-          if(typeof renderGlobalUserBadges === "function") renderGlobalUserBadges();
+          renderGlobalUserBadges();
         }
       }
     }
@@ -6142,6 +6156,8 @@ function getUserProfile(usernameOrKey) {
   if (typeof USER_PROFILES !== 'undefined' && USER_PROFILES) {
     if (USER_PROFILES[target]) {
       p = USER_PROFILES[target];
+    } else if (USER_PROFILES[lower]) {
+      p = USER_PROFILES[lower];
     } else {
       for (const k in USER_PROFILES) {
         if (k.toLowerCase() === lower || 
@@ -6154,37 +6170,36 @@ function getUserProfile(usernameOrKey) {
     }
   }
 
+  // Check localStorage for assigned user ranks
+  let localRank = null;
+  try {
+    const stored = (isMe || lower === "admin") ? localStorage.getItem("hyschool_admin_ranks") : (localStorage.getItem("hyschool_ranks_" + target) || localStorage.getItem("hyschool_ranks_" + lower));
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) localRank = parsed;
+    }
+  } catch(_) {}
+
   if (p) {
+    if (localRank && (!p.rank || localRank.length > 0)) {
+      p.rank = localRank;
+    }
     if (isMe) {
       const myAvatar = localStorage.getItem("hyschool_avatar_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_avatar") : null);
       const myBanner = localStorage.getItem("hyschool_banner_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_banner") : null);
       const myBio = localStorage.getItem("hyschool_bio_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_bio") : null);
       const myDiscord = localStorage.getItem("hyschool_discord_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_discord") : null);
-      const myRanks = (CURRENT_USER.is_admin || lower === "admin") ? localStorage.getItem("hyschool_admin_ranks") : (localStorage.getItem("hyschool_ranks_" + target) || localStorage.getItem("hyschool_ranks_" + lower));
       
       if (myAvatar) p.avatar = myAvatar;
       if (myBanner) p.banner = myBanner;
       if (myBio) p.bio = myBio;
       if (myDiscord !== null && myDiscord !== undefined) p.discord = myDiscord;
-      if (myRanks) {
-        try {
-          const parsed = JSON.parse(myRanks);
-          if (Array.isArray(parsed) && parsed.length > 0) p.rank = parsed;
-        } catch(_) {}
-      }
     }
     return p;
   }
 
   const isOwner = (lower === "admin" || (CURRENT_USER && CURRENT_USER.is_admin && isMe));
-  let fallbackRanks = isOwner ? ["admin"] : ["premium"];
-  try {
-    const stored = (isOwner || isMe) ? (localStorage.getItem("hyschool_admin_ranks") || localStorage.getItem("hyschool_ranks_" + target)) : localStorage.getItem("hyschool_ranks_" + target);
-    if(stored) {
-      const parsed = JSON.parse(stored);
-      if(Array.isArray(parsed) && parsed.length > 0) fallbackRanks = parsed;
-    }
-  } catch(_) {}
+  let fallbackRanks = localRank || (isOwner ? ["admin"] : ["premium"]);
 
   return {
     username: isOwner ? "ADMIN" : target,
@@ -6197,6 +6212,12 @@ function getUserProfile(usernameOrKey) {
     joined: "01.01.2026",
     guestbook: []
   };
+}
+
+function renderGlobalUserBadges() {
+  if(typeof renderChatMessages === "function") renderChatMessages();
+  if(typeof renderADMINTicketsList === "function") renderADMINTicketsList();
+  if(typeof filterUserConfigs === "function") filterUserConfigs();
 }
 
 function getAvatarUrl(usernameOrKey) {
@@ -6488,6 +6509,7 @@ async function updateProfileRoles(el) {
   
   const target = _activeProfileTarget;
   const lower = target.toLowerCase();
+  
   let exactKey = target;
   for (let k in USER_PROFILES) {
     if (k.toLowerCase() === lower) {
@@ -6531,7 +6553,6 @@ async function updateProfileRoles(el) {
   }
   
   renderGlobalUserBadges();
-  if(typeof renderChatMessages === "function") renderChatMessages();
 }
 
 function handleBannerUpload(e) {
@@ -7396,13 +7417,14 @@ let _activePlayerHighlight = null;
 function getRankBadge(username, userRank, allowMultiple = false) {
   try {
     let prof = null;
-    if (typeof getUserProfile === 'function') {
+    if (typeof getUserProfile === 'function' && username) {
       prof = getUserProfile(username);
     } else if (typeof USER_PROFILES !== 'undefined' && USER_PROFILES && username) {
-      prof = USER_PROFILES[username];
+      prof = USER_PROFILES[username] || USER_PROFILES[String(username).toLowerCase()];
     }
     
-    let ranksInput = userRank || (prof && prof.rank) || "premium";
+    // Priority: Profile assigned rank > userRank parameter > fallback "premium"
+    let ranksInput = (prof && prof.rank && prof.rank.length > 0) ? prof.rank : (userRank || "premium");
     let ranks = [];
     
     if (Array.isArray(ranksInput)) {
