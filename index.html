@@ -7909,11 +7909,11 @@ function _makeHlCard(h) {
   const authorDisplayName = formatNameUpper(h.author);
   const authorAvatar = getAvatarUrl(h.author);
   const hasLiked = h.likedBy && h.likedBy.includes(CURRENT_USER.name);
-  const isOwn = CURRENT_USER.is_admin || (!h.isCensored && h.author === CURRENT_USER.name);
+  const isOwn = CURRENT_USER.is_admin || (h.author === CURRENT_USER.name);
 
   // Author name overlay (top-right of video thumbnail)
-  const overlayColor = h.isCensored ? "#94a3b8" : "#e5a93c";
-  const overlayName = h.isCensored ? "&#128274; Anonym" : escapeHtml(formatNameUpper(h.author));
+  const overlayColor = "#e5a93c";
+  const overlayName = escapeHtml(formatNameUpper(h.author));
   const authorOverlay = '<div style="position:absolute;top:8px;right:8px;z-index:10;background:rgba(0,0,0,0.78);padding:3px 9px;border-radius:6px;font-size:9.5px;font-weight:800;color:' + overlayColor + ';backdrop-filter:blur(6px);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid rgba(255,255,255,0.08);">' + overlayName + '</div>';
 
   let previewHtml = "";
