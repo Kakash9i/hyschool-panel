@@ -1553,7 +1553,7 @@
   <div class="config-preview-modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
-        <span style="color:#e5a93c;">&#128100;</span> CONFIG VORSCHAU â€” <span id="cfg-preview-title" style="color:#e5a93c;">config.cfg</span>
+        <span style="color:#e5a93c;">&#128100;</span> CONFIG VORSCHAU &bull;” <span id="cfg-preview-title" style="color:#e5a93c;">config.cfg</span>
       </h3>
       <button onclick="closeConfigPreviewModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
     </div>
@@ -1703,7 +1703,7 @@
   <!-- TAB 1: MAYA UPDATER -->
   <div class="tab-content" id="tc-1">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
-      <div class="section-title" style="margin-bottom:0;font-size:13px;color:#f8fafc;">MAYA LOADER EXE UPDATER â€” AUTOMATISCHES KUNDEN-UPDATE</div>
+      <div class="section-title" style="margin-bottom:0;font-size:13px;color:#f8fafc;">MAYA LOADER EXE UPDATER &bull;” AUTOMATISCHES KUNDEN-UPDATE</div>
     </div>
     <p style="font-size:12px;color:#94a3b8;margin-bottom:18px;line-height:1.6;">Sobald du hier eine neue <code style="color:#e5a93c;font-weight:700;background:#090a0f;padding:2px 6px;border-radius:4px;border:1px solid #1e2333;">maya.exe</code> hochlÃ¤dst, erhÃ¶ht das System die Versionsnummer ganz <b>automatisch</b> und lÃ¶st bei deinen Kunden beim nÃ¤chsten Start das Update-Fenster aus!</p>
     
@@ -7838,7 +7838,7 @@ function openHighlightPlayer(highlightId) {
 
   if(modal) modalöstyle.display = "flex";
 
-  // Censor blur overlay Ã¢â‚¬â€ covers top-right (scoreboard/name area) when isCensored
+  // Censor blur overlay Ã¢â‚¬&bull; covers top-right (scoreboard/name area) when isCensored
   const oldBlur = document.getElementById("hl-censor-blur");
   if(oldBlur) oldBlur.remove();
   if(h.isCensored) {
@@ -8016,7 +8016,7 @@ function filterHighlights() {
     }
   }
 
-  // Clip der Woche Ã¢â‚¬â€ most liked clip from current ISO week
+  // Clip der Woche Ã¢â‚¬&bull; most liked clip from current ISO week
   const cdwBanner = document.getElementById("cdw-banner");
   if(cdwBanner && ALL_HIGHLIGHTS.length > 0) {
     const now = new Date();
