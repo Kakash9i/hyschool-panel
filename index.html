@@ -6537,7 +6537,8 @@ function openOwnProfileModal() {
   openUserProfileModal(myName);
 }
 
-function openUserProfileModal(usernameOrKey) {
+async function openUserProfileModal(usernameOrKey) {
+  await loadProfiles(); // Ensure real-time sync when opened!
   _activeProfileTarget = usernameOrKey;
   const prof = getUserProfile(usernameOrKey) || {};
   const modal = document.getElementById("user-profile-modal");
@@ -6576,10 +6577,10 @@ function openUserProfileModal(usernameOrKey) {
 
   const roleManager = document.getElementById("profile-role-manager");
   if(roleManager) {
-    const canManageRoles = typeof CURRENT_USER !== 'undefined' && CURRENT_USER && (
-      CURRENT_USER.is_admin || 
-      (CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_staff)
-    );
+    const isOwner = typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.is_admin;
+    const assignableRoles = (CURRENT_USER && CURRENT_USER.permissions && CURRENT_USER.permissions.assignable_roles) || [];
+    const canManageRoles = isOwner || assignableRoles.length > 0;
+    
     if(canManageRoles) {
       roleManager.style.display = "block";
       const checkboxes = document.querySelectorAll(".role-checkbox");
@@ -6600,6 +6601,13 @@ function openUserProfileModal(usernameOrKey) {
       
       checkboxes.forEach(cb => {
         const val = cb.value.toLowerCase();
+        
+        if(!isOwner && !assignableRoles.includes(val)) {
+           cb.parentElement.style.display = "none";
+        } else {
+           cb.parentElement.style.display = "inline-flex";
+        }
+        
         cb.checked = currentRanks.includes(val);
         if(cb.checked) cb.parentElement.classList.add("active");
         else cb.parentElement.classList.remove("active");
