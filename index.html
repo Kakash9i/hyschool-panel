@@ -7844,7 +7844,7 @@ function openHighlightPlayer(highlightId) {
   if(h.isCensored) {
     const blurEl = document.createElement("div");
     blurEl.id = "hl-censor-blur";
-    blurEl.style.cssText = "position:absolute;top:0;right:0;width:44%;height:35%;backdrop-filter:blur(45px) brightness(0.85);-webkit-backdrop-filter:blur(45px) brightness(0.85);mask-image:radial-gradient(ellipse 100% 100% at right top, black 80%, transparent 100%);-webkit-mask-image:radial-gradient(ellipse 100% 100% at right top, black 80%, transparent 100%);pointer-events:none;z-index:50;";
+    blurEl.style.cssText = "position:absolute;top:0;right:0;width:48%;height:45%;backdrop-filter:blur(45px) brightness(0.85);-webkit-backdrop-filter:blur(45px) brightness(0.85);mask-image:radial-gradient(ellipse 100% 100% at right top, black 80%, transparent 100%);-webkit-mask-image:radial-gradient(ellipse 100% 100% at right top, black 80%, transparent 100%);pointer-events:none;z-index:50;";
     container.style.position = "relative";
     container.appendChild(blurEl);
   }
