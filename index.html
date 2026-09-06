@@ -1036,6 +1036,43 @@
     border: 1px solid rgba(59,130,246,0.5);
     box-shadow: 0 0 10px rgba(59,130,246,0.25);
   }
+
+/* LUXURY ROLE PILL STYLES */
+.role-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  user-select: none;
+}
+.role-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+.role-pill input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.role-pill.active {
+  background: rgba(229, 169, 60, 0.18) !important;
+  border-color: rgba(229, 169, 60, 0.6) !important;
+  color: #fbbf24 !important;
+  box-shadow: 0 0 12px rgba(229, 169, 60, 0.25) !important;
+}
 </style>
 </head>
 <body>
@@ -6105,7 +6142,7 @@ function getUserProfile(usernameOrKey) {
     rank: isOwner ? ["admin"] : ["premium"],
     avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(target)}`,
     banner: isOwner ? (localStorage.getItem("hyschool_admin_banner") || "") : "",
-    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugef&#128100;gt.",
+    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugef&uuml;gt.",
     discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "Nicht angegeben",
     joined: "01.01.2026",
     guestbook: []
