@@ -6309,7 +6309,8 @@ function getUserProfile(usernameOrKey) {
   // Check localStorage for assigned user ranks
   let localRank = null;
   try {
-    const stored = (isMe || lower === "admin") ? localStorage.getItem("hyschool_admin_ranks") : (localStorage.getItem("hyschool_ranks_" + target) || localStorage.getItem("hyschool_ranks_" + lower));
+    const isOwnerProfile = lower === "admin" || (CURRENT_USER && CURRENT_USER.is_admin && isMe);
+    const stored = (isOwnerProfile) ? localStorage.getItem("hyschool_admin_ranks") : (localStorage.getItem("hyschool_ranks_" + target) || localStorage.getItem("hyschool_ranks_" + lower));
     if (stored) {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed) && parsed.length > 0) localRank = parsed;
@@ -6691,8 +6692,8 @@ async function updateProfileRoles(el) {
   USER_PROFILES[lower] = USER_PROFILES[exactKey];
   USER_PROFILES[target] = USER_PROFILES[exactKey];
   
-  const isMe = (target.toUpperCase() === "ADMIN" || (CURRENT_USER && target.toLowerCase() === CURRENT_USER.name.toLowerCase()));
-  if(isMe || lower === "admin") {
+  const isOwnerProfile = target.toUpperCase() === "ADMIN" || (CURRENT_USER && CURRENT_USER.is_admin && target.toLowerCase() === CURRENT_USER.name.toLowerCase());
+  if (isOwnerProfile || lower === "admin") {
     localStorage.setItem("hyschool_admin_ranks", JSON.stringify(selected));
     if(CURRENT_USER) CURRENT_USER.rank = selected;
   }
