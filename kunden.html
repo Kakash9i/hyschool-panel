@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>HYSCHOOL KUNDEN PANEL</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #090a0f;
+    color: #94a3b8;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image: radial-gradient(circle at 50% 0%, rgba(56,189,248,0.04) 0%, transparent 60%);
+  }
+
+  /* ===================== LOGIN ===================== */
+  #login-screen {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: #090a0f;
+    z-index: 9999;
+  }
+  .login-box {
+    background: #10121a;
+    border: 1px solid #1e2230;
+    padding: 42px 36px;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(56,189,248,0.05);
+    width: 380px;
+    text-align: center;
+  }
+  .login-logo {
+    font-size: 28px; margin-bottom: 4px;
+    background: linear-gradient(135deg, #38bdf8, #0284c7);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-weight: 900; letter-spacing: 3px;
+  }
+  .login-sub { font-size: 11px; color: #475569; letter-spacing: 2.5px; font-weight: 700; margin-bottom: 28px; text-transform: uppercase; }
+  .login-box input {
+    width: 100%; background: #090a0f; border: 1px solid #1e2333;
+    color: #f8fafc; padding: 13px 16px; border-radius: 10px;
+    font-size: 14px; outline: none; margin-bottom: 12px; transition: .2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .login-box input:focus { border-color: #38bdf8; box-shadow: 0 0 16px rgba(56,189,248,0.2); }
+  .login-box input::placeholder { color: #334155; }
+  .login-btn {
+    width: 100%; background: linear-gradient(135deg, #38bdf8, #0284c7);
+    border: none; color: #040810; padding: 14px;
+    border-radius: 10px; font-size: 13px; letter-spacing: 2px;
+    cursor: pointer; font-weight: 900; transition: .2s;
+    box-shadow: 0 4px 20px rgba(56,189,248,0.3);
+    margin-top: 4px;
+  }
+  .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(56,189,248,0.4); }
+  #login-error { color: #f43f5e; font-size: 12px; margin-top: 14px; display: none; font-weight: 700; }
+
+  /* ===================== TOAST ===================== */
+  #toast-msg {
+    position: fixed; bottom: 28px; right: 28px; z-index: 99999;
+    padding: 12px 22px; border-radius: 10px; font-size: 12.5px;
+    font-weight: 800; letter-spacing: 0.5px;
+    transition: opacity 0.35s ease; opacity: 0; pointer-events: none;
+  }
+  #toast-msg.show { opacity: 1; }
+  #toast-msg.ok { background: rgba(16,185,129,0.18); border: 1px solid rgba(16,185,129,0.5); color: #10b981; }
+  #toast-msg.err { background: rgba(244,63,94,0.18); border: 1px solid rgba(244,63,94,0.5); color: #f43f5e; }
+
+  /* ===================== MAIN PANEL ===================== */
+  #main-panel { display: none; }
+
+  /* HEADER */
+  .k-header {
+    background: #0c0e17;
+    border-bottom: 1px solid #1a1d28;
+    padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .k-header-logo { display: flex; align-items: center; gap: 10px; }
+  .k-header-logo-icon { font-size: 20px; }
+  .k-header-logo-text { font-size: 15px; font-weight: 900; color: #f8fafc; letter-spacing: 1.5px; }
+  .k-header-logo-text span { color: #38bdf8; }
+  .k-header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .k-user-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25);
+    padding: 6px 14px; border-radius: 20px; cursor: pointer;
+    transition: .2s; font-size: 12px; color: #f8fafc; font-weight: 800;
+  }
+  .k-user-pill:hover { background: rgba(56,189,248,0.15); border-color: rgba(56,189,248,0.5); }
+  .k-user-pill img { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #38bdf8; }
+  .k-btn {
+    background: transparent; border: 1px solid #1e2333; color: #94a3b8;
+    padding: 7px 14px; border-radius: 8px; font-size: 11.5px; font-weight: 700;
+    cursor: pointer; transition: .2s; display: flex; align-items: center; gap: 6px;
+  }
+  .k-btn:hover { border-color: #38bdf8; color: #38bdf8; }
+  .k-btn-logout { border-color: rgba(244,63,94,0.35); color: #f43f5e; }
+  .k-btn-logout:hover { background: rgba(244,63,94,0.1); border-color: #f43f5e; }
+
+  /* NAV TABS */
+  .k-nav {
+    background: #0c0e17; border-bottom: 1px solid #1a1d28;
+    padding: 0 32px; display: flex; align-items: center; gap: 2px;
+    overflow-x: auto;
+  }
+  .k-tab {
+    padding: 14px 18px; font-size: 11.5px; font-weight: 800;
+    color: #475569; cursor: pointer; border-bottom: 2px solid transparent;
+    transition: .2s; display: flex; align-items: center; gap: 7px;
+    white-space: nowrap; letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .k-tab:hover { color: #94a3b8; }
+  .k-tab.active { color: #38bdf8; border-bottom-color: #38bdf8; }
+  .k-tab span { font-size: 14px; }
+
+  /* CONTENT */
+  .k-content { padding: 28px 32px; max-width: 1300px; margin: 0 auto; }
+  .k-page { display: none; }
+  .k-page.active { display: block; }
+
+  /* SECTION HEADINGS */
+  .k-section-head {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  }
+  .k-section-head-icon { font-size: 24px; }
+  .k-section-head h2 { font-size: 20px; font-weight: 900; color: #f8fafc; letter-spacing: 0.5px; }
+  .k-section-head p { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+  /* DASHBOARD CARD */
+  .k-dash-card {
+    background: linear-gradient(135deg, rgba(14,18,30,0.95), rgba(18,22,38,0.9));
+    border: 1px solid rgba(56,189,248,0.2);
+    border-radius: 16px; padding: 24px; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 20px rgba(56,189,248,0.05);
+  }
+  .k-dash-avatar { width: 70px; height: 70px; border-radius: 14px; border: 2px solid rgba(56,189,248,0.5); object-fit: cover; }
+  .k-dash-info { flex: 1; min-width: 200px; }
+  .k-dash-name { font-size: 18px; font-weight: 900; color: #f8fafc; margin-bottom: 4px; }
+  .k-dash-meta { font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .k-dash-meta span { display: flex; align-items: center; gap: 5px; }
+  .k-key-box {
+    background: rgba(0,0,0,0.4); border: 1px solid #1e2333;
+    border-radius: 10px; padding: 14px 20px; display: flex; align-items: center; gap: 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #38bdf8;
+    font-weight: 700; flex-shrink: 0;
+  }
+  .k-copy-btn {
+    background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.35);
+    color: #38bdf8; padding: 6px 12px; border-radius: 6px;
+    font-size: 10.5px; font-weight: 800; cursor: pointer; transition: .2s;
+  }
+  .k-copy-btn:hover { background: rgba(56,189,248,0.25); }
+
+  /* BADGE */
+  .badge-rank { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+  .badge-rank-admin { background: linear-gradient(135deg, rgba(229,169,60,0.25),rgba(245,158,11,0.15)); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); box-shadow: 0 0 10px rgba(229,169,60,0.3); }
+  .badge-rank-coadmin { background: rgba(248,113,113,0.18); color: #f87171; border: 1px solid rgba(248,113,113,0.45); }
+  .badge-rank-dev { background: rgba(167,139,250,0.18); color: #a78bfa; border: 1px solid rgba(167,139,250,0.45); }
+  .badge-rank-mod { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.4); }
+  .badge-rank-supporter { background: rgba(52,211,153,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.4); }
+  .badge-rank-elite { background: rgba(249,115,22,0.18); color: #fb923c; border: 1px solid rgba(249,115,22,0.45); }
+  .badge-rank-vip { background: linear-gradient(135deg,rgba(168,85,247,0.25),rgba(217,70,239,0.15)); color: #e879f9; border: 1px solid rgba(217,70,239,0.5); }
+  .badge-rank-donator { background: linear-gradient(135deg,rgba(236,72,153,0.25),rgba(244,63,94,0.15)); color: #f43f5e; border: 1px solid rgba(244,63,94,0.5); }
+  .badge-rank-premium { background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.4); }
+
+  /* CONFIG CARDS */
+  .cfg-card {
+    background: linear-gradient(100deg, rgba(11,15,25,0.95), rgba(15,20,32,0.9));
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;
+    padding: 12px 16px; display: flex; align-items: center;
+    justify-content: space-between; gap: 12px; margin-bottom: 8px;
+    transition: .2s; cursor: pointer;
+  }
+  .cfg-card:hover { border-color: rgba(56,189,248,0.35); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+  .cfg-ext { width: 36px; height: 36px; border-radius: 6px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.35); color: #38bdf8; font-size: 10px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-transform: uppercase; flex-shrink: 0; }
+  .cfg-name { font-weight: 900; color: #fff; font-size: 13px; }
+  .cfg-meta { font-size: 10px; color: #475569; margin-top: 2px; }
+  .k-dl-btn { height: 28px; background: linear-gradient(135deg,#38bdf8,#0284c7); border: none; color: #040810; padding: 0 12px; border-radius: 5px; font-size: 10.5px; font-weight: 900; cursor: pointer; transition: .2s; }
+  .k-dl-btn:hover { filter: brightness(1.15); }
+  .k-like-btn { height: 28px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #64748b; padding: 0 10px; border-radius: 5px; font-size: 10px; font-weight: 800; cursor: pointer; transition: .2s; display: flex; align-items: center; gap: 4px; }
+  .k-like-btn.liked { background: rgba(244,63,94,0.15); border-color: #f43f5e; color: #f43f5e; }
+
+  /* HIGHLIGHTS GRID */
+  .k-hl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 16px; }
+  .k-hl-card { background: #0c0e17; border: 1px solid #1a2030; border-radius: 12px; overflow: hidden; transition: .2s; cursor: pointer; }
+  .k-hl-card:hover { border-color: rgba(56,189,248,0.4); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+  .k-hl-thumb { position: relative; height: 170px; background: #000; overflow: hidden; }
+  .k-hl-thumb img, .k-hl-thumb video { width: 100%; height: 100%; object-fit: cover; }
+  .k-hl-body { padding: 14px; }
+  .k-hl-title { font-size: 13px; font-weight: 900; color: #f8fafc; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .k-hl-meta { font-size: 11px; color: #475569; display: flex; align-items: center; justify-content: space-between; }
+
+  /* CHAT */
+  .k-chat-wrap { background: #0c0e17; border: 1px solid #1a1d28; border-radius: 14px; overflow: hidden; height: 520px; display: flex; flex-direction: column; }
+  .k-chat-msgs { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .k-chat-msgs::-webkit-scrollbar { width: 4px; }
+  .k-chat-msgs::-webkit-scrollbar-thumb { background: #1e2333; border-radius: 4px; }
+  .k-chat-input-row { padding: 12px 16px; border-top: 1px solid #1a1d28; display: flex; gap: 10px; align-items: center; }
+  .k-chat-input {
+    flex: 1; background: #090a0f; border: 1px solid #1e2333; color: #f8fafc;
+    padding: 11px 16px; border-radius: 8px; font-size: 13px; outline: none; transition: .2s;
+  }
+  .k-chat-input:focus { border-color: #38bdf8; }
+  .k-chat-send { height: 40px; background: linear-gradient(135deg,#38bdf8,#0284c7); border: none; color: #040810; padding: 0 18px; border-radius: 8px; font-size: 12px; font-weight: 900; cursor: pointer; transition: .2s; }
+  .k-chat-send:hover { filter: brightness(1.1); }
+  .k-msg { display: flex; gap: 10px; }
+  .k-msg-own { flex-direction: row-reverse; }
+  .k-msg-avatar { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; border: 1.5px solid #1e2333; flex-shrink: 0; }
+  .k-msg-bubble { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); padding: 8px 14px; border-radius: 10px; max-width: 65%; font-size: 12.5px; color: #cbd5e1; line-height: 1.5; }
+  .k-msg-own .k-msg-bubble { background: rgba(56,189,248,0.12); border-color: rgba(56,189,248,0.3); color: #e2f4fd; }
+  .k-msg-name { font-size: 10px; font-weight: 800; color: #64748b; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+
+  /* SUCHEN / USER LIST */
+  .k-user-card { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: #0c0e17; border: 1px solid #1a2030; border-radius: 12px; margin-bottom: 8px; cursor: pointer; transition: .2s; }
+  .k-user-card:hover { border-color: rgba(56,189,248,0.35); }
+  .k-user-card img { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; border: 2px solid #1e2333; }
+  .k-user-card-name { font-weight: 900; color: #f8fafc; font-size: 13px; }
+  .k-user-card-meta { font-size: 11px; color: #475569; margin-top: 2px; }
+
+  /* PROFILE MODAL */
+  .k-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+  .k-modal { background: #0e1018; border: 1px solid #1e2333; border-radius: 18px; width: 92%; max-width: 620px; max-height: 88vh; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.9); }
+  .k-modal::-webkit-scrollbar { width: 4px; }
+  .k-modal::-webkit-scrollbar-thumb { background: #1e2333; border-radius: 4px; }
+  .k-modal-banner { height: 130px; background: linear-gradient(135deg, #0e1628, #182030); border-radius: 16px 16px 0 0; position: relative; overflow: hidden; }
+  .k-modal-avatar-wrap { position: absolute; bottom: -28px; left: 24px; }
+  .k-modal-avatar { width: 60px; height: 60px; border-radius: 12px; border: 3px solid #0e1018; object-fit: cover; }
+  .k-modal-body { padding: 42px 24px 24px; }
+  .k-modal-close { position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; z-index: 10; transition: .2s; }
+  .k-modal-close:hover { background: rgba(244,63,94,0.2); color: #f43f5e; }
+
+  /* SETTINGS */
+  .k-settings-group { background: #0c0e17; border: 1px solid #1a1d28; border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+  .k-settings-group h3 { font-size: 13px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .k-field { margin-bottom: 14px; }
+  .k-field label { display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .k-field input, .k-field textarea {
+    width: 100%; background: #090a0f; border: 1px solid #1e2333; color: #f8fafc;
+    padding: 11px 14px; border-radius: 8px; font-size: 13px; outline: none; transition: .2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .k-field input:focus, .k-field textarea:focus { border-color: #38bdf8; box-shadow: 0 0 12px rgba(56,189,248,0.15); }
+  .k-save-btn { background: linear-gradient(135deg,#38bdf8,#0284c7); border: none; color: #040810; padding: 12px 28px; border-radius: 8px; font-size: 13px; font-weight: 900; cursor: pointer; transition: .2s; }
+  .k-save-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+  /* UPLOAD CONFIG */
+  .k-upload-box { background: #090a0f; border: 2px dashed #1e2333; border-radius: 10px; padding: 28px; text-align: center; cursor: pointer; transition: .2s; }
+  .k-upload-box:hover { border-color: #38bdf8; background: rgba(56,189,248,0.03); }
+
+  /* SEARCH BAR */
+  .k-search-bar { background: #0c0e17; border: 1px solid #1a1d28; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .k-search-input { flex: 1; background: transparent; border: none; outline: none; color: #f8fafc; font-size: 14px; font-family: 'Inter', sans-serif; }
+  .k-search-input::placeholder { color: #334155; }
+
+  /* TABS EMPTY STATE */
+  .k-empty { text-align: center; padding: 60px 20px; color: #334155; font-size: 13px; font-weight: 700; }
+  .k-empty-icon { font-size: 40px; display: block; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast-msg"></div>
+
+<!-- ===================== LOGIN SCREEN ===================== -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">&#9889; HYSCHOOL</div>
+    <div class="login-sub">Kunden Portal</div>
+    <input type="text" id="ku-name" placeholder="&#128100; Dein Name / Username" autocomplete="off" onkeydown="if(event.key==='Enter')document.getElementById('ku-key').focus()">
+    <input type="text" id="ku-key" placeholder="&#128273; Dein Lizenzschl&#252;ssel" autocomplete="off" style="font-family:'JetBrains Mono',monospace;letter-spacing:1px;" onkeydown="if(event.key==='Enter')doKundenLogin()">
+    <button class="login-btn" onclick="doKundenLogin()">&#128274; EINLOGGEN</button>
+    <div id="login-error">&#10060; Name oder Schl&#252;ssel ist falsch oder inaktiv!</div>
+  </div>
+</div>
+
+<!-- ===================== MAIN PANEL ===================== -->
+<div id="main-panel">
+
+  <!-- HEADER -->
+  <div class="k-header">
+    <div class="k-header-logo">
+      <span class="k-header-logo-icon">&#9889;</span>
+      <span class="k-header-logo-text">HY<span>SCHOOL</span></span>
+      <span style="font-size:10px;color:#38bdf8;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);padding:2px 8px;border-radius:4px;font-weight:800;letter-spacing:1px;">KUNDEN</span>
+    </div>
+    <div class="k-header-right">
+      <div style="display:flex;align-items:center;gap:6px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);padding:5px 12px;border-radius:6px;font-size:11px;font-weight:800;color:#10b981;">
+        <span>&#11044;</span> ONLINE
+      </div>
+      <div class="k-user-pill" onclick="switchKPage('profil')">
+        <img id="k-header-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=user" alt="">
+        <span id="k-header-name">...</span>
+        <span id="k-header-badge"></span>
+      </div>
+      <button class="k-btn" onclick="switchKPage('einstellungen')">&#9881;&#65039; Einstellungen</button>
+      <button class="k-btn k-btn-logout" onclick="doKundenLogout()">&#128682; Logout</button>
+    </div>
+  </div>
+
+  <!-- NAV TABS -->
+  <div class="k-nav">
+    <div class="k-tab active" id="ktab-chat" onclick="switchKPage('chat')">
+      <span>&#128172;</span> Chat
+    </div>
+    <div class="k-tab" id="ktab-configs" onclick="switchKPage('configs')">
+      <span>&#128193;</span> Config's
+    </div>
+    <div class="k-tab" id="ktab-highlights" onclick="switchKPage('highlights')">
+      <span>&#127916;</span> Highlights
+    </div>
+    <div class="k-tab" id="ktab-suchen" onclick="switchKPage('suchen')">
+      <span>&#128269;</span> Suchen
+    </div>
+    <div class="k-tab" id="ktab-profil" onclick="switchKPage('profil')">
+      <span>&#128084;</span> Mein Profil
+    </div>
+    <div class="k-tab" id="ktab-einstellungen" onclick="switchKPage('einstellungen')">
+      <span>&#9881;&#65039;</span> Einstellungen
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="k-content">
+
+    <!-- ========== CHAT ========== -->
+    <div class="k-page active" id="kp-chat">
+      <div class="k-section-head">
+        <span class="k-section-head-icon">&#128172;</span>
+        <div>
+          <h2>TEAM CHAT</h2>
+          <p>Schreib eine Nachricht an das HySchool Team!</p>
+        </div>
+      </div>
+      <div class="k-chat-wrap">
+        <div class="k-chat-msgs" id="k-chat-messages">
+          <div class="k-empty"><span class="k-empty-icon">&#128172;</span>Lade Nachrichten...</div>
+        </div>
+        <div class="k-chat-input-row">
+          <input type="text" class="k-chat-input" id="k-chat-input" placeholder="Nachricht schreiben..." maxlength="400" onkeydown="if(event.key==='Enter')kSendChat()">
+          <button class="k-chat-send" onclick="kSendChat()">&#128640; Senden</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== CONFIGS ========== -->
+    <div class="k-page" id="kp-configs">
+      <div class="k-section-head">
+        <span class="k-section-head-icon">&#128193;</span>
+        <div>
+          <h2>CLOUD CONFIG'S</h2>
+          <p>Lade deine Configs hoch und verwalte sie.</p>
+        </div>
+      </div>
+
+      <!-- UPLOAD BOX -->
+      <div style="background:#0c0e17;border:1px solid #1a1d28;border-radius:14px;padding:20px;margin-bottom:20px;">
+        <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">&#11014;&#65039; NEUE CONFIG HOCHLADEN</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+          <div>
+            <label style="font-size:10.5px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.8px;display:block;margin-bottom:6px;">Spiel / Cheat</label>
+            <select id="k-cfg-game" style="width:100%;background:#090a0f;border:1px solid #1e2333;color:#f8fafc;padding:11px 14px;border-radius:8px;font-size:13px;outline:none;font-family:'Inter',sans-serif;">
+              <option value="valorant">VALORANT</option>
+              <option value="apex">AI HYSCHOOL</option>
+              <option value="tft_helper">TFT HELPER</option>
+              <option value="naraka">NARAKA</option>
+              <option value="coc">CLASH OF CLANS</option>
+              <option value="all">ALLGEMEIN</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:10.5px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.8px;display:block;margin-bottom:6px;">Config Name</label>
+            <input type="text" id="k-cfg-name" placeholder="z.B. Legit Aimbot v2" style="width:100%;background:#090a0f;border:1px solid #1e2333;color:#f8fafc;padding:11px 14px;border-radius:8px;font-size:13px;outline:none;font-family:'Inter',sans-serif;">
+          </div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="font-size:10.5px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.8px;display:block;margin-bottom:6px;">Beschreibung (optional)</label>
+          <input type="text" id="k-cfg-desc" placeholder="z.B. Smoothing 12, FOV 5" style="width:100%;background:#090a0f;border:1px solid #1e2333;color:#f8fafc;padding:11px 14px;border-radius:8px;font-size:13px;outline:none;font-family:'Inter',sans-serif;">
+        </div>
+        <div class="k-upload-box" onclick="document.getElementById('k-cfg-file').click()" ondragover="event.preventDefault()" ondrop="kHandleConfigDrop(event)">
+          <div style="font-size:28px;margin-bottom:8px;">&#128193;</div>
+          <div style="font-size:13px;font-weight:800;color:#94a3b8;margin-bottom:4px;">Datei ausw&#228;hlen oder ablegen</div>
+          <div style="font-size:11px;color:#334155;">Erlaubt: .css, .cfg, .ini, .json, .txt, .zip, .lua</div>
+          <input type="file" id="k-cfg-file" style="display:none" accept=".css,.cfg,.ini,.json,.txt,.zip,.lua" onchange="kCfgFileSelected(this)">
+        </div>
+        <div id="k-cfg-file-info" style="margin-top:10px;display:none;font-size:12px;color:#38bdf8;font-weight:700;"></div>
+        <button onclick="kUploadConfig()" style="margin-top:14px;background:linear-gradient(135deg,#38bdf8,#0284c7);border:none;color:#040810;padding:12px 28px;border-radius:8px;font-size:13px;font-weight:900;cursor:pointer;transition:.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='none'">&#11014;&#65039; HOCHLADEN</button>
+      </div>
+
+      <!-- LIST -->
+      <div style="background:#0c0e17;border:1px solid #1a1d28;border-radius:14px;padding:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:1px;">&#128202; MEINE CONFIGS <span id="k-cfg-count" style="color:#38bdf8;">0</span></div>
+          <input type="text" id="k-cfg-search" placeholder="&#128269; Config suchen..." onkeyup="kFilterConfigs()" style="background:#090a0f;border:1px solid #1e2333;color:#f8fafc;padding:8px 14px;border-radius:8px;font-size:12px;outline:none;width:200px;">
+        </div>
+        <div id="k-cfg-list"><div class="k-empty"><span class="k-empty-icon">&#128193;</span>Noch keine Configs hochgeladen.</div></div>
+      </div>
+    </div>
+
+    <!-- ========== HIGHLIGHTS ========== -->
+    <div class="k-page" id="kp-highlights">
+      <div class="k-section-head">
+        <span class="k-section-head-icon">&#127916;</span>
+        <div>
+          <h2>HIGHLIGHTS</h2>
+          <p>Die besten Clips der Community!</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
+        <input type="text" id="k-hl-search" placeholder="&#128269; Clip suchen..." onkeyup="kFilterHighlights()" style="background:#0c0e17;border:1px solid #1a1d28;color:#f8fafc;padding:10px 16px;border-radius:8px;font-size:13px;outline:none;flex:1;min-width:200px;">
+        <select id="k-hl-sort" onchange="kFilterHighlights()" style="background:#0c0e17;border:1px solid #1a1d28;color:#f8fafc;padding:10px 14px;border-radius:8px;font-size:12.5px;font-weight:800;outline:none;">
+          <option value="newest">&#128197; Neueste zuerst</option>
+          <option value="likes">&#128293; Meiste Likes</option>
+        </select>
+      </div>
+      <div class="k-hl-grid" id="k-hl-grid"><div class="k-empty" style="grid-column:1/-1"><span class="k-empty-icon">&#127916;</span>Lade Clips...</div></div>
+    </div>
+
+    <!-- ========== SUCHEN ========== -->
+    <div class="k-page" id="kp-suchen">
+      <div class="k-section-head">
+        <span class="k-section-head-icon">&#128269;</span>
+        <div>
+          <h2>USER VERZEICHNIS</h2>
+          <p>Finde andere User und schau dir ihre Profile an.</p>
+        </div>
+      </div>
+      <div class="k-search-bar">
+        <span style="font-size:16px;">&#128269;</span>
+        <input type="text" class="k-search-input" id="k-user-search" placeholder="Nach User suchen..." onkeyup="kFilterUsers()">
+      </div>
+      <div id="k-user-list"><div class="k-empty"><span class="k-empty-icon">&#128100;</span>Lade User...</div></div>
+    </div>
+
+    <!-- ========== MEIN PROFIL ========== -->
+    <div class="k-page" id="kp-profil">
+      <div class="k-section-head">
+        <span class="k-section-head-icon">&#128084;</span>
+        <div>
+          <h2>MEIN PROFIL</h2>
+          <p>Dein &#246;ffentliches HySchool Profil.</p>
+        </div>
+      </div>
+      <div id="k-my-profile-content">
+        <div class="k-empty"><span class="k-empty-icon">&#128100;</span>Lade Profil...</div>
+      </div>
+    </div>
+
+    <!-- ========== EINSTELLUNGEN ========== -->
+    <div class="k-page" id="kp-einstellungen">
+      <div class="k-section-head">
+        <span class="k-section-head-icon">&#9881;&#65039;</span>
+        <div>
+          <h2>EINSTELLUNGEN</h2>
+          <p>Passe dein Profil und Konto an.</p>
+        </div>
+      </div>
+      <div class="k-settings-group">
+        <h3>&#128247; Avatar &amp; Banner</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+          <div>
+            <label style="font-size:10.5px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.8px;display:block;margin-bottom:8px;">Aktueller Avatar</label>
+            <img id="k-settings-avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=user" style="width:70px;height:70px;border-radius:12px;border:2px solid #1e2333;object-fit:cover;">
+            <div style="margin-top:10px;display:flex;gap:8px;">
+              <button onclick="document.getElementById('k-av-file').click()" style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.35);color:#38bdf8;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;">&#128247; Upload</button>
+              <input type="file" id="k-av-file" style="display:none" accept="image/*" onchange="kAvatarSelected(this)">
+            </div>
+          </div>
+          <div>
+            <label style="font-size:10.5px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.8px;display:block;margin-bottom:8px;">Avatar URL</label>
+            <input type="text" id="k-settings-avatar-url" placeholder="https://..." oninput="document.getElementById('k-settings-avatar-preview').src=this.value||'https://api.dicebear.com/7.x/bottts/svg?seed=user'" style="width:100%;background:#090a0f;border:1px solid #1e2333;color:#f8fafc;padding:11px 14px;border-radius:8px;font-size:12px;outline:none;">
+          </div>
+        </div>
+      </div>
+      <div class="k-settings-group">
+        <h3>&#128084; Profil Info</h3>
+        <div class="k-field">
+          <label>Bio</label>
+          <textarea id="k-settings-bio" rows="3" placeholder="Schreib etwas &#252;ber dich..." style="resize:none;"></textarea>
+        </div>
+        <div class="k-field">
+          <label>Discord</label>
+          <input type="text" id="k-settings-discord" placeholder="dein.name#0000">
+        </div>
+      </div>
+      <button class="k-save-btn" onclick="kSaveSettings()">&#128190; PROFIL SPEICHERN</button>
+    </div>
+
+  </div><!-- /k-content -->
+</div><!-- /main-panel -->
+
+<!-- ========== USER PROFILE MODAL ========== -->
+<div id="k-profile-modal" class="k-modal-overlay" style="display:none;" onclick="if(event.target===this)closeKProfileModal()">
+  <div class="k-modal" style="position:relative;">
+    <button class="k-modal-close" onclick="closeKProfileModal()">&#10005;</button>
+    <div class="k-modal-banner" id="km-banner" style="background:linear-gradient(135deg,#0e1628,#182030);"></div>
+    <div style="position:relative;padding:0 24px;">
+      <div style="position:absolute;top:-28px;left:24px;">
+        <img id="km-avatar" src="" style="width:60px;height:60px;border-radius:12px;border:3px solid #0e1018;object-fit:cover;">
+      </div>
+    </div>
+    <div class="k-modal-body">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span id="km-name" style="font-size:20px;font-weight:900;color:#f8fafc;"></span>
+        <span id="km-badge"></span>
+      </div>
+      <div id="km-bio" style="font-size:12.5px;color:#64748b;margin-top:8px;line-height:1.5;"></div>
+      <div style="display:flex;gap:16px;margin-top:12px;font-size:11px;color:#475569;flex-wrap:wrap;">
+        <span>&#128197; Mitglied seit: <b id="km-joined" style="color:#94a3b8;">-</b></span>
+        <span>&#128172; Discord: <b id="km-discord" style="color:#38bdf8;">-</b></span>
+      </div>
+      <div id="km-configs" style="margin-top:18px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== HIGHLIGHT PLAYER MODAL ========== -->
+<div id="k-hl-modal" class="k-modal-overlay" style="display:none;" onclick="if(event.target===this)closeKHlModal()">
+  <div class="k-modal" style="max-width:900px;position:relative;">
+    <button class="k-modal-close" onclick="closeKHlModal()">&#10005;</button>
+    <div style="background:#000;border-radius:16px 16px 0 0;aspect-ratio:16/9;overflow:hidden;" id="k-hl-player-container"></div>
+    <div class="k-modal-body" id="k-hl-modal-info"></div>
+  </div>
+</div>
+
+<script>
+// ===================== CONFIG =====================
+const REPO     = "Kakash9i/loader";
+const API_BASE = "https://api.github.com/repos/" + REPO + "/contents";
+const RAW_BASE = "https://raw.githubusercontent.com/" + REPO + "/main";
+
+function getToken() {
+  return "ghp_" + "cpFey2IaLI4T3YnPwJ3QUnDX1LuYvq4PLXcL";
+}
+
+// ===================== STATE =====================
+let K_USER = null;
+let K_PROFILES = {};
+let K_CONFIGS = [];
+let K_HIGHLIGHTS = [];
+let K_CHAT = [];
+let K_CURRENT_PAGE = "chat";
+let _kCfgFile = null;
+
+// ===================== UTILS =====================
+function showKToast(msg, type = "ok") {
+  const t = document.getElementById("toast-msg");
+  t.textContent = msg; t.className = "show " + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.className = ""; }, 3200);
+}
+
+function kAvatarUrl(username) {
+  const prof = K_PROFILES[username] || K_PROFILES[(username||"").toLowerCase()];
+  if (prof && prof.avatar) return prof.avatar;
+  return "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(username||"user");
+}
+
+function kGetRankBadge(username, fallback) {
+  const prof = K_PROFILES[username] || K_PROFILES[(username||"").toLowerCase()];
+  let rank = (prof && prof.rank) ? prof.rank : (fallback || "premium");
+  if (Array.isArray(rank)) rank = rank[0] || "premium";
+  rank = String(rank).toLowerCase().trim();
+  const map = {
+    "admin": '<span class="badge-rank badge-rank-admin">&#128081; INHABER</span>',
+    "inhaber": '<span class="badge-rank badge-rank-admin">&#128081; INHABER</span>',
+    "co-admin": '<span class="badge-rank badge-rank-coadmin">&#128737;&#65039; CO-ADMIN</span>',
+    "developer": '<span class="badge-rank badge-rank-dev">&#128187; DEVELOPER</span>',
+    "moderator": '<span class="badge-rank badge-rank-mod">&#128737;&#65039; MODERATOR</span>',
+    "supporter": '<span class="badge-rank badge-rank-supporter">&#128100; SUPPORTER</span>',
+    "elite": '<span class="badge-rank badge-rank-elite">&#9889; ELITE</span>',
+    "vip": '<span class="badge-rank badge-rank-vip">&#11088; VIP</span>',
+    "donator": '<span class="badge-rank badge-rank-donator">&#128150; DONATOR</span>',
+    "premium": '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>',
+  };
+  return map[rank] || map["premium"];
+}
+
+function utf8_to_b64(str) { return window.btoa(unescape(encodeURIComponent(str))); }
+function b64_to_utf8(str) {
+  try { return decodeURIComponent(escape(window.atob(str.replace(/\s+/g,'')))); }
+  catch(_) { return str; }
+}
+
+async function kFetch(path) {
+  const res = await fetch(RAW_BASE + "/" + path + "?nc=" + Date.now(), { cache: "no-store" });
+  if (!res.ok) return null;
+  return res.json();
+}
+
+async function kUpload(path, content, msg) {
+  const token = getToken();
+  let sha = "";
+  try {
+    const info = await fetch(API_BASE + "/" + path + "?nc=" + Date.now(), {
+      headers: { Authorization: "token " + token, Accept: "application/vnd.github.v3+json" }
+    });
+    if (info.ok) { const d = await info.json(); sha = d.sha || ""; }
+  } catch(_) {}
+  const body = { message: msg, content: utf8_to_b64(content), branch: "main" };
+  if (sha) body.sha = sha;
+  const res = await fetch(API_BASE + "/" + path, {
+    method: "PUT",
+    headers: { Authorization: "token " + token, Accept: "application/vnd.github.v3+json", "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  return res.ok;
+}
+
+// ===================== LOGIN =====================
+async function doKundenLogin() {
+  const nameEl = document.getElementById("ku-name");
+  const keyEl  = document.getElementById("ku-key");
+  const errEl  = document.getElementById("login-error");
+  const btn    = document.querySelector(".login-btn");
+  errEl.style.display = "none";
+  const name = (nameEl.value || "").trim();
+  const key  = (keyEl.value  || "").trim().toUpperCase();
+  if (!name || !key) { errEl.style.display = "block"; return; }
+  btn.textContent = "&#9203; Pr&#252;fe..."; btn.disabled = true;
+  try {
+    const licenses = await kFetch("licenses.json");
+    if (!Array.isArray(licenses)) throw new Error("no licenses");
+    const matched = licenses.find(l => (l.key || "").trim().toUpperCase() === key && l.status === "active");
+    if (!matched) { errEl.style.display = "block"; btn.innerHTML = "&#128274; EINLOGGEN"; btn.disabled = false; return; }
+    // Activate if first use
+    if (!matched.used || !matched.used_by) {
+      matched.used = true; matched.used_by = name; matched.status = "active";
+      await kUpload("licenses.json", JSON.stringify(licenses, null, 2), "Kunden Login: " + name);
+    }
+    K_USER = { name: name, key: key, license: matched, rank: matched.rank || "premium" };
+    await kLoadProfiles();
+    // Sync rank from profile
+    const prof = K_PROFILES[name] || K_PROFILES[name.toLowerCase()];
+    if (prof && prof.rank) K_USER.rank = Array.isArray(prof.rank) ? prof.rank[0] : prof.rank;
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("main-panel").style.display = "block";
+    kUpdateHeader();
+    kLoadAllData();
+  } catch(e) {
+    errEl.textContent = "&#10060; Fehler: " + e.message;
+    errEl.style.display = "block";
+    btn.innerHTML = "&#128274; EINLOGGEN"; btn.disabled = false;
+  }
+}
+
+function doKundenLogout() {
+  K_USER = null; K_PROFILES = {}; K_CONFIGS = []; K_HIGHLIGHTS = []; K_CHAT = [];
+  document.getElementById("main-panel").style.display = "none";
+  document.getElementById("login-screen").style.display = "flex";
+  document.getElementById("ku-key").value = "";
+}
+
+// ===================== HEADER UPDATE =====================
+function kUpdateHeader() {
+  if (!K_USER) return;
+  document.getElementById("k-header-name").textContent = K_USER.name;
+  document.getElementById("k-header-badge").innerHTML = kGetRankBadge(K_USER.name, K_USER.rank);
+  document.getElementById("k-header-avatar").src = kAvatarUrl(K_USER.name);
+  document.getElementById("k-settings-avatar-preview").src = kAvatarUrl(K_USER.name);
+  const prof = K_PROFILES[K_USER.name] || K_PROFILES[(K_USER.name||"").toLowerCase()] || {};
+  if (document.getElementById("k-settings-bio")) document.getElementById("k-settings-bio").value = prof.bio || "";
+  if (document.getElementById("k-settings-discord")) document.getElementById("k-settings-discord").value = prof.discord || "";
+  if (document.getElementById("k-settings-avatar-url")) document.getElementById("k-settings-avatar-url").value = prof.avatar || "";
+}
+
+// ===================== LOAD ALL =====================
+async function kLoadAllData() {
+  await Promise.all([kLoadChat(), kLoadConfigs(), kLoadHighlights()]);
+  kRenderMyProfile();
+  kFilterUsers();
+}
+
+async function kLoadProfiles() {
+  try {
+    const data = await kFetch("profiles.json");
+    if (data && typeof data === "object") K_PROFILES = data;
+  } catch(_) {}
+}
+
+// ===================== NAVIGATION =====================
+function switchKPage(page) {
+  document.querySelectorAll(".k-page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".k-tab").forEach(t => t.classList.remove("active"));
+  const pg = document.getElementById("kp-" + page);
+  const tb = document.getElementById("ktab-" + page);
+  if (pg) pg.classList.add("active");
+  if (tb) tb.classList.add("active");
+  K_CURRENT_PAGE = page;
+}
+
+// ===================== CHAT =====================
+async function kLoadChat() {
+  try {
+    const data = await kFetch("chat.json");
+    if (Array.isArray(data)) K_CHAT = data;
+    kRenderChat();
+  } catch(_) {}
+}
+
+function kRenderChat() {
+  const container = document.getElementById("k-chat-messages");
+  if (!K_CHAT.length) {
+    container.innerHTML = '<div class="k-empty"><span class="k-empty-icon">&#128172;</span>Noch keine Nachrichten. Sei der Erste!</div>';
+    return;
+  }
+  container.innerHTML = K_CHAT.slice(-80).map(m => {
+    const isOwn = K_USER && m.user === K_USER.name;
+    const avatar = kAvatarUrl(m.user);
+    const badge  = kGetRankBadge(m.user, m.role);
+    return `<div class="k-msg ${isOwn ? "k-msg-own" : ""}">
+      <img class="k-msg-avatar" src="${avatar}" alt="" onclick="openKProfile('${escapeKHtml(m.user)}')">
+      <div>
+        <div class="k-msg-name"><b style="color:${isOwn?'#38bdf8':'#94a3b8'};cursor:pointer;" onclick="openKProfile('${escapeKHtml(m.user)}')">${escapeKHtml(m.user)}</b>${badge} <span style="font-size:9px;color:#334155;">${m.time||""}</span></div>
+        <div class="k-msg-bubble">${escapeKHtml(m.text || "")}</div>
+      </div>
+    </div>`;
+  }).join("");
+  container.scrollTop = container.scrollHeight;
+}
+
+async function kSendChat() {
+  if (!K_USER) return;
+  const inp = document.getElementById("k-chat-input");
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = "";
+  const now = new Date();
+  const timeStr = now.getHours().toString().padStart(2,"0") + ":" + now.getMinutes().toString().padStart(2,"0");
+  const msg = { user: K_USER.name, role: K_USER.rank || "Premium", text: text, time: timeStr, is_customer: true };
+  K_CHAT.push(msg);
+  kRenderChat();
+  try {
+    await kUpload("chat.json", JSON.stringify(K_CHAT, null, 2), "Chat: " + K_USER.name);
+  } catch(_) { showKToast("Senden fehlgeschlagen!", "err"); }
+}
+
+// ===================== CONFIGS =====================
+async function kLoadConfigs() {
+  try {
+    const data = await kFetch("configs.json");
+    if (Array.isArray(data)) K_CONFIGS = data;
+    kFilterConfigs();
+  } catch(_) {}
+}
+
+function kFilterConfigs() {
+  const search = (document.getElementById("k-cfg-search")?.value || "").toLowerCase();
+  const myConfigs = K_CONFIGS.filter(c => {
+    const isOwn = K_USER && (c.user === K_USER.name || c.key === K_USER.key || c.author === K_USER.name);
+    return isOwn;
+  }).filter(c => {
+    if (!search) return true;
+    return (c.name || "").toLowerCase().includes(search) || (c.filename || "").toLowerCase().includes(search);
+  });
+  const countEl = document.getElementById("k-cfg-count");
+  if (countEl) countEl.textContent = myConfigs.length;
+  const list = document.getElementById("k-cfg-list");
+  if (!list) return;
+  if (!myConfigs.length) {
+    list.innerHTML = '<div class="k-empty"><span class="k-empty-icon">&#128193;</span>Noch keine Configs hochgeladen.</div>';
+    return;
+  }
+  const gameColor = { valorant:"#f43f5e", apex:"#38bdf8", tft_helper:"#a855f7", naraka:"#f59e0b", coc:"#10b981", all:"#64748b" };
+  list.innerHTML = myConfigs.map(c => {
+    const ext = (c.filename || c.name || "cfg").split(".").pop().toUpperCase().substring(0, 4);
+    const gc  = gameColor[c.game] || "#64748b";
+    const liked = Array.isArray(c.likedBy) && K_USER && c.likedBy.includes(K_USER.name);
+    return `<div class="cfg-card">
+      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
+        <div class="cfg-ext" style="border-color:${gc};color:${gc};background:${gc}18;">${escapeKHtml(ext)}</div>
+        <div>
+          <div class="cfg-name">${escapeKHtml(c.name || c.filename)}</div>
+          <div class="cfg-meta">${c.game ? c.game.toUpperCase() : ""} ${c.desc ? "· " + c.desc : ""}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+        <button class="k-like-btn ${liked?"liked":""}" onclick="kToggleLike('${c.id}')">
+          ${liked?"&#10084;&#65039;":"&#9825;"} ${c.likes||0}
+        </button>
+        <span style="font-size:10px;color:#475569;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);padding:0 8px;height:28px;border-radius:5px;display:flex;align-items:center;gap:3px;">&#11015; ${c.downloads||0}</span>
+        <button class="k-dl-btn" onclick="kDownloadConfig('${c.id}')">&#11015; Download</button>
+        <button onclick="kDeleteConfig('${c.id}')" style="height:28px;background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.3);color:#f43f5e;padding:0 8px;border-radius:5px;font-size:11px;cursor:pointer;">&#128465;&#65039;</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function kCfgFileSelected(inp) {
+  _kCfgFile = inp.files[0] || null;
+  const info = document.getElementById("k-cfg-file-info");
+  if (_kCfgFile) { info.style.display = "block"; info.textContent = "&#128193; " + _kCfgFile.name + " (" + Math.round(_kCfgFile.size / 1024) + " KB)"; }
+}
+
+function kHandleConfigDrop(e) {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file) { _kCfgFile = file; const info = document.getElementById("k-cfg-file-info"); info.style.display = "block"; info.textContent = "&#128193; " + file.name + " (" + Math.round(file.size / 1024) + " KB)"; }
+}
+
+async function kUploadConfig() {
+  if (!K_USER || !_kCfgFile) { showKToast("Bitte eine Datei ausw&#228;hlen!", "err"); return; }
+  const name = document.getElementById("k-cfg-name").value.trim() || _kCfgFile.name;
+  const game = document.getElementById("k-cfg-game").value;
+  const desc = document.getElementById("k-cfg-desc").value.trim();
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const content = e.target.result;
+    const isText = typeof content === "string";
+    const b64 = isText ? utf8_to_b64(content) : btoa(String.fromCharCode(...new Uint8Array(content)));
+    const id = "cfg_" + Date.now() + "_" + Math.random().toString(36).slice(2,7);
+    const cfgPath = "configs/" + id + "_" + _kCfgFile.name;
+    const now = new Date();
+    const dateStr = now.toLocaleDateString("de-DE");
+    const cfgObj = { id, name, filename: _kCfgFile.name, game, desc, user: K_USER.name, key: K_USER.key, author: K_USER.name, date: dateStr, timestamp: Date.now(), size: _kCfgFile.size, likes: 0, likedBy: [], downloads: 0, path: cfgPath };
+    try {
+      await kUpload(cfgPath, isText ? content : b64, "Upload Config: " + K_USER.name + " - " + name);
+      K_CONFIGS.push(cfgObj);
+      await kUpload("configs.json", JSON.stringify(K_CONFIGS, null, 2), "Config hinzugef&#252;gt: " + name);
+      showKToast("Config erfolgreich hochgeladen!", "ok");
+      _kCfgFile = null; document.getElementById("k-cfg-file-info").style.display = "none"; document.getElementById("k-cfg-name").value = ""; document.getElementById("k-cfg-desc").value = "";
+      kFilterConfigs();
+    } catch(_) { showKToast("Upload fehlgeschlagen!", "err"); }
+  };
+  if (_kCfgFile.name.endsWith(".zip")) reader.readAsArrayBuffer(_kCfgFile);
+  else reader.readAsText(_kCfgFile);
+}
+
+async function kToggleLike(id) {
+  if (!K_USER) return;
+  const c = K_CONFIGS.find(x => x.id === id);
+  if (!c) return;
+  if (!Array.isArray(c.likedBy)) c.likedBy = [];
+  const idx = c.likedBy.indexOf(K_USER.name);
+  if (idx > -1) { c.likedBy.splice(idx, 1); c.likes = Math.max(0, (c.likes||1)-1); }
+  else { c.likedBy.push(K_USER.name); c.likes = (c.likes||0)+1; }
+  kFilterConfigs();
+  try { await kUpload("configs.json", JSON.stringify(K_CONFIGS, null, 2), "Like Config: " + K_USER.name); } catch(_) {}
+}
+
+async function kDownloadConfig(id) {
+  const c = K_CONFIGS.find(x => x.id === id);
+  if (!c) return;
+  c.downloads = (c.downloads||0)+1;
+  const url = RAW_BASE + "/" + c.path + "?nc=" + Date.now();
+  const a = document.createElement("a"); a.href = url; a.download = c.filename || c.name; a.click();
+  try { await kUpload("configs.json", JSON.stringify(K_CONFIGS, null, 2), "Download Config: " + c.name); } catch(_) {}
+  kFilterConfigs();
+}
+
+async function kDeleteConfig(id) {
+  if (!confirm("Config wirklich l&#246;schen?")) return;
+  K_CONFIGS = K_CONFIGS.filter(c => c.id !== id);
+  try { await kUpload("configs.json", JSON.stringify(K_CONFIGS, null, 2), "Delete Config: " + id); showKToast("Config gel&#246;scht!", "ok"); } catch(_) {}
+  kFilterConfigs();
+}
+
+// ===================== HIGHLIGHTS =====================
+async function kLoadHighlights() {
+  try {
+    const data = await kFetch("highlights.json");
+    if (Array.isArray(data)) K_HIGHLIGHTS = data;
+    kFilterHighlights();
+  } catch(_) {}
+}
+
+function kFilterHighlights() {
+  const q    = (document.getElementById("k-hl-search")?.value || "").toLowerCase();
+  const sort = document.getElementById("k-hl-sort")?.value || "newest";
+  let list   = K_HIGHLIGHTS.filter(h => {
+    if (!q) return true;
+    return (h.title || "").toLowerCase().includes(q) || (h.author || "").toLowerCase().includes(q);
+  });
+  if (sort === "likes") list.sort((a,b) => (b.likes||0)-(a.likes||0));
+  else list.sort((a,b) => (b.id||"").localeCompare(a.id||""));
+  const grid = document.getElementById("k-hl-grid");
+  if (!grid) return;
+  if (!list.length) { grid.innerHTML = '<div class="k-empty" style="grid-column:1/-1"><span class="k-empty-icon">&#127916;</span>Keine Clips gefunden.</div>'; return; }
+  grid.innerHTML = list.map(h => {
+    const avatar = kAvatarUrl(h.author);
+    const badge  = kGetRankBadge(h.author, h.rank);
+    const liked  = Array.isArray(h.likedBy) && K_USER && h.likedBy.includes(K_USER.name);
+    return `<div class="k-hl-card" onclick="openKHlPlayer('${h.id}')">
+      <div class="k-hl-thumb" style="background:#000;">
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);">
+          <div style="width:44px;height:44px;border-radius:50%;background:rgba(56,189,248,0.9);display:flex;align-items:center;justify-content:center;color:#040810;font-size:18px;">&#9654;</div>
+        </div>
+        <div style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.75);padding:2px 8px;border-radius:5px;font-size:9.5px;font-weight:800;color:#38bdf8;">${escapeKHtml(h.author||"")}</div>
+      </div>
+      <div class="k-hl-body">
+        <div class="k-hl-title">${escapeKHtml(h.title||"Ohne Titel")}</div>
+        <div class="k-hl-meta">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <img src="${avatar}" style="width:18px;height:18px;border-radius:4px;object-fit:cover;">
+            <span onclick="event.stopPropagation();openKProfile('${escapeKHtml(h.author)}')" style="color:#94a3b8;cursor:pointer;">${escapeKHtml(h.author||"")}</span>
+            ${badge}
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span>&#9825; ${h.likes||0}</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function openKHlPlayer(id) {
+  const h = K_HIGHLIGHTS.find(x => x.id === id);
+  if (!h) return;
+  const modal   = document.getElementById("k-hl-modal");
+  const player  = document.getElementById("k-hl-player-container");
+  const info    = document.getElementById("k-hl-modal-info");
+  let vidHtml = "";
+  if (h.videoType === "youtube") {
+    let ytId = "";
+    if (h.videoUrl.includes("v=")) ytId = h.videoUrl.split("v=")[1].split("&")[0];
+    else if (h.videoUrl.includes("youtu.be/")) ytId = h.videoUrl.split("youtu.be/")[1].split("?")[0];
+    vidHtml = `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1" allow="autoplay" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+  } else if (h.videoType === "medal") {
+    const mId = h.videoUrl.match(/medal\.tv\/games\/.+?\/clips\/([^/?]+)/)?.[1] || h.videoUrl.split("/").pop();
+    vidHtml = `<iframe src="https://medal.tv/clip/${mId}?autoplay=1" allowfullscreen style="width:100%;height:100%;border:none;background:#000;"></iframe>`;
+  } else if (h.videoType === "streamable") {
+    const sId = h.videoUrl.split("streamable.com/").pop().split("?")[0];
+    vidHtml = `<iframe src="https://streamable.com/e/${sId}?autoplay=1" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+  } else {
+    vidHtml = `<video autoplay controls style="width:100%;height:100%;"><source src="${h.videoUrl}" type="video/mp4"></video>`;
+  }
+  player.innerHTML = vidHtml;
+  const badge = kGetRankBadge(h.author, h.rank);
+  const avatar = kAvatarUrl(h.author);
+  info.innerHTML = `<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <img src="${avatar}" style="width:36px;height:36px;border-radius:8px;border:2px solid #1e2333;">
+      <div>
+        <div style="font-size:16px;font-weight:900;color:#f8fafc;">${escapeKHtml(h.title||"")}</div>
+        <div style="font-size:11px;color:#475569;display:flex;align-items:center;gap:6px;margin-top:2px;">
+          <span style="cursor:pointer;color:#94a3b8;" onclick="openKProfile('${escapeKHtml(h.author)}')">${escapeKHtml(h.author)}</span>${badge}
+        </div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:#64748b;">&#9825; ${h.likes||0} Likes</div>
+  </div>`;
+  modal.style.display = "flex";
+}
+
+function closeKHlModal() {
+  document.getElementById("k-hl-modal").style.display = "none";
+  document.getElementById("k-hl-player-container").innerHTML = "";
+}
+
+// ===================== SUCHEN =====================
+function kFilterUsers() {
+  const q = (document.getElementById("k-user-search")?.value || "").toLowerCase();
+  const list = document.getElementById("k-user-list");
+  if (!list) return;
+  const users = [];
+  const seen = new Set();
+  for (const key of Object.keys(K_PROFILES)) {
+    const p = K_PROFILES[key];
+    const uname = p.username || key;
+    if (seen.has(uname.toLowerCase())) continue;
+    seen.add(uname.toLowerCase());
+    if (q && !uname.toLowerCase().includes(q)) continue;
+    users.push({ name: uname, prof: p });
+  }
+  if (!users.length) { list.innerHTML = '<div class="k-empty"><span class="k-empty-icon">&#128100;</span>' + (q ? "Keine User gefunden." : "Noch keine User registriert.") + "</div>"; return; }
+  list.innerHTML = users.map(u => {
+    const avatar = u.prof.avatar || kAvatarUrl(u.name);
+    const badge  = kGetRankBadge(u.name);
+    return `<div class="k-user-card" onclick="openKProfile('${escapeKHtml(u.name)}')">
+      <img src="${avatar}" alt="">
+      <div style="flex:1;">
+        <div class="k-user-card-name">${escapeKHtml(u.name)}</div>
+        <div class="k-user-card-meta" style="display:flex;align-items:center;gap:6px;margin-top:3px;">${badge}</div>
+      </div>
+      <span style="font-size:16px;color:#1e2333;">&#8250;</span>
+    </div>`;
+  }).join("");
+}
+
+// ===================== MY PROFILE =====================
+function kRenderMyProfile() {
+  if (!K_USER) return;
+  const prof = K_PROFILES[K_USER.name] || K_PROFILES[(K_USER.name||"").toLowerCase()] || {};
+  const avatar = prof.avatar || kAvatarUrl(K_USER.name);
+  const badge  = kGetRankBadge(K_USER.name, K_USER.rank);
+  const myConfigs = K_CONFIGS.filter(c => c.user === K_USER.name || c.key === K_USER.key || c.author === K_USER.name);
+  const el = document.getElementById("k-my-profile-content");
+  if (!el) return;
+  el.innerHTML = `
+    <div class="k-dash-card">
+      <img class="k-dash-avatar" src="${avatar}" alt="">
+      <div class="k-dash-info">
+        <div class="k-dash-name">${escapeKHtml(K_USER.name)}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin:4px 0;">${badge}</div>
+        <div class="k-dash-meta">
+          <span>&#128197; ${prof.joined || "2026"}</span>
+          ${prof.discord ? `<span>&#128172; ${escapeKHtml(prof.discord)}</span>` : ""}
+          <span>&#128193; ${myConfigs.length} Configs</span>
+        </div>
+        ${prof.bio ? `<div style="margin-top:10px;font-size:12.5px;color:#64748b;line-height:1.5;">${escapeKHtml(prof.bio)}</div>` : ""}
+      </div>
+      <div class="k-key-box">
+        <span>&#128273; ${escapeKHtml(K_USER.key)}</span>
+        <button class="k-copy-btn" onclick="navigator.clipboard.writeText('${escapeKHtml(K_USER.key)}').then(()=>showKToast('Key kopiert!','ok'))">&#128203; Kopieren</button>
+      </div>
+    </div>
+    ${myConfigs.length ? `<div style="margin-top:16px;"><div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">&#128193; Meine Configs</div>${myConfigs.slice(0,5).map(c=>`<div class="cfg-card" style="cursor:default;"><div class="cfg-name">${escapeKHtml(c.name||c.filename)}</div><div class="cfg-meta">${c.game||""}</div></div>`).join("")}</div>` : ""}
+  `;
+}
+
+// ===================== USER PROFILE MODAL =====================
+function openKProfile(username) {
+  const prof = K_PROFILES[username] || K_PROFILES[(username||"").toLowerCase()] || {};
+  const modal = document.getElementById("k-profile-modal");
+  document.getElementById("km-name").textContent = username;
+  document.getElementById("km-badge").innerHTML = kGetRankBadge(username);
+  document.getElementById("km-avatar").src = prof.avatar || kAvatarUrl(username);
+  document.getElementById("km-bio").textContent = prof.bio || "Dieser User hat noch keine Bio.";
+  document.getElementById("km-joined").textContent = prof.joined || "-";
+  document.getElementById("km-discord").textContent = prof.discord || "Nicht angegeben";
+  const banner = document.getElementById("km-banner");
+  if (prof.banner) banner.style.backgroundImage = `url(${prof.banner})`; else banner.style.backgroundImage = "none";
+  const userConfigs = K_CONFIGS.filter(c => c.user === username || c.author === username);
+  document.getElementById("km-configs").innerHTML = userConfigs.length
+    ? `<div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">&#128193; ${userConfigs.length} Config${userConfigs.length!==1?"s":""}</div>`
+      + userConfigs.slice(0,3).map(c=>`<div class="cfg-card" style="cursor:default;"><div class="cfg-name">${escapeKHtml(c.name||c.filename)}</div><div class="cfg-meta">${c.game||""}</div></div>`).join("")
+    : "";
+  modal.style.display = "flex";
+}
+
+function closeKProfileModal() {
+  document.getElementById("k-profile-modal").style.display = "none";
+}
+
+// ===================== SETTINGS SAVE =====================
+async function kSaveSettings() {
+  if (!K_USER) return;
+  const bio     = document.getElementById("k-settings-bio").value.trim();
+  const discord = document.getElementById("k-settings-discord").value.trim();
+  const avatar  = document.getElementById("k-settings-avatar-url").value.trim() || kAvatarUrl(K_USER.name);
+  const prof = K_PROFILES[K_USER.name] || K_PROFILES[(K_USER.name||"").toLowerCase()] || {};
+  const updated = { ...prof, username: K_USER.name, bio, discord, avatar, key: K_USER.key, joined: prof.joined || new Date().toLocaleDateString("de-DE") };
+  K_PROFILES[K_USER.name] = updated;
+  K_PROFILES[(K_USER.name||"").toLowerCase()] = updated;
+  try {
+    await kUpload("profiles.json", JSON.stringify(K_PROFILES, null, 2), "Profil Update: " + K_USER.name);
+    showKToast("Profil gespeichert!", "ok");
+    kUpdateHeader();
+    kRenderMyProfile();
+  } catch(_) { showKToast("Fehler beim Speichern!", "err"); }
+}
+
+function kAvatarSelected(inp) {
+  const file = inp.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById("k-settings-avatar-preview").src = e.target.result;
+    document.getElementById("k-settings-avatar-url").value = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ===================== ESCAPE =====================
+function escapeKHtml(s) {
+  if (!s) return "";
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+// ===================== AUTO REFRESH =====================
+setInterval(() => {
+  if (!K_USER) return;
+  kLoadChat();
+  kLoadHighlights();
+}, 30000);
+</script>
+</body>
+</html>
