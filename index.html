@@ -1240,6 +1240,269 @@
     transition: all 0.3s ease;
   }
 </style>
+
+<!-- RESPONSIVE / ADAPTIVE CSS -->
+<style id="responsive-adaptive">
+
+  /* === GLOBAL SCALING === */
+  html {
+    font-size: 16px;
+  }
+
+  /* Main panel wrapper */
+  #main-panel {
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  /* === HEADER RESPONSIVE === */
+  .cyber-header-wrap {
+    padding: 0 clamp(10px, 2vw, 32px) !important;
+  }
+
+  /* Header inner flex */
+  .cyber-header-wrap > div {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* === MAIN TABS — wrap on smaller screens === */
+  .main-tabs {
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+    padding: 0 clamp(8px, 2vw, 20px);
+    margin-bottom: 14px !important;
+  }
+
+  .main-tab {
+    padding: clamp(6px, 1vw, 10px) clamp(8px, 1.2vw, 14px) !important;
+    font-size: clamp(9px, 0.9vw, 11px) !important;
+    white-space: nowrap;
+  }
+
+  /* === CONTENT AREA PADDING === */
+  .tab-content {
+    padding: clamp(14px, 2vw, 26px) !important;
+    border-radius: 10px !important;
+    overflow-x: auto;
+  }
+
+  /* === TABLES — always scrollable === */
+  .logs-table-wrap {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .logs-table {
+    min-width: 700px;
+  }
+
+  /* === CHEAT GRID — responsive columns === */
+  .cheat-view-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 280px) minmax(0, 1fr) !important;
+    gap: clamp(12px, 2vw, 24px) !important;
+  }
+
+  /* === CONFIG GRID === */
+  .config-grid-layout {
+    grid-template-columns: minmax(0, 300px) minmax(0, 1fr) !important;
+  }
+
+  /* === MODALS — mobile friendly === */
+  .edit-lic-modal-box,
+  .hwid-modal-box,
+  .staff-modal-box,
+  .config-preview-modal-box {
+    max-width: 95vw !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+  }
+
+  /* === HIGHLIGHTS GRID === */
+  .highlights-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  }
+
+  /* 1600px — large screens, subtle adjustments */
+  @media (max-width: 1600px) {
+    html { font-size: 15px; }
+    .main-tab { font-size: clamp(9px, 0.85vw, 10.5px) !important; }
+  }
+
+  /* 1400px — standard office monitors */
+  @media (max-width: 1400px) {
+    html { font-size: 14px; }
+
+    .cheat-view-grid {
+      grid-template-columns: 240px 1fr !important;
+    }
+
+    .config-grid-layout {
+      grid-template-columns: 260px 1fr !important;
+    }
+  }
+
+  /* 1280px — common laptop resolution */
+  @media (max-width: 1280px) {
+    html { font-size: 13.5px; }
+
+    .main-tab {
+      padding: 5px 9px !important;
+      font-size: 9.5px !important;
+      gap: 4px !important;
+    }
+
+    .tab-content {
+      padding: 16px !important;
+    }
+
+    .cheat-view-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    .config-grid-layout {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* Highlight grid smaller */
+    .highlights-grid {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
+    }
+
+    /* License table columns tighter */
+    .logs-table th, .logs-table td {
+      padding: 8px 10px !important;
+      font-size: 11px !important;
+    }
+  }
+
+  /* 1100px — small laptops, tablets landscape */
+  @media (max-width: 1100px) {
+    html { font-size: 13px; }
+
+    .main-tabs {
+      gap: 3px !important;
+    }
+
+    .main-tab {
+      padding: 5px 8px !important;
+      font-size: 9px !important;
+    }
+
+    /* Hide icons in tabs to save space */
+    .main-tab span:first-child {
+      display: none !important;
+    }
+
+    .tab-content {
+      padding: 12px !important;
+    }
+
+    /* Stack permission grid */
+    .perm-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* License generate form */
+    #tc-3 > div > div[style*="grid-template-columns"] {
+      grid-template-columns: 1fr 1fr !important;
+    }
+  }
+
+  /* 900px — tablets portrait */
+  @media (max-width: 900px) {
+    html { font-size: 12.5px; }
+
+    .main-tabs {
+      justify-content: flex-start;
+    }
+
+    .main-tab {
+      font-size: 8.5px !important;
+      padding: 4px 7px !important;
+    }
+
+    .logs-table {
+      min-width: 600px;
+    }
+
+    /* Staff modal full width */
+    .staff-modal-box {
+      width: 95vw !important;
+    }
+
+    /* Hide less important table columns via opacity */
+    .action-btn-del {
+      padding: 0 5px !important;
+    }
+  }
+
+  /* 768px — mobile landscape / small tablet */
+  @media (max-width: 768px) {
+    html { font-size: 12px; }
+
+    #login-screen {
+      width: 90vw !important;
+      max-width: 400px !important;
+    }
+
+    .main-tabs {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 3px !important;
+    }
+
+    .main-tab {
+      font-size: 8px !important;
+      padding: 4px 6px !important;
+    }
+
+    .highlights-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    .logs-table {
+      min-width: 500px;
+    }
+
+    .tab-content {
+      padding: 10px !important;
+    }
+  }
+
+  /* Fix horizontal overflow everywhere */
+  * {
+    max-width: 100%;
+  }
+
+  img, video, iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Ensure body never overflows horizontally */
+  body {
+    overflow-x: hidden !important;
+  }
+
+  /* Smooth scroll on mobile */
+  .logs-table-wrap, .tab-content {
+    scroll-behavior: smooth;
+  }
+
+  /* Scrollbar styling for tables */
+  .logs-table-wrap::-webkit-scrollbar {
+    height: 4px;
+  }
+  .logs-table-wrap::-webkit-scrollbar-track {
+    background: #0a0c14;
+  }
+  .logs-table-wrap::-webkit-scrollbar-thumb {
+    background: #e5a93c;
+    border-radius: 2px;
+  }
+</style>
 </head>
 <body>
 
