@@ -6050,15 +6050,15 @@ function renderChatMessages() {
       : (isADMIN ? "background: #111420; border: 1px solid rgba(229,169,60,0.22);" : "background: #101422; border: 1px solid #1c2438;");
 
     return `
-      <div style="display:flex;gap:12px;align-items:flex-start;${isMe ? 'flex-direction:row-reverse;align-self:flex-end;' : 'align-self:flex-start;'}max-width:82%;">
+      <div style="display:flex;gap:12px;align-items:flex-start;${!isMe ? 'flex-direction:row-reverse;align-self:flex-end;' : 'align-self:flex-start;'}max-width:82%;">
         ${avatar}
-        <div style="display:flex;flex-direction:column;${isMe ? 'align-items:flex-end;' : 'align-items:flex-start;'}">
+        <div style="display:flex;flex-direction:column;${!isMe ? 'align-items:flex-end;' : 'align-items:flex-start;'}">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
             <span class="clickable-user" onclick="openUserProfileModal('${escapeHtml(msg.user)}')" style="font-size:12px;font-weight:900;color:${isADMIN ? '#e5a93c' : '#f8fafc'};">${escapeHtml(formatNameUpper(msg.user))}</span>
             ${userBadge}
             <span style="font-size:10px;color:#64748b;font-weight:600;">${msg.time || ''}</span>
           </div>
-          <div style="${bubbleBg} padding: 10px 15px; border-radius: ${isMe ? '12px 2px 12px 12px' : '2px 12px 12px 12px'}; color: #f8fafc; font-size: 12.5px; line-height: 1.5; word-break: break-word; box-shadow: 0 4px 16px rgba(0,0,0,0.35);">
+          <div style="${bubbleBg} padding: 10px 15px; border-radius: ${!isMe ? '12px 2px 12px 12px' : '2px 12px 12px 12px'}; color: #f8fafc; font-size: 12.5px; line-height: 1.5; word-break: break-word; box-shadow: 0 4px 16px rgba(0,0,0,0.35);">
             ${formatMessageText(msg.text)}
           </div>
         </div>
