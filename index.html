@@ -6947,7 +6947,8 @@ function getUserProfile(usernameOrKey) {
     rank: fallbackRanks,
     avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(target)}`,
     banner: isOwner ? (localStorage.getItem("hyschool_admin_banner") || "") : "",
-    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugefÃ¼gt.",
+    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugef\u00fcgt.",
+
     discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "Nicht angegeben",
     joined: "01.01.2026",
     guestbook: []
@@ -7223,7 +7224,8 @@ async function openUserProfileModal(usernameOrKey) {
     }
   }
 
-  if(bioEl) bioEl.textContent = (prof && prof.bio) ? prof.bio : "Dieser User hat noch keine Bio hinzugefÃ¼gt.";
+  if(bioEl) bioEl.textContent = (prof && prof.bio) ? prof.bio : "Dieser User hat noch keine Bio hinzugef\u00fcgt.";
+
   if(joinedEl) joinedEl.textContent = (prof && prof.joined) ? prof.joined : "01.01.2026";
   if(discordEl) discordEl.textContent = (prof && prof.discord) ? prof.discord : "Nicht angegeben";
   if(cfgCountEl) cfgCountEl.textContent = `${userConfigs.length} Configs`;
