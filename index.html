@@ -2283,7 +2283,7 @@
           <img id="dash-avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
         </div>
         <div style="display:flex;flex-direction:column;gap:4px;">
-          <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:4px;">&#128084; EINGELOGGTER ACCOUNT</div>
+          <div style="font-size:10px;color:#64748b;font-weight:800;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:4px;">EINGELOGGTER ACCOUNT</div>
           <div style="display:flex;align-items:center;gap:8px;">
             <span id="cfg-dash-username" style="color:#ffffff;font-size:14px;font-weight:900;letter-spacing:0.5px;line-height:1;">ADMIN</span>
             <span id="cfg-dash-role-badge"></span>
@@ -2916,14 +2916,14 @@ async function doLogin() {
     if (matchedLic) {
       if (matchedLic.status === "paused") {
         if (errEl) {
-          errEl.textContent = "Dieser Lizenzschl&#252;ssel ist aktuell pausiert!";
+          errEl.textContent = "Dieser Lizenzschl\u00fcssel ist aktuell pausiert!";
           errEl.style.display = "block";
         }
         return;
       }
       if (matchedLic.status === "expired") {
         if (errEl) {
-          errEl.textContent = "Dieser Lizenzschl&#252;ssel ist abgelaufen!";
+          errEl.textContent = "Dieser Lizenzschl\u00fcssel ist abgelaufen!";
           errEl.style.display = "block";
         }
         return;
@@ -3028,7 +3028,7 @@ function handleLoginSuccess(user, pass) {
   try { switchMainTab(initialTab); } catch(e) { console.error("switchMainTab err:", e); }
 
   try { logADMINAction("LOGIN", "-", `${CURRENT_USER.name} (${CURRENT_USER.role}) hat sich eingeloggt`); } catch(_) {}
-  try { showToast(`Willkommen zur&#252;ck, ${CURRENT_USER.name || user}!`, "ok"); } catch(_) {}
+  try { showToast(`Willkommen zur\u00fcck, ${CURRENT_USER.name || user}!`, "ok"); } catch(_) {}
 }
 
 function doLogout() {
@@ -3083,7 +3083,7 @@ function applyUserPermissions() {
 
   if(dashCheats) {
     if(CURRENT_USER.is_admin) {
-      dashCheats.innerHTML = `<span class="tag-product">&#128081; ALLE CHEATS</span>`;
+      dashCheats.innerHTML = `<span class="tag-product">\uD83D\uDC51 ALLE CHEATS</span>`;
     } else if(CURRENT_USER.key) {
       const defPerms = getDefaultPermissionsForKey(CURRENT_USER.key, CURRENT_USER.license);
       const curPerms = USER_PERMISSIONS[CURRENT_USER.key] || defPerms;
@@ -3105,7 +3105,7 @@ function applyUserPermissions() {
 
       dashCheats.innerHTML = gameBadges.length > 0 ? gameBadges.join(" ") : `<span style="color:#64748b;font-size:11px;">Keine Spiele freigeschaltet</span>`;
     } else {
-      dashCheats.innerHTML = `<span class="tag-product">&#128081; ALLE CHEATS</span>`;
+      dashCheats.innerHTML = `<span class="tag-product">\uD83D\uDC51 ALLE CHEATS</span>`;
     }
   }
 
@@ -3244,7 +3244,7 @@ function buildCheatsUI() {
         </div>
 
         <button class="save-cheat-btn" id="save-btn-${c.prefix}" onclick="saveAllToGitHub()">
-          &#128640; SPEICHERN &amp; PUSHEN
+          \uD83D\uDE80 SPEICHERN &amp; PUSHEN
         </button>
       </div>
 
@@ -3260,7 +3260,7 @@ function buildCheatsUI() {
           <input type="file" id="fi-${c.prefix}" onchange="addFiles(this,'${c.prefix}')">
           <div style="font-size:26px;color:#e5a93c;">&#8597;</div>
           <div style="font-weight:800;color:#f8fafc;font-size:13px;">${c.label} Datei hier reinziehen oder klicken</div>
-          <div style="font-size:11px;color:#64748b">L&#228;dt die Datei hoch und aktiviert den Download im Loader</div>
+          <div style="font-size:11px;color:#64748b">L\u00e4dt die Datei hoch und aktiviert den Download im Loader</div>
         </div>
         
         <div class="file-list" id="fl-${c.prefix}"></div>
@@ -3272,7 +3272,7 @@ function buildCheatsUI() {
               <span style="color:#64748b;font-size:11px;">Lade Datei-Info...</span>
             </div>
             <button id="${c.prefix}-del-file-btn" onclick="deleteCheatFile('${c.prefix}','${c.key}')" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;">
-              &#128465;&#65039; DATEI L&#214;SCHEN
+              \uD83D\uDDD1&#65039; DATEI L\u00d6SCHEN
             </button>
           </div>
         </div>
@@ -3291,7 +3291,7 @@ function buildCheatsUI() {
         <!-- DEDICATED RAZER.DLL UPLOAD SECTION -->
         <div style="margin-top:14px;padding-top:14px;border-top:1px solid #1a1e2b;display:flex;flex-direction:column;gap:10px;">
           <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div class="section-title" style="margin-bottom:0;color:#10b981;">&#9889; RAZER.DLL HOCHLADEN (AUTO-INJECTION DATEI)</div>
+            <div class="section-title" style="margin-bottom:0;color:#10b981;">\u26A1 RAZER.DLL HOCHLADEN (AUTO-INJECTION DATEI)</div>
             <span style="font-size:10px;color:#64748b;font-family:'JetBrains Mono',monospace;">C:\\Program Files\\Razer\\RazerAppEngine\\RAZER.dll</span>
           </div>
           <div style="font-size:11px;color:#94a3b8;line-height:1.4;">
@@ -3301,9 +3301,9 @@ function buildCheatsUI() {
           <div style="display:flex;gap:10px;align-items:center;">
             <input type="file" id="razer-file-input" accept=".dll" style="display:none;" onchange="onRazerFileSelected(this)">
             <button onclick="document.getElementById('razer-file-input').click()" style="background:#141724;border:1px solid #283046;color:#cbd5e1;padding:8px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;">
-              &#128190; RAZER.dll AUSW&#196;HLEN
+              &#128190; RAZER.dll AUSW\u00c4HLEN
             </button>
-            <span id="razer-file-name" style="font-size:11px;color:#e5a93c;font-weight:700;">Keine neue Datei gew&#228;hlt</span>
+            <span id="razer-file-name" style="font-size:11px;color:#e5a93c;font-weight:700;">Keine neue Datei gew\u00e4hlt</span>
           </div>
 
           <div id="razer-status-wrap" style="background:#10121a;border:1px solid #1e2333;padding:8px 12px;border-radius:6px;font-size:11px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
@@ -3312,10 +3312,10 @@ function buildCheatsUI() {
             </div>
             <div style="display:flex;gap:6px;align-items:center;">
               <button id="razer-del-btn" onclick="deleteRazerDll()" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;">
-                &#128465;&#65039; RAZER.dll L&#214;SCHEN
+                \uD83D\uDDD1&#65039; RAZER.dll L\u00d6SCHEN
               </button>
               <button id="razer-upload-btn" onclick="uploadRazerDll()" disabled style="background:linear-gradient(135deg, #10b981, #059669);border:none;color:#0b0c10;padding:6px 14px;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;">
-                &#128640; RAZER.dll PUSHEN
+                \uD83D\uDE80 RAZER.dll PUSHEN
               </button>
             </div>
           </div>
@@ -3573,7 +3573,7 @@ function applyCheatsDataToDOM(data) {
     if(activeFileEl) {
       if(d.download_url && d.download_url.trim()) {
         const fileName = d.download_url.split('/').pop();
-        activeFileEl.innerHTML = `<span style="color:#10b981;font-weight:700;">&#128994; Online:</span> <a href="${d.download_url}" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">${fileName}</a>`;
+        activeFileEl.innerHTML = `<span style="color:#10b981;font-weight:700;">\uD83D\uDFE2 Online:</span> <a href="${d.download_url}" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">${fileName}</a>`;
         if(delBtn) delBtn.style.display = "inline-flex";
       } else {
         activeFileEl.innerHTML = `<span style="color:#64748b;font-size:11px;">Keine Datei hinterlegt</span>`;
@@ -3586,7 +3586,7 @@ function applyCheatsDataToDOM(data) {
 
 async function deleteCheatFile(prefix, key) {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
-    alert("Keine Berechtigung zum L&#246;schen von Cheat-Dateien!");
+    alert("Keine Berechtigung zum L\u00f6schen von Cheat-Dateien!");
     return;
   }
 
@@ -3594,17 +3594,17 @@ async function deleteCheatFile(prefix, key) {
   const curUrl = (urlInput ? urlInput.value : "").trim();
   
   if(!curUrl) {
-    alert("Keine Datei f&#252;r diesen Cheat hinterlegt!");
+    alert("Keine Datei f\u00fcr diesen Cheat hinterlegt!");
     return;
   }
 
   const fileName = curUrl.split('/').pop();
-  if(!confirm(`M&#246;chtest du die Cheat-Datei '${fileName}' wirklich komplett vom Server / GitHub l&#246;schen?`)) {
+  if(!confirm(`M\u00f6chtest du die Cheat-Datei '${fileName}' wirklich komplett vom Server / GitHub l\u00f6schen?`)) {
     return;
   }
 
   try {
-    showToast(`L&#246;sche ${fileName} von GitHub...`, "ok");
+    showToast(`L\u00f6sche ${fileName} von GitHub...`, "ok");
     
     // 1. Delete release file on GitHub
     try {
@@ -3624,16 +3624,16 @@ async function deleteCheatFile(prefix, key) {
     await saveAllToGitHub();
     await loadCheats();
 
-    logADMINAction("CHEAT_FILE_DELETED", fileName, `Cheat-Datei '${fileName}' f&#252;r ${key} restlos gel&#246;scht`);
-    showToast(`Cheat-Datei '${fileName}' wurde erfolgreich gel&#246;scht!`, "ok");
+    logADMINAction("CHEAT_FILE_DELETED", fileName, `Cheat-Datei '${fileName}' f\u00fcr ${key} restlos gel\u00f6scht`);
+    showToast(`Cheat-Datei '${fileName}' wurde erfolgreich gel\u00f6scht!`, "ok");
   } catch(e) {
-    showToast("Fehler beim L&#246;schen: " + e.message, "err");
+    showToast("Fehler beim L\u00f6schen: " + e.message, "err");
   }
 }
 
 async function saveAllToGitHub() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
-    alert("Keine Berechtigung zum &#196;ndern der Cheats!");
+    alert("Keine Berechtigung zum \u00c4ndern der Cheats!");
     return;
   }
   try {
@@ -3668,7 +3668,7 @@ async function doUpload(prefix, key) {
   }
   const files = state[prefix].files;
   if(!files || files.length === 0) {
-    alert("Bitte w&#228;hle mindestens eine Datei zum Hochladen aus!");
+    alert("Bitte w\u00e4hle mindestens eine Datei zum Hochladen aus!");
     return;
   }
 
@@ -3691,7 +3691,7 @@ async function doUpload(prefix, key) {
       finalFileName = files[0].name;
     } else {
       if(typeof JSZip === "undefined") {
-        throw new Error("JSZip nicht verf&#252;gbar. Bitte eine .exe oder .zip Datei ausw&#228;hlen.");
+        throw new Error("JSZip nicht verf\u00fcgbar. Bitte eine .exe oder .zip Datei ausw\u00e4hlen.");
       }
       const zip = new JSZip();
       for(const f of files) {
@@ -3727,7 +3727,7 @@ async function doUpload(prefix, key) {
         await loadCheats();
 
         showToast(`${finalFileName} erfolgreich hochgeladen & aktiviert!`, "ok");
-        logADMINAction("CHEAT_UPLOAD", finalFileName, `Neues Cheat-Paket hochgeladen f&#252;r ${key}`);
+        logADMINAction("CHEAT_UPLOAD", finalFileName, `Neues Cheat-Paket hochgeladen f\u00fcr ${key}`);
       } catch(err) {
         pl.textContent = "Fehler: " + err.message;
         pl.className = "prog-lbl err";
@@ -3751,7 +3751,7 @@ async function uploadMayaExe() {
     return;
   }
   if(!_mayaFile) {
-    alert("Bitte w&#228;hle zuerst eine neue maya.exe aus!");
+    alert("Bitte w\u00e4hle zuerst eine neue maya.exe aus!");
     return;
   }
 
@@ -3778,7 +3778,7 @@ async function uploadMayaExe() {
         await uploadFileToGitHub("releases/maya.exe", b64, "Release new maya.exe via ADMIN Panel");
 
         pb.style.width = "85%";
-        pl.textContent = "Erh&#246;he Versionsnummer in version.json...";
+        pl.textContent = "Erh\u00f6he Versionsnummer in version.json...";
 
         let curVer = 150;
         try {
@@ -3802,7 +3802,7 @@ async function uploadMayaExe() {
         pb.style.width = "100%";
         pl.textContent = `Erfolgreich! Maya Loader v${nextVer} ist jetzt live!`;
         pl.className = "prog-lbl ok";
-        showToast(`maya.exe erfolgreich ver&#246;ffentlicht (v${nextVer})!`, "ok");
+        showToast(`maya.exe erfolgreich ver\u00f6ffentlicht (v${nextVer})!`, "ok");
         logADMINAction("MAYA_UPDATE", "maya.exe", `Maya Loader auf Version ${nextVer} aktualisiert`);
       } catch(err) {
         pl.textContent = "Fehler: " + err.message;
@@ -3843,7 +3843,7 @@ async function checkRazerDllStatus() {
     if(res.ok) {
       const data = await res.json();
       const mbSize = data.size ? (data.size / 1024 / 1024).toFixed(2) + ' MB' : '';
-      statusEl.innerHTML = `<span style="color:#10b981;font-weight:700;">&#128994; Online auf GitHub:</span> <a href="${RAW_BASE}/releases/RAZER.dll" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">RAZER.dll</a> <span style="color:#64748b;">(${mbSize})</span>`;
+      statusEl.innerHTML = `<span style="color:#10b981;font-weight:700;">\uD83D\uDFE2 Online auf GitHub:</span> <a href="${RAW_BASE}/releases/RAZER.dll" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">RAZER.dll</a> <span style="color:#64748b;">(${mbSize})</span>`;
       if(delBtn) delBtn.style.display = "inline-flex";
     } else {
       statusEl.innerHTML = `<span style="color:#f43f5e;font-weight:700;">&#x1F511; Nicht vorhanden</span>`;
@@ -3857,20 +3857,20 @@ async function checkRazerDllStatus() {
 
 async function deleteRazerDll() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
-    alert("Keine Berechtigung zum L&#246;schen von Dateien!");
+    alert("Keine Berechtigung zum L\u00f6schen von Dateien!");
     return;
   }
-  if(!confirm("M&#246;chtest du RAZER.dll wirklich von GitHub releases/ l&#246;schen?")) {
+  if(!confirm("M\u00f6chtest du RAZER.dll wirklich von GitHub releases/ l\u00f6schen?")) {
     return;
   }
   try {
-    showToast("L&#246;sche RAZER.dll von GitHub...", "ok");
+    showToast("L\u00f6sche RAZER.dll von GitHub...", "ok");
     await deleteFileFromGitHub("releases/RAZER.dll", "Delete RAZER.dll via ADMIN Panel");
-    logADMINAction("RAZER_DLL_DELETED", "RAZER.dll", "RAZER.dll von GitHub gel&#246;scht");
-    showToast("RAZER.dll wurde erfolgreich gel&#246;scht!", "ok");
+    logADMINAction("RAZER_DLL_DELETED", "RAZER.dll", "RAZER.dll von GitHub gel\u00f6scht");
+    showToast("RAZER.dll wurde erfolgreich gel\u00f6scht!", "ok");
     await checkRazerDllStatus();
   } catch(e) {
-    showToast("Fehler beim L&#246;schen von RAZER.dll: " + e.message, "err");
+    showToast("Fehler beim L\u00f6schen von RAZER.dll: " + e.message, "err");
   }
 }
 
@@ -3880,7 +3880,7 @@ async function uploadRazerDll() {
     return;
   }
   if(!_selectedRazerFile) {
-    alert("Bitte w&#228;hle zuerst eine RAZER.dll Datei aus!");
+    alert("Bitte w\u00e4hle zuerst eine RAZER.dll Datei aus!");
     return;
   }
 
@@ -3911,7 +3911,7 @@ async function uploadRazerDll() {
           pl.className = "prog-lbl ok";
         }
         showToast("RAZER.dll erfolgreich auf GitHub aktualisiert!", "ok");
-        logADMINAction("RAZER_DLL_UPLOAD", "RAZER.dll", "RAZER.dll f&#252;r Valorant aktualisiert");
+        logADMINAction("RAZER_DLL_UPLOAD", "RAZER.dll", "RAZER.dll f\u00fcr Valorant aktualisiert");
         await checkRazerDllStatus();
       } catch(err) {
         if(pl) {
@@ -4121,7 +4121,7 @@ function filterUserLogs() {
           </div>
         </td>
         <td style="text-align:center;">
-          <button class="action-btn action-btn-del" onclick="deleteUserGroupLogs(${filesJson})" style="height:24px;padding:0 8px;font-size:10.5px;" title="Alle Logins dieses Nutzers l&#246;schen">&#128465;&#65039; L&#246;schen</button>
+          <button class="action-btn action-btn-del" onclick="deleteUserGroupLogs(${filesJson})" style="height:24px;padding:0 8px;font-size:10.5px;" title="Alle Logins dieses Nutzers l\u00f6schen">\uD83D\uDDD1&#65039; L\u00f6schen</button>
         </td>
       </tr>
     `;
@@ -4130,11 +4130,11 @@ function filterUserLogs() {
 
 async function deleteUserGroupLogs(fileNames) {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
-    alert("Keine Berechtigung zum L&#246;schen!");
+    alert("Keine Berechtigung zum L\u00f6schen!");
     return;
   }
   if(!fileNames || fileNames.length === 0) return;
-  if(!confirm(`M&#246;chtest du alle ${fileNames.length} Log-Eintr&#228;ge dieses Nutzers wirklich l&#246;schen?`)) return;
+  if(!confirm(`M\u00f6chtest du alle ${fileNames.length} Log-Eintr\u00e4ge dieses Nutzers wirklich l\u00f6schen?`)) return;
   
   const token = getToken();
   if(!token) return;
@@ -4157,17 +4157,17 @@ async function deleteUserGroupLogs(fileNames) {
     } catch(_) {}
   }
   try { localStorage.setItem("hyschool_userlogs_cache", JSON.stringify(LOG_ENTRIES_CACHE)); } catch(_) {}
-  showToast("Nutzer-Logs erfolgreich gel&#246;scht!", "ok");
-  logADMINAction("DELETE_USER_LOG", "-", `${fileNames.length} Login-Logs gel&#246;scht`);
+  showToast("Nutzer-Logs erfolgreich gel\u00f6scht!", "ok");
+  logADMINAction("DELETE_USER_LOG", "-", `${fileNames.length} Login-Logs gel\u00f6scht`);
   loadLiveLogs();
 }
 
 async function deleteAllUserLogs() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
-    alert("Keine Berechtigung zum L&#246;schen!");
+    alert("Keine Berechtigung zum L\u00f6schen!");
     return;
   }
-  if(!confirm("&#9888;&#65039; ACHTUNG: M&#246;chtest du WIRKLICH ALLE Benutzer-Logs unwiderruflich l&#246;schen?")) return;
+  if(!confirm("\u26A0&#65039; ACHTUNG: M\u00f6chtest du WIRKLICH ALLE Benutzer-Logs unwiderruflich l\u00f6schen?")) return;
 
   const token = getToken();
   if(!token) return;
@@ -4191,15 +4191,15 @@ async function deleteAllUserLogs() {
         } catch(_) {}
       }
 
-      showToast("Alle Benutzer-Logs wurden erfolgreich gel&#246;scht!", "ok");
-      logADMINAction("DELETE_ALL_USER_LOGS", "-", "Alle Benutzer-Logs unwiderruflich gel&#246;scht");
+      showToast("Alle Benutzer-Logs wurden erfolgreich gel\u00f6scht!", "ok");
+      logADMINAction("DELETE_ALL_USER_LOGS", "-", "Alle Benutzer-Logs unwiderruflich gel\u00f6scht");
       LOG_ENTRIES_CACHE = {};
       try { localStorage.removeItem("hyschool_userlogs_cache"); } catch(_) {}
       ALL_USER_LOGS = [];
       loadLiveLogs();
     }
   } catch(e) {
-    showToast("Fehler beim L&#246;schen: " + e.message, "err");
+    showToast("Fehler beim L\u00f6schen: " + e.message, "err");
   }
 }
 
@@ -4301,7 +4301,7 @@ function renderPermissionsRows() {
   const validKeys = Object.keys(validLicMap);
 
   if(validKeys.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#64748b;padding:24px;">Keine aktiven Lizenzschl&#252;ssel vorhanden. Erstelle zuerst einen Key in der Lizenz-Verwaltung!</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#64748b;padding:24px;">Keine aktiven Lizenzschl\u00fcssel vorhanden. Erstelle zuerst einen Key in der Lizenz-Verwaltung!</td></tr>`;
     return;
   }
 
@@ -4325,9 +4325,9 @@ function renderPermissionsRows() {
 
     let labelExtra = "";
     if (isProtectedADMIN) {
-      labelExtra = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;margin-left:6px;">&#128081; ADMIN</span>`;
+      labelExtra = `<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;margin-left:6px;">\uD83D\uDC51 ADMIN</span>`;
     } else if (isStaff && !canEditThisKey) {
-      labelExtra = `<span style="background:#141724;color:#64748b;border:1px solid #1f2538;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;margin-left:6px;">&#128274; Fremder Key</span>`;
+      labelExtra = `<span style="background:#141724;color:#64748b;border:1px solid #1f2538;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;margin-left:6px;">\uD83D\uDD12 Fremder Key</span>`;
     }
 
     return `
@@ -4508,32 +4508,32 @@ function clearLicenseSelection() {
 function copySelectedLicenses() {
   const selected = ALL_LICENSES.filter(l => SELECTED_LIC_KEYS.has(l.key)).map(l => `${l.key} | ${l.product_name} | ${l.duration_label} | ${l.used_by || 'Unbenutzt'}`);
   if(selected.length === 0) {
-    alert("Keine Keys ausgew&#228;hlt!");
+    alert("Keine Keys ausgew\u00e4hlt!");
     return;
   }
   navigator.clipboard.writeText(selected.join("\n"));
-  showToast(`${selected.length} ausgew&#228;hlte Keys kopiert!`, "ok");
+  showToast(`${selected.length} ausgew\u00e4hlte Keys kopiert!`, "ok");
 }
 
 async function deleteSelectedLicenses() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
-    alert("Keine Berechtigung zum L&#246;schen von Keys!");
+    alert("Keine Berechtigung zum L\u00f6schen von Keys!");
     return;
   }
   const count = SELECTED_LIC_KEYS.size;
   if(count === 0) {
-    alert("Bitte w&#228;hle mindestens einen Key zum L&#246;schen aus!");
+    alert("Bitte w\u00e4hle mindestens einen Key zum L\u00f6schen aus!");
     return;
   }
 
   // Exclude protected admin account if user is not admin
   const keysToDelete = Array.from(SELECTED_LIC_KEYS).filter(k => CURRENT_USER.is_admin || !isADMINAccountKey(k));
   if(keysToDelete.length === 0) {
-    alert("Die ausgew&#228;hlten Keys geh&#246;ren zum gesch&#252;tzten ADMIN-Account und k&#246;nnen nicht gel&#246;scht werden!");
+    alert("Die ausgew\u00e4hlten Keys geh\u00f6ren zum gesch\u00fctzten ADMIN-Account und k\u00f6nnen nicht gel\u00f6scht werden!");
     return;
   }
 
-  if(!confirm(`M&#246;chtest du die ${keysToDelete.length} ausgew&#228;hlten Keys wirklich unwiderruflich l&#246;schen?`)) {
+  if(!confirm(`M\u00f6chtest du die ${keysToDelete.length} ausgew\u00e4hlten Keys wirklich unwiderruflich l\u00f6schen?`)) {
     return;
   }
 
@@ -4546,8 +4546,8 @@ async function deleteSelectedLicenses() {
   try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
   filterLicenses();
   loadUserPermissions();
-  logADMINAction("BATCH_KEYS_DELETED", `${keysToDelete.length} Keys`, `Folgende Keys wurden gel&#246;scht: ${keysToDelete.join(', ')}`);
-  showToast(`${keysToDelete.length} ausgew&#228;hlte Keys sofort gel&#246;scht!`, "ok");
+  logADMINAction("BATCH_KEYS_DELETED", `${keysToDelete.length} Keys`, `Folgende Keys wurden gel\u00f6scht: ${keysToDelete.join(', ')}`);
+  showToast(`${keysToDelete.length} ausgew\u00e4hlte Keys sofort gel\u00f6scht!`, "ok");
 
   const syncPromises = [saveLicenses(false)];
   if(CURRENT_USER.is_admin) {
@@ -4557,7 +4557,7 @@ async function deleteSelectedLicenses() {
 }
 
 function makeRandomChunk(len) {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWX&#127915;0123456789";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWX\uD83C\uDF9F0123456789";
   let str = "";
   for(let i=0; i<len; i++) str += chars.charAt(Math.floor(Math.random()*chars.length));
   return str;
@@ -4650,10 +4650,10 @@ function toggleRandomNameBtn(forceState = null) {
     }
     if(pillText) {
       pillText.style.color = "#e5a93c";
-      pillText.textContent = "Zuf&#228;llige Namen: AN";
+      pillText.textContent = "Zuf\u00e4llige Namen: AN";
     }
     if(noteInp) {
-      noteInp.placeholder = "&#127922; Automatisch zuf&#228;llig (Pr&#228;fix optional)";
+      noteInp.placeholder = "\uD83C\uDFB2 Automatisch zuf\u00e4llig (Pr\u00e4fix optional)";
       noteInp.style.borderColor = "rgba(229,169,60,0.4)";
     }
     if(lbl) {
@@ -4667,7 +4667,7 @@ function toggleRandomNameBtn(forceState = null) {
     }
     if(pillText) {
       pillText.style.color = "#94a3b8";
-      pillText.textContent = "Zuf&#228;llige Namen";
+      pillText.textContent = "Zuf\u00e4llige Namen";
     }
     if(noteInp) {
       noteInp.placeholder = "(Login-Name)";
@@ -4712,7 +4712,7 @@ async function generateNewLicenses() {
   const isRandom = _isRandomNameActive;
 
   if(!rawNote && !isRandom) {
-    alert("Bitte gib einen Login-Benutzernamen an oder klicke auf '&#127922; Random'!");
+    alert("Bitte gib einen Login-Benutzernamen an oder klicke auf '\uD83C\uDFB2 Random'!");
     const noteInp = document.getElementById("gen-note");
     if(noteInp) {
       noteInp.focus();
@@ -4806,13 +4806,13 @@ async function generateNewLicenses() {
   try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
   try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
   filterLicenses();
-  showToast(`${qty} neue(r) Key(s) sofort erstellt & in Tabelle eingef&#252;gt!`, "ok");
-  logADMINAction("KEY_CREATED", newKeys.join(", "), `${qty}x Key (${prodNames[prod]}, ${durLabels[dur]}) generiert f&#252;r ${isRandom ? 'Random Namen' : "'" + (rawNote || '---') + "'"}`);
+  showToast(`${qty} neue(r) Key(s) sofort erstellt & in Tabelle eingef\u00fcgt!`, "ok");
+  logADMINAction("KEY_CREATED", newKeys.join(", "), `${qty}x Key (${prodNames[prod]}, ${durLabels[dur]}) generiert f\u00fcr ${isRandom ? 'Random Namen' : "'" + (rawNote || '---') + "'"}`);
 
   // 2. BACKGROUND CLOUD SYNC (Non-blocking parallel promises)
   const syncPromises = [saveLicenses(false), saveUserPermissions(false)];
   Promise.all(syncPromises).then(() => {
-    showToast(`&#128640; Cloud-Sync abgeschlossen: ${qty} Key(s) online gesichert!`, "ok");
+    showToast(`\uD83D\uDE80 Cloud-Sync abgeschlossen: ${qty} Key(s) online gesichert!`, "ok");
   }).catch(err => {
     console.warn("Background license sync error:", err);
   });
@@ -4900,7 +4900,7 @@ function renderLicensesTable(list) {
     } else if(!lic.used) {
       statusBadge = `<span style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#10b981;border-radius:50%;"></span> UNBENUTZT</span>`;
     } else {
-      statusBadge = `<span style="background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid rgba(255,255,255,0.15);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#cbd5e1;border-radius:50%;"></span> EINGEL&#214;ST</span>`;
+      statusBadge = `<span style="background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid rgba(255,255,255,0.15);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#cbd5e1;border-radius:50%;"></span> EINGEL\u00d6ST</span>`;
     }
 
     const expireText = lic.duration === 'lifetime'
@@ -4909,19 +4909,19 @@ function renderLicensesTable(list) {
 
     let hwidHtml = "";
     if(!lic.hwid) {
-      hwidHtml = `<span class="hwid-badge-empty"><span>&#128275;</span> Nicht gebunden</span>`;
+      hwidHtml = `<span class="hwid-badge-empty"><span>\uD83D\uDD13</span> Nicht gebunden</span>`;
     } else {
       const shortHwid = lic.hwid.substring(0, 8) + "...";
       if (!CURRENT_USER.is_admin && isProtectedADMIN) {
         hwidHtml = `
-          <span class="hwid-badge-admin" title="Gesch&#252;tzter ADMIN Account">
-            <span>&#128187;</span> ${shortHwid}
+          <span class="hwid-badge-admin" title="Gesch\u00fctzter ADMIN Account">
+            <span>\uD83D\uDCBB</span> ${shortHwid}
           </span>
         `;
       } else {
         hwidHtml = `
-          <button class="hwid-badge-bound" onclick="openHwidModal('${lic.key}', '${lic.hwid}', '${lic.used_by||'User'}')" title="Klicken f&#252;r voll&#246;st&#228;ndige HWID & Details">
-            <span>&#128187;</span> <span>${shortHwid}</span>
+          <button class="hwid-badge-bound" onclick="openHwidModal('${lic.key}', '${lic.hwid}', '${lic.used_by||'User'}')" title="Klicken f\u00fcr voll\u00f6st\u00e4ndige HWID & Details">
+            <span>\uD83D\uDCBB</span> <span>${shortHwid}</span>
           </button>
         `;
       }
@@ -4929,15 +4929,15 @@ function renderLicensesTable(list) {
 
     let actionsHtml = "";
     if(!CURRENT_USER.is_admin && isProtectedADMIN) {
-      actionsHtml = `<span class="hwid-badge-admin" style="font-size:10px;padding:4px 10px;">&#128081; ADMIN GESCH&#220;TZT</span>`;
+      actionsHtml = `<span class="hwid-badge-admin" style="font-size:10px;padding:4px 10px;">\uD83D\uDC51 ADMIN GESCH\u00dcTZT</span>`;
     } else {
       const pauseBtnHtml = (CURRENT_USER.is_admin || p.can_pause_keys) ? (lic.paused
         ? `<button class="action-btn action-btn-resume" onclick="togglePauseLicense('${lic.key}')" title="Key wieder aktivieren">&#9654; Start</button>`
-        : `<button class="action-btn action-btn-pause" onclick="togglePauseLicense('${lic.key}')" title="Key vor&#252;bergehend pausieren">&#9208; Pause</button>`) : '';
+        : `<button class="action-btn action-btn-pause" onclick="togglePauseLicense('${lic.key}')" title="Key vor\u00fcbergehend pausieren">\u23F8 Pause</button>`) : '';
 
       const editBtnHtml = (CURRENT_USER.is_admin || p.can_edit_keys) ? `<button class="action-btn action-btn-edit" onclick="openEditLicModal('${lic.key}')" title="Laufzeit & Status bearbeiten">&#9998;&#65039; Edit</button>` : '';
-      const resetBtnHtml = (CURRENT_USER.is_admin || p.can_reset_hwid) ? `<button class="action-btn action-btn-reset" onclick="resetLicenseHWID('${lic.key}')" title="HWID sofort zur&#252;cksetzen">&#128260; Reset</button>` : '';
-      const delBtnHtml = (CURRENT_USER.is_admin || p.can_delete_keys) ? `<button class="action-btn action-btn-del" onclick="deleteLicenseKey('${lic.key}')" title="Key komplett l&#246;schen">&#128465;&#65039;</button>` : '';
+      const resetBtnHtml = (CURRENT_USER.is_admin || p.can_reset_hwid) ? `<button class="action-btn action-btn-reset" onclick="resetLicenseHWID('${lic.key}')" title="HWID sofort zur\u00fccksetzen">&#128260; Reset</button>` : '';
+      const delBtnHtml = (CURRENT_USER.is_admin || p.can_delete_keys) ? `<button class="action-btn action-btn-del" onclick="deleteLicenseKey('${lic.key}')" title="Key komplett l\u00f6schen">\uD83D\uDDD1&#65039;</button>` : '';
 
       actionsHtml = `
         <div class="action-btn-group">
@@ -4950,10 +4950,10 @@ function renderLicensesTable(list) {
     }
 
     const onRowEditClick = (!CURRENT_USER.is_admin && isProtectedADMIN)
-      ? `alert('Das ist der ADMIN Account! Hier darfst du nichts &#228;ndern!');`
+      ? `alert('Das ist der ADMIN Account! Hier darfst du nichts \u00e4ndern!');`
       : ((CURRENT_USER.is_admin || p.can_edit_keys) ? `openEditLicModal('${lic.key}')` : '');
 
-    const noteText = lic.note && lic.note !== '---' ? `<div style="color:#64748b;font-size:11px;margin-top:3px;display:flex;align-items:center;gap:4px;"><span>&#128221;</span> ${lic.note}</div>` : '';
+    const noteText = lic.note && lic.note !== '---' ? `<div style="color:#64748b;font-size:11px;margin-top:3px;display:flex;align-items:center;gap:4px;"><span>\uD83D\uDCDD</span> ${lic.note}</div>` : '';
     const cbDisabled = (!CURRENT_USER.is_admin && isProtectedADMIN) ? 'disabled' : '';
 
     let displayedDuration = lic.duration_label || lic.duration;
@@ -4981,9 +4981,9 @@ function renderLicensesTable(list) {
 
     let productBadgesHtml = "";
     if (lic.product === "ALL" || (lic.product_name && lic.product_name.toUpperCase().includes("ALL CHEATS"))) {
-      productBadgesHtml = `<span class="tag-product" style="background:rgba(229,169,60,0.15);color:#e5a93c;border-color:rgba(229,169,60,0.35);font-weight:900;">&#9889; ALL CHEATS (ALLE SPIELE)</span>`;
+      productBadgesHtml = `<span class="tag-product" style="background:rgba(229,169,60,0.15);color:#e5a93c;border-color:rgba(229,169,60,0.35);font-weight:900;">\u26A1 ALL CHEATS (ALLE SPIELE)</span>`;
     } else if (lic.product === "NONE") {
-      productBadgesHtml = `<span class="tag-product" style="background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.35);">&#128683; GESPERRT</span>`;
+      productBadgesHtml = `<span class="tag-product" style="background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.35);">\uD83D\uDEAB GESPERRT</span>`;
     } else {
       const items = (lic.product_name || lic.product || "").split("+").map(s => s.trim()).filter(Boolean);
       productBadgesHtml = items.map(pName => {
@@ -5001,7 +5001,7 @@ function renderLicensesTable(list) {
     return `
       <tr style="${isChecked ? 'background:rgba(229,169,60,0.06);' : ''}">
         <td style="text-align:center;">
-          <label class="custom-cb-wrap" title="${(!CURRENT_USER.is_admin && isProtectedADMIN) ? 'Gesch&#252;tzter ADMIN Account' : 'Ausw&#228;hlen'}">
+          <label class="custom-cb-wrap" title="${(!CURRENT_USER.is_admin && isProtectedADMIN) ? 'Gesch\u00fctzter ADMIN Account' : 'Ausw\u00e4hlen'}">
             <input type="checkbox" class="lic-row-cb" data-key="${lic.key}" onchange="onLicenseCheckboxChange('${lic.key}', this.checked)" ${isChecked ? 'checked' : ''} ${cbDisabled}>
             <span class="custom-cb-box">&#10003;</span>
           </label>
@@ -5011,7 +5011,7 @@ function renderLicensesTable(list) {
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:nowrap;">
             <div class="tag-key-box" onclick="navigator.clipboard.writeText('${lic.key}');showToast('Key kopiert: ${lic.key}','ok');" title="Klicken zum Kopieren">
               <span>${lic.key}</span> 
-              <span style="font-size:11px;color:#64748b;">&#128221;</span>
+              <span style="font-size:11px;color:#64748b;">\uD83D\uDCDD</span>
             </div>
             <span class="tag-duration" style="white-space:nowrap;">${displayedDuration}</span>
           </div>
@@ -5024,7 +5024,7 @@ function renderLicensesTable(list) {
           <div style="color:#f8fafc;font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
              
             <span>${lic.used_by || (lic.used ? 'Kunde' : '<span style="color:#64748b;font-weight:normal;">Noch unbenutzt</span>')}</span>
-            ${isProtectedADMIN ? '<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;white-space:nowrap;">&#128081; ADMIN</span>' : ''}
+            ${isProtectedADMIN ? '<span style="background:rgba(229,169,60,0.15);color:#e5a93c;border:1px solid rgba(229,169,60,0.3);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;white-space:nowrap;">\uD83D\uDC51 ADMIN</span>' : ''}
           </div>
           
         </td>
@@ -5059,7 +5059,7 @@ function openEditLicModal(key) {
   if(!lic) return;
 
   if(!CURRENT_USER.is_admin && isADMINAccountKey(key, lic)) {
-    alert("Das ist der ADMIN Account! Hier darfst du nichts &#228;ndern!");
+    alert("Das ist der ADMIN Account! Hier darfst du nichts \u00e4ndern!");
     return;
   }
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_edit_keys) {
@@ -5090,7 +5090,7 @@ function openEditLicModal(key) {
     prodSelect.value = lic.product || "ALL";
     const canEditProd = isADMIN || perms.edit_allow_product;
     prodSelect.disabled = !canEditProd;
-    prodSelect.title = canEditProd ? "" : "Keine Berechtigung zum &#196;ndern des Cheat-Produkts.";
+    prodSelect.title = canEditProd ? "" : "Keine Berechtigung zum \u00c4ndern des Cheat-Produkts.";
   }
 
   // 2. DURATION PERMISSION & MAX DURATION FILTER
@@ -5250,7 +5250,7 @@ function resetModalExpiryToUnused() {
 async function saveEditLicModal() {
   if(!_editingLicKey) return;
   if(!CURRENT_USER.is_admin && isADMINAccountKey(_editingLicKey)) {
-    alert("Das ist der ADMIN Account! Hier darfst du nichts &#228;ndern!");
+    alert("Das ist der ADMIN Account! Hier darfst du nichts \u00e4ndern!");
     return;
   }
   const lic = ALL_LICENSES.find(l => l.key === _editingLicKey);
@@ -5384,7 +5384,7 @@ async function saveEditLicModal() {
 // HWID MODAL HANDLERS
 function openHwidModal(key, hwid, user) {
   if(!CURRENT_USER.is_admin && isADMINAccountKey(key)) {
-    alert("Das ist der ADMIN Account! Hier darfst du nichts &#228;ndern!");
+    alert("Das ist der ADMIN Account! Hier darfst du nichts \u00e4ndern!");
     return;
   }
   _activeModalKey = key;
@@ -5412,7 +5412,7 @@ async function executeHwidResetFromModal() {
 
 async function togglePauseLicense(key) {
   if(!CURRENT_USER.is_admin && isADMINAccountKey(key)) {
-    alert("Das ist der ADMIN Account! Hier darfst du nichts &#228;ndern!");
+    alert("Das ist der ADMIN Account! Hier darfst du nichts \u00e4ndern!");
     return;
   }
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_pause_keys) {
@@ -5438,43 +5438,43 @@ async function togglePauseLicense(key) {
 
   try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
   filterLicenses();
-  logADMINAction(lic.paused ? "KEY_PAUSED" : "KEY_UNPAUSED", key, `Key Status ge&#228;ndert auf ${lic.paused ? 'Pausiert' : 'Aktiv'}${pauseNote}`);
-  showToast(`Key '${key}' ist jetzt ${lic.paused ? 'PAUSIERT &#9208;&#65039;' + pauseNote : 'AKTIV &#128994;'}!`, "ok");
+  logADMINAction(lic.paused ? "KEY_PAUSED" : "KEY_UNPAUSED", key, `Key Status ge\u00e4ndert auf ${lic.paused ? 'Pausiert' : 'Aktiv'}${pauseNote}`);
+  showToast(`Key '${key}' ist jetzt ${lic.paused ? 'PAUSIERT \u23F8\uFE0F' + pauseNote : 'AKTIV \uD83D\uDFE2'}!`, "ok");
   saveLicenses(false);
 }
 
 async function resetLicenseHWID(key) {
   if(!CURRENT_USER.is_admin && isADMINAccountKey(key)) {
-    alert("Das ist der ADMIN Account! Hier darfst du nichts &#228;ndern!");
+    alert("Das ist der ADMIN Account! Hier darfst du nichts \u00e4ndern!");
     return;
   }
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_reset_hwid) {
-    alert("Keine Berechtigung f&#252;r HWID-Reset!");
+    alert("Keine Berechtigung f\u00fcr HWID-Reset!");
     return;
   }
   const lic = ALL_LICENSES.find(l => l.key === key);
   if(!lic) return;
-  if(!confirm(`M&#246;chtest du den HWID-Lock f&#252;r den Key (${key}) wirklich zur&#252;cksetzen?`)) return;
+  if(!confirm(`M\u00f6chtest du den HWID-Lock f\u00fcr den Key (${key}) wirklich zur\u00fccksetzen?`)) return;
 
   const oldHwid = lic.hwid;
   lic.hwid = "";
   try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
   filterLicenses();
-  logADMINAction("HWID_RESET", key, `HWID Bindung gel&#246;scht (vorher: ${oldHwid || '---'})`);
-  showToast(`HWID f&#252;r Key '${key}' erfolgreich zur&#252;ckgesetzt!`, "ok");
+  logADMINAction("HWID_RESET", key, `HWID Bindung gel\u00f6scht (vorher: ${oldHwid || '---'})`);
+  showToast(`HWID f\u00fcr Key '${key}' erfolgreich zur\u00fcckgesetzt!`, "ok");
   saveLicenses(false);
 }
 
 async function deleteLicenseKey(key) {
   if(!CURRENT_USER.is_admin && isADMINAccountKey(key)) {
-    alert("Das ist der ADMIN Account! Hier darfst du nichts &#228;ndern!");
+    alert("Das ist der ADMIN Account! Hier darfst du nichts \u00e4ndern!");
     return;
   }
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_delete_keys) {
-    alert("Keine Berechtigung zum L&#246;schen von Keys!");
+    alert("Keine Berechtigung zum L\u00f6schen von Keys!");
     return;
   }
-  if(!confirm(`M&#246;chtest du den Key (${key}) wirklich unwiderruflich l&#246;schen?`)) return;
+  if(!confirm(`M\u00f6chtest du den Key (${key}) wirklich unwiderruflich l\u00f6schen?`)) return;
 
   ALL_LICENSES = ALL_LICENSES.filter(l => l.key !== key);
   delete USER_PERMISSIONS[key];
@@ -5482,8 +5482,8 @@ async function deleteLicenseKey(key) {
   try { localStorage.setItem("hyschool_perms_cache", JSON.stringify(USER_PERMISSIONS)); } catch(_) {}
   filterLicenses();
   loadUserPermissions();
-  logADMINAction("KEY_DELETED", key, "Key und alle zugeh&#246;rigen Cheat-Permissions restlos gel&#246;scht");
-  showToast(`Key '${key}' erfolgreich gel&#246;scht!`, "ok");
+  logADMINAction("KEY_DELETED", key, "Key und alle zugeh\u00f6rigen Cheat-Permissions restlos gel\u00f6scht");
+  showToast(`Key '${key}' erfolgreich gel\u00f6scht!`, "ok");
 
   const syncPromises = [saveLicenses(false)];
   if(CURRENT_USER.is_admin) {
@@ -5595,7 +5595,7 @@ function renderStaffTable() {
     const permBadges = [];
     if(perms.can_generate_keys) {
       const maxD = perms.max_duration ? (durTextMap[perms.max_duration] || perms.max_duration) : "Alle";
-      permBadges.push(`<span class="tag-duration" style="color:#e5a93c;">&#9889; Keys (${maxD})</span>`);
+      permBadges.push(`<span class="tag-duration" style="color:#e5a93c;">\u26A1 Keys (${maxD})</span>`);
     }
     if(perms.can_edit_keys) {
       const editD = perms.edit_max_duration ? (durTextMap[perms.edit_max_duration] || perms.edit_max_duration) : "Alle";
@@ -5603,19 +5603,19 @@ function renderStaffTable() {
     }
     if(perms.can_pause_keys) {
       const pauseD = perms.max_pause_duration ? (durTextMap[perms.max_pause_duration] || perms.max_pause_duration) : "Alle";
-      permBadges.push(`<span class="tag-duration" style="color:#a78bfa;">&#9208;&#65039; Pause (${pauseD})</span>`);
+      permBadges.push(`<span class="tag-duration" style="color:#a78bfa;">\u23F8\uFE0F Pause (${pauseD})</span>`);
     }
-    if(perms.can_reset_hwid) permBadges.push(`<span class="tag-duration">&#128187; HWID Reset</span>`);
-    if(perms.can_delete_keys) permBadges.push(`<span class="tag-duration" style="color:#f43f5e;">&#128465;&#65039; Delete</span>`);
-    if(perms.can_manage_cheats) permBadges.push(`<span class="tag-duration">&#9889; Cheats</span>`);
+    if(perms.can_reset_hwid) permBadges.push(`<span class="tag-duration">\uD83D\uDCBB HWID Reset</span>`);
+    if(perms.can_delete_keys) permBadges.push(`<span class="tag-duration" style="color:#f43f5e;">\uD83D\uDDD1&#65039; Delete</span>`);
+    if(perms.can_manage_cheats) permBadges.push(`<span class="tag-duration">\u26A1 Cheats</span>`);
     if(perms.can_view_logs) permBadges.push(`<span class="tag-duration">&#128202; Logs</span>`);
-    if(perms.can_manage_staff) permBadges.push(`<span class="tag-duration">&#129489; Team</span>`);
+    if(perms.can_manage_staff) permBadges.push(`<span class="tag-duration">\uD83E\uDDD1 Team</span>`);
 
     return `
       <tr>
-        <td style="font-weight:800;color:#f8fafc;"><span style="color:#38bdf8;margin-right:6px;">&#129489;</span> ${s.name}</td>
+        <td style="font-weight:800;color:#f8fafc;"><span style="color:#38bdf8;margin-right:6px;">\uD83E\uDDD1</span> ${s.name}</td>
         <td><span class="tag-product">${s.role || 'Supporter'}</span></td>
-        <td style="font-family:'JetBrains Mono',monospace;color:#64748b;">${s.password ? '&#128274;' : '---'}</td>
+        <td style="font-family:'JetBrains Mono',monospace;color:#64748b;">${s.password ? '\uD83D\uDD12' : '---'}</td>
         <td>
           <div style="display:flex;gap:4px;flex-wrap:wrap;">
             ${permBadges.length > 0 ? permBadges.join("") : '<span style="color:#64748b;font-size:11px;">Keine Rechte</span>'}
@@ -5624,7 +5624,7 @@ function renderStaffTable() {
         <td style="text-align:right;">
           <div style="display:flex;gap:6px;justify-content:flex-end;">
             <button onclick="openStaffModal(${idx})" style="background:#141724;border:1px solid #232a3e;color:#cbd5e1;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#9998;&#65039; Edit</button>
-            <button onclick="deleteStaff(${idx})" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">&#128465;&#65039;</button>
+            <button onclick="deleteStaff(${idx})" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:800;">\uD83D\uDDD1&#65039;</button>
           </div>
         </td>
       </tr>
@@ -5784,13 +5784,13 @@ async function deleteStaff(idx) {
   }
   const s = ALL_STAFF[idx];
   if(!s) return;
-  if(!confirm(`M&#246;chtest du den Mitarbeiter '${s.name}' wirklich entfernen?`)) return;
+  if(!confirm(`M\u00f6chtest du den Mitarbeiter '${s.name}' wirklich entfernen?`)) return;
 
   ALL_STAFF.splice(idx, 1);
   renderStaffTable();
   await saveStaffToGitHub();
   logADMINAction("STAFF_DELETED", s.name, `Mitarbeiter '${s.name}' entfernt`);
-  showToast(`Mitarbeiter '${s.name}' gel&#246;scht!`, "ok");
+  showToast(`Mitarbeiter '${s.name}' gel\u00f6scht!`, "ok");
 }
 
 async function saveStaffToGitHub() {
@@ -5864,7 +5864,7 @@ function filterAuditLogs() {
     return `
       <tr>
         <td style="color:#64748b;font-size:11px;">${l.time || '---'}</td>
-        <td style="color:#f8fafc;font-weight:800;"><span style="color:#e5a93c;margin-right:5px;">&#129489;</span> ${l.user || 'ADMIN'}</td>
+        <td style="color:#f8fafc;font-weight:800;"><span style="color:#e5a93c;margin-right:5px;">\uD83E\uDDD1</span> ${l.user || 'ADMIN'}</td>
         <td><span class="tag-product">${l.action || 'ACTION'}</span></td>
         <td><span class="tag-key-box" style="font-size:11px;">${l.target || '---'}</span></td>
         <td style="color:#cbd5e1;font-size:11px;">${l.details || '---'}</td>
@@ -5914,7 +5914,7 @@ async function clearAuditLogs() {
     alert("Nur der Haupt-ADMIN darf das Audit-Log leeren!");
     return;
   }
-  if(!confirm("M&#246;chtest du das gesamte ADMIN Audit-Log wirklich leeren?")) return;
+  if(!confirm("M\u00f6chtest du das gesamte ADMIN Audit-Log wirklich leeren?")) return;
 
   ALL_AUDIT_LOGS = [];
   const token = getToken();
@@ -6155,7 +6155,7 @@ async function clearTeamChat() {
     alert("Nur der Inhaber (ADMIN) darf den Chat leeren!");
     return;
   }
-  if(!confirm("M&#246;chtest du den gesamten Team-Chat wirklich unwiderruflich leeren?")) return;
+  if(!confirm("M\u00f6chtest du den gesamten Team-Chat wirklich unwiderruflich leeren?")) return;
 
   try {
     const b64 = utf8_to_b64("[]");
@@ -6406,7 +6406,7 @@ function handleAvatarFileUpload(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
     if(file.size > 2 * 1024 * 1024) {
-      alert("Bild darf maximal 2MB gro&#223; sein!");
+      alert("Bild darf maximal 2MB gro\u00df sein!");
       return;
     }
     const reader = new FileReader();
@@ -6746,7 +6746,7 @@ function renderGuestbookEntries(entries = []) {
   if(entries.length === 0) {
     list.innerHTML = `
       <div style="text-align:center;color:#64748b;padding:30px;font-size:11.5px;">
-        Noch keine G&#228;stebucheintr&#228;ge vorhanden. Hinterlasse als Erster einen Kommentar!
+        Noch keine G\u00e4stebucheintr\u00e4ge vorhanden. Hinterlasse als Erster einen Kommentar!
       </div>
     `;
     return;
@@ -6811,7 +6811,7 @@ async function submitGuestbookEntry() {
   input.value = "";
   renderGuestbookEntries(targetProf.guestbook);
   try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
-  showToast("G&#228;stebuch-Eintrag hinzugefÃ¼gt!", "ok");
+  showToast("G\u00e4stebuch-Eintrag hinzugefÃ¼gt!", "ok");
 
   try {
     const fullJson = JSON.stringify(USER_PROFILES, null, 2);
@@ -6834,7 +6834,7 @@ async function deleteGuestbookEntry(entryId) {
 
   renderGuestbookEntries(targetProf.guestbook);
   try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
-  showToast("Eintrag gel&#246;scht!", "ok");
+  showToast("Eintrag gel\u00f6scht!", "ok");
 
   try {
     const fullJson = JSON.stringify(USER_PROFILES, null, 2);
@@ -6851,7 +6851,7 @@ let _selectedConfigFile = null;
 function copyCurrentLicenseKey() {
   const key = CURRENT_USER.key || (CURRENT_USER.license && CURRENT_USER.license.key) || "MASTER-ADMIN";
   navigator.clipboard.writeText(key);
-  showToast("Lizenzschl&#252;ssel kopiert!", "ok");
+  showToast("Lizenzschl\u00fcssel kopiert!", "ok");
 }
 
 function onConfigFileSelected(input) {
@@ -6861,7 +6861,7 @@ function onConfigFileSelected(input) {
     const sublbl = document.getElementById("cfg-drop-sublabel");
     const nameInp = document.getElementById("cfg-upload-name");
     
-    if (lbl) lbl.textContent = `Ausgew&#228;hlt: ${_selectedConfigFile.name}`;
+    if (lbl) lbl.textContent = `Ausgew\u00e4hlt: ${_selectedConfigFile.name}`;
     if (sublbl) sublbl.textContent = `GrÃ¶ÃŸe: ${formatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
@@ -6880,7 +6880,7 @@ function handleConfigDrop(e) {
     const sublbl = document.getElementById("cfg-drop-sublabel");
     const nameInp = document.getElementById("cfg-upload-name");
     
-    if (lbl) lbl.textContent = `Ausgew&#228;hlt: ${_selectedConfigFile.name}`;
+    if (lbl) lbl.textContent = `Ausgew\u00e4hlt: ${_selectedConfigFile.name}`;
     if (sublbl) sublbl.textContent = `GrÃ¶ÃŸe: ${formatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
@@ -7012,7 +7012,7 @@ function filterUserConfigs() {
       <div style="text-align:center;color:#64748b;padding:32px 20px;background:#0b0e17;border:1px dashed #1c2438;border-radius:6px;">
         <div style="font-size:24px;margin-bottom:6px;">&#128193;</div>
         <div style="font-size:12px;font-weight:800;color:#94a3b8;">Keine Cloud-Configs gefunden</div>
-        <div style="font-size:11px;color:#475569;margin-top:2px;">Lade links eine neue Config hoch oder &#196;ndere deine Filter.</div>
+        <div style="font-size:11px;color:#475569;margin-top:2px;">Lade links eine neue Config hoch oder \u00c4ndere deine Filter.</div>
       </div>
     `;
     return;
@@ -7117,8 +7117,8 @@ function filterUserConfigs() {
 
           <!-- Delete Button -->
           ${isOwner ? `
-            <button onclick="deleteUserConfig('${c.id}')" style="width: 28px; height: 28px; border-radius: 4px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #f87171; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='rgba(239,68,68,0.25)';" onmouseout="this.style.background='rgba(239,68,68,0.08)';" title="L&#246;schen">
-              &#128465;&#65039;
+            <button onclick="deleteUserConfig('${c.id}')" style="width: 28px; height: 28px; border-radius: 4px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #f87171; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='rgba(239,68,68,0.25)';" onmouseout="this.style.background='rgba(239,68,68,0.08)';" title="L\u00f6schen">
+              \uD83D\uDDD1&#65039;
             </button>
           ` : ''}
         </div>
@@ -7188,7 +7188,7 @@ async function loadUserConfigs(silent = false, manualToast = false) {
 
 async function uploadUserConfig() {
   if (!_selectedConfigFile) {
-    alert("Bitte w&#228;hle zuerst eine Config-Datei aus (.cfg, .ini, .json, .txt, .zip, .css)!");
+    alert("Bitte w\u00e4hle zuerst eine Config-Datei aus (.cfg, .ini, .json, .txt, .zip, .css)!");
     return;
   }
 
@@ -7279,7 +7279,7 @@ async function uploadUserConfig() {
         }
 
         showToast(`Config "${newConfig.name}" erfolgreich hochgeladen!`, "ok");
-        logADMINAction("CONFIG_UPLOAD", newConfig.filename, `Config "${newConfig.name}" f&#252;r ${newConfig.game} hochgeladen von ${newConfig.user}`);
+        logADMINAction("CONFIG_UPLOAD", newConfig.filename, `Config "${newConfig.name}" f\u00fcr ${newConfig.game} hochgeladen von ${newConfig.user}`);
 
         // Reset inputs
         _selectedConfigFile = null;
@@ -7413,7 +7413,7 @@ async function saveEditedConfig() {
     showToast("Cloud-Sync Fehler: " + e.message, "err");
   } finally {
     saveBtn.disabled = false;
-    saveBtn.textContent = "&#128190; &#196;NDERUNGEN SPEICHERN";
+    saveBtn.textContent = "&#128190; \u00c4NDERUNGEN SPEICHERN";
   }
 }
 
@@ -7489,7 +7489,7 @@ function previewConfig(configId) {
       if(content) content.value = decoded;
     }
   } catch(_) {
-    if(content) content.value = "[Vorschau nicht verf&#252;gbar. Bitte Download nutzen!]";
+    if(content) content.value = "[Vorschau nicht verf\u00fcgbar. Bitte Download nutzen!]";
   }
 
   if(modal) modal.style.display = "flex";
@@ -7514,23 +7514,23 @@ async function deleteUserConfig(configId) {
 
   const canDelete = CURRENT_USER.is_admin || (cfg.user === CURRENT_USER.name) || (CURRENT_USER.key && cfg.key === CURRENT_USER.key);
   if(!canDelete) {
-    alert("Du kannst nur deine eigenen Configs l&#246;schen!");
+    alert("Du kannst nur deine eigenen Configs l\u00f6schen!");
     return;
   }
 
-  if(!confirm(`M&#246;chtest du die Config "${cfg.name || cfg.filename}" wirklich l&#246;schen?`)) return;
+  if(!confirm(`M\u00f6chtest du die Config "${cfg.name || cfg.filename}" wirklich l\u00f6schen?`)) return;
 
   ALL_CONFIGS = ALL_CONFIGS.filter(c => c.id !== configId);
   try { localStorage.setItem("hyschool_configs_cache", JSON.stringify(ALL_CONFIGS)); } catch(_) {}
   filterUserConfigs();
-  showToast("Config gel&#246;scht!", "ok");
+  showToast("Config gel\u00f6scht!", "ok");
 
   try {
     const token = getToken();
     const fullJson = JSON.stringify(ALL_CONFIGS, null, 2);
     const finalB64 = utf8_to_b64(fullJson);
     await uploadFileToGitHub("configs.json", finalB64, `Delete Config: [${cfg.user}] ${cfg.name}`);
-    logADMINAction("CONFIG_DELETED", cfg.filename, `Config "${cfg.name}" wurde gel&#246;scht`);
+    logADMINAction("CONFIG_DELETED", cfg.filename, `Config "${cfg.name}" wurde gel\u00f6scht`);
   } catch(e) {
     showToast("Cloud-Sync Fehler: " + e.message, "err");
   }
@@ -7615,30 +7615,30 @@ function getRankBadge(username, userRank, allowMultiple = false, includeName = f
       if (!r) continue;
       r = String(r).toLowerCase().trim();
       if (r === "admin" || r === "inhaber") {
-        html += '<span class="badge-rank badge-rank-admin">&#128081; INHABER' + nameSuffix + '</span>';
+        html += '<span class="badge-rank badge-rank-admin">\uD83D\uDC51 INHABER' + nameSuffix + '</span>';
       } else if (r === "co-admin" || r.includes("co-admin") || r === "coadmin") {
-        html += '<span class="badge-rank badge-rank-coadmin">&#128737;&#65039; CO-ADMIN' + nameSuffix + '</span>';
+        html += '<span class="badge-rank badge-rank-coadmin">\uD83D\uDEE1\uFE0F CO-ADMIN' + nameSuffix + '</span>';
       } else if (r === "developer" || r.includes("dev")) {
-        html += '<span class="badge-rank badge-rank-dev">&#128187; DEVELOPER' + nameSuffix + '</span>';
+        html += '<span class="badge-rank badge-rank-dev">\uD83D\uDCBB DEVELOPER' + nameSuffix + '</span>';
       } else if (r === "moderator" || r.includes("mod")) {
-        html += '<span class="badge-rank badge-rank-mod">&#128737;&#65039; MODERATOR' + nameSuffix + '</span>';
+        html += '<span class="badge-rank badge-rank-mod">\uD83D\uDEE1\uFE0F MODERATOR' + nameSuffix + '</span>';
       } else if (r === "supporter" || r.includes("support")) {
-        html += '<span class="badge-rank badge-rank-supporter">&#129489; SUPPORTER' + nameSuffix + '</span>';
+        html += '<span class="badge-rank badge-rank-supporter">\uD83E\uDDD1 SUPPORTER' + nameSuffix + '</span>';
       } else if (r === "elite") {
-        html += '<span class="badge-rank badge-rank-elite">&#9889; ELITE' + nameSuffix + '</span>';
+        html += '<span class="badge-rank badge-rank-elite">\u26A1 ELITE' + nameSuffix + '</span>';
       } else if (r === "vip") {
-        html += '<span class="badge-rank badge-rank-vip">&#11088; VIP' + nameSuffix + '</span>';
+        html += '<span class="badge-rank badge-rank-vip">\u2B50 VIP' + nameSuffix + '</span>';
       } else if (r === "donator" || r.includes("donat")) {
-        html += '<span class="badge-rank badge-rank-donator">&#128150; DONATOR' + nameSuffix + '</span>';
+        html += '<span class="badge-rank badge-rank-donator">\uD83D\uDC96 DONATOR' + nameSuffix + '</span>';
       } else if (r === "premium" || r === "kunde") {
-        html += '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM' + nameSuffix + '</span>';
+        html += '<span class="badge-rank badge-rank-premium">\uD83D\uDC8E PREMIUM' + nameSuffix + '</span>';
       } else {
-        html += '<span class="badge-rank badge-rank-premium">&#128142; ' + escapeHtml(r.toUpperCase()) + nameSuffix + '</span>';
+        html += '<span class="badge-rank badge-rank-premium">\uD83D\uDC8E ' + escapeHtml(r.toUpperCase()) + nameSuffix + '</span>';
       }
     }
-    return html.trim() || ('<span class="badge-rank badge-rank-premium">&#128142; PREMIUM' + nameSuffix + '</span>');
+    return html.trim() || ('<span class="badge-rank badge-rank-premium">\uD83D\uDC8E PREMIUM' + nameSuffix + '</span>');
   } catch(e) {
-    return '<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>';
+    return '<span class="badge-rank badge-rank-premium">\uD83D\uDC8E PREMIUM</span>';
   }
 }
 
@@ -7652,13 +7652,13 @@ function onHighlightFileSelected(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
     if(file.size > 28 * 1024 * 1024) {
-      alert("Video-Datei ist zu gro&#223; f&#252;r Direkt-Upload (Max 25MB). Bitte nutze einen YouTube/Medal/Streamable Link!");
+      alert("Video-Datei ist zu gro\u00df f\u00fcr Direkt-Upload (Max 25MB). Bitte nutze einen YouTube/Medal/Streamable Link!");
       input.value = "";
       return;
     }
     _uploadedHighlightFile = file;
-    document.getElementById("hl-drop-label").textContent = "&#127916; " + file.name;
-    document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB gew&#228;hlt";
+    document.getElementById("hl-drop-label").textContent = "\uD83C\uDFAC " + file.name;
+    document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB gew\u00e4hlt";
     document.getElementById("hl-upload-url").value = "";
   }
 }
@@ -7669,11 +7669,11 @@ function handleHighlightFileDrop(e) {
   if (e.dataTransfer.files && e.dataTransfer.files[0]) {
     const file = e.dataTransfer.files[0];
     if(file.size > 28 * 1024 * 1024) {
-      alert("Video-Datei ist zu gro&#223; (Max 25MB)!");
+      alert("Video-Datei ist zu gro\u00df (Max 25MB)!");
       return;
     }
     _uploadedHighlightFile = file;
-    document.getElementById("hl-drop-label").textContent = "&#127916; " + file.name;
+    document.getElementById("hl-drop-label").textContent = "\uD83C\uDFAC " + file.name;
     document.getElementById("hl-drop-sublabel").textContent = (file.size / (1024*1024)).toFixed(1) + " MB abgelegt";
     document.getElementById("hl-upload-url").value = "";
   }
@@ -7682,7 +7682,7 @@ function handleHighlightFileDrop(e) {
 function onHighlightUrlChanged(val) {
   if(val && val.trim()) {
     _uploadedHighlightFile = null;
-    document.getElementById("hl-drop-label").textContent = "&#127916; Video hier ablegen oder klicken";
+    document.getElementById("hl-drop-label").textContent = "\uD83C\uDFAC Video hier ablegen oder klicken";
     document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (fÃ¼r grÃ¶ÃŸere Clips bitte Link nutzen)";
   }
 }
@@ -7695,8 +7695,8 @@ async function uploadHighlightClip() {
   const isCensored = document.getElementById("hl-censor-name-cb").checked;
   const file = _uploadedHighlightFile;
 
-  if(!title) { alert("Bitte gib einen Titel f&#252;r das Highlight ein!"); return; }
-  if(!urlInput && !file) { alert("Bitte gib einen Video-Link ein oder w&#228;hle eine Videodatei aus!"); return; }
+  if(!title) { alert("Bitte gib einen Titel f\u00fcr das Highlight ein!"); return; }
+  if(!urlInput && !file) { alert("Bitte gib einen Video-Link ein oder w\u00e4hle eine Videodatei aus!"); return; }
 
   const btn = document.getElementById("hl-submit-btn");
   const progWrap = document.getElementById("hl-prog-wrap");
@@ -7742,7 +7742,7 @@ async function uploadHighlightClip() {
       desc: desc || "Keine Beschreibung",
       author: CURRENT_USER.name,
       isCensored: isCensored,
-      censoredName: "[Zensiert &#128274;]",
+      censoredName: "[Zensiert \uD83D\uDD12]",
       rank: CURRENT_USER.role ? CURRENT_USER.role.toLowerCase() : "ADMIN",
       isUserClip: !CURRENT_USER.is_admin,
       videoUrl: videoUrl,
@@ -7761,21 +7761,21 @@ async function uploadHighlightClip() {
       await uploadFileToGitHub("highlights.json", finalB64, "Upload Highlight: [" + CURRENT_USER.name + "] " + title);
 
       progFill.style.width = "100%";
-      progLbl.textContent = "Highlight erfolgreich ver&#246;ffentlicht!";
-      showToast("Highlight \"" + title + "\" ver&#246;ffentlicht!", "ok");
+      progLbl.textContent = "Highlight erfolgreich ver\u00f6ffentlicht!";
+      showToast("Highlight \"" + title + "\" ver\u00f6ffentlicht!", "ok");
 
       document.getElementById("hl-upload-title").value = "";
       document.getElementById("hl-upload-desc").value = "";
       document.getElementById("hl-upload-url").value = "";
       document.getElementById("hl-file-input").value = "";
       document.getElementById("hl-censor-name-cb").checked = false;
-      document.getElementById("hl-drop-label").textContent = "&#127916; Video hier ablegen oder klicken";
+      document.getElementById("hl-drop-label").textContent = "\uD83C\uDFAC Video hier ablegen oder klicken";
       document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (fÃ¼r grÃ¶ÃŸere Clips bitte Link nutzen)";
       _uploadedHighlightFile = null;
             toggleHighlightUploadCard();
     } catch(err) {
       console.error(err);
-      showToast("Fehler beim Ver&#246;ffentlichen: " + err.message, "err");
+      showToast("Fehler beim Ver\u00f6ffentlichen: " + err.message, "err");
     } finally {
       setTimeout(() => {
         progWrap.style.display = "none";
@@ -7821,11 +7821,11 @@ async function deleteHighlight(highlightId) {
   const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
   if(!h) return;
 
-  if(!confirm("M&#246;chtest du das Highlight \"" + h.title + "\" wirklich l&#246;schen?")) return;
+  if(!confirm("M\u00f6chtest du das Highlight \"" + h.title + "\" wirklich l\u00f6schen?")) return;
 
   ALL_HIGHLIGHTS = ALL_HIGHLIGHTS.filter(item => item.id !== highlightId);
   filterHighlights();
-  showToast("Highlight gel&#246;scht!", "ok");
+  showToast("Highlight gel\u00f6scht!", "ok");
 
   try {
     const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
@@ -7898,7 +7898,7 @@ function closeHighlightPlayerModal() {
 async function loadHighlights(silent = false, manualToast = false) {
   const container = document.getElementById("highlights-grid-container");
   if(container && !silent && ALL_HIGHLIGHTS.length === 0) {
-    container.innerHTML = `<div style="grid-column: 1/-1;text-align:center;color:#e5a93c;padding:40px;font-size:12px;">&#127916; Lade Highlight Clips...</div>`;
+    container.innerHTML = `<div style="grid-column: 1/-1;text-align:center;color:#e5a93c;padding:40px;font-size:12px;">\uD83C\uDFAC Lade Highlight Clips...</div>`;
   }
 
   const token = getToken();
@@ -7984,7 +7984,7 @@ function _makeHlCard(h) {
   }
   const likeStyle = hasLiked ? 'background:rgba(244,63,94,0.2);color:#f43f5e;border-color:#f43f5e;' : '';
   const likeIcon = hasLiked ? '&#10084;&#65039;' : '&#129293;';
-  const deleteBtn = isOwn ? '<button onclick="deleteHighlight(\'' + h.id + '\')" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:4px 8px;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;">&#128465;&#65039;</button>' : '';
+  const deleteBtn = isOwn ? '<button onclick="deleteHighlight(\'' + h.id + '\')" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:4px 8px;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;">\uD83D\uDDD1&#65039;</button>' : '';
   const profileClick = 'onclick="openUserProfileModal(\'' + escapeHtml(h.author) + '\')"';
   const rankHtml = getRankBadge(h.author, h.rank);
 
@@ -8113,7 +8113,7 @@ function filterHighlights() {
           + "</div>";
       });
       html += "<div onclick=\"var s=document.getElementById('hl-channel-filter');if(s){s.value='all';filterHighlights();}\" style=\"display:flex;align-items:center;gap:6px;background:"+(channelFilter&&channelFilter.value==='all'?"rgba(56,189,248,0.1)":"#0d0f1a")+";border:1px solid "+(channelFilter&&channelFilter.value==='all'?"rgba(56,189,248,0.5)":"#1a2030")+";border-radius:50px;padding:6px 14px;cursor:pointer;transition:.2s;\">"
-        + "<span style=\"font-size:11px;font-weight:900;color:"+(channelFilter&&channelFilter.value==='all'?"#38bdf8":"#64748b")+";\">&#127916; ALLE</span>"
+        + "<span style=\"font-size:11px;font-weight:900;color:"+(channelFilter&&channelFilter.value==='all'?"#38bdf8":"#64748b")+";\">\uD83C\uDFAC ALLE</span>"
         + "</div>";
       channelTabsEl.innerHTML = html;
     } else {
@@ -8123,7 +8123,7 @@ function filterHighlights() {
 
   // ---- MAIN GRID ----
   if(filtered.length === 0) {
-    container.innerHTML = "<div style=\"grid-column:1/-1;text-align:center;color:#64748b;padding:60px 20px;font-size:12px;\"><div style=\"font-size:40px;margin-bottom:16px;\">&#127916;</div><div style=\"font-size:14px;font-weight:900;color:#374151;margin-bottom:8px;\">Keine Clips gefunden</div><div>Sei der Erste und lade einen Clip hoch!</div></div>";
+    container.innerHTML = "<div style=\"grid-column:1/-1;text-align:center;color:#64748b;padding:60px 20px;font-size:12px;\"><div style=\"font-size:40px;margin-bottom:16px;\">\uD83C\uDFAC</div><div style=\"font-size:14px;font-weight:900;color:#374151;margin-bottom:8px;\">Keine Clips gefunden</div><div>Sei der Erste und lade einen Clip hoch!</div></div>";
   } else {
     container.innerHTML = filtered.map(h => _makeHlCard(h)).join("");
   }
@@ -8334,7 +8334,7 @@ function renderADMINTicketsList() {
                 </div>
                 
                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-                  <div style="width:16px;height:16px;border-radius:4px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:9px;">&#127915;</div>
+                  <div style="width:16px;height:16px;border-radius:4px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:9px;">\uD83C\uDF9F</div>
                   <span style="font-size:11px;color:#94a3b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;"><b style="color:#e2e8f0;">${escapeHtml(t.customerName || 'Kunde')}</b>: ${escapeHtml(t.description || '')}</span>
                 </div>
                 
@@ -8395,13 +8395,13 @@ function renderActiveADMINTicketRoom(t) {
     if (btnClaim && btnClose) {
         if (t.status === 'closed') {
             btnClaim.style.display = 'none';
-            btnClose.innerHTML = '&#128275; WIEDER &#214;FFNEN';
+            btnClose.innerHTML = '\uD83D\uDD13 WIEDER \u00d6FFNEN';
             btnClose.style.background = 'rgba(16,185,129,0.15)';
             btnClose.style.borderColor = 'rgba(16,185,129,0.4)';
             btnClose.style.color = '#10b981';
         } else {
             btnClaim.style.display = t.assignedTo ? 'none' : 'inline-block';
-            btnClose.innerHTML = '&#128274; TICKET SCHLIE&#223;EN';
+            btnClose.innerHTML = '\uD83D\uDD12 TICKET SCHLIE\u00dfEN';
             btnClose.style.background = 'rgba(244,63,94,0.15)';
             btnClose.style.borderColor = 'rgba(244,63,94,0.4)';
             btnClose.style.color = '#f43f5e';
@@ -8494,7 +8494,7 @@ async function claimCurrentTicket() {
     t.messages.push({
         sender: myName,
         role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben Ã¼bernommen. Wie kann ich dir heute weiterhelfen? &#128075;`,
+        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben Ã¼bernommen. Wie kann ich dir heute weiterhelfen? \uD83D\uDC4B`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now()
     });
