@@ -3636,10 +3636,15 @@ function applyUserPermissions() {
   const dashImg = document.getElementById("dash-avatar-img");
 
   const prof = getUserProfile(CURRENT_USER.name) || getUserProfile("ADMIN") || {};
-  const savedAvatar = localStorage.getItem("hyschool_admin_avatar") || prof.avatar;
-  if(dashImg) dashImg.src = savedAvatar || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN";
+  // Per-user avatar: admin gets their own key, staff each get their own key by username
+  const savedAvatar = CURRENT_USER.is_admin
+    ? (localStorage.getItem("hyschool_admin_avatar") || prof.avatar)
+    : (localStorage.getItem("hyschool_avatar_" + CURRENT_USER.name) || prof.avatar);
+  const defaultSeed = CURRENT_USER.is_admin ? "ADMIN" : encodeURIComponent(CURRENT_USER.name || "User");
+  if(dashImg) dashImg.src = savedAvatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${defaultSeed}`;
   const headerAvatarEl = document.getElementById("header-user-avatar");
-  if(headerAvatarEl) headerAvatarEl.src = savedAvatar || (typeof getAvatarUrl === 'function' ? getAvatarUrl(CURRENT_USER.name || "ADMIN") : "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN");
+  if(headerAvatarEl) headerAvatarEl.src = savedAvatar || (typeof getAvatarUrl === 'function' ? getAvatarUrl(CURRENT_USER.name || "ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${defaultSeed}`);
+
 
   if(dashUser) dashUser.textContent = CURRENT_USER.is_admin ? "ADMIN" : CURRENT_USER.name;
   if(dashRole) dashRole.innerHTML = getRankBadge(CURRENT_USER.name, CURRENT_USER.role);
