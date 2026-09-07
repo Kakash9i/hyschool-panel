@@ -1382,22 +1382,6 @@
         <span>&#129489; Team verwalten</span>
         <label class="toggle"><input type="checkbox" id="sp-staff"><span class="slider"></span></label>
       </div>
-      <div class="perm-item">
-        <span>&#128172; Chat nutzen</span>
-        <label class="toggle"><input type="checkbox" id="sp-chat"><span class="slider"></span></label>
-      </div>
-      <div class="perm-item">
-        <span>&#128193; User Config's</span>
-        <label class="toggle"><input type="checkbox" id="sp-configs"><span class="slider"></span></label>
-      </div>
-      <div class="perm-item">
-        <span>&#127916; Highlights ansehen</span>
-        <label class="toggle"><input type="checkbox" id="sp-highlights"><span class="slider"></span></label>
-      </div>
-      <div class="perm-item">
-        <span>&#128269; User-Suche</span>
-        <label class="toggle"><input type="checkbox" id="sp-search"><span class="slider"></span></label>
-      </div>
       
       <div class="perm-item" style="grid-column: 1 / -1; display:flex; flex-direction:column; align-items:flex-start; gap:8px;">
         <div style="font-weight:900;font-size:11px;color:#e5a93c;">&#128081; DARF FOLGENDE ROLLEN VERGEBEN:</div>
@@ -3451,29 +3435,29 @@ function applyUserPermissions() {
   const mtab8 = document.getElementById("mtab-8");
   const mtab9 = document.getElementById("mtab-9");
 
-  if(CURRENT_USER.is_customer) {
-    if(mtab0) mtab0.style.display = "none";
-    if(mtab1) mtab1.style.display = "none";
-    if(mtab2) mtab2.style.display = "none";
-    if(mtab3) mtab3.style.display = "none";
-    if(mtab4) mtab4.style.display = "none";
-    if(mtab5) mtab5.style.display = "none";
-    if(mtab6) mtab6.style.display = "inline-flex";
-    if(mtab7) mtab7.style.display = "inline-flex";
-    if(mtab8) mtab8.style.display = "inline-flex";
-    if(mtab9) mtab9.style.display = "inline-flex";
+  function _showTab(el) { if(el) { el.style.setProperty("display","inline-flex","important"); } }
+  function _hideTab(el) { if(el) { el.style.setProperty("display","none","important"); } }
+
+  // Tabs 6-9 ALWAYS visible for EVERYONE — no permission needed
+  _showTab(mtab6);
+  _showTab(mtab7);
+  _showTab(mtab8);
+  _showTab(mtab9);
+
+  if(CURRENT_USER.is_admin) {
+    _showTab(mtab0); _showTab(mtab1); _showTab(mtab2); _showTab(mtab3); _showTab(mtab4); _showTab(mtab5);
+  } else if(CURRENT_USER.is_customer) {
+    _hideTab(mtab0); _hideTab(mtab1); _hideTab(mtab2); _hideTab(mtab3); _hideTab(mtab4); _hideTab(mtab5);
   } else {
-    if(mtab0) mtab0.style.display = (CURRENT_USER.is_admin || p.can_manage_cheats === true) ? "inline-flex" : "none";
-    if(mtab1) mtab1.style.display = (CURRENT_USER.is_admin || p.can_manage_cheats === true) ? "inline-flex" : "none";
-    if(mtab2) mtab2.style.display = (CURRENT_USER.is_admin || p.can_view_logs === true) ? "inline-flex" : "none";
-    if(mtab3) mtab3.style.display = (CURRENT_USER.is_admin || p.can_generate_keys === true || p.can_edit_keys === true || p.can_pause_keys === true || p.can_reset_hwid === true || p.can_delete_keys === true) ? "inline-flex" : "none";
-    if(mtab4) mtab4.style.display = (CURRENT_USER.is_admin || p.can_manage_staff === true) ? "inline-flex" : "none";
-    if(mtab5) mtab5.style.display = CURRENT_USER.is_admin ? "inline-flex" : "none";
-    if(mtab6) mtab6.style.display = "inline-flex";
-    if(mtab7) mtab7.style.display = "inline-flex";
-    if(mtab8) mtab8.style.display = "inline-flex";
-    if(mtab9) mtab9.style.display = "inline-flex";
+    // Staff: only show tab if they have the specific permission
+    (p.can_manage_cheats === true) ? _showTab(mtab0) : _hideTab(mtab0);
+    (p.can_manage_cheats === true) ? _showTab(mtab1) : _hideTab(mtab1);
+    (p.can_view_logs === true)     ? _showTab(mtab2) : _hideTab(mtab2);
+    (p.can_generate_keys || p.can_edit_keys || p.can_pause_keys || p.can_reset_hwid || p.can_delete_keys) ? _showTab(mtab3) : _hideTab(mtab3);
+    (p.can_manage_staff === true)  ? _showTab(mtab4) : _hideTab(mtab4);
+    _hideTab(mtab5); // ADMIN AUDIT LOGS: inhaber only
   }
+
 
   // Cheat Permissions subtab button: visible for ADMIN OR Staff with Cheat-Product edit permission
   const btnSubPerm = document.getElementById("btn-sub-perm");
@@ -6035,10 +6019,6 @@ function openStaffModal(idx = -1) {
     document.getElementById("sp-cheat").checked = !!p.can_manage_cheats;
     document.getElementById("sp-logs").checked = !!p.can_view_logs;
     document.getElementById("sp-staff").checked = !!p.can_manage_staff;
-    if(document.getElementById("sp-chat")) document.getElementById("sp-chat").checked = !!p.can_use_chat;
-    if(document.getElementById("sp-configs")) document.getElementById("sp-configs").checked = !!p.can_manage_configs;
-    if(document.getElementById("sp-highlights")) document.getElementById("sp-highlights").checked = !!p.can_view_highlights;
-    if(document.getElementById("sp-search")) document.getElementById("sp-search").checked = !!p.can_search_users;
     const assignable = p.assignable_roles || [];
     document.querySelectorAll(".assign-role-cb").forEach(cb => {
       cb.checked = assignable.includes(cb.value.toLowerCase());
@@ -6121,10 +6101,6 @@ async function saveStaffModal() {
       can_manage_cheats: document.getElementById("sp-cheat").checked,
       can_view_logs: document.getElementById("sp-logs").checked,
       can_manage_staff: document.getElementById("sp-staff").checked,
-      can_use_chat: document.getElementById("sp-chat") ? document.getElementById("sp-chat").checked : false,
-      can_manage_configs: document.getElementById("sp-configs") ? document.getElementById("sp-configs").checked : false,
-      can_view_highlights: document.getElementById("sp-highlights") ? document.getElementById("sp-highlights").checked : false,
-      can_search_users: document.getElementById("sp-search") ? document.getElementById("sp-search").checked : false,
       assignable_roles: Array.from(document.querySelectorAll(".assign-role-cb:checked")).map(cb => cb.value.toLowerCase())
     }
   };
