@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -1381,6 +1381,22 @@
       <div class="perm-item" style="grid-column: 1 / -1;">
         <span>&#129489; Team verwalten</span>
         <label class="toggle"><input type="checkbox" id="sp-staff"><span class="slider"></span></label>
+      </div>
+      <div class="perm-item">
+        <span>&#128172; Chat nutzen</span>
+        <label class="toggle"><input type="checkbox" id="sp-chat"><span class="slider"></span></label>
+      </div>
+      <div class="perm-item">
+        <span>&#128193; User Config's</span>
+        <label class="toggle"><input type="checkbox" id="sp-configs"><span class="slider"></span></label>
+      </div>
+      <div class="perm-item">
+        <span>&#127916; Highlights ansehen</span>
+        <label class="toggle"><input type="checkbox" id="sp-highlights"><span class="slider"></span></label>
+      </div>
+      <div class="perm-item">
+        <span>&#128269; User-Suche</span>
+        <label class="toggle"><input type="checkbox" id="sp-search"><span class="slider"></span></label>
       </div>
       
       <div class="perm-item" style="grid-column: 1 / -1; display:flex; flex-direction:column; align-items:flex-start; gap:8px;">
@@ -3332,10 +3348,9 @@ function handleLoginSuccess(user, pass) {
   if(CURRENT_USER.is_customer) {
     initialTab = 7;
   } else if(!CURRENT_USER.is_admin) {
-    if(CURRENT_USER.permissions && (CURRENT_USER.permissions.can_generate_keys || CURRENT_USER.permissions.can_edit_keys)) initialTab = 3;
-    else if(CURRENT_USER.permissions && CURRENT_USER.permissions.can_view_logs) initialTab = 2;
-    else if(CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_cheats) initialTab = 0;
-    else initialTab = 6;
+    const tabPriority = [3, 2, 0, 1, 4, 6, 7, 8, 9];
+    const found = tabPriority.find(t => canUserAccessTab(t));
+    initialTab = (found !== undefined) ? found : 3;
   }
   try { switchMainTab(initialTab); } catch(e) { console.error("switchMainTab err:", e); }
 
@@ -3431,9 +3446,10 @@ function applyUserPermissions() {
   const mtab3 = document.getElementById("mtab-3");
   const mtab4 = document.getElementById("mtab-4");
   const mtab5 = document.getElementById("mtab-5");
-    const mtab6 = document.getElementById("mtab-6");
+  const mtab6 = document.getElementById("mtab-6");
   const mtab7 = document.getElementById("mtab-7");
   const mtab8 = document.getElementById("mtab-8");
+  const mtab9 = document.getElementById("mtab-9");
 
   if(CURRENT_USER.is_customer) {
     if(mtab0) mtab0.style.display = "none";
@@ -3445,16 +3461,18 @@ function applyUserPermissions() {
     if(mtab6) mtab6.style.display = "inline-flex";
     if(mtab7) mtab7.style.display = "inline-flex";
     if(mtab8) mtab8.style.display = "inline-flex";
+    if(mtab9) mtab9.style.display = "inline-flex";
   } else {
-    if(mtab0) mtab0.style.display = (CURRENT_USER.is_admin || p.can_manage_cheats) ? "inline-flex" : "none";
-    if(mtab1) mtab1.style.display = (CURRENT_USER.is_admin || p.can_manage_cheats) ? "inline-flex" : "none";
-    if(mtab2) mtab2.style.display = (CURRENT_USER.is_admin || p.can_view_logs) ? "inline-flex" : "none";
-    if(mtab3) mtab3.style.display = (CURRENT_USER.is_admin || p.can_generate_keys || p.can_edit_keys) ? "inline-flex" : "none";
-    if(mtab4) mtab4.style.display = (CURRENT_USER.is_admin || p.can_manage_staff) ? "inline-flex" : "none";
+    if(mtab0) mtab0.style.display = (CURRENT_USER.is_admin || p.can_manage_cheats === true) ? "inline-flex" : "none";
+    if(mtab1) mtab1.style.display = (CURRENT_USER.is_admin || p.can_manage_cheats === true) ? "inline-flex" : "none";
+    if(mtab2) mtab2.style.display = (CURRENT_USER.is_admin || p.can_view_logs === true) ? "inline-flex" : "none";
+    if(mtab3) mtab3.style.display = (CURRENT_USER.is_admin || p.can_generate_keys === true || p.can_edit_keys === true || p.can_pause_keys === true || p.can_reset_hwid === true || p.can_delete_keys === true) ? "inline-flex" : "none";
+    if(mtab4) mtab4.style.display = (CURRENT_USER.is_admin || p.can_manage_staff === true) ? "inline-flex" : "none";
     if(mtab5) mtab5.style.display = CURRENT_USER.is_admin ? "inline-flex" : "none";
     if(mtab6) mtab6.style.display = "inline-flex";
     if(mtab7) mtab7.style.display = "inline-flex";
     if(mtab8) mtab8.style.display = "inline-flex";
+    if(mtab9) mtab9.style.display = "inline-flex";
   }
 
   // Cheat Permissions subtab button: visible for ADMIN OR Staff with Cheat-Product edit permission
@@ -3645,7 +3663,35 @@ function buildCheatsUI() {
   `).join("");
 }
 
+function canUserAccessTab(idx) {
+  if(!CURRENT_USER) return false;
+  if(CURRENT_USER.is_admin) return true;
+  const p = CURRENT_USER.permissions || {};
+  if(CURRENT_USER.is_customer) {
+    return [6, 7, 8, 9].includes(idx);
+  }
+  // Staff account validation
+  switch(idx) {
+    case 0: return !!p.can_manage_cheats;
+    case 1: return !!p.can_manage_cheats;
+    case 2: return !!p.can_view_logs;
+    case 3: return !!(p.can_generate_keys || p.can_edit_keys || p.can_pause_keys || p.can_reset_hwid || p.can_delete_keys);
+    case 4: return !!p.can_manage_staff;
+    case 5: return false; // Inhaber only
+    case 6: return true; // Chat
+    case 7: return true; // User Configs
+    case 8: return true; // Highlights
+    case 9: return true; // Suchen
+    default: return false;
+  }
+}
+
 function switchMainTab(idx) {
+  if(!canUserAccessTab(idx)) {
+    showToast("Keine Berechtigung f\u00fcr diesen Bereich!", "err");
+    return;
+  }
+
   document.querySelectorAll(".main-tab").forEach((t, i) => t.classList.toggle("active", i === idx));
   document.querySelectorAll(".tab-content").forEach((t, i) => t.classList.toggle("active", i === idx));
 
@@ -5989,6 +6035,10 @@ function openStaffModal(idx = -1) {
     document.getElementById("sp-cheat").checked = !!p.can_manage_cheats;
     document.getElementById("sp-logs").checked = !!p.can_view_logs;
     document.getElementById("sp-staff").checked = !!p.can_manage_staff;
+    if(document.getElementById("sp-chat")) document.getElementById("sp-chat").checked = !!p.can_use_chat;
+    if(document.getElementById("sp-configs")) document.getElementById("sp-configs").checked = !!p.can_manage_configs;
+    if(document.getElementById("sp-highlights")) document.getElementById("sp-highlights").checked = !!p.can_view_highlights;
+    if(document.getElementById("sp-search")) document.getElementById("sp-search").checked = !!p.can_search_users;
     const assignable = p.assignable_roles || [];
     document.querySelectorAll(".assign-role-cb").forEach(cb => {
       cb.checked = assignable.includes(cb.value.toLowerCase());
@@ -6022,6 +6072,10 @@ function openStaffModal(idx = -1) {
     document.getElementById("sp-cheat").checked = false;
     document.getElementById("sp-logs").checked = true;
     document.getElementById("sp-staff").checked = false;
+    if(document.getElementById("sp-chat")) document.getElementById("sp-chat").checked = false;
+    if(document.getElementById("sp-configs")) document.getElementById("sp-configs").checked = false;
+    if(document.getElementById("sp-highlights")) document.getElementById("sp-highlights").checked = false;
+    if(document.getElementById("sp-search")) document.getElementById("sp-search").checked = false;
     document.querySelectorAll(".assign-role-cb").forEach(cb => {
       cb.checked = false;
       cb.parentElement.classList.remove("active");
@@ -6067,6 +6121,10 @@ async function saveStaffModal() {
       can_manage_cheats: document.getElementById("sp-cheat").checked,
       can_view_logs: document.getElementById("sp-logs").checked,
       can_manage_staff: document.getElementById("sp-staff").checked,
+      can_use_chat: document.getElementById("sp-chat") ? document.getElementById("sp-chat").checked : false,
+      can_manage_configs: document.getElementById("sp-configs") ? document.getElementById("sp-configs").checked : false,
+      can_view_highlights: document.getElementById("sp-highlights") ? document.getElementById("sp-highlights").checked : false,
+      can_search_users: document.getElementById("sp-search") ? document.getElementById("sp-search").checked : false,
       assignable_roles: Array.from(document.querySelectorAll(".assign-role-cb:checked")).map(cb => cb.value.toLowerCase())
     }
   };
