@@ -2433,36 +2433,69 @@
 </div>
 
 <!-- CUSTOM ROLE CREATE / EDIT MODAL POPUP -->
-<div id="custom-role-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999999;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px;">
-  <div style="background:linear-gradient(165deg, #121624 0%, #080a10 100%);border:1px solid #e5a93c;border-radius:14px;padding:26px 30px;width:480px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.9);position:relative;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+<div id="custom-role-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:999999;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px;">
+  <div style="background:linear-gradient(165deg, #121624 0%, #080a10 100%);border:1px solid #e5a93c;border-radius:14px;padding:24px 28px;width:500px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.9);position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <h3 id="custom-role-modal-title" style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
         <span style="color:#e5a93c;">&#128081;</span> NEUE ROLLE ERSTELLEN
       </h3>
       <button type="button" onclick="closeCustomRoleModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
     </div>
     <input type="hidden" id="custom-role-orig-id" value="" />
-    <div class="modal-field-group" style="margin-bottom:12px;">
-      <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">ROLLEN ID (EINZIGARTIG, Z.B. vip_gold)</label>
-      <input type="text" id="custom-role-id" placeholder="z.B. vip_gold" style="background:#090a0f;border:1px solid #1f2538;color:#e5a93c;padding:10px 14px;border-radius:6px;width:100%;font-size:12px;font-weight:800;outline:none;box-sizing:border-box;" />
-    </div>
-    <div class="modal-field-group" style="margin-bottom:12px;">
-      <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">NAME DER ROLLE</label>
-      <input type="text" id="custom-role-name" placeholder="z.B. VIP GOLD" style="background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:10px 14px;border-radius:6px;width:100%;font-size:12px;outline:none;box-sizing:border-box;" />
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
       <div class="modal-field-group" style="margin-bottom:0;">
-        <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">ICON / EMOJI</label>
-        <input type="text" id="custom-role-icon" placeholder="z.B. &#11088; oder &#128081;" value="&#11088;" style="background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:10px 14px;border-radius:6px;width:100%;font-size:12px;outline:none;box-sizing:border-box;" />
+        <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">ROLLEN ID (Z.B. vip_gold)</label>
+        <input type="text" id="custom-role-id" placeholder="z.B. vip_gold" oninput="updateCustomRolePreview()" style="background:#090a0f;border:1px solid #1f2538;color:#e5a93c;padding:10px 12px;border-radius:6px;width:100%;font-size:12px;font-weight:800;outline:none;box-sizing:border-box;" />
       </div>
       <div class="modal-field-group" style="margin-bottom:0;">
-        <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">FARBE (HEX / FARBCODE)</label>
-        <input type="text" id="custom-role-color" placeholder="z.B. #fbbf24" value="#fbbf24" style="background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:10px 14px;border-radius:6px;width:100%;font-size:12px;outline:none;box-sizing:border-box;" />
+        <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">NAME DER ROLLE</label>
+        <input type="text" id="custom-role-name" placeholder="z.B. VIP GOLD" oninput="updateCustomRolePreview()" style="background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:10px 12px;border-radius:6px;width:100%;font-size:12px;outline:none;box-sizing:border-box;" />
       </div>
     </div>
-    <div style="display:flex;gap:10px;margin-top:20px;">
-      <button type="button" onclick="saveCustomRoleSubmit()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128190; ROLLE SPEICHERN &amp; PUSHEN</button>
-      <button type="button" onclick="closeCustomRoleModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Abbrechen</button>
+
+    <!-- ICON SELECTION & UPLOAD -->
+    <div class="modal-field-group" style="margin-bottom:12px;background:#090c15;padding:12px;border-radius:8px;border:1px solid #1a2234;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <label style="font-size:10px;color:#94a3b8;font-weight:700;display:block;margin:0;">ICON / BILD AUSW&#196;HLEN</label>
+        <label style="background:rgba(229,169,60,0.15);border:1px solid rgba(229,169,60,0.4);color:#e5a93c;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+          <span>&#128193;</span> ICON BILD HOCHLADEN
+          <input type="file" id="custom-role-icon-file" accept="image/*" style="display:none;" onchange="handleCustomRoleIconUpload(event)">
+        </label>
+      </div>
+      
+      <!-- Quick Emoji Palette -->
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;" id="role-emoji-palette"></div>
+      
+      <!-- Current Icon Display & Manual input -->
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div id="role-icon-preview-box" style="width:34px;height:34px;background:#111522;border:1px solid #232c42;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;overflow:hidden;flex-shrink:0;">
+          &#11088;
+        </div>
+        <input type="text" id="custom-role-icon" placeholder="Icon / Emoji / DataURL" value="&#11088;" oninput="updateRoleIconFromInput(this.value)" style="flex:1;background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:8px 12px;border-radius:6px;font-size:11px;outline:none;" />
+      </div>
+    </div>
+
+    <!-- COLOR SELECTION & COLOR PANEL -->
+    <div class="modal-field-group" style="margin-bottom:12px;background:#090c15;padding:12px;border-radius:8px;border:1px solid #1a2234;">
+      <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:8px;display:block;">FARBE (COLOURPANEL &amp; PRESETS)</label>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <input type="color" id="custom-role-color-picker" value="#fbbf24" style="width:40px;height:34px;padding:2px;border:1px solid #1f2538;border-radius:6px;cursor:pointer;background:#090a0f;" oninput="syncRoleColor(this.value)">
+        <input type="text" id="custom-role-color" placeholder="#fbbf24" value="#fbbf24" oninput="syncRoleColor(this.value)" style="flex:1;background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:8px 12px;border-radius:6px;font-size:12px;outline:none;" />
+      </div>
+      <!-- Preset Color Swatches -->
+      <div style="display:flex;flex-wrap:wrap;gap:6px;" id="role-color-swatches"></div>
+    </div>
+
+    <!-- LIVE BADGE PREVIEW -->
+    <div style="margin-bottom:14px;background:rgba(0,0,0,0.3);border:1px solid #1a2234;padding:8px 14px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:10px;color:#94a3b8;font-weight:700;">LIVE VORSCHAU:</span>
+      <div id="custom-role-live-badge-preview"></div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:14px;">
+      <button type="button" onclick="saveCustomRoleSubmit()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:11px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128190; ROLLE SPEICHERN &amp; PUSHEN</button>
+      <button type="button" onclick="closeCustomRoleModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:11px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Abbrechen</button>
     </div>
   </div>
 </div>
@@ -3328,23 +3361,42 @@
     </div>
   </div>
 
+<!-- TAB 9: USER VERZEICHNIS & PROFILE WORKSPACE -->
 <div class="tab-content" id="tc-9">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
     <div>
-      <h2 style="margin:0;font-size:22px;font-weight:900;color:#f8fafc;letter-spacing:1px;display:flex;align-items:center;gap:10px;">
-        <span style="font-size:26px;">&#128269;</span> USER VERZEICHNIS
+      <h2 style="margin:0;font-size:20px;font-weight:900;color:#f8fafc;letter-spacing:1px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:24px;">&#128269;</span> USER VERZEICHNIS &amp; PROFILE
       </h2>
-      <p style="margin:6px 0 0 0;font-size:12px;color:#94a3b8;line-height:1.5;">Hier findest du alle aktiven User und deren Profile.</p>
+      <p style="margin:4px 0 0 0;font-size:11.5px;color:#94a3b8;">Klicke links auf einen User, um sein vollst&#228;ndiges Profil, Rollen, Berechtigungen und G&#228;stebuch rechts direkt zu verwalten.</p>
     </div>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <input type="text" id="user-search-input" placeholder="User suchen..." oninput="filterUserSearch()" style="background:#0e121e;border:1px solid #1d253a;color:#cbd5e1;padding:8px 14px;border-radius:8px;font-size:12px;outline:none;width:220px;">
+    <div style="display:flex;align-items:center;gap:10px;">
       <button onclick="renderUserSearch()" class="btn-nav-action" style="background:#121624;border:1px solid rgba(56,189,248,0.4);color:#38bdf8;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;">
         &#128260; AKTUALISIEREN
       </button>
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:16px;" id="user-search-grid">
-    <!-- Rendered by JS -->
+
+  <div class="user-directory-split" style="display:grid;grid-template-columns:320px minmax(0, 1fr);gap:20px;align-items:flex-start;">
+    
+    <!-- LEFT SIDEBAR: USER LIST -->
+    <div style="background:#090b12;border:1px solid #1a2234;border-radius:14px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+      <div style="margin-bottom:12px;">
+        <input type="text" id="user-search-input" placeholder="User oder Rolle suchen..." oninput="filterUserSearch()" style="width:100%;box-sizing:border-box;background:#0e121e;border:1px solid #1d253a;color:#cbd5e1;padding:8px 12px;border-radius:8px;font-size:11.5px;outline:none;">
+      </div>
+      <div style="font-size:10px;font-weight:800;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+        <span>AKTIVE BENUTZER</span>
+        <span id="user-search-total-count" style="color:#e5a93c;font-weight:900;">0</span>
+      </div>
+      <div id="user-search-grid" style="display:flex;flex-direction:column;gap:8px;max-height:720px;overflow-y:auto;padding-right:4px;">
+        <!-- Compact user cards rendered by JS -->
+      </div>
+    </div>
+
+    <!-- RIGHT MAIN: INTEGRATED PROFILE WORKSPACE -->
+    <div id="tab9-profile-workspace" style="background:#090b12;border:1px solid #1a2234;border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.6);min-height:500px;">
+      <!-- Profile rendered dynamically by renderTab9UserProfile(username) -->
+    </div>
   </div>
 </div>
 
@@ -7428,6 +7480,16 @@ function getUserProfile(usernameOrKey) {
   };
 }
 
+function renderRoleIconHtml(iconStr) {
+  if (!iconStr) return '&#11088;';
+  const str = String(iconStr).trim();
+  if (str.startsWith('data:image') || str.startsWith('http://') || str.startsWith('https://') || str.startsWith('<img')) {
+    if (str.startsWith('<img')) return str;
+    return `<img src="${str}" style="width:13px;height:13px;object-fit:contain;border-radius:2px;vertical-align:middle;display:inline-block;margin-right:3px;" alt="icon">`;
+  }
+  return str;
+}
+
 function getRankBadge(usernameOrKey, overrideRanks = null, showAll = false) {
   let ranks = overrideRanks;
   if (!ranks) {
@@ -7467,8 +7529,9 @@ function getRankBadge(usernameOrKey, overrideRanks = null, showAll = false) {
 
     const cls = `badge-rank badge-rank-${roleDef.id.replace(/[^a-z0-9]/g, '')}`;
     const styleAttr = `background:${roleDef.bg || 'rgba(255,255,255,0.1)'};color:${roleDef.color};border:1px solid ${roleDef.color}88;`;
+    const iconHtml = renderRoleIconHtml(roleDef.icon);
     
-    renderedBadges.push(`<span class="${cls}" style="${styleAttr}">${roleDef.icon || '&#11088;'} ${escapeHtml(roleDef.name)}</span>`);
+    renderedBadges.push(`<span class="${cls}" style="${styleAttr}">${iconHtml} ${escapeHtml(roleDef.name)}</span>`);
   });
 
   if (showAll) {
@@ -7790,6 +7853,9 @@ const DEFAULT_GLOBAL_ROLES = [
 
 let CUSTOM_ROLES = [];
 
+const ROLE_EMOJI_PRESETS = ['\uD83D\uDC51','\uD83D\uDEE1\uFE0F','\uD83D\uDCBB','\u26A1','\u2B50','\uD83D\uDC8E','\uD83D\uDC96','\uD83D\uDD25','\uD83C\uDFAF','\uD83D\uDE80','\u269C\uFE0F','\uD83C\uDFC6','\uD83C\uDF1F','\uD83D\uDC80','\uD83E\uDD16','\uD83D\uDDE1\uFE0F','\uD83E\uDE78','\uD83E\uDD85','\uD83C\uDF00','\u2693','\uD83C\uDF96\uFE0F','\u2728'];
+const ROLE_COLOR_PRESETS = ['#fbbf24', '#38bdf8', '#f87171', '#34d399', '#c084fc', '#fb923c', '#f472b6', '#22d3ee', '#818cf8', '#f8fafc', '#a3e635', '#e11d48', '#e5a93c'];
+
 function getAllRoles() {
   const custom = (Array.isArray(CUSTOM_ROLES) && CUSTOM_ROLES.length > 0) ? CUSTOM_ROLES : [];
   const combined = [...DEFAULT_GLOBAL_ROLES];
@@ -7799,8 +7865,73 @@ function getAllRoles() {
   return combined;
 }
 
-function renderDynamicRolePills(prof) {
-  const container = document.getElementById("profile-dynamic-roles-list");
+function initCustomRoleModalControls() {
+  const emWrap = document.getElementById("role-emoji-palette");
+  if(emWrap && emWrap.children.length === 0) {
+    emWrap.innerHTML = ROLE_EMOJI_PRESETS.map(em => `
+      <button type="button" onclick="selectRoleEmoji('${em}')" style="background:#111522;border:1px solid #1f2538;color:#fff;width:28px;height:28px;border-radius:6px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;" onmouseover="this.style.borderColor='#e5a93c'" onmouseout="this.style.borderColor='#1f2538'">${em}</button>
+    `).join("");
+  }
+  const colWrap = document.getElementById("role-color-swatches");
+  if(colWrap && colWrap.children.length === 0) {
+    colWrap.innerHTML = ROLE_COLOR_PRESETS.map(c => `
+      <div onclick="syncRoleColor('${c}')" style="width:22px;height:22px;border-radius:6px;background:${c};cursor:pointer;border:2px solid rgba(255,255,255,0.15);transition:all .15s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'" title="${c}"></div>
+    `).join("");
+  }
+}
+
+function selectRoleEmoji(em) {
+  const inp = document.getElementById("custom-role-icon");
+  if(inp) inp.value = em;
+  const box = document.getElementById("role-icon-preview-box");
+  if(box) box.innerHTML = em;
+  updateCustomRolePreview();
+}
+
+function handleCustomRoleIconUpload(e) {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const dataUrl = evt.target.result;
+    const inp = document.getElementById("custom-role-icon");
+    if(inp) inp.value = dataUrl;
+    const box = document.getElementById("role-icon-preview-box");
+    if(box) box.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:contain;" alt="Icon">`;
+    updateCustomRolePreview();
+    showToast("Icon-Bild erfolgreich geladen!", "ok");
+  };
+  reader.readAsDataURL(file);
+}
+
+function updateRoleIconFromInput(val) {
+  const box = document.getElementById("role-icon-preview-box");
+  if(box) box.innerHTML = renderRoleIconHtml(val);
+  updateCustomRolePreview();
+}
+
+function syncRoleColor(hex) {
+  if(!hex) return;
+  const picker = document.getElementById("custom-role-color-picker");
+  const textInp = document.getElementById("custom-role-color");
+  if(picker && hex.startsWith("#") && hex.length === 7) picker.value = hex;
+  if(textInp && textInp.value !== hex) textInp.value = hex;
+  updateCustomRolePreview();
+}
+
+function updateCustomRolePreview() {
+  const name = (document.getElementById("custom-role-name") ? document.getElementById("custom-role-name").value : "") || "ROLLE";
+  const icon = (document.getElementById("custom-role-icon") ? document.getElementById("custom-role-icon").value : "") || "&#11088;";
+  const color = (document.getElementById("custom-role-color") ? document.getElementById("custom-role-color").value : "") || "#fbbf24";
+  const preview = document.getElementById("custom-role-live-badge-preview");
+  if(preview) {
+    const iconHtml = renderRoleIconHtml(icon);
+    preview.innerHTML = `<span class="badge-rank" style="background:${color}25;color:${color};border:1px solid ${color}88;font-size:10px;font-weight:900;padding:3px 9px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;">${iconHtml} ${escapeHtml(name.toUpperCase())}</span>`;
+  }
+}
+
+function renderDynamicRolePills(prof, targetContainerId = "profile-dynamic-roles-list") {
+  const container = document.getElementById(targetContainerId);
   if(!container) return;
 
   const roles = getAllRoles();
@@ -7819,41 +7950,103 @@ function renderDynamicRolePills(prof) {
     });
   }
 
+  const primaryRole = (currentRanks && currentRanks.length > 0) ? currentRanks[0].toLowerCase() : "";
   const isOwner = typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.is_admin;
 
   container.innerHTML = roles.map(r => {
     const isChecked = currentRanks.includes(r.id.toLowerCase());
+    const isPrimary = isChecked && (r.id.toLowerCase() === primaryRole);
     const isCustom = !DEFAULT_GLOBAL_ROLES.some(dr => dr.id === r.id);
+    const iconHtml = renderRoleIconHtml(r.icon);
 
     return `
-      <div style="display:inline-flex;align-items:center;gap:4px;">
-        <label class="role-pill ${isChecked ? 'active' : ''}" style="${isChecked ? `border-color:${r.color};color:${r.color};background:${r.bg || 'rgba(255,255,255,0.1)'};` : ''}">
-          <input type="checkbox" class="role-checkbox" value="${r.id}" ${isChecked ? 'checked' : ''} onchange="updateProfileRoles(this)">
-          <span>${r.icon || '&#11088;'}</span> <span>${escapeHtml(r.name)}</span>
+      <div style="display:inline-flex;align-items:center;gap:5px;background:#0d111c;border:1px solid ${isChecked ? (r.color || '#e5a93c') : '#1e263c'};border-radius:8px;padding:4px 8px;transition:all .2s ease;">
+        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;font-weight:800;color:${isChecked ? (r.color || '#f8fafc') : '#94a3b8'};">
+          <input type="checkbox" class="role-checkbox" value="${r.id}" ${isChecked ? 'checked' : ''} onchange="updateProfileRoles(this, '${targetContainerId}')" style="cursor:pointer;accent-color:${r.color || '#e5a93c'};">
+          <span>${iconHtml}</span> <span>${escapeHtml(r.name)}</span>
         </label>
+
+        ${isChecked ? `
+          <button type="button" onclick="setPrimaryRole('${r.id}', '${targetContainerId}')" title="${isPrimary ? 'Dies ist die aktuelle Hauptrolle (wird zuerst angezeigt)' : 'Als Hauptrolle (zuerst angezeigt) setzen'}" style="background:${isPrimary ? 'rgba(251,191,36,0.2)' : '#141826'};border:1px solid ${isPrimary ? '#fbbf24' : '#232d44'};color:${isPrimary ? '#fbbf24' : '#64748b'};padding:2px 6px;border-radius:4px;font-size:9.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:3px;transition:all .15s;" onmouseover="this.style.borderColor='#fbbf24';this.style.color='#fbbf24'">
+            <span>${isPrimary ? '\u2B50' : '\u2606'}</span> <span>${isPrimary ? 'HAUPT' : 'SETZEN'}</span>
+          </button>
+        ` : ''}
+
         ${(isOwner && isCustom) ? `
-          <button type="button" onclick="editCustomRole('${r.id}')" style="background:#111522;border:1px solid #222a3e;color:#e5a93c;padding:3px 6px;border-radius:4px;font-size:9px;cursor:pointer;" title="Rolle bearbeiten">&#9998;</button>
-          <button type="button" onclick="deleteCustomRole('${r.id}')" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.3);color:#f43f5e;padding:3px 6px;border-radius:4px;font-size:9px;cursor:pointer;" title="Rolle l\u00f6schen">&#128465;&#65039;</button>
+          <button type="button" onclick="editCustomRole('${r.id}')" style="background:#141826;border:1px solid #232d44;color:#e5a93c;padding:2px 5px;border-radius:4px;font-size:9.5px;cursor:pointer;" title="Rolle bearbeiten">&#9998;</button>
+          <button type="button" onclick="deleteCustomRole('${r.id}')" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.3);color:#f43f5e;padding:2px 5px;border-radius:4px;font-size:9.5px;cursor:pointer;" title="Rolle l\u00f6schen">&#128465;&#65039;</button>
         ` : ''}
       </div>
     `;
   }).join("");
 }
 
+async function setPrimaryRole(roleId, targetContainerId) {
+  if(!_activeProfileTarget) return;
+  const target = _activeProfileTarget;
+  const prof = getUserProfile(target) || { username: target };
+  
+  let ranks = Array.isArray(prof.rank) ? [...prof.rank] : [prof.rank || "premium"];
+  ranks = ranks.filter(r => String(r).toLowerCase() !== roleId.toLowerCase());
+  ranks.unshift(roleId.toLowerCase()); // Move to first index
+  
+  prof.rank = ranks;
+  USER_PROFILES[target] = prof;
+  if(USER_PROFILES[target.toLowerCase()]) USER_PROFILES[target.toLowerCase()].rank = ranks;
+  
+  const isOwnerProfile = target.toUpperCase() === "ADMIN" || (CURRENT_USER && CURRENT_USER.is_admin && target.toLowerCase() === CURRENT_USER.name.toLowerCase());
+  if (isOwnerProfile) {
+    localStorage.setItem("hyschool_admin_ranks", JSON.stringify(ranks));
+    if(CURRENT_USER) CURRENT_USER.rank = ranks;
+  }
+  
+  try {
+    localStorage.setItem("hyschool_ranks_" + target, JSON.stringify(ranks));
+    localStorage.setItem("hyschool_ranks_" + target.toLowerCase(), JSON.stringify(ranks));
+    localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES));
+  } catch(_) {}
+  
+  showToast(`'${roleId.toUpperCase()}' ist nun die prim\u00e4re Hauptrolle!`, "ok");
+  
+  renderDynamicRolePills(prof, "profile-dynamic-roles-list");
+  renderDynamicRolePills(prof, "tab9-profile-dynamic-roles-list");
+  
+  const badgeWrap = document.getElementById("profile-modal-badge-wrap");
+  if(badgeWrap) badgeWrap.innerHTML = getRankBadge(target, ranks, true);
+  
+  const tab9BadgeWrap = document.getElementById("tab9-profile-badge-wrap");
+  if(tab9BadgeWrap) tab9BadgeWrap.innerHTML = getRankBadge(target, ranks, true);
+  
+  renderUserSearch();
+  renderGlobalUserBadges();
+  
+  try {
+    const fullJson = JSON.stringify(USER_PROFILES, null, 2);
+    await uploadFileToGitHub("profiles.json", utf8_to_b64(fullJson), `Set primary role for ${target}: ${roleId}`);
+  } catch(e) {
+    console.warn("Save profile primary role err:", e);
+  }
+}
+
 function openCreateCustomRoleModal() {
+  initCustomRoleModalControls();
   document.getElementById("custom-role-modal-title").innerHTML = `<span style="color:#e5a93c;">&#128081;</span> NEUE ROLLE ERSTELLEN`;
   document.getElementById("custom-role-orig-id").value = "";
   document.getElementById("custom-role-id").value = "";
   document.getElementById("custom-role-id").disabled = false;
   document.getElementById("custom-role-name").value = "";
   document.getElementById("custom-role-icon").value = "&#11088;";
-  document.getElementById("custom-role-color").value = "#fbbf24";
+  const box = document.getElementById("role-icon-preview-box");
+  if(box) box.innerHTML = "&#11088;";
+  syncRoleColor("#fbbf24");
+  updateCustomRolePreview();
 
   const modal = document.getElementById("custom-role-modal");
   if(modal) modal.style.display = "flex";
 }
 
 function editCustomRole(roleId) {
+  initCustomRoleModalControls();
   const r = getAllRoles().find(x => x.id === roleId);
   if(!r) return;
 
@@ -7863,7 +8056,10 @@ function editCustomRole(roleId) {
   document.getElementById("custom-role-id").disabled = true;
   document.getElementById("custom-role-name").value = r.name;
   document.getElementById("custom-role-icon").value = r.icon || "&#11088;";
-  document.getElementById("custom-role-color").value = r.color || "#fbbf24";
+  const box = document.getElementById("role-icon-preview-box");
+  if(box) box.innerHTML = renderRoleIconHtml(r.icon || "&#11088;");
+  syncRoleColor(r.color || "#fbbf24");
+  updateCustomRolePreview();
 
   const modal = document.getElementById("custom-role-modal");
   if(modal) modal.style.display = "flex";
@@ -7907,7 +8103,9 @@ async function saveCustomRoleSubmit() {
 
   closeCustomRoleModal();
   const prof = getUserProfile(_activeProfileTarget);
-  renderDynamicRolePills(prof);
+  renderDynamicRolePills(prof, "profile-dynamic-roles-list");
+  renderDynamicRolePills(prof, "tab9-profile-dynamic-roles-list");
+  renderUserSearch();
   showToast(`Rolle '${name}' erfolgreich gespeichert!`, "ok");
 
   try {
@@ -7922,7 +8120,9 @@ async function deleteCustomRole(roleId) {
   if(!confirm(`M\u00f6chtest du die Rolle '${roleId}' wirklich l\u00f6schen?`)) return;
   CUSTOM_ROLES = CUSTOM_ROLES.filter(r => r.id !== roleId);
   const prof = getUserProfile(_activeProfileTarget);
-  renderDynamicRolePills(prof);
+  renderDynamicRolePills(prof, "profile-dynamic-roles-list");
+  renderDynamicRolePills(prof, "tab9-profile-dynamic-roles-list");
+  renderUserSearch();
   showToast(`Rolle '${roleId}' gel\u00f6scht!`, "ok");
 
   try {
@@ -7959,7 +8159,10 @@ async function banActiveProfileUser() {
   showToast(`User '${_activeProfileTarget}' wurde erfolgreich gebannt!`, "ok");
   logADMINAction("USER_BANNED", _activeProfileTarget, `User gebannt wegen: ${prof.ban_reason}`);
 
-  openUserProfileModal(_activeProfileTarget);
+  if(document.getElementById("user-profile-modal") && document.getElementById("user-profile-modal").style.display === "flex") {
+    openUserProfileModal(_activeProfileTarget);
+  }
+  renderTab9UserProfile(_activeProfileTarget);
   renderUserSearch();
 
   try {
@@ -7994,7 +8197,10 @@ async function unbanActiveProfileUser() {
   showToast(`User '${_activeProfileTarget}' erfolgreich entbannt!`, "ok");
   logADMINAction("USER_UNBANNED", _activeProfileTarget, `User entbannt`);
 
-  openUserProfileModal(_activeProfileTarget);
+  if(document.getElementById("user-profile-modal") && document.getElementById("user-profile-modal").style.display === "flex") {
+    openUserProfileModal(_activeProfileTarget);
+  }
+  renderTab9UserProfile(_activeProfileTarget);
   renderUserSearch();
 
   try {
@@ -8003,26 +8209,23 @@ async function unbanActiveProfileUser() {
   } catch(_) {}
 }
 
-async function updateProfileRoles(el) {
+async function updateProfileRoles(el, targetContainerId = "profile-dynamic-roles-list") {
   if(!_activeProfileTarget) return;
-  const checkboxes = document.querySelectorAll(".role-checkbox");
+  const container = document.getElementById(targetContainerId);
+  if(!container) return;
+
+  const checkboxes = container.querySelectorAll(".role-checkbox");
   let selected = [];
   checkboxes.forEach(cb => {
     if(cb.checked) {
       selected.push(cb.value.toLowerCase());
-      cb.parentElement.classList.add("active");
-    } else {
-      cb.parentElement.classList.remove("active");
+      if(cb.parentElement && cb.parentElement.parentElement) {
+        cb.parentElement.parentElement.classList.add("active");
+      }
     }
   });
   if(selected.length === 0) {
     selected = ["premium"];
-    checkboxes.forEach(cb => {
-      if(cb.value.toLowerCase() === "premium") {
-        cb.checked = true;
-        cb.parentElement.classList.add("active");
-      }
-    });
   }
   
   if(!USER_PROFILES) USER_PROFILES = {};
@@ -8058,10 +8261,14 @@ async function updateProfileRoles(el) {
   } catch(_) {}
   
   const badgeWrap = document.getElementById("profile-modal-badge-wrap");
-  if(badgeWrap) {
-    badgeWrap.innerHTML = getRankBadge(target, selected, true);
-  }
+  if(badgeWrap) badgeWrap.innerHTML = getRankBadge(target, selected, true);
+
+  const tab9BadgeWrap = document.getElementById("tab9-profile-badge-wrap");
+  if(tab9BadgeWrap) tab9BadgeWrap.innerHTML = getRankBadge(target, selected, true);
   
+  renderDynamicRolePills(USER_PROFILES[exactKey], "profile-dynamic-roles-list");
+  renderDynamicRolePills(USER_PROFILES[exactKey], "tab9-profile-dynamic-roles-list");
+
   showToast("Rollen aktualisiert!", "ok");
   
   try {
@@ -8081,6 +8288,212 @@ function filterUserSearch() {
   renderUserSearch();
 }
 
+function selectUserInDirectory(username) {
+  _activeProfileTarget = username;
+  document.querySelectorAll(".tab9-user-card").forEach(el => {
+    const isThis = el.getAttribute("data-username") === username;
+    el.style.borderColor = isThis ? "#e5a93c" : "#1a2234";
+    el.style.background = isThis ? "linear-gradient(135deg, #182034 0%, #0d111d 100%)" : "#0c0f18";
+    el.style.boxShadow = isThis ? "0 0 15px rgba(229,169,60,0.25)" : "none";
+  });
+  renderTab9UserProfile(username);
+}
+
+function renderTab9UserProfile(usernameOrKey) {
+  const workspace = document.getElementById("tab9-profile-workspace");
+  if(!workspace) return;
+  if(!usernameOrKey) {
+    workspace.innerHTML = `<div style="padding:60px 20px;text-align:center;color:#64748b;font-size:13px;">Kein Benutzer ausgew\u00e4hlt. W\u00e4hle links einen Benutzer aus.</div>`;
+    return;
+  }
+
+  _activeProfileTarget = usernameOrKey;
+  const prof = getUserProfile(usernameOrKey) || {};
+  const isSelf = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && (
+    usernameOrKey === CURRENT_USER.name || 
+    (CURRENT_USER.is_admin && (usernameOrKey === "ADMIN" || usernameOrKey === CURRENT_USER.name))
+  ));
+  const isOwner = typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.is_admin;
+  const isBanned = !!(prof && prof.is_banned);
+  const avatarUrl = (prof && prof.avatar) ? prof.avatar : getAvatarUrl(usernameOrKey);
+  const userConfigs = (typeof ALL_CONFIGS !== 'undefined' && Array.isArray(ALL_CONFIGS)) ? ALL_CONFIGS.filter(c => c.user === (prof.username || usernameOrKey)) : [];
+  
+  let bUrl = (prof && prof.banner) ? prof.banner : "";
+  if (isSelf && !bUrl) {
+    try { bUrl = localStorage.getItem("hyschool_banner_" + usernameOrKey) || localStorage.getItem("hyschool_admin_banner") || ""; } catch(e){}
+  }
+  const bannerStyle = bUrl ? `background-image:url(${bUrl});` : `background:linear-gradient(45deg, #1e293b, #0f172a);`;
+
+  workspace.innerHTML = `
+    <div>
+      <!-- BANNER AREA -->
+      <div id="tab9-profile-banner" style="width:100%;height:160px;${bannerStyle}background-size:cover;background-position:center;position:relative;mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);-webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);">
+        ${isSelf ? `
+          <button onclick="document.getElementById('tab9-banner-upload-input').click()" style="position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.65);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:6px 12px;border-radius:6px;font-size:10px;font-weight:800;cursor:pointer;backdrop-filter:blur(4px);z-index:10;">
+            &#128247; BANNER &#196;NDERN
+          </button>
+          <input type="file" id="tab9-banner-upload-input" style="display:none;" accept="image/*" onchange="handleBannerUpload(event)">
+        ` : ''}
+      </div>
+
+      <div style="padding:0 24px 24px 24px;position:relative;z-index:5;">
+        <!-- AVATAR & HEADER INFO -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:-50px;margin-bottom:14px;flex-wrap:wrap;gap:12px;">
+          <div style="display:flex;align-items:flex-end;gap:16px;">
+            <div style="width:96px;height:96px;border-radius:20px;border:3px solid #090b12;overflow:hidden;background:#131826;display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(229,169,60,0.3);position:relative;z-index:2;flex-shrink:0;">
+              <img src="${avatarUrl}" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <h2 style="color:#ffffff;font-size:22px;font-weight:900;letter-spacing:1px;margin:0;">${escapeHtml(formatNameUpper(usernameOrKey))}</h2>
+                ${isBanned ? `<span style="background:rgba(244,63,94,0.15);color:#f43f5e;border:1px solid rgba(244,63,94,0.4);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:900;">&#128683; GEBANNT</span>` : `<span style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.4);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:900;">&#9989; AKTIV</span>`}
+              </div>
+              <div id="tab9-profile-badge-wrap" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px;">
+                ${getRankBadge(usernameOrKey, prof ? prof.rank : null, true)}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BIO -->
+        <p style="font-size:12.5px;color:#e2e8f0;margin-top:12px;line-height:1.5;background:rgba(255,255,255,0.03);padding:12px 16px;border-radius:10px;border:1px solid rgba(255,255,255,0.05);border-left:4px solid #e5a93c;">
+          ${escapeHtml((prof && prof.bio) ? prof.bio : "Dieser User hat noch keine Bio hinterlegt.")}
+        </p>
+
+        <!-- DYNAMIC ROLE MANAGER WITH PRIMARY ROLE SELECTION -->
+        <div style="margin-top:14px;background:rgba(9,11,18,0.75);border:1px solid #1a2234;padding:14px 16px;border-radius:10px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+            <div style="font-size:10.5px;color:#94a3b8;font-weight:900;letter-spacing:1px;text-transform:uppercase;">
+              &#9881;&#65039; ROLLEN VERWALTEN &amp; HAUPTROLLE W&#196;HLEN
+            </div>
+            ${isOwner ? `
+              <button type="button" onclick="openCreateCustomRoleModal()" style="background:rgba(229,169,60,0.15);border:1px solid rgba(229,169,60,0.4);color:#e5a93c;padding:4px 10px;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                <span>&#10010;</span> NEUE ROLLE ERSTELLEN
+              </button>
+            ` : ''}
+          </div>
+          <div id="tab9-profile-dynamic-roles-list" style="display:flex;flex-wrap:wrap;gap:8px;">
+            <!-- Rendered by renderDynamicRolePills -->
+          </div>
+
+          <!-- ADMIN USER BAN & UNBAN ACTION BOX -->
+          ${(isOwner && !isSelf) ? `
+            <div style="margin-top:14px;padding-top:12px;border-top:1px solid #1a2234;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+              <div style="font-size:11px;color:#94a3b8;display:flex;align-items:center;gap:6px;">
+                <span>&#128737;&#65039;</span> 
+                <span>Account-Status: ${isBanned ? `<b style="color:#f43f5e;">&#128683; GEBANNT (${escapeHtml(prof.ban_reason || 'Verstoss gegen die Regeln')})</b>` : `<b style="color:#10b981;">&#9989; Aktiv</b>`}</span>
+              </div>
+              <div style="display:flex;gap:8px;">
+                ${isBanned ? `
+                  <button type="button" onclick="unbanActiveProfileUser()" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#10b981;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                    <span>&#9989;</span> ENTBANNEN
+                  </button>
+                ` : `
+                  <button type="button" onclick="banActiveProfileUser()" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.4);color:#f43f5e;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                    <span>&#128683;</span> USER BANNEN
+                  </button>
+                `}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- META DETAILS -->
+        <div style="display:flex;align-items:center;gap:16px;margin-top:14px;font-size:11px;color:#64748b;flex-wrap:wrap;background:rgba(0,0,0,0.25);padding:10px 14px;border-radius:8px;border:1px solid #1a2234;">
+          <div style="display:flex;align-items:center;gap:6px;"><span>&#128197;</span> <span style="color:#94a3b8;">Mitglied seit:</span> <b style="color:#f8fafc;">${escapeHtml((prof && prof.joined) ? prof.joined : "01.01.2026")}</b></div>
+          <div style="display:flex;align-items:center;gap:6px;"><span>&#128172;</span> <span style="color:#94a3b8;">Discord:</span> <b style="color:#e5a93c;">${escapeHtml((prof && prof.discord) ? prof.discord : "Nicht angegeben")}</b></div>
+          <div style="display:flex;align-items:center;gap:6px;"><span>&#128193;</span> <span style="color:#94a3b8;">Configs:</span> <b style="color:#10b981;">${userConfigs.length} Configs</b></div>
+        </div>
+
+        <!-- GUESTBOOK SECTION -->
+        <div style="margin-top:16px;background:rgba(9,11,18,0.75);border:1px solid #1a2234;border-radius:12px;padding:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <h4 style="color:#ffffff;font-size:12.5px;font-weight:900;letter-spacing:0.5px;display:flex;align-items:center;gap:8px;margin:0;">
+              <span style="color:#e5a93c;">&#128214;</span> G&#196;STEBUCH &amp; REPUTATION
+              <span style="background:#131828;color:#94a3b8;border:1px solid #202a40;padding:2px 8px;border-radius:10px;font-size:9.5px;">${((prof && prof.guestbook) ? prof.guestbook : []).length} Eintr&#228;ge</span>
+            </h4>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-bottom:14px;">
+            <input type="text" id="tab9-guestbook-input" placeholder="Hinterlasse einen Kommentar f\u00fcr ${escapeHtml(usernameOrKey)}... (Enter)" onkeydown="if(event.key==='Enter')submitTab9GuestbookEntry()" style="flex:1;background:#111522;border:1px solid #212a40;color:#f8fafc;padding:8px 12px;border-radius:6px;font-size:11.5px;outline:none;" />
+            <button onclick="submitTab9GuestbookEntry()" class="upload-btn" style="width:auto;padding:8px 16px;font-size:11px;">
+              &#x270E; EINTRAGEN
+            </button>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;padding-right:4px;">
+            ${(((prof && prof.guestbook) ? prof.guestbook : []).slice().reverse().map((entry) => {
+              const isMe = entry.author === (CURRENT_USER ? CURRENT_USER.name : '');
+              const authorAvatar = getAvatarUrl(entry.author);
+              return `
+                <div style="background:#0e121d;border:1px solid #1a2234;border-radius:8px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start;">
+                  <div style="width:32px;height:32px;border-radius:6px;overflow:hidden;border:1px solid #28344e;flex-shrink:0;">
+                    <img src="${authorAvatar}" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
+                  </div>
+                  <div style="flex:1;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">
+                      <div style="display:flex;align-items:center;gap:6px;">
+                        <b style="color:#ffffff;font-size:11.5px;cursor:pointer;" onclick="selectUserInDirectory('${escapeHtml(entry.author)}')">${escapeHtml(entry.author)}</b>
+                        <span style="font-size:9.5px;color:#64748b;">${entry.time || ''}</span>
+                      </div>
+                      ${(isMe || isOwner) ? `<button onclick="deleteGuestbookEntry('${entry.id}')" style="background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.2);color:#f43f5e;font-size:8.5px;padding:2px 6px;border-radius:4px;cursor:pointer;font-weight:800;">L\u00d6SCHEN</button>` : ''}
+                    </div>
+                    <div style="color:#cbd5e1;font-size:11.5px;line-height:1.4;word-break:break-word;">
+                      ${escapeHtml(entry.text || entry.content || "")}
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join("")) || `<div style="text-align:center;color:#64748b;padding:20px;font-size:11px;">Noch keine Eintr\u00e4ge vorhanden.</div>`}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  renderDynamicRolePills(prof, "tab9-profile-dynamic-roles-list");
+}
+
+async function submitTab9GuestbookEntry() {
+  const input = document.getElementById("tab9-guestbook-input");
+  if(!input) return;
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = "";
+
+  const targetProf = getUserProfile(_activeProfileTarget);
+  if(!targetProf.guestbook) targetProf.guestbook = [];
+
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const timeStr = `${pad(now.getDate())}.${pad(now.getMonth()+1)}.${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+  const newEntry = {
+    id: "gb_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4),
+    author: (CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : "ADMIN",
+    author_key: (CURRENT_USER && CURRENT_USER.key) ? CURRENT_USER.key : "",
+    text: text,
+    time: timeStr,
+    timestamp: Date.now()
+  };
+
+  targetProf.guestbook.push(newEntry);
+  USER_PROFILES[_activeProfileTarget] = targetProf;
+  if(targetProf.key) USER_PROFILES[targetProf.key] = targetProf;
+
+  try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
+
+  renderTab9UserProfile(_activeProfileTarget);
+  showToast("G\u00e4stebucheintrag hinzugef\u00fcgt!", "ok");
+
+  try {
+    const fullJson = JSON.stringify(USER_PROFILES, null, 2);
+    await uploadFileToGitHub("profiles.json", utf8_to_b64(fullJson), `New Guestbook entry on ${_activeProfileTarget} by ${newEntry.author}`);
+  } catch(e) {
+    console.warn("Save guestbook err:", e);
+  }
+}
+
 function renderUserSearch() {
   const grid = document.getElementById("user-search-grid");
   if(!grid) return;
@@ -8089,24 +8502,36 @@ function renderUserSearch() {
   const q = (searchInp ? searchInp.value : "").toLowerCase().trim();
 
   // ONLY show REAL, existing users from licenses, staff, chat, and admin!
+  // Normalized Map key prevents duplicates like "ADMIN" and "admin"
   const validUsersSet = new Map();
 
-  // 1. Admin
-  validUsersSet.set("ADMIN", { name: "ADMIN", source: "Inhaber" });
+  // 1. Admin (always single master entry)
+  validUsersSet.set("admin", { name: "ADMIN", source: "Inhaber" });
 
   // 2. Staff members
   if (Array.isArray(ALL_STAFF)) {
     ALL_STAFF.forEach(st => {
-      if(st && st.name) validUsersSet.set(st.name, { name: st.name, source: st.role || "Staff" });
+      if(st && st.name) {
+        const norm = st.name.trim().toLowerCase();
+        if(!validUsersSet.has(norm)) {
+          validUsersSet.set(norm, { name: st.name.trim(), source: st.role || "Staff" });
+        }
+      }
     });
   }
 
   // 3. Real License customers
   if (Array.isArray(ALL_LICENSES)) {
     ALL_LICENSES.forEach(lic => {
-      const u = lic.used_by || (lic.note && lic.note !== "---" && !lic.note.includes("MASTER") ? lic.note : "");
-      if(u && u.trim() && u.trim() !== "---" && !validUsersSet.has(u)) {
-        validUsersSet.set(u, { name: u, source: "Kunde", key: lic.key });
+      let u = lic.used_by || (lic.note && lic.note !== "---" && !lic.note.includes("MASTER") ? lic.note : "");
+      if(u && u.trim() && u.trim() !== "---") {
+        if(u.includes("[GEBANNT:")) {
+          u = u.replace("[GEBANNT:", "").replace("]", "").trim();
+        }
+        const norm = u.trim().toLowerCase();
+        if(norm && !validUsersSet.has(norm)) {
+          validUsersSet.set(norm, { name: u.trim(), source: "Kunde", key: lic.key });
+        }
       }
     });
   }
@@ -8114,8 +8539,11 @@ function renderUserSearch() {
   // 4. Chat participants
   if (Array.isArray(ALL_CHAT_MESSAGES)) {
     ALL_CHAT_MESSAGES.forEach(msg => {
-      if(msg && msg.user && msg.user.trim() && !validUsersSet.has(msg.user)) {
-        validUsersSet.set(msg.user, { name: msg.user, source: msg.role || "Kunde" });
+      if(msg && msg.user && msg.user.trim()) {
+        const norm = msg.user.trim().toLowerCase();
+        if(norm && !validUsersSet.has(norm)) {
+          validUsersSet.set(norm, { name: msg.user.trim(), source: msg.role || "Kunde" });
+        }
       }
     });
   }
@@ -8123,35 +8551,48 @@ function renderUserSearch() {
   let users = Array.from(validUsersSet.values());
 
   if(q) {
-    users = users.filter(u => u.name.toLowerCase().includes(q) || u.source.toLowerCase().includes(q));
+    users = users.filter(u => u.name.toLowerCase().includes(q) || (u.source && u.source.toLowerCase().includes(q)));
   }
 
+  const countBadge = document.getElementById("user-search-total-count");
+  if(countBadge) countBadge.textContent = users.length;
+
   if(users.length === 0) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#64748b;padding:40px;font-size:12px;">Keine Benutzer gefunden.</div>`;
+    grid.innerHTML = `<div style="text-align:center;color:#64748b;padding:30px;font-size:11.5px;">Keine Benutzer gefunden.</div>`;
     return;
   }
+
+  const activeUser = _activeProfileTarget || users[0].name;
 
   grid.innerHTML = users.map(u => {
     const prof = getUserProfile(u.name) || {};
     const avatar = (prof && prof.avatar) ? prof.avatar : getAvatarUrl(u.name);
     const ranks = (prof && prof.rank) ? prof.rank : [u.name === "ADMIN" ? "admin" : "premium"];
     const isBanned = !!(prof && prof.is_banned);
-    const badgeHtml = isBanned ? `<span style="background:rgba(244,63,94,0.15);color:#f43f5e;border:1px solid rgba(244,63,94,0.4);padding:2px 6px;border-radius:4px;font-size:9.5px;font-weight:900;">&#128683; GEBANNT</span>` : getRankBadge(u.name, ranks);
+    const badgeHtml = isBanned ? `<span style="background:rgba(244,63,94,0.15);color:#f43f5e;border:1px solid rgba(244,63,94,0.4);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;">&#128683; GEBANNT</span>` : getRankBadge(u.name, ranks);
+    const isSelected = (activeUser && activeUser.toLowerCase() === u.name.toLowerCase());
 
     return `
-      <div onclick="openUserProfileModal('${escapeHtml(u.name)}')" style="background:#0c0f18;border:1px solid #1a2234;border-radius:12px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;cursor:pointer;transition:all .2s ease;box-shadow:0 4px 16px rgba(0,0,0,0.3);" onmouseover="this.style.borderColor='#e5a93c';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#1a2234';this.style.transform='translateY(0)'">
-        <div style="width:58px;height:58px;border-radius:14px;border:2px solid ${u.name === 'ADMIN' ? '#e5a93c' : '#28344e'};overflow:hidden;background:#141926;display:flex;align-items:center;justify-content:center;">
+      <div onclick="selectUserInDirectory('${escapeHtml(u.name)}')" data-username="${escapeHtml(u.name)}" class="tab9-user-card" style="background:${isSelected ? 'linear-gradient(135deg, #182034 0%, #0d111d 100%)' : '#0c0f18'};border:1px solid ${isSelected ? '#e5a93c' : '#1a2234'};border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .15s ease;box-shadow:${isSelected ? '0 0 15px rgba(229,169,60,0.25)' : 'none'};" onmouseover="if(!this.style.borderColor.includes('229'))this.style.borderColor='#2a3754'" onmouseout="if(!this.style.borderColor.includes('229'))this.style.borderColor='#1a2234'">
+        <div style="width:40px;height:40px;border-radius:10px;border:2px solid ${u.name === 'ADMIN' ? '#e5a93c' : '#28344e'};overflow:hidden;background:#141926;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <img src="${avatar}" style="width:100%;height:100%;object-fit:cover;" alt="${escapeHtml(u.name)}">
         </div>
-        <div>
-          <div style="color:#ffffff;font-weight:900;font-size:13px;margin-bottom:4px;">${escapeHtml(formatNameUpper(u.name))}</div>
-          <div style="display:flex;align-items:center;justify-content:center;">
+        <div style="flex:1;min-width:0;">
+          <div style="color:#ffffff;font-weight:900;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;">${escapeHtml(formatNameUpper(u.name))}</div>
+          <div style="display:flex;align-items:center;gap:4px;">
             ${badgeHtml}
           </div>
         </div>
       </div>
     `;
   }).join("");
+
+  // Select current active or first user in the workspace
+  if(!_activeProfileTarget && users.length > 0) {
+    selectUserInDirectory(users[0].name);
+  } else if(_activeProfileTarget) {
+    renderTab9UserProfile(_activeProfileTarget);
+  }
 }
 
 function handleBannerUpload(e) {
