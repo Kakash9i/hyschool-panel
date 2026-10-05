@@ -5799,18 +5799,39 @@ function renderLicensesTable(list) {
     const isProtectedADMIN = isADMINAccountKey(lic.key, lic);
     const isChecked = SELECTED_LIC_KEYS.has(lic.key);
 
+    let isExpired = false;
+    let remainingDays = 0;
+    let remainingHours = 0;
+    const isLifetime = (lic.duration === 'lifetime' || (lic.expires_at && lic.expires_at.toUpperCase() === 'LIFETIME'));
+
+    if (!isLifetime && lic.expires_at) {
+      const parsedExp = parseGermanDate(lic.expires_at);
+      if (parsedExp) {
+        const now = new Date();
+        const diffMs = parsedExp.getTime() - now.getTime();
+        if (diffMs <= 0) {
+          isExpired = true;
+        } else {
+          remainingDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          remainingHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        }
+      }
+    }
+
     let statusBadge = "";
     if(lic.paused) {
       statusBadge = `<span style="background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#f59e0b;border-radius:50%;"></span> PAUSIERT</span>`;
     } else if(!lic.used) {
       statusBadge = `<span style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#10b981;border-radius:50%;"></span> UNBENUTZT</span>`;
+    } else if(isExpired) {
+      statusBadge = `<span style="background:rgba(244,63,94,0.12);color:#f43f5e;border:1px solid rgba(244,63,94,0.3);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#f43f5e;border-radius:50%;"></span> ABGELAUFEN</span>`;
     } else {
-      statusBadge = `<span style="background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid rgba(255,255,255,0.15);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#cbd5e1;border-radius:50%;"></span> EINGEL\u00d6ST</span>`;
+      statusBadge = `<span style="background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid rgba(255,255,255,0.15);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;background:#cbd5e1;border-radius:50%;"></span> EINGEL&Ouml;ST</span>`;
     }
 
-    const expireText = lic.duration === 'lifetime'
+    const expireText = isLifetime
       ? `<span style="color:#e5a93c;font-weight:800;font-size:11px;">&#9854; LIFETIME</span>`
-      : (lic.expires_at ? `<span style="color:#f8fafc;font-size:11px;font-weight:700;">${lic.expires_at}</span>` : `<span style="color:#64748b;font-size:11px;">Startet bei Login</span>`);
+      : (lic.expires_at ? `<span style="color:${isExpired ? '#f43f5e' : '#f8fafc'};font-size:11px;font-weight:700;">${lic.expires_at}</span>` : `<span style="color:#64748b;font-size:11px;">Startet bei Login</span>`);
 
     let hwidHtml = "";
     if(!lic.hwid) {
@@ -5861,26 +5882,23 @@ function renderLicensesTable(list) {
     const noteText = lic.note && lic.note !== '---' ? `<div style="color:#64748b;font-size:11px;margin-top:3px;display:flex;align-items:center;gap:4px;"><span>\uD83D\uDCDD</span> ${lic.note}</div>` : '';
     const cbDisabled = (!CURRENT_USER.is_admin && isProtectedADMIN) ? 'disabled' : '';
 
-    let displayedDuration = lic.duration_label || lic.duration;
-    if (lic.duration === 'lifetime' || (lic.expires_at && lic.expires_at.toUpperCase() === 'LIFETIME')) {
+    let displayedDuration = lic.duration_label || (lic.duration ? (lic.duration + ' Tage') : '30 Tage');
+    let durationTagStyle = "";
+
+    if (isLifetime) {
       displayedDuration = 'Lifetime';
-    } else if (lic.expires_at) {
-      const parsedExp = parseGermanDate(lic.expires_at);
-      if (parsedExp) {
-        let baseDate = new Date();
-        if (lic.first_used_at) {
-          const parsedFirst = parseGermanDate(lic.first_used_at);
-          if (parsedFirst) baseDate = parsedFirst;
+    } else if (!lic.used) {
+      displayedDuration = lic.duration_label || (lic.duration ? (lic.duration + ' Tage') : '30 Tage');
+    } else {
+      if (isExpired) {
+        displayedDuration = 'Abgelaufen';
+        durationTagStyle = "background:rgba(244,63,94,0.15);color:#f43f5e;border-color:rgba(244,63,94,0.35);font-weight:900;";
+      } else {
+        if (remainingDays >= 1) {
+          displayedDuration = `${remainingDays} ${remainingDays === 1 ? 'Tag' : 'Tage'}`;
+        } else {
+          displayedDuration = `${Math.max(1, remainingHours)} Std.`;
         }
-        const totalDiffDays = Math.max(1, Math.round((parsedExp.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24)));
-        if (totalDiffDays === 1) displayedDuration = "1 Tag (Trial)";
-        else if (totalDiffDays === 3) displayedDuration = "3 Tage";
-        else if (totalDiffDays === 7) displayedDuration = "7 Tage (Woche)";
-        else if (totalDiffDays === 14) displayedDuration = "14 Tage";
-        else if (totalDiffDays >= 28 && totalDiffDays <= 31) displayedDuration = "30 Tage (1 Monat)";
-        else if (totalDiffDays >= 88 && totalDiffDays <= 93) displayedDuration = "90 Tage (3 Monate)";
-        else if (totalDiffDays >= 360 && totalDiffDays <= 366) displayedDuration = "365 Tage (1 Jahr)";
-        else displayedDuration = `${totalDiffDays} Tage`;
       }
     }
 
@@ -5918,7 +5936,7 @@ function renderLicensesTable(list) {
               <span>${lic.key}</span> 
               <span style="font-size:11px;color:#64748b;">\uD83D\uDCDD</span>
             </div>
-            <span class="tag-duration" style="white-space:nowrap;">${displayedDuration}</span>
+            <span class="tag-duration" style="white-space:nowrap;${durationTagStyle}">${displayedDuration}</span>
           </div>
           <div style="display:flex;gap:4px;margin-top:6px;align-items:center;flex-wrap:wrap;">
             ${productBadgesHtml}
