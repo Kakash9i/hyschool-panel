@@ -2285,7 +2285,12 @@
 
 <!-- TAB 0: CHEATS -->
   <div class="tab-content active" id="tc-0">
-    <div class="sub-tabs-container" id="cheat-sub-tabs"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+      <div class="sub-tabs-container" id="cheat-sub-tabs" style="margin-bottom:0;"></div>
+      <button onclick="openAddCheatModal()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:900;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 15px rgba(229,169,60,0.25);">
+        <span>&#10010;</span> NEUEN CHEAT ANLEGEN
+      </button>
+    </div>
     <div id="cheat-sub-contents"></div>
   </div>
 
@@ -3791,6 +3796,48 @@ function buildUI() {
   buildCheatsUI();
 }
 
+function openAddCheatModal() {
+  document.getElementById("add-cheat-modal").style.display = "flex";
+}
+function closeAddCheatModal() {
+  document.getElementById("add-cheat-modal").style.display = "none";
+}
+async function createNewCheatSubmit() {
+  const label = (document.getElementById("add-cheat-label").value || "").trim();
+  const key = (document.getElementById("add-cheat-key").value || "").trim().toLowerCase();
+  const ver = (document.getElementById("add-cheat-ver").value || "1.0.0").trim();
+  const stat = document.getElementById("add-cheat-status").value || "UNDETECTED";
+  if(!label || !key) { alert("Bitte gib einen Namen und eine Key-ID an!"); return; }
+  const prefix = key.slice(0, 4);
+  if(!CHEATS.some(c => c.key === key)) {
+    CHEATS.push({ key: key, label: label.toUpperCase(), color: "#e5a93c", prefix: prefix });
+    state[prefix] = { files: [], url: "", script: "" };
+  }
+  closeAddCheatModal();
+  buildCheatsUI();
+  const subEl = document.getElementById(prefix + "-sub");
+  const verEl = document.getElementById(prefix + "-ver");
+  const statEl = document.getElementById(prefix + "-status");
+  const loadEl = document.getElementById(prefix + "-load");
+  if(subEl) subEl.value = "AKTIV";
+  if(verEl) verEl.value = ver;
+  if(statEl) statEl.value = stat;
+  if(loadEl) loadEl.checked = true;
+  await saveAllToGitHub();
+  await loadCheats();
+  showToast("Neuer Cheat \x27" + label + "\x27 erfolgreich angelegt!", "ok");
+}
+
+async function removeCheatTab(key) {
+  if(!confirm("M\u00f6chtest du den Cheat-Reiter \x27" + key + "\x27 wirklich lÃ¶schen?")) return;
+  CHEATS = CHEATS.filter(c => c.key !== key);
+  _activeCheatIdx = 0;
+  buildCheatsUI();
+  await saveAllToGitHub();
+  await loadCheats();
+  showToast("Cheat-Reiter entfernt!", "ok");
+}
+
 function buildCheatsUI() {
   const subTabs = document.getElementById("cheat-sub-tabs");
   const subContents = document.getElementById("cheat-sub-contents");
@@ -3823,7 +3870,7 @@ function buildCheatsUI() {
         </div>
 
         <button class="save-cheat-btn" id="save-btn-${c.prefix}" onclick="saveAllToGitHub()">
-          \uD83D\uDE80 SPEICHERN &amp; PUSHEN
+          \uD83D\uDE80 SPEICHERN &amp; PUSHEN</button><button class="btn" onclick="removeCheatTab(\x27${c.key}\x27)" style="width:100%;margin-top:8px;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;font-size:11px;padding:8px;border-radius:6px;font-weight:800;cursor:pointer;">\uD83D\uDDD1\uFE0F CHEAT REITER ENTFERNEN
         </button>
       </div>
 
