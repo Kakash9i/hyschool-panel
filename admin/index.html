@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -2283,6 +2283,44 @@
       <span style="font-size:13px;color:#38bdf8;">&#128269;</span> SUCHEN
     </div>
   </div>
+
+<!-- ADD NEW CHEAT MODAL POPUP -->
+<div id="add-cheat-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999999;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px;">
+  <div style="background:linear-gradient(165deg, #121624 0%, #080a10 100%);border:1px solid #e5a93c;border-radius:14px;padding:26px 30px;width:480px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.9);position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+      <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
+        <span style="color:#e5a93c;">&#10010;</span> NEUEN CHEAT-REITER ANLEGEN
+      </h3>
+      <button type="button" onclick="closeAddCheatModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
+    </div>
+    <div class="modal-field-group" style="margin-bottom:12px;">
+      <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">CHEAT LABEL / NAME (Z.B. APEX LEGENDS)</label>
+      <input type="text" id="add-cheat-label" placeholder="z.B. APEX LEGENDS" style="background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:10px 14px;border-radius:6px;width:100%;font-size:12px;outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="modal-field-group" style="margin-bottom:12px;">
+      <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">CHEAT KEY / ID (Z.B. apex)</label>
+      <input type="text" id="add-cheat-key" placeholder="z.B. apex" style="background:#090a0f;border:1px solid #1f2538;color:#e5a93c;padding:10px 14px;border-radius:6px;width:100%;font-size:12px;font-weight:800;outline:none;box-sizing:border-box;" />
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+      <div class="modal-field-group" style="margin-bottom:0;">
+        <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">VERSION</label>
+        <input type="text" id="add-cheat-ver" value="1.0.0" style="background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:10px 14px;border-radius:6px;width:100%;font-size:12px;outline:none;box-sizing:border-box;" />
+      </div>
+      <div class="modal-field-group" style="margin-bottom:0;">
+        <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">STATUS</label>
+        <select id="add-cheat-status" style="background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:10px 14px;border-radius:6px;width:100%;font-size:12px;outline:none;box-sizing:border-box;">
+          <option value="UNDETECTED">UNDETECTED</option>
+          <option value="TESTING">TESTING</option>
+          <option value="MAINTENANCE">MAINTENANCE</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button type="button" onclick="createNewCheatSubmit()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#10010; REITER ERSTELLEN &amp; PUSHEN</button>
+      <button type="button" onclick="closeAddCheatModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Abbrechen</button>
+    </div>
+  </div>
+</div>
 
 <!-- TAB 0: CHEATS -->
   <div class="tab-content active" id="tc-0">
