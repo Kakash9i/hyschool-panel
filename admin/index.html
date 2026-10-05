@@ -3215,7 +3215,7 @@ const RAW_BASE    = "https://raw.githubusercontent.com/" + REPO + "/main";
 
 const DEFAULT_CHEATS = [
   { key:"valorant", label:"VALORANT", color:"#ffcc00", prefix:"val", subscription:"AKTIV", version:"v2.4", status:"UNDETECTED", last_update:"05.10.2026", download_url:"", loadable:true },
-  { key:"apex", label:"AI HYSCHOOL", color:"#ffb700", prefix:"apex", subscription:"AKTIV", version:"1.0.0", status:"UNDETECTED", last_update:"05.10.2026", download_url:"", loadable:true },
+  { key:"aihyschool", label:"AI HYSCHOOL", color:"#ffb700", prefix:"aihysc", subscription:"AKTIV", version:"1.0.0", status:"UNDETECTED", last_update:"05.10.2026", download_url:"", loadable:true },
   { key:"coc", label:"CLASH OF CLANS", color:"#ffcc00", prefix:"coc", subscription:"AKTIV", version:"v1.0", status:"UNDETECTED", last_update:"05.10.2026", download_url:"", loadable:true }
 ];
 
@@ -3850,7 +3850,7 @@ async function createNewCheatSubmit() {
   const statInput = document.getElementById("add-cheat-status");
 
   const label = (labelInput ? labelInput.value : "").trim();
-  let key = (keyInput ? keyInput.value : "").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
+  let rawKey = (keyInput ? keyInput.value : "").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
   const ver = (verInput && verInput.value.trim()) ? verInput.value.trim() : "1.0.0";
   const stat = statInput ? statInput.value : "UNDETECTED";
 
@@ -3858,21 +3858,27 @@ async function createNewCheatSubmit() {
     alert("Bitte gib einen Cheat-Namen ein!");
     return;
   }
-  if (!key) {
-    key = label.toLowerCase().replace(/[^a-z0-9_-]/g, "");
+  if (!rawKey) {
+    rawKey = label.toLowerCase().replace(/[^a-z0-9_-]/g, "");
   }
-  if (!key) {
-    alert("UngÃ¼ltiger Key-Identifier!");
-    return;
+  if (!rawKey) {
+    rawKey = "cheat_" + Date.now().toString().slice(-4);
   }
 
-  const prefix = "c_" + key.slice(0, 6) + "_" + Math.floor(Math.random()*1000);
+  // Guarantee UNIQUE key so it NEVER overwrites an existing tab
+  let finalKey = rawKey;
+  let counter = 1;
+  while (CHEATS.some(c => c.key === finalKey)) {
+    counter++;
+    finalKey = rawKey + "_" + counter;
+  }
+
+  const prefix = "c_" + finalKey.slice(0, 5) + "_" + Math.floor(Math.random() * 10000);
   const now = new Date();
   const todayStr = String(now.getDate()).padStart(2, '0') + "." + String(now.getMonth() + 1).padStart(2, '0') + "." + now.getFullYear();
 
-  const existingIdx = CHEATS.findIndex(c => c.key === key);
   const newCheatObj = {
-    key: key,
+    key: finalKey,
     label: label.toUpperCase(),
     color: "#e5a93c",
     prefix: prefix,
@@ -3884,12 +3890,8 @@ async function createNewCheatSubmit() {
     loadable: true
   };
 
-  if (existingIdx >= 0) {
-    CHEATS[existingIdx] = newCheatObj;
-  } else {
-    CHEATS.push(newCheatObj);
-  }
-
+  // ALWAYS append as a brand new tab!
+  CHEATS.push(newCheatObj);
   state[prefix] = { files: [], url: "", script: "" };
   _activeCheatIdx = CHEATS.length - 1;
 
@@ -3904,8 +3906,8 @@ async function createNewCheatSubmit() {
   try {
     await saveAllToGitHub();
     await loadCheats();
-    showToast("Neuer Cheat '" + label + "' erfolgreich angelegt und live synchronisiert!", "ok");
-    logADMINAction("CHEAT_CREATED", key, "Neuer Cheat '" + label + "' (" + key + ") angelegt");
+    showToast("Neuer Cheat-Reiter '" + label + "' erfolgreich als eigener Tab angelegt!", "ok");
+    logADMINAction("CHEAT_CREATED", finalKey, "Neuer Cheat-Reiter '" + label + "' (" + finalKey + ") angelegt");
   } catch(err) {
     showToast("Fehler beim Speichern: " + err.message, "err");
   }
