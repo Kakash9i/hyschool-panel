@@ -7264,7 +7264,7 @@ function renderChatMessages() {
     const isADMIN = (prof && prof.rank && (prof.rank === 'admin' || (Array.isArray(prof.rank) && prof.rank.includes('admin')))) || msg.is_admin || msg.user === 'ADMIN';
 
     const avatar = `
-      <div onclick="openUserProfileModal('${escapeHtml(msg.user)}')" class="clickable-user" style="width:36px;height:36px;border-radius:10px;overflow:hidden;border:1.5px solid ${isADMIN ? '#e5a93c' : '#1e283e'};flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,0.4);">
+      <div onclick="viewUserProfile('${escapeHtml(msg.user)}')" class="clickable-user" style="width:36px;height:36px;border-radius:10px;overflow:hidden;border:1.5px solid ${isADMIN ? '#e5a93c' : '#1e283e'};flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,0.4);">
         <img src="${avatarUrl}" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
       </div>
     `;
@@ -7278,7 +7278,7 @@ function renderChatMessages() {
         ${avatar}
         <div style="display:flex;flex-direction:column;${!isMe ? 'align-items:flex-end;' : 'align-items:flex-start;'}">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-            <span class="clickable-user" onclick="openUserProfileModal('${escapeHtml(msg.user)}')" style="font-size:12px;font-weight:900;color:${isADMIN ? '#e5a93c' : '#f8fafc'};">${escapeHtml(formatNameUpper(msg.user))}</span>
+            <span class="clickable-user" onclick="viewUserProfile('${escapeHtml(msg.user)}')" style="font-size:12px;font-weight:900;color:${isADMIN ? '#e5a93c' : '#f8fafc'};">${escapeHtml(formatNameUpper(msg.user))}</span>
             ${userBadge}
             <span style="font-size:10px;color:#64748b;font-weight:600;">${msg.time || ''}</span>
           </div>
@@ -7545,10 +7545,23 @@ function getUserProfile(usernameOrKey) {
     }
   } catch(_) {}
 
+  // Calculate joined date from license if available
+  let joinedDate = (p && p.joined) ? p.joined : "";
+  if (!joinedDate || joinedDate === "01.01.2026") {
+    if (typeof ALL_LICENSES !== 'undefined' && Array.isArray(ALL_LICENSES)) {
+      const lic = ALL_LICENSES.find(l => (l.used_by && l.used_by.toLowerCase() === lower) || (l.note && l.note.toLowerCase() === lower) || (p && p.key && l.key === p.key));
+      if (lic && (lic.created || lic.date)) {
+        joinedDate = lic.created || lic.date;
+      }
+    }
+  }
+  if (!joinedDate) joinedDate = "01.01.2026";
+
   if (p) {
-    if (localRank && (!p.rank || localRank.length > 0)) {
+    if (localRank && Array.isArray(localRank) && localRank.length > 0) {
       p.rank = localRank;
     }
+    p.joined = joinedDate;
     if (isMe) {
       const myAvatar = localStorage.getItem("hyschool_avatar_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_avatar") : null);
       const myBanner = localStorage.getItem("hyschool_banner_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_banner") : null);
@@ -7573,9 +7586,8 @@ function getUserProfile(usernameOrKey) {
     avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(target)}`,
     banner: isOwner ? (localStorage.getItem("hyschool_admin_banner") || "") : "",
     bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugef\u00fcgt.",
-
     discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "Nicht angegeben",
-    joined: "01.01.2026",
+    joined: joinedDate,
     guestbook: []
   };
 }
@@ -7825,118 +7837,22 @@ async function saveUserProfile() {
 
 let _activeProfileTarget = null;
 
+function viewUserProfile(usernameOrKey) {
+  const target = usernameOrKey || (CURRENT_USER ? CURRENT_USER.name : "ADMIN");
+  closeProfileModal();
+  switchMainTab(9);
+  setTimeout(() => {
+    openTab9UserProfile(target);
+  }, 60);
+}
+
 function openOwnProfileModal() {
   const myName = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : "ADMIN";
-  openUserProfileModal(myName);
+  viewUserProfile(myName);
 }
 
 async function openUserProfileModal(usernameOrKey) {
-  await loadProfiles(); // Ensure real-time sync when opened!
-  _activeProfileTarget = usernameOrKey;
-  const prof = getUserProfile(usernameOrKey) || {};
-  const modal = document.getElementById("user-profile-modal");
-
-  const avatarEl = document.getElementById("profile-modal-avatar");
-  const bannerEl = document.getElementById("profile-modal-banner");
-  const btnUploadBanner = document.getElementById("btn-upload-banner");
-  const userEl = document.getElementById("profile-modal-username");
-  const badgeEl = document.getElementById("profile-modal-badge-wrap");
-  const bioEl = document.getElementById("profile-modal-bio");
-  const joinedEl = document.getElementById("profile-modal-joined");
-  const discordEl = document.getElementById("profile-modal-discord");
-  const cfgCountEl = document.getElementById("profile-modal-cfg-count");
-
-  const isSelf = (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && (
-    usernameOrKey === CURRENT_USER.name || 
-    (CURRENT_USER.is_admin && (usernameOrKey === "ADMIN" || usernameOrKey === CURRENT_USER.name))
-  ));
-  
-  if(bannerEl) {
-    let bUrl = (prof && prof.banner) ? prof.banner : "";
-    if (isSelf && !bUrl) {
-      try { bUrl = localStorage.getItem("hyschool_banner_" + usernameOrKey) || localStorage.getItem("hyschool_admin_banner") || ""; } catch(e){}
-    }
-    bannerEl.style.backgroundImage = bUrl ? `url(${bUrl})` : `linear-gradient(45deg, #1e293b, #0f172a)`;
-  }
-  if(btnUploadBanner) {
-    btnUploadBanner.style.display = isSelf ? "block" : "none";
-  }
-  const userConfigs = (typeof ALL_CONFIGS !== 'undefined' && Array.isArray(ALL_CONFIGS)) ? ALL_CONFIGS.filter(c => c.user === (prof.username || usernameOrKey)) : [];
-
-  if(avatarEl) avatarEl.src = (prof && prof.avatar) ? prof.avatar : getAvatarUrl(usernameOrKey);
-  if(userEl) userEl.textContent = (prof && prof.username) ? prof.username : usernameOrKey;
-  
-  if(badgeEl) badgeEl.innerHTML = getRankBadge(usernameOrKey, prof ? prof.rank : null, true);
-
-  const roleManager = document.getElementById("profile-role-manager");
-  const adminRoleCrudBtns = document.getElementById("admin-role-crud-btns");
-  const adminBanBox = document.getElementById("profile-admin-ban-box");
-  const banStatusText = document.getElementById("profile-ban-status-text");
-  const btnBan = document.getElementById("profile-btn-ban");
-  const btnUnban = document.getElementById("profile-btn-unban");
-
-  const isOwner = typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.is_admin;
-
-  if(roleManager) {
-    const assignableRoles = (CURRENT_USER && CURRENT_USER.permissions && CURRENT_USER.permissions.assignable_roles) || [];
-    const canManageRoles = isOwner || assignableRoles.length > 0;
-    
-    if(canManageRoles) {
-      roleManager.style.display = "block";
-      if(adminRoleCrudBtns) adminRoleCrudBtns.style.display = isOwner ? "flex" : "none";
-
-      renderDynamicRolePills(prof);
-    } else {
-      roleManager.style.display = "none";
-    }
-  }
-
-  // Ban management for Admin
-  if(adminBanBox) {
-    if(isOwner && !isSelf) {
-      adminBanBox.style.display = "flex";
-      const isBanned = !!(prof && prof.is_banned);
-      if(banStatusText) {
-        banStatusText.innerHTML = isBanned ? `<span style="color:#f43f5e;font-weight:900;">&#128683; GEBANNT (${escapeHtml(prof.ban_reason || 'Verstoss gegen die Regeln')})</span>` : `<span style="color:#10b981;font-weight:900;">&#9989; Aktiv</span>`;
-      }
-      if(btnBan) btnBan.style.display = isBanned ? "none" : "inline-flex";
-      if(btnUnban) btnUnban.style.display = isBanned ? "inline-flex" : "none";
-    } else {
-      adminBanBox.style.display = "none";
-    }
-  }
-
-  if(bioEl) bioEl.textContent = (prof && prof.bio) ? prof.bio : "Dieser User hat noch keine Bio hinzugef\u00fcgt.";
-
-  if(joinedEl) joinedEl.textContent = (prof && prof.joined) ? prof.joined : "01.01.2026";
-  if(discordEl) discordEl.textContent = (prof && prof.discord) ? prof.discord : "Nicht angegeben";
-  if(cfgCountEl) cfgCountEl.textContent = `${userConfigs.length} Configs`;
-
-  renderGuestbookEntries((prof && prof.guestbook) ? prof.guestbook : []);
-  const clipsGrid = document.getElementById("profile-modal-clips-grid");
-  if(clipsGrid) {
-    const userClips = (typeof ALL_HIGHLIGHTS !== 'undefined' && Array.isArray(ALL_HIGHLIGHTS)) ? ALL_HIGHLIGHTS.filter(h => (h.author||'').toLowerCase() === (prof.username || usernameOrKey).toLowerCase()) : [];
-    if(userClips.length > 0) {
-      clipsGrid.innerHTML = userClips.map(h => {
-        return `
-          <div onclick="closeProfileModal(); switchMainTab(8); setTimeout(()=>openHighlightPlayer('${h.id}'), 500)" style="background:#05070c;border:1px solid #1a2234;border-radius:8px;overflow:hidden;cursor:pointer;transition:.2s;" onmouseover="this.style.borderColor='#a855f7'" onmouseout="this.style.borderColor='#1a2234'">
-            <div style="height:90px;background:#000;display:flex;align-items:center;justify-content:center;position:relative;">
-              <span style="font-size:24px;color:rgba(168,85,247,0.7);">&#9654;</span>
-              <div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,0.8);color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:800;">${(h.game||'VALORANT').toUpperCase()}</div>
-            </div>
-            <div style="padding:10px;">
-              <div style="font-size:11px;font-weight:900;color:#f8fafc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(h.title)}</div>
-              <div style="font-size:9.5px;color:#64748b;margin-top:4px;">&#10084;&#65039; ${h.likes||0} Likes</div>
-            </div>
-          </div>
-        `;
-      }).join("");
-    } else {
-      clipsGrid.innerHTML = `<div style="grid-column:1/-1;font-size:11.5px;color:#64748b;text-align:center;padding:12px;background:rgba(255,255,255,0.02);border-radius:8px;">Dieser User hat noch keine Clips hochgeladen.</div>`;
-    }
-  }
-
-  if(modal) modal.style.display = "flex";
+  viewUserProfile(usernameOrKey);
 }
 
 // DEFAULT & CUSTOM ROLES DEFINITION
@@ -8324,24 +8240,28 @@ async function updateProfileRoles(el, targetContainerId = "profile-dynamic-roles
   const container = document.getElementById(targetContainerId);
   if(!container) return;
 
-  const checkboxes = container.querySelectorAll(".role-checkbox");
-  let selected = [];
-  checkboxes.forEach(cb => {
-    if(cb.checked) {
-      selected.push(cb.value.toLowerCase());
-      if(cb.parentElement && cb.parentElement.parentElement) {
-        cb.parentElement.parentElement.classList.add("active");
-      }
+  const target = _activeProfileTarget;
+  const lower = target.toLowerCase();
+  let prof = getUserProfile(target) || { username: target };
+  let currentRanks = Array.isArray(prof.rank) ? [...prof.rank] : [prof.rank || "premium"];
+
+  const checkedCheckboxes = Array.from(container.querySelectorAll(".role-checkbox:checked"));
+  const checkedSet = new Set(checkedCheckboxes.map(cb => cb.value.toLowerCase()));
+
+  // Keep existing order for all still-checked ranks
+  let selected = currentRanks.filter(r => checkedSet.has(String(r).toLowerCase()));
+  // Append any newly checked ranks that were not in currentRanks
+  checkedSet.forEach(r => {
+    if(!selected.some(s => String(s).toLowerCase() === r)) {
+      selected.push(r);
     }
   });
+
   if(selected.length === 0) {
     selected = ["premium"];
   }
   
   if(!USER_PROFILES) USER_PROFILES = {};
-  
-  const target = _activeProfileTarget;
-  const lower = target.toLowerCase();
   
   let exactKey = target;
   for (let k in USER_PROFILES) {
@@ -8358,8 +8278,8 @@ async function updateProfileRoles(el, targetContainerId = "profile-dynamic-roles
   USER_PROFILES[lower] = USER_PROFILES[exactKey];
   USER_PROFILES[target] = USER_PROFILES[exactKey];
   
-  const isOwnerProfile = target.toUpperCase() === "ADMIN" || (CURRENT_USER && CURRENT_USER.is_admin && target.toLowerCase() === CURRENT_USER.name.toLowerCase());
-  if (isOwnerProfile || lower === "admin") {
+  const isOwnerProfile = target.toUpperCase() === "ADMIN" || (CURRENT_USER && CURRENT_USER.is_admin && (target.toLowerCase() === CURRENT_USER.name.toLowerCase() || target.toLowerCase() === "admin"));
+  if (isOwnerProfile) {
     localStorage.setItem("hyschool_admin_ranks", JSON.stringify(selected));
     if(CURRENT_USER) CURRENT_USER.rank = selected;
   }
@@ -8523,12 +8443,24 @@ function renderTab9UserProfile(usernameOrKey) {
   const isBanned = !!(prof && prof.is_banned);
   const avatarUrl = (prof && prof.avatar) ? prof.avatar : getAvatarUrl(usernameOrKey);
   const userConfigs = (typeof ALL_CONFIGS !== 'undefined' && Array.isArray(ALL_CONFIGS)) ? ALL_CONFIGS.filter(c => c.user === (prof.username || usernameOrKey)) : [];
+  const userClips = (typeof ALL_HIGHLIGHTS !== 'undefined' && Array.isArray(ALL_HIGHLIGHTS)) ? ALL_HIGHLIGHTS.filter(h => (h.author || '').toLowerCase() === (prof.username || usernameOrKey).toLowerCase()) : [];
   
   let bUrl = (prof && prof.banner) ? prof.banner : "";
   if (isSelf && !bUrl) {
     try { bUrl = localStorage.getItem("hyschool_banner_" + usernameOrKey) || localStorage.getItem("hyschool_admin_banner") || ""; } catch(e){}
   }
   const bannerStyle = bUrl ? `background-image:url(${bUrl});` : `background:linear-gradient(45deg, #1e293b, #0f172a);`;
+
+  let joinedDate = (prof && prof.joined) ? prof.joined : "";
+  if (!joinedDate || joinedDate === "01.01.2026") {
+    if (typeof ALL_LICENSES !== 'undefined' && Array.isArray(ALL_LICENSES)) {
+      const lic = ALL_LICENSES.find(l => (l.used_by && l.used_by.toLowerCase() === String(usernameOrKey).toLowerCase()) || (l.note && l.note.toLowerCase() === String(usernameOrKey).toLowerCase()) || (prof.key && l.key === prof.key));
+      if (lic && (lic.created || lic.date)) {
+        joinedDate = lic.created || lic.date;
+      }
+    }
+  }
+  if (!joinedDate) joinedDate = "01.01.2026";
 
   workspace.innerHTML = `
     <div>
@@ -8606,9 +8538,44 @@ function renderTab9UserProfile(usernameOrKey) {
 
         <!-- META DETAILS -->
         <div style="display:flex;align-items:center;gap:16px;margin-top:14px;font-size:11px;color:#64748b;flex-wrap:wrap;background:rgba(0,0,0,0.25);padding:10px 14px;border-radius:8px;border:1px solid #1a2234;">
-          <div style="display:flex;align-items:center;gap:6px;"><span>&#128197;</span> <span style="color:#94a3b8;">Mitglied seit:</span> <b style="color:#f8fafc;">${escapeHtml((prof && prof.joined) ? prof.joined : "01.01.2026")}</b></div>
+          <div style="display:flex;align-items:center;gap:6px;"><span>&#128197;</span> <span style="color:#94a3b8;">Mitglied seit:</span> <b style="color:#f8fafc;">${escapeHtml(joinedDate)}</b></div>
           <div style="display:flex;align-items:center;gap:6px;"><span>&#128172;</span> <span style="color:#94a3b8;">Discord:</span> <b style="color:#e5a93c;">${escapeHtml((prof && prof.discord) ? prof.discord : "Nicht angegeben")}</b></div>
           <div style="display:flex;align-items:center;gap:6px;"><span>&#128193;</span> <span style="color:#94a3b8;">Configs:</span> <b style="color:#10b981;">${userConfigs.length} Configs</b></div>
+          <div style="display:flex;align-items:center;gap:6px;"><span>&#127916;</span> <span style="color:#94a3b8;">Highlights:</span> <b style="color:#e879f9;">${userClips.length} Clips</b></div>
+        </div>
+
+        <!-- HIGHLIGHT CLIPS SECTION -->
+        <div style="margin-top:16px;background:rgba(9,11,18,0.75);border:1px solid #1a2234;border-radius:12px;padding:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <h4 style="color:#ffffff;font-size:12.5px;font-weight:900;letter-spacing:0.5px;display:flex;align-items:center;gap:8px;margin:0;">
+              <span style="color:#e879f9;">&#127916;</span> HOCHGELADENE HIGHLIGHT CLIPS
+              <span style="background:#131828;color:#e879f9;border:1px solid rgba(232,121,249,0.3);padding:2px 8px;border-radius:10px;font-size:9.5px;font-weight:800;">${userClips.length} Clips</span>
+            </h4>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:12px;">
+            ${userClips.length > 0 ? userClips.map(h => `
+              <div onclick="switchMainTab(8); setTimeout(()=>openHighlightPlayer('${h.id}'), 200);" style="background:#0c0f18;border:1px solid #1a2234;border-radius:8px;overflow:hidden;cursor:pointer;transition:all .2s ease;" onmouseover="this.style.borderColor='#e879f9';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#1a2234';this.style.transform='none'">
+                <div style="height:110px;background:#000000;position:relative;display:flex;align-items:center;justify-content:center;">
+                  ${(h.videoType === 'direct' || !h.videoType) ? `
+                    <video src="${h.videoUrl}" preload="metadata" muted playsinline style="width:100%;height:100%;object-fit:cover;pointer-events:none;"></video>
+                  ` : `
+                    <div style="width:36px;height:36px;border-radius:50%;background:rgba(232,121,249,0.2);border:1px solid rgba(232,121,249,0.5);display:flex;align-items:center;justify-content:center;color:#e879f9;font-size:14px;">&#9654;</div>
+                  `}
+                  <div style="position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,0.85);color:#e5a93c;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:900;border:1px solid rgba(229,169,60,0.3);">${escapeHtml((h.game||'VALORANT').toUpperCase())}</div>
+                  <div style="position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,0.85);color:#f43f5e;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:800;">&#10084;&#65039; ${h.likes||0}</div>
+                </div>
+                <div style="padding:10px;">
+                  <div style="color:#ffffff;font-size:11.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;">${escapeHtml(h.title)}</div>
+                  <div style="color:#64748b;font-size:10px;display:flex;justify-content:space-between;align-items:center;">
+                    <span>${escapeHtml(h.date||'')}</span>
+                  </div>
+                </div>
+              </div>
+            `).join("") : `
+              <div style="grid-column:1/-1;text-align:center;color:#64748b;padding:24px;font-size:11.5px;background:rgba(255,255,255,0.02);border-radius:8px;">Dieser Benutzer hat noch keine Highlight-Clips hochgeladen.</div>
+            `}
+          </div>
         </div>
 
         <!-- GUESTBOOK SECTION -->
@@ -8804,21 +8771,47 @@ function renderUserSearch() {
 function handleBannerUpload(e) {
   const file = e.target.files[0];
   if(!file) return;
+  if(file.size > 5 * 1024 * 1024) {
+    showToast("Banner darf maximal 5MB gross sein!", "err");
+    return;
+  }
   const reader = new FileReader();
-  reader.onload = function(evt) {
+  reader.onload = async function(evt) {
     const dataUrl = evt.target.result;
+    const target = _activeProfileTarget || (CURRENT_USER ? CURRENT_USER.name : "ADMIN");
     
-    // Save to local storage if it's me
-    if(_activeProfileTarget === "ADMIN" || _activeProfileTarget === CURRENT_USER.name) {
+    // Save to local storage
+    if(target.toUpperCase() === "ADMIN" || (CURRENT_USER && CURRENT_USER.is_admin)) {
       localStorage.setItem("hyschool_admin_banner", dataUrl);
     }
+    localStorage.setItem("hyschool_banner_" + target, dataUrl);
+    localStorage.setItem("hyschool_banner_" + target.toLowerCase(), dataUrl);
     
     // Save to prof memory
-    if(!USER_PROFILES[_activeProfileTarget]) USER_PROFILES[_activeProfileTarget] = {};
-    USER_PROFILES[_activeProfileTarget].banner = dataUrl;
+    if(!USER_PROFILES) USER_PROFILES = {};
+    if(!USER_PROFILES[target]) USER_PROFILES[target] = { username: target };
+    USER_PROFILES[target].banner = dataUrl;
+    USER_PROFILES[target.toLowerCase()] = USER_PROFILES[target];
     
-    document.getElementById("profile-modal-banner").style.backgroundImage = `url(${dataUrl})`;
+    try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
+    
+    const bannerEl = document.getElementById("tab9-profile-banner");
+    if(bannerEl) {
+      bannerEl.style.backgroundImage = `url(${dataUrl})`;
+    }
+    const modalBanner = document.getElementById("profile-modal-banner");
+    if(modalBanner) {
+      modalBanner.style.backgroundImage = `url(${dataUrl})`;
+    }
     showToast("Banner erfolgreich aktualisiert!", "ok");
+
+    // Background push to GitHub
+    try {
+      const fullJson = JSON.stringify(USER_PROFILES, null, 2);
+      await uploadFileToGitHub("profiles.json", utf8_to_b64(fullJson), `Update banner for ${target}`);
+    } catch(err) {
+      console.warn("Banner sync error:", err);
+    }
   };
   reader.readAsDataURL(file);
 }
@@ -8857,7 +8850,7 @@ function renderGuestbookEntries(entries = []) {
         <div style="flex:1;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
             <div style="display:flex;align-items:center;gap:8px;">
-              <b class="clickable-user" onclick="openUserProfileModal('${escapeHtml(entry.author)}')" style="color:#ffffff;font-size:12px;">${escapeHtml(entry.author)}</b>
+              <b class="clickable-user" onclick="viewUserProfile('${escapeHtml(entry.author)}')" style="color:#ffffff;font-size:12px;">${escapeHtml(entry.author)}</b>
               <span style="font-size:10px;color:#64748b;">${entry.time || ''}</span>
             </div>
             ${(isMe || isOwner) ? `<button onclick="deleteGuestbookEntry('${entry.id}')" style="background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.2);color:#f43f5e;font-size:9px;padding:4px 8px;border-radius:4px;cursor:pointer;font-weight:800;letter-spacing:0.5px;transition:all 0.2s ease;" onmouseover="this.style.background='rgba(244,63,94,0.2)';this.style.borderColor='rgba(244,63,94,0.4)';" onmouseout="this.style.background='rgba(244,63,94,0.1)';this.style.borderColor='rgba(244,63,94,0.2)';">L&Ouml;SCHEN</button>` : ''}
@@ -9162,7 +9155,7 @@ function filterUserConfigs() {
 
         <!-- MITTE-RECHTS: Author + Inhaber Pill (deutlich mehr nach rechts verschoben) -->
         <div style="margin-left: auto; margin-right: 6px; flex-shrink: 0;">
-          <div class="clickable-user" onclick="openUserProfileModal('${escapeHtml(displayAuthor)}')" style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 20px; transition: all 0.2s ease;" onmouseover="this.style.borderColor='rgba(245,158,11,0.4)'; this.style.background='rgba(245,158,11,0.05)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.background='rgba(255,255,255,0.03)';">
+          <div class="clickable-user" onclick="viewUserProfile('${escapeHtml(displayAuthor)}')" style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 20px; transition: all 0.2s ease;" onmouseover="this.style.borderColor='rgba(245,158,11,0.4)'; this.style.background='rgba(245,158,11,0.05)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.background='rgba(255,255,255,0.03)';">
             <img src="${authorAvatar}" style="width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid rgba(245,158,11,0.5); object-fit: cover;" alt="Avatar">
             <span style="font-weight: 900; color: #f8fafc; font-size: 11px; letter-spacing: 0.3px;">${escapeHtml(displayAuthor)}</span>
             ${getRankBadge(c.author || c.user || "ADMIN")}
@@ -9726,14 +9719,31 @@ async function uploadHighlightClip() {
   let videoType = "link";
 
   if(file) {
-    progFill.style.width = "50%";
+    progFill.style.width = "40%";
     progLbl.textContent = "Lese Video-Datei...";
     const reader = new FileReader();
     reader.onload = async function(e) {
-      const b64Data = e.target.result;
-      videoUrl = b64Data;
-      videoType = "direct";
-      finishHighlightUpload();
+      try {
+        const fullDataUrl = e.target.result;
+        const b64Data = fullDataUrl.split(',')[1];
+        progFill.style.width = "60%";
+        progLbl.textContent = "Lade Video auf HySchool Server hoch...";
+        
+        const ext = file.name.split('.').pop() || 'mp4';
+        const cleanName = `hl_${Date.now()}.${ext}`;
+        const uploadPath = `releases/highlights/${cleanName}`;
+        
+        await uploadFileToGitHub(uploadPath, b64Data, `Upload highlight video: ${cleanName}`);
+        videoUrl = `${RAW_BASE}/${uploadPath}`;
+        videoType = "direct";
+        await finishHighlightUpload();
+      } catch(err) {
+        console.error("Video upload error:", err);
+        // Fallback to dataUrl if release upload fails
+        videoUrl = e.target.result;
+        videoType = "direct";
+        await finishHighlightUpload();
+      }
     };
     reader.readAsDataURL(file);
     return;
@@ -9746,8 +9756,8 @@ async function uploadHighlightClip() {
   }
 
   async function finishHighlightUpload() {
-    progFill.style.width = "75%";
-    progLbl.textContent = "Lade in HySchool Cloud hoch...";
+    progFill.style.width = "85%";
+    progLbl.textContent = "Speichere Highlight in Datenbank...";
 
     const newHighlight = {
       id: "hl_" + Date.now(),
@@ -9784,9 +9794,9 @@ async function uploadHighlightClip() {
       document.getElementById("hl-file-input").value = "";
       document.getElementById("hl-censor-name-cb").checked = false;
       document.getElementById("hl-drop-label").textContent = "\uD83C\uDFAC Video hier ablegen oder klicken";
-      document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (fr grere Clips bitte Link nutzen)";
+      document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (f\u00fcr gr\u00f6ssere Clips bitte Link nutzen)";
       _uploadedHighlightFile = null;
-            toggleHighlightUploadCard();
+      toggleHighlightUploadCard();
     } catch(err) {
       console.error(err);
       showToast("Fehler beim Ver\u00f6ffentlichen: " + err.message, "err");
@@ -9884,7 +9894,14 @@ function openHighlightPlayer(highlightId) {
     const sSrc = sId ? `https://streamable.com/e/${sId}` : h.videoUrl;
     container.innerHTML = `<iframe src="${sSrc}" allow="autoplay; encrypted-media" allowfullscreen frameborder="0" style="width:100%;height:100%;border:none;"></iframe>`;
   } else {
-    container.innerHTML = `<video controls autoplay style="width:100%;height:100%;object-fit:contain;background:#000000;"><source src="${h.videoUrl}" type="video/mp4">Dein Browser unterst&uuml;tzt dieses Videoformat nicht.</video>`;
+    container.innerHTML = `
+      <video controls autoplay playsinline style="width:100%;height:100%;object-fit:contain;background:#000000;">
+        <source src="${h.videoUrl}" type="video/mp4">
+        <source src="${h.videoUrl}" type="video/webm">
+        <source src="${h.videoUrl}">
+        Dein Browser unterst&uuml;tzt dieses Videoformat nicht.
+      </video>
+    `;
   }
 
   if(modal) modal.style.display = "flex";
@@ -9999,7 +10016,7 @@ function _makeHlCard(h) {
   const likeStyle = hasLiked ? 'background:rgba(244,63,94,0.2);color:#f43f5e;border-color:#f43f5e;' : '';
   const likeIcon = hasLiked ? '&#10084;&#65039;' : '&#129293;';
   const deleteBtn = isOwn ? '<button onclick="deleteHighlight(\'' + h.id + '\')" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:4px 8px;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;">\uD83D\uDDD1&#65039;</button>' : '';
-  const profileClick = 'onclick="openUserProfileModal(\'' + escapeHtml(h.author) + '\')"';
+  const profileClick = 'onclick="viewUserProfile(\'' + escapeHtml(h.author) + '\')"';
   const rankHtml = getRankBadge(h.author, h.rank);
 
   return '<div class="clip-card">'
@@ -10454,13 +10471,13 @@ function renderActiveADMINTicketRoom(t) {
             html += `
               <div style="display:flex;flex-direction:${flexDir};align-items:flex-end;gap:12px;margin-bottom:12px;width:100%;">
                 
-                <div onclick="openUserProfileModal('${escapeHtml(cleanSender)}')" style="cursor:pointer;width:34px;height:34px;border-radius:10px;border:2px solid ${isStaff ? '#e5a93c' : '#38bdf8'};overflow:hidden;flex-shrink:0;box-shadow:0 0 10px ${isStaff ? 'rgba(229,169,60,0.3)' : 'rgba(56,189,248,0.3)'};">
+                <div onclick="viewUserProfile('${escapeHtml(cleanSender)}')" style="cursor:pointer;width:34px;height:34px;border-radius:10px;border:2px solid ${isStaff ? '#e5a93c' : '#38bdf8'};overflow:hidden;flex-shrink:0;box-shadow:0 0 10px ${isStaff ? 'rgba(229,169,60,0.3)' : 'rgba(56,189,248,0.3)'};">
                   <img src="${senderAvatar}" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
                 </div>
                 
                 <div style="display:flex;flex-direction:column;align-items:${align};max-width:80%;">
                   <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-direction:${flexDir};">
-                    <b onclick="openUserProfileModal('${escapeHtml(cleanSender)}')" style="cursor:pointer;color:#ffffff;font-size:12px;letter-spacing:0.5px;">${escapeHtml(cleanSender)}</b>
+                    <b onclick="viewUserProfile('${escapeHtml(cleanSender)}')" style="cursor:pointer;color:#ffffff;font-size:12px;letter-spacing:0.5px;">${escapeHtml(cleanSender)}</b>
                     <div style="display:flex;align-items:center;">
                       ${badgeHtml}
                     </div>
