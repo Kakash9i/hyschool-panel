@@ -7617,6 +7617,214 @@ async function loadProfiles() {
   } catch(_) {}
 }
 
+function getTodayDateString() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  return `${pad(now.getDate())}.${pad(now.getMonth() + 1)}.${now.getFullYear()}`;
+}
+
+function formatJoinedDate(val) {
+  if (!val || val === "01.01.2026" || val === "---") return null;
+  if (typeof val === 'number' || (!isNaN(val) && String(val).length >= 10 && !String(val).includes("."))) {
+    const d = new Date(parseInt(val, 10));
+    if (!isNaN(d.getTime())) {
+      const pad = n => String(n).padStart(2, '0');
+      return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`;
+    }
+  }
+  if (typeof val === 'string') {
+    const s = val.trim();
+    // Check DD.MM.YYYY
+    const dmyMatch = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+    if (dmyMatch) {
+      const pad = n => String(n).padStart(2, '0');
+      return `${pad(dmyMatch[1])}.${pad(dmyMatch[2])}.${dmyMatch[3]}`;
+    }
+    // Check YYYY-MM-DD
+    const ymdMatch = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if (ymdMatch) {
+      const pad = n => String(n).padStart(2, '0');
+      return `${pad(ymdMatch[3])}.${pad(ymdMatch[2])}.${ymdMatch[1]}`;
+    }
+    const d = new Date(s);
+    if (!isNaN(d.getTime())) {
+      const pad = n => String(n).padStart(2, '0');
+      return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`;
+    }
+  }
+  return null;
+}
+
+function getUserJoinedDate(usernameOrKey) {
+  if (!usernameOrKey) return getTodayDateString();
+  const lower = String(usernameOrKey).toLowerCase().trim();
+
+  const prof = (typeof USER_PROFILES === 'object' && USER_PROFILES !== null) ? (USER_PROFILES[usernameOrKey] || USER_PROFILES[lower]) : null;
+  if (prof && prof.joined && prof.joined !== "01.01.2026") {
+    const formatted = formatJoinedDate(prof.joined);
+    if (formatted) return formatted;
+  }
+
+  // 1. Check in ALL_LICENSES (activated keys or notes)
+  if (Array.isArray(ALL_LICENSES)) {
+    const lic = ALL_LICENSES.find(l => 
+      (l.used_by && l.used_by.toLowerCase() === lower) ||
+      (l.note && l.note.toLowerCase() === lower) ||
+      (l.user && l.user.toLowerCase() === lower) ||
+      (l.username && l.username.toLowerCase() === lower) ||
+      (prof && prof.key && l.key === prof.key) ||
+      (l.key && l.key.toLowerCase() === lower)
+    );
+    if (lic) {
+      const d = formatJoinedDate(lic.created_at || lic.first_used_at || lic.created || lic.date || lic.generated_at);
+      if (d) return d;
+    }
+  }
+
+  // 2. Check in ALL_USER_LOGS
+  if (Array.isArray(ALL_USER_LOGS)) {
+    const logEntry = ALL_USER_LOGS.find(l => 
+      (l.user && l.user.toLowerCase() === lower) ||
+      (l.name && l.name.toLowerCase() === lower) ||
+      (l.key && l.key.toLowerCase() === lower)
+    );
+    if (logEntry) {
+      const d = formatJoinedDate(logEntry.time || logEntry.timestamp || logEntry.date);
+      if (d) return d;
+    }
+  }
+
+  // 3. Check in ALL_STAFF
+  if (Array.isArray(ALL_STAFF)) {
+    const st = ALL_STAFF.find(s => s.name && s.name.toLowerCase() === lower);
+    if (st) {
+      const d = formatJoinedDate(st.created_at || st.created || st.date);
+      if (d) return d;
+    }
+  }
+
+  // 4. Default to today's date
+  const today = getTodayDateString();
+  if (prof) {
+    prof.joined = today;
+  }
+  return today;
+}
+
+function getAllRegisteredUsers() {
+  const validUsersSet = new Map();
+
+  // 1. Admin (Master entry)
+  validUsersSet.set("admin", { name: "ADMIN", source: "Inhaber", role: "admin", key: "MASTER-ADMIN" });
+
+  // 2. Staff members
+  if (Array.isArray(ALL_STAFF)) {
+    ALL_STAFF.forEach(st => {
+      if (st && st.name && st.name.trim()) {
+        const norm = st.name.trim().toLowerCase();
+        if (norm && !validUsersSet.has(norm)) {
+          validUsersSet.set(norm, { name: st.name.trim(), source: st.role || "Staff", role: st.role || "staff" });
+        }
+      }
+    });
+  }
+
+  // 3. KeyAuth Licenses (Activated keys & Assigned notes)
+  if (Array.isArray(ALL_LICENSES)) {
+    ALL_LICENSES.forEach(lic => {
+      let u = lic.used_by || lic.username || lic.user || (lic.note && lic.note !== "---" && !lic.note.includes("MASTER") ? lic.note : "");
+      if (u && u.trim() && u.trim() !== "---") {
+        if (u.includes("[GEBANNT:")) {
+          u = u.replace("[GEBANNT:", "").replace("]", "").trim();
+        }
+        const norm = u.trim().toLowerCase();
+        if (norm && !validUsersSet.has(norm)) {
+          validUsersSet.set(norm, { 
+            name: u.trim(), 
+            source: lic.used ? "Kunde (Aktiv)" : (lic.note && lic.note !== "---" ? lic.note : "Kunde"), 
+            key: lic.key,
+            created_at: lic.created_at || lic.first_used_at || lic.created || lic.date
+          });
+        }
+      }
+    });
+  }
+
+  // 4. User Logs (Every user login / key activation)
+  if (Array.isArray(ALL_USER_LOGS)) {
+    ALL_USER_LOGS.forEach(l => {
+      const u = l.user || l.username || l.name;
+      if (u && u.trim() && u.trim() !== "---") {
+        const norm = u.trim().toLowerCase();
+        if (norm && !validUsersSet.has(norm)) {
+          validUsersSet.set(norm, { 
+            name: u.trim(), 
+            source: "Kunde", 
+            key: l.key || "",
+            created_at: l.time || l.timestamp || l.date
+          });
+        }
+      }
+    });
+  }
+
+  // 5. User Profiles (Saved profiles)
+  if (typeof USER_PROFILES === 'object' && USER_PROFILES !== null) {
+    Object.keys(USER_PROFILES).forEach(k => {
+      const prof = USER_PROFILES[k];
+      const u = (prof && prof.username) ? prof.username : k;
+      if (u && u.trim() && !u.startsWith("gb_") && !u.startsWith("cfg_") && !u.includes("/")) {
+        const norm = u.trim().toLowerCase();
+        if (norm && !validUsersSet.has(norm)) {
+          validUsersSet.set(norm, { 
+            name: u.trim(), 
+            source: (prof.rank && prof.rank.length > 0) ? prof.rank[0] : "Kunde",
+            key: prof.key || ""
+          });
+        }
+      }
+    });
+  }
+
+  // 6. Cloud Configs
+  if (Array.isArray(ALL_CONFIGS)) {
+    ALL_CONFIGS.forEach(cfg => {
+      if (cfg && cfg.user && cfg.user.trim()) {
+        const norm = cfg.user.trim().toLowerCase();
+        if (norm && !validUsersSet.has(norm)) {
+          validUsersSet.set(norm, { name: cfg.user.trim(), source: "Kunde" });
+        }
+      }
+    });
+  }
+
+  // 7. Highlights / Clips
+  if (Array.isArray(ALL_HIGHLIGHTS)) {
+    ALL_HIGHLIGHTS.forEach(h => {
+      if (h && h.author && h.author.trim()) {
+        const norm = h.author.trim().toLowerCase();
+        if (norm && !validUsersSet.has(norm)) {
+          validUsersSet.set(norm, { name: h.author.trim(), source: "Kunde" });
+        }
+      }
+    });
+  }
+
+  // 8. Chat messages
+  if (Array.isArray(ALL_CHAT_MESSAGES)) {
+    ALL_CHAT_MESSAGES.forEach(msg => {
+      if (msg && msg.user && msg.user.trim()) {
+        const norm = msg.user.trim().toLowerCase();
+        if (norm && !validUsersSet.has(norm)) {
+          validUsersSet.set(norm, { name: msg.user.trim(), source: msg.role || "Kunde" });
+        }
+      }
+    });
+  }
+
+  return Array.from(validUsersSet.values());
+}
+
 function getUserProfile(usernameOrKey) {
   if(!usernameOrKey) return null;
   const target = String(usernameOrKey).trim();
@@ -7657,17 +7865,8 @@ function getUserProfile(usernameOrKey) {
     }
   } catch(_) {}
 
-  // Calculate joined date from license if available
-  let joinedDate = (p && p.joined) ? p.joined : "";
-  if (!joinedDate || joinedDate === "01.01.2026") {
-    if (typeof ALL_LICENSES !== 'undefined' && Array.isArray(ALL_LICENSES)) {
-      const lic = ALL_LICENSES.find(l => (l.used_by && l.used_by.toLowerCase() === lower) || (l.note && l.note.toLowerCase() === lower) || (p && p.key && l.key === p.key));
-      if (lic && (lic.created || lic.date)) {
-        joinedDate = lic.created || lic.date;
-      }
-    }
-  }
-  if (!joinedDate) joinedDate = "01.01.2026";
+  // Calculate accurate joined date from license/logs/profile
+  const joinedDate = getUserJoinedDate(target);
 
   if (p) {
     if (localRank && Array.isArray(localRank) && localRank.length > 0) {
@@ -7887,7 +8086,7 @@ async function saveUserProfile() {
     bio: bio,
     discord: discord,
     rank: existing.rank || (CURRENT_USER && CURRENT_USER.is_admin ? ["admin"] : ["premium"]),
-    joined: existing.joined || "01.01.2026",
+    joined: existing.joined && existing.joined !== "01.01.2026" ? existing.joined : getUserJoinedDate(myName),
     guestbook: existing.guestbook || []
   };
 
@@ -8460,53 +8659,22 @@ function renderTab9SidebarUserList() {
   const searchInp = document.getElementById("tab9-sidebar-search-input");
   const q = (searchInp ? searchInp.value : "").toLowerCase().trim();
 
-  const validUsersSet = new Map();
-  validUsersSet.set("admin", { name: "ADMIN", source: "Inhaber" });
+  let users = getAllRegisteredUsers();
 
-  if (Array.isArray(ALL_STAFF)) {
-    ALL_STAFF.forEach(st => {
-      if(st && st.name) {
-        const norm = st.name.trim().toLowerCase();
-        if(!validUsersSet.has(norm)) validUsersSet.set(norm, { name: st.name.trim(), source: st.role || "Staff" });
-      }
-    });
-  }
-
-  if (Array.isArray(ALL_LICENSES)) {
-    ALL_LICENSES.forEach(lic => {
-      let u = lic.used_by || (lic.note && lic.note !== "---" && !lic.note.includes("MASTER") ? lic.note : "");
-      if(u && u.trim() && u.trim() !== "---") {
-        if(u.includes("[GEBANNT:")) u = u.replace("[GEBANNT:", "").replace("]", "").trim();
-        const norm = u.trim().toLowerCase();
-        if(norm && !validUsersSet.has(norm)) validUsersSet.set(norm, { name: u.trim(), source: "Kunde", key: lic.key });
-      }
-    });
-  }
-
-  if (Array.isArray(ALL_CHAT_MESSAGES)) {
-    ALL_CHAT_MESSAGES.forEach(msg => {
-      if(msg && msg.user && msg.user.trim()) {
-        const norm = msg.user.trim().toLowerCase();
-        if(norm && !validUsersSet.has(norm)) validUsersSet.set(norm, { name: msg.user.trim(), source: msg.role || "Kunde" });
-      }
-    });
-  }
-
-  let users = Array.from(validUsersSet.values());
   if(q) {
     users = users.filter(u => u.name.toLowerCase().includes(q) || (u.source && u.source.toLowerCase().includes(q)));
   }
 
   if(countEl) countEl.textContent = users.length;
 
-  const activeUser = _activeProfileTarget || users[0].name;
+  const activeUser = _activeProfileTarget || (users[0] ? users[0].name : "ADMIN");
 
   grid.innerHTML = users.map(u => {
     const prof = getUserProfile(u.name) || {};
     const avatar = (prof && prof.avatar) ? prof.avatar : getAvatarUrl(u.name);
     const ranks = (prof && prof.rank) ? prof.rank : [u.name === "ADMIN" ? "admin" : "premium"];
     const isBanned = !!(prof && prof.is_banned);
-    const badgeHtml = isBanned ? `<span style="background:rgba(244,63,94,0.15);color:#f43f5e;border:1px solid rgba(244,63,94,0.4);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;">&#128683; GEBANNT</span>` : getRankBadge(u.name, ranks);
+    const badgeHtml = isBanned ? `<span style="background:rgba(244,63,94,0.15);color:#f43f5e;border:1px solid rgba(244,63,94,0.4);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:900;">🚫 GEBANNT</span>` : getRankBadge(u.name, ranks);
     const isSelected = (activeUser && activeUser.toLowerCase() === u.name.toLowerCase());
 
     return `
@@ -8533,7 +8701,7 @@ function renderTab9UserProfile(usernameOrKey) {
   const workspace = document.getElementById("tab9-profile-workspace");
   if(!workspace) return;
   if(!usernameOrKey) {
-    workspace.innerHTML = `<div style="padding:60px 20px;text-align:center;color:#64748b;font-size:13px;">Kein Benutzer ausgew\u00e4hlt. W\u00e4hle links einen Benutzer aus.</div>`;
+    workspace.innerHTML = `<div style="padding:60px 20px;text-align:center;color:#64748b;font-size:13px;">Kein Benutzer ausgewählt. Wähle links einen Benutzer aus.</div>`;
     return;
   }
 
@@ -8555,16 +8723,7 @@ function renderTab9UserProfile(usernameOrKey) {
   }
   const bannerStyle = bUrl ? `background-image:url(${bUrl});` : `background:linear-gradient(45deg, #1e293b, #0f172a);`;
 
-  let joinedDate = (prof && prof.joined) ? prof.joined : "";
-  if (!joinedDate || joinedDate === "01.01.2026") {
-    if (typeof ALL_LICENSES !== 'undefined' && Array.isArray(ALL_LICENSES)) {
-      const lic = ALL_LICENSES.find(l => (l.used_by && l.used_by.toLowerCase() === String(usernameOrKey).toLowerCase()) || (l.note && l.note.toLowerCase() === String(usernameOrKey).toLowerCase()) || (prof.key && l.key === prof.key));
-      if (lic && (lic.created || lic.date)) {
-        joinedDate = lic.created || lic.date;
-      }
-    }
-  }
-  if (!joinedDate) joinedDate = "01.01.2026";
+  const joinedDate = getUserJoinedDate(usernameOrKey);
 
   workspace.innerHTML = `
     <div>
@@ -8778,54 +8937,7 @@ function renderUserSearch() {
   const searchInp = document.getElementById("user-search-input");
   const q = (searchInp ? searchInp.value : "").toLowerCase().trim();
 
-  // ONLY show REAL, existing users from licenses, staff, chat, and admin!
-  // Normalized Map key prevents duplicates like "ADMIN" and "admin"
-  const validUsersSet = new Map();
-
-  // 1. Admin (always single master entry)
-  validUsersSet.set("admin", { name: "ADMIN", source: "Inhaber" });
-
-  // 2. Staff members
-  if (Array.isArray(ALL_STAFF)) {
-    ALL_STAFF.forEach(st => {
-      if(st && st.name) {
-        const norm = st.name.trim().toLowerCase();
-        if(!validUsersSet.has(norm)) {
-          validUsersSet.set(norm, { name: st.name.trim(), source: st.role || "Staff" });
-        }
-      }
-    });
-  }
-
-  // 3. Real License customers
-  if (Array.isArray(ALL_LICENSES)) {
-    ALL_LICENSES.forEach(lic => {
-      let u = lic.used_by || (lic.note && lic.note !== "---" && !lic.note.includes("MASTER") ? lic.note : "");
-      if(u && u.trim() && u.trim() !== "---") {
-        if(u.includes("[GEBANNT:")) {
-          u = u.replace("[GEBANNT:", "").replace("]", "").trim();
-        }
-        const norm = u.trim().toLowerCase();
-        if(norm && !validUsersSet.has(norm)) {
-          validUsersSet.set(norm, { name: u.trim(), source: "Kunde", key: lic.key });
-        }
-      }
-    });
-  }
-
-  // 4. Chat participants
-  if (Array.isArray(ALL_CHAT_MESSAGES)) {
-    ALL_CHAT_MESSAGES.forEach(msg => {
-      if(msg && msg.user && msg.user.trim()) {
-        const norm = msg.user.trim().toLowerCase();
-        if(norm && !validUsersSet.has(norm)) {
-          validUsersSet.set(norm, { name: msg.user.trim(), source: msg.role || "Kunde" });
-        }
-      }
-    });
-  }
-
-  let users = Array.from(validUsersSet.values());
+  let users = getAllRegisteredUsers();
 
   if(q) {
     users = users.filter(u => u.name.toLowerCase().includes(q) || (u.source && u.source.toLowerCase().includes(q)));
