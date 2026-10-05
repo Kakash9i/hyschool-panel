@@ -9092,13 +9092,13 @@ function renderUserSearch() {
 function handleAvatarUpload(e) {
   const file = e.target.files[0];
   if(!file) return;
-  if(file.size > 15 * 1024 * 1024) {
-    showToast("Profilbild darf maximal 15MB gross sein!", "err");
+  if(file.size > 20 * 1024 * 1024) {
+    showToast("Profilbild darf maximal 20MB gross sein!", "err");
     return;
   }
 
   showToast("Profilbild wird optimiert...", "ok");
-  compressImageToDataUrl(file, 256, 256, 0.8, async function(dataUrl) {
+  compressImageToDataUrl(file, 128, 128, 0.7, async function(dataUrl) {
     const target = _activeProfileTarget || (CURRENT_USER ? CURRENT_USER.name : "ADMIN");
     const isMe = (CURRENT_USER && (target.toLowerCase() === CURRENT_USER.name.toLowerCase() || (CURRENT_USER.is_admin && target.toUpperCase() === "ADMIN")));
 
@@ -9137,7 +9137,7 @@ function handleAvatarUpload(e) {
     renderTab9SidebarUserList();
     if(typeof renderChatMessages === "function") renderChatMessages();
 
-    showToast("Profilbild aktualisiert! Synchronisiere...", "ok");
+    showToast("Profilbild aktualisiert! Synchronisiere mit Cloud...", "ok");
 
     // Fetch latest remote profiles, merge and push to GitHub
     try {
@@ -9165,10 +9165,10 @@ function handleAvatarUpload(e) {
 
       const fullJson = JSON.stringify(USER_PROFILES, null, 2);
       await uploadFileToGitHub("profiles.json", utf8_to_b64(fullJson), `Update avatar for ${target}`);
-      showToast("Profilbild für alle Benutzer synchronisiert!", "ok");
+      showToast("Profilbild erfolgreich für alle PCs synchronisiert!", "ok");
     } catch(err) {
       console.warn("Avatar sync error:", err);
-      showToast("Profilbild lokal gespeichert", "warn");
+      showToast("Fehler beim Cloud-Sync: " + err.message, "err");
     }
   });
 }
@@ -9176,13 +9176,13 @@ function handleAvatarUpload(e) {
 function handleBannerUpload(e) {
   const file = e.target.files[0];
   if(!file) return;
-  if(file.size > 15 * 1024 * 1024) {
-    showToast("Banner darf maximal 15MB gross sein!", "err");
+  if(file.size > 20 * 1024 * 1024) {
+    showToast("Banner darf maximal 20MB gross sein!", "err");
     return;
   }
   
   showToast("Banner wird optimiert...", "ok");
-  compressImageToDataUrl(file, 900, 320, 0.75, async function(dataUrl) {
+  compressImageToDataUrl(file, 640, 180, 0.65, async function(dataUrl) {
     const target = _activeProfileTarget || (CURRENT_USER ? CURRENT_USER.name : "ADMIN");
     const isMe = (CURRENT_USER && (target.toLowerCase() === CURRENT_USER.name.toLowerCase() || (CURRENT_USER.is_admin && target.toUpperCase() === "ADMIN")));
     
@@ -9263,10 +9263,10 @@ function handleBannerUpload(e) {
 
       const fullJson = JSON.stringify(USER_PROFILES, null, 2);
       await uploadFileToGitHub("profiles.json", utf8_to_b64(fullJson), `Update banner for ${target}`);
-      showToast("Banner für alle Benutzer synchronisiert!", "ok");
+      showToast("Banner erfolgreich für alle PCs synchronisiert!", "ok");
     } catch(err) {
       console.warn("Banner sync error:", err);
-      showToast("Banner lokal gespeichert", "warn");
+      showToast("Fehler beim Cloud-Sync: " + err.message, "err");
     }
   });
 }
