@@ -9705,39 +9705,44 @@ async function uploadHighlightClip() {
 
   if(file) {
     progFill.style.width = "40%";
-    progLbl.textContent = "Lese Video-Datei...";
-    const reader = new FileReader();
-    reader.onload = async function(e) {
-      try {
-        const fullDataUrl = e.target.result;
-        const b64Data = fullDataUrl.split(',')[1];
-        progFill.style.width = "60%";
-        progLbl.textContent = "Lade Video auf HySchool Server hoch...";
-        
-        const ext = file.name.split('.').pop() || 'mp4';
-        const cleanName = `hl_${Date.now()}.${ext}`;
-        const uploadPath = `releases/highlights/${cleanName}`;
-        
-        await uploadFileToGitHub(uploadPath, b64Data, `Upload highlight video: ${cleanName}`);
-        videoUrl = `${RAW_BASE}/${uploadPath}`;
-        videoType = "direct";
-        await finishHighlightUpload();
-      } catch(err) {
-        console.error("Video upload error:", err);
-        // Fallback to dataUrl if release upload fails
-        videoUrl = e.target.result;
-        videoType = "direct";
-        await finishHighlightUpload();
+    progLbl.textContent = "Lade Video in Cloud hoch...";
+    try {
+      const formData = new FormData();
+      formData.append("reqtype", "fileupload");
+      formData.append("fileToUpload", file);
+      const res = await fetch("https://catbox.moe/user/api.php", {
+        method: "POST",
+        body: formData
+      });
+      if(res.ok) {
+        const hostedUrl = await res.text();
+        if(hostedUrl && hostedUrl.startsWith("http")) {
+          videoUrl = hostedUrl.trim();
+          videoType = "direct";
+        } else {
+          throw new Error("Invalid response from cloud host");
+        }
+      } else {
+        throw new Error("Upload HTTP status " + res.status);
       }
-    };
-    reader.readAsDataURL(file);
+    } catch(uploadErr) {
+      console.warn("Cloud video host fallback:", uploadErr);
+      const reader = new FileReader();
+      const b64Data = await new Promise(resolve => {
+        reader.onload = e => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
+      videoUrl = b64Data;
+      videoType = "direct";
+    }
+    await finishHighlightUpload();
     return;
   } else {
     if(urlInput.includes("youtube.com") || urlInput.includes("youtu.be")) videoType = "youtube";
     else if(urlInput.includes("medal.tv")) videoType = "medal";
     else if(urlInput.includes("streamable.com")) videoType = "streamable";
     else videoType = "direct";
-    finishHighlightUpload();
+    await finishHighlightUpload();
   }
 
   async function finishHighlightUpload() {
@@ -9845,6 +9850,25 @@ async function deleteHighlight(highlightId) {
   }
 }
 
+function b64toBlobUrl(dataUrl) {
+  if(!dataUrl || !String(dataUrl).startsWith("data:")) return dataUrl;
+  try {
+    const parts = dataUrl.split(',');
+    const mimeMatch = parts[0].match(/:(.*?);/);
+    const mime = mimeMatch ? mimeMatch[1] : 'video/mp4';
+    const b64 = parts[1];
+    const byteChars = atob(b64);
+    const byteNums = new Uint8Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) {
+      byteNums[i] = byteChars.charCodeAt(i);
+    }
+    const blob = new Blob([byteNums], { type: mime });
+    return URL.createObjectURL(blob);
+  } catch(e) {
+    return dataUrl;
+  }
+}
+
 function openHighlightPlayer(highlightId) {
   const h = ALL_HIGHLIGHTS.find(item => item.id === highlightId);
   if(!h) return;
@@ -9879,11 +9903,11 @@ function openHighlightPlayer(highlightId) {
     const sSrc = sId ? `https://streamable.com/e/${sId}` : h.videoUrl;
     container.innerHTML = `<iframe src="${sSrc}" allow="autoplay; encrypted-media" allowfullscreen frameborder="0" style="width:100%;height:100%;border:none;"></iframe>`;
   } else {
+    const playableSrc = b64toBlobUrl(h.videoUrl);
     container.innerHTML = `
-      <video id="hl-active-video-player" controls playsinline preload="auto" style="width:100%;height:100%;object-fit:contain;background:#000000;border-radius:10px;">
-        <source src="${h.videoUrl}" type="video/mp4">
-        <source src="${h.videoUrl}" type="video/webm">
-        <source src="${h.videoUrl}">
+      <video id="hl-active-video-player" src="${playableSrc}" controls playsinline preload="auto" style="width:100%;height:100%;object-fit:contain;background:#000000;border-radius:10px;">
+        <source src="${playableSrc}" type="video/mp4">
+        <source src="${playableSrc}" type="video/webm">
         Dein Browser unterst&uuml;tzt dieses Videoformat nicht.
       </video>
     `;
@@ -10006,7 +10030,8 @@ function _makeHlCard(h) {
       + `<span style="font-size:9px;color:#64748b;font-weight:700;">LINK</span>`
       + `</div>` + authorOverlay;
   } else {
-    previewHtml = `<video preload="metadata" muted playsinline style="width:100%;height:100%;object-fit:cover;"><source src="${h.videoUrl}" type="video/mp4"></video>`
+    const cardVideoSrc = b64toBlobUrl(h.videoUrl);
+    previewHtml = `<video src="${cardVideoSrc}" preload="metadata" muted playsinline style="width:100%;height:100%;object-fit:cover;pointer-events:none;"></video>`
       + `<div onclick="openHighlightPlayer('${h.id}')" style="position:absolute;inset:0;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;" onmouseover="this.style.background='rgba(0,0,0,0.1)'" onmouseout="this.style.background='rgba(0,0,0,0.3)'"><div style="width:46px;height:46px;border-radius:50%;background:rgba(229,169,60,0.9);display:flex;align-items:center;justify-content:center;color:#07080c;font-size:18px;box-shadow:0 0 20px rgba(229,169,60,0.5);">&#9654;</div></div>`
       + authorOverlay;
   }
