@@ -3558,14 +3558,29 @@ function utf8_to_b64(str) {
 }
 
 function b64_to_utf8(str) {
+  let text = "";
   try {
-    return decodeURIComponent(escape(window.atob(str.replace(/\s+/g, ''))));
+    text = decodeURIComponent(escape(window.atob(str.replace(/\s+/g, ''))));
   } catch(_) {
-    const bin = window.atob(str.replace(/\s+/g, ''));
-    const bytes = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    return new TextDecoder().decode(bytes);
+    try {
+      const bin = window.atob(str.replace(/\s+/g, ''));
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      text = new TextDecoder().decode(bytes);
+    } catch(e) {
+      return "{}";
+    }
   }
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+  text = text.trim();
+  const firstBrace = text.indexOf('{');
+  const firstBracket = text.indexOf('[');
+  if (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) {
+    text = text.slice(firstBrace);
+  } else if (firstBracket !== -1) {
+    text = text.slice(firstBracket);
+  }
+  return text;
 }
 
 function showToast(msg, type="ok") {
@@ -8169,11 +8184,35 @@ async function saveUserProfile() {
   if(settingsPreview) settingsPreview.src = avatarUrl;
 
   try {
+    const token = getToken();
+    try {
+      const getRes = await fetch(`${API_BASE}/profiles.json?nc=${Date.now()}_${Math.random()}`, {
+        cache: "no-store",
+        headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+      });
+      if(getRes.ok) {
+        const info = await getRes.json();
+        if(info && info.content) {
+          const remoteMap = JSON.parse(b64_to_utf8(info.content));
+          if(remoteMap && typeof remoteMap === 'object') {
+            Object.keys(remoteMap).forEach(k => {
+              if(!USER_PROFILES[k]) USER_PROFILES[k] = remoteMap[k];
+            });
+          }
+        }
+      }
+    } catch(_) {}
+
+    USER_PROFILES[myName] = updatedProfile;
+    if(CURRENT_USER && CURRENT_USER.is_admin) USER_PROFILES["ADMIN"] = updatedProfile;
+
     const fullJson = JSON.stringify(USER_PROFILES, null, 2);
     const finalB64 = utf8_to_b64(fullJson);
     await uploadFileToGitHub("profiles.json", finalB64, `Update Profile: ${myName}`);
-    showToast("Profil erfolgreich aktualisiert!", "ok");
+    showToast("Profil erfolgreich aktualisiert und für alle synchronisiert!", "ok");
     closeSettingsModal();
+    renderGlobalUserBadges();
+    if(typeof renderTab9SidebarUserList === "function") renderTab9SidebarUserList();
     if(typeof renderChatMessages === "function") renderChatMessages();
     if(typeof filterUserConfigs === "function") filterUserConfigs();
   } catch(err) {
@@ -8799,8 +8838,16 @@ function renderTab9UserProfile(usernameOrKey) {
         <!-- AVATAR & HEADER INFO -->
         <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:-50px;margin-bottom:14px;flex-wrap:wrap;gap:12px;">
           <div style="display:flex;align-items:flex-end;gap:16px;">
-            <div style="width:96px;height:96px;border-radius:20px;border:3px solid #090b12;overflow:hidden;background:#131826;display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(229,169,60,0.3);position:relative;z-index:2;flex-shrink:0;">
-              <img src="${avatarUrl}" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
+            <div style="position:relative;width:96px;height:96px;flex-shrink:0;">
+              <div style="width:96px;height:96px;border-radius:20px;border:3px solid #090b12;overflow:hidden;background:#131826;display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(229,169,60,0.3);">
+                <img id="tab9-profile-main-avatar" src="${avatarUrl}" style="width:100%;height:100%;object-fit:cover;" alt="Avatar">
+              </div>
+              ${isSelf ? `
+                <button type="button" onclick="document.getElementById('tab9-avatar-upload-input').click()" title="Profilbild ändern" style="position:absolute;bottom:-4px;right:-4px;background:#e5a93c;color:#000;border:2px solid #090b12;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;cursor:pointer;box-shadow:0 0 10px rgba(229,169,60,0.6);z-index:10;">
+                  &#128247;
+                </button>
+                <input type="file" id="tab9-avatar-upload-input" style="display:none;" accept="image/*" onchange="handleAvatarUpload(event)">
+              ` : ''}
             </div>
             <div>
               <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
@@ -9042,6 +9089,90 @@ function renderUserSearch() {
   }
 }
 
+function handleAvatarUpload(e) {
+  const file = e.target.files[0];
+  if(!file) return;
+  if(file.size > 15 * 1024 * 1024) {
+    showToast("Profilbild darf maximal 15MB gross sein!", "err");
+    return;
+  }
+
+  showToast("Profilbild wird optimiert...", "ok");
+  compressImageToDataUrl(file, 256, 256, 0.8, async function(dataUrl) {
+    const target = _activeProfileTarget || (CURRENT_USER ? CURRENT_USER.name : "ADMIN");
+    const isMe = (CURRENT_USER && (target.toLowerCase() === CURRENT_USER.name.toLowerCase() || (CURRENT_USER.is_admin && target.toUpperCase() === "ADMIN")));
+
+    if(isMe) {
+      if(CURRENT_USER.is_admin) {
+        localStorage.setItem("hyschool_admin_avatar", dataUrl);
+      }
+      localStorage.setItem("hyschool_avatar_" + target, dataUrl);
+      localStorage.setItem("hyschool_avatar_" + target.toLowerCase(), dataUrl);
+    }
+
+    if(!USER_PROFILES) USER_PROFILES = {};
+    const existingProf = (typeof getUserProfile === 'function' ? getUserProfile(target) : USER_PROFILES[target]) || { username: target };
+
+    USER_PROFILES[target] = {
+      ...existingProf,
+      username: existingProf.username || target,
+      avatar: dataUrl
+    };
+    USER_PROFILES[target.toLowerCase()] = USER_PROFILES[target];
+    if(target.toUpperCase() === "ADMIN") USER_PROFILES["ADMIN"] = USER_PROFILES[target];
+    if(existingProf.key) USER_PROFILES[existingProf.key] = USER_PROFILES[target];
+
+    try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
+
+    // Immediate DOM updates
+    const mainAvatarImg = document.getElementById("tab9-profile-main-avatar");
+    if(mainAvatarImg) mainAvatarImg.src = dataUrl;
+    const headerAvatarEl = document.getElementById("header-user-avatar");
+    if(headerAvatarEl) headerAvatarEl.src = dataUrl;
+    const dashAvatarEl = document.getElementById("dash-avatar-img");
+    if(dashAvatarEl) dashAvatarEl.src = dataUrl;
+    const settingsPreview = document.getElementById("settings-avatar-preview");
+    if(settingsPreview) settingsPreview.src = dataUrl;
+
+    renderTab9SidebarUserList();
+    if(typeof renderChatMessages === "function") renderChatMessages();
+
+    showToast("Profilbild aktualisiert! Synchronisiere...", "ok");
+
+    // Fetch latest remote profiles, merge and push to GitHub
+    try {
+      const token = getToken();
+      try {
+        const getRes = await fetch(`${API_BASE}/profiles.json?nc=${Date.now()}_${Math.random()}`, {
+          cache: "no-store",
+          headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+        });
+        if(getRes.ok) {
+          const info = await getRes.json();
+          if(info && info.content) {
+            const remoteMap = JSON.parse(b64_to_utf8(info.content));
+            if(remoteMap && typeof remoteMap === 'object') {
+              Object.keys(remoteMap).forEach(k => {
+                if(!USER_PROFILES[k]) USER_PROFILES[k] = remoteMap[k];
+              });
+            }
+          }
+        }
+      } catch(_) {}
+
+      USER_PROFILES[target].avatar = dataUrl;
+      if(target.toUpperCase() === "ADMIN") USER_PROFILES["ADMIN"].avatar = dataUrl;
+
+      const fullJson = JSON.stringify(USER_PROFILES, null, 2);
+      await uploadFileToGitHub("profiles.json", utf8_to_b64(fullJson), `Update avatar for ${target}`);
+      showToast("Profilbild für alle Benutzer synchronisiert!", "ok");
+    } catch(err) {
+      console.warn("Avatar sync error:", err);
+      showToast("Profilbild lokal gespeichert", "warn");
+    }
+  });
+}
+
 function handleBannerUpload(e) {
   const file = e.target.files[0];
   if(!file) return;
@@ -9074,6 +9205,7 @@ function handleBannerUpload(e) {
       banner: dataUrl
     };
     USER_PROFILES[target.toLowerCase()] = USER_PROFILES[target];
+    if(target.toUpperCase() === "ADMIN") USER_PROFILES["ADMIN"] = USER_PROFILES[target];
     if(existingProf.key) USER_PROFILES[existingProf.key] = USER_PROFILES[target];
     
     try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
@@ -9105,8 +9237,30 @@ function handleBannerUpload(e) {
 
     showToast("Banner erfolgreich aktualisiert! Synchronisiere...", "ok");
 
-    // Background push to GitHub
+    // Fetch latest remote profiles, merge and push to GitHub
     try {
+      const token = getToken();
+      try {
+        const getRes = await fetch(`${API_BASE}/profiles.json?nc=${Date.now()}_${Math.random()}`, {
+          cache: "no-store",
+          headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+        });
+        if(getRes.ok) {
+          const info = await getRes.json();
+          if(info && info.content) {
+            const remoteMap = JSON.parse(b64_to_utf8(info.content));
+            if(remoteMap && typeof remoteMap === 'object') {
+              Object.keys(remoteMap).forEach(k => {
+                if(!USER_PROFILES[k]) USER_PROFILES[k] = remoteMap[k];
+              });
+            }
+          }
+        }
+      } catch(_) {}
+
+      USER_PROFILES[target].banner = dataUrl;
+      if(target.toUpperCase() === "ADMIN") USER_PROFILES["ADMIN"].banner = dataUrl;
+
       const fullJson = JSON.stringify(USER_PROFILES, null, 2);
       await uploadFileToGitHub("profiles.json", utf8_to_b64(fullJson), `Update banner for ${target}`);
       showToast("Banner für alle Benutzer synchronisiert!", "ok");
