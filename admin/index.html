@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -3939,14 +3939,14 @@ function renameCheatTab(key) {
   buildCheatsUI();
   applyCheatsDataToDOM(CHEATS);
   saveAllToGitHub();
-  showToast(`Tab erfolgreich in '${cleanName}' umbenannt!`, "ok");
-  logADMINAction("CHEAT_RENAMED", key, `Cheat-Tab zu '${cleanName}' umbenannt`);
+  showToast("Tab erfolgreich umbenannt!", "ok");
+  logADMINAction("CHEAT_RENAMED", key, "Cheat-Tab zu '" + cleanName + "' umbenannt");
 }
 
 async function removeCheatTab(key) {
   const c = CHEATS.find(x => x.key === key);
   const name = c ? c.label : key;
-  if(!confirm(`MÃ¶chtest du den Cheat-Reiter '${name}' wirklich komplett lÃ¶schen?`)) return;
+  if(!confirm("MÃ¶chtest du den Cheat-Reiter '" + name + "' wirklich komplett lÃ¶schen?")) return;
   
   CHEATS = CHEATS.filter(x => x.key !== key);
   if (_activeCheatIdx >= CHEATS.length) _activeCheatIdx = Math.max(0, CHEATS.length - 1);
@@ -3957,8 +3957,8 @@ async function removeCheatTab(key) {
   try {
     await saveAllToGitHub();
     await loadCheats();
-    showToast(`Cheat-Reiter '${name}' erfolgreich gelÃ¶scht!`, "ok");
-    logADMINAction("CHEAT_REMOVED", key, `Cheat-Reiter '${name}' (${key}) entfernt`);
+    showToast("Cheat-Reiter erfolgreich gelÃ¶scht!", "ok");
+    logADMINAction("CHEAT_REMOVED", key, "Cheat-Reiter '" + name + "' entfernt");
   } catch(err) {
     showToast("Fehler beim LÃ¶schen: " + err.message, "err");
   }
@@ -3972,7 +3972,7 @@ function buildCheatsUI() {
   if (CHEATS.length === 0) {
     subTabs.innerHTML = `<span style="color:#64748b;font-size:12px;padding:8px 0;">Keine Cheats angelegt. Klicke auf "+ NEUEN CHEAT ANLEGEN"</span>`;
     subContents.innerHTML = `<div style="background:#0c0d14;border:1px solid #1a2030;border-radius:12px;padding:40px;text-align:center;color:#94a3b8;">
-      <div style="font-size:32px;margin-bottom:12px;">ðŸŽ®</div>
+      <div style="font-size:32px;margin-bottom:12px;">&#127918;</div>
       <div style="font-size:14px;font-weight:800;color:#f8fafc;margin-bottom:6px;">Noch keine Cheats angelegt</div>
       <div style="font-size:12px;color:#64748b;margin-bottom:18px;">Erstelle deinen ersten Cheat-Tab Ã¼ber den Button oben rechts.</div>
       <button onclick="openAddCheatModal()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:10px 20px;border-radius:6px;font-size:12px;font-weight:900;cursor:pointer;">+ NEUEN CHEAT ANLEGEN</button>
@@ -3986,9 +3986,9 @@ function buildCheatsUI() {
     <div class="sub-tab ${i === _activeCheatIdx ? 'active' : ''}" onclick="switchCheatSubTab(${i})" id="csub-${i}" style="display:inline-flex;align-items:center;gap:6px;user-select:none;">
       <span style="color:#e5a93c">&#9679;</span>
       <span id="tab-label-text-${c.prefix}">${c.label}</span>
-      <div style="display:inline-flex;align-items:center;gap:2px;margin-left:4px;" onclick="event.stopPropagation()">
-        ${i > 0 ? `<span onclick="moveCheatTab(${i}, -1)" title="Nach links verschieben" style="cursor:pointer;font-size:11px;color:#64748b;padding:0 2px;transition:.15s;" onmouseover="this.style.color='#e5a93c'" onmouseout="this.style.color='#64748b'">â—€</span>` : ''}
-        ${i < CHEATS.length - 1 ? `<span onclick="moveCheatTab(${i}, 1)" title="Nach rechts verschieben" style="cursor:pointer;font-size:11px;color:#64748b;padding:0 2px;transition:.15s;" onmouseover="this.style.color='#e5a93c'" onmouseout="this.style.color='#64748b'">â–¶</span>` : ''}
+      <div style="display:inline-flex;align-items:center;gap:3px;margin-left:6px;" onclick="event.stopPropagation()">
+        ${i > 0 ? `<button type="button" onclick="moveCheatTab(${i}, -1)" title="Nach links verschieben" style="background:#10131d;border:1px solid #232d42;color:#94a3b8;font-size:9px;padding:1px 5px;border-radius:3px;cursor:pointer;line-height:1;transition:.15s;" onmouseover="this.style.color='#e5a93c';this.style.borderColor='#e5a93c'" onmouseout="this.style.color='#94a3b8';this.style.borderColor='#232d42'">&#9664;</button>` : ''}
+        ${i < CHEATS.length - 1 ? `<button type="button" onclick="moveCheatTab(${i}, 1)" title="Nach rechts verschieben" style="background:#10131d;border:1px solid #232d42;color:#94a3b8;font-size:9px;padding:1px 5px;border-radius:3px;cursor:pointer;line-height:1;transition:.15s;" onmouseover="this.style.color='#e5a93c';this.style.borderColor='#e5a93c'" onmouseout="this.style.color='#94a3b8';this.style.borderColor='#232d42'">&#9654;</button>` : ''}
       </div>
     </div>
   `).join("");
@@ -3999,10 +3999,10 @@ function buildCheatsUI() {
       <div class="info-panel">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;border-bottom:1px solid #1c2235;padding-bottom:10px;">
           <h3 style="margin:0;font-size:13px;font-weight:900;color:#f8fafc;display:flex;align-items:center;gap:6px;">
-            <span>âš¡</span> CHEAT KONFIGURATION (<span style="color:#e5a93c;">${c.label}</span>)
+            <span style="color:#e5a93c;">&#9889;</span> CHEAT KONFIGURATION (<span style="color:#e5a93c;">${c.label}</span>)
           </h3>
-          <button type="button" onclick="renameCheatTab('${c.key}')" style="background:#141724;border:1px solid #283046;color:#e5a93c;padding:5px 10px;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:4px;" title="Tab-Namen bearbeiten">
-            âœï¸ TAB UMBENENNEN
+          <button type="button" onclick="renameCheatTab('${c.key}')" style="background:#141724;border:1px solid #283046;color:#e5a93c;padding:5px 12px;border-radius:5px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:4px;" title="Tab-Namen bearbeiten">
+            &#9998; TAB UMBENENNEN
           </button>
         </div>
 
@@ -4023,11 +4023,11 @@ function buildCheatsUI() {
         </div>
 
         <button class="save-cheat-btn" id="save-btn-${c.prefix}" onclick="saveAllToGitHub()">
-          ðŸš€ SPEICHERN &amp; PUSHEN
+          &#128640; SPEICHERN &amp; PUSHEN
         </button>
         
         <button class="btn" type="button" onclick="removeCheatTab('${c.key}')" style="width:100%;margin-top:8px;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;font-size:11px;padding:9px;border-radius:6px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:.2s;" onmouseover="this.style.background='rgba(244,63,94,0.2)'" onmouseout="this.style.background='rgba(244,63,94,0.12)'">
-          ðŸ—‘ï¸ CHEAT REITER '${c.label}' ENTFERNEN
+          &#128465;&#65039; CHEAT REITER '${c.label}' ENTFERNEN
         </button>
       </div>
 
@@ -4055,7 +4055,7 @@ function buildCheatsUI() {
               <span style="color:#64748b;font-size:11px;">Lade Datei-Info...</span>
             </div>
             <button id="${c.prefix}-del-file-btn" onclick="deleteCheatFile('${c.prefix}','${c.key}')" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;">
-              ðŸ—‘ï¸ DATEI LÃ–SCHEN
+              &#128465;&#65039; DATEI LÃ–SCHEN
             </button>
           </div>
         </div>
@@ -4074,7 +4074,7 @@ function buildCheatsUI() {
         <!-- DEDICATED RAZER.DLL UPLOAD SECTION -->
         <div style="margin-top:14px;padding-top:14px;border-top:1px solid #1a1e2b;display:flex;flex-direction:column;gap:10px;">
           <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div class="section-title" style="margin-bottom:0;color:#10b981;">âš¡ RAZER.DLL HOCHLADEN (AUTO-INJECTION DATEI)</div>
+            <div class="section-title" style="margin-bottom:0;color:#10b981;">&#9889; RAZER.DLL HOCHLADEN (AUTO-INJECTION DATEI)</div>
             <span style="font-size:10px;color:#64748b;font-family:'JetBrains Mono',monospace;">C:\\Program Files\\Razer\\RazerAppEngine\\RAZER.dll</span>
           </div>
           <div style="font-size:11px;color:#94a3b8;line-height:1.4;">
@@ -4084,7 +4084,7 @@ function buildCheatsUI() {
           <div style="display:flex;gap:10px;align-items:center;">
             <input type="file" id="razer-file-input" accept=".dll" style="display:none;" onchange="onRazerFileSelected(this)">
             <button onclick="document.getElementById('razer-file-input').click()" style="background:#141724;border:1px solid #283046;color:#cbd5e1;padding:8px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;">
-              ðŸ’¾ RAZER.dll AUSWÃ„HLEN
+              &#128190; RAZER.dll AUSWÃ„HLEN
             </button>
             <span id="razer-file-name" style="font-size:11px;color:#e5a93c;font-weight:700;">Keine neue Datei gewÃ¤hlt</span>
           </div>
@@ -4095,10 +4095,10 @@ function buildCheatsUI() {
             </div>
             <div style="display:flex;gap:6px;align-items:center;">
               <button id="razer-del-btn" onclick="deleteRazerDll()" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;">
-                ðŸ—‘ï¸ RAZER.dll LÃ–SCHEN
+                &#128465;&#65039; RAZER.dll LÃ–SCHEN
               </button>
               <button id="razer-upload-btn" onclick="uploadRazerDll()" disabled style="background:linear-gradient(135deg, #10b981, #059669);border:none;color:#0b0c10;padding:6px 14px;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;">
-                ðŸš€ RAZER.dll PUSHEN
+                &#128640; RAZER.dll PUSHEN
               </button>
             </div>
           </div>
