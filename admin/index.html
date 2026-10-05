@@ -3363,39 +3363,63 @@
 
 <!-- TAB 9: USER VERZEICHNIS & PROFILE WORKSPACE -->
 <div class="tab-content" id="tc-9">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
-    <div>
-      <h2 style="margin:0;font-size:20px;font-weight:900;color:#f8fafc;letter-spacing:1px;display:flex;align-items:center;gap:10px;">
-        <span style="font-size:24px;">&#128269;</span> USER VERZEICHNIS &amp; PROFILE
-      </h2>
-      <p style="margin:4px 0 0 0;font-size:11.5px;color:#94a3b8;">Klicke links auf einen User, um sein vollst&#228;ndiges Profil, Rollen, Berechtigungen und G&#228;stebuch rechts direkt zu verwalten.</p>
+  <!-- VIEW 1: FULL USER GRID OVERVIEW (DEFAULT) -->
+  <div id="tab9-grid-view">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h2 style="margin:0;font-size:22px;font-weight:900;color:#f8fafc;letter-spacing:1px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:26px;">&#128269;</span> USER VERZEICHNIS
+        </h2>
+        <p style="margin:6px 0 0 0;font-size:12px;color:#94a3b8;line-height:1.5;">Hier findest du alle aktiven User und deren Profile. Klicke auf eine Karte, um das Profil zu &#246;ffnen.</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <input type="text" id="user-search-input" placeholder="User oder Rolle suchen..." oninput="filterUserSearch()" style="background:#0e121e;border:1px solid #1d253a;color:#cbd5e1;padding:8px 14px;border-radius:8px;font-size:12px;outline:none;width:220px;">
+        <button onclick="renderUserSearch()" class="btn-nav-action" style="background:#121624;border:1px solid rgba(56,189,248,0.4);color:#38bdf8;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;">
+          &#128260; AKTUALISIEREN
+        </button>
+      </div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <button onclick="renderUserSearch()" class="btn-nav-action" style="background:#121624;border:1px solid rgba(56,189,248,0.4);color:#38bdf8;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;">
-        &#128260; AKTUALISIEREN
-      </button>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:16px;" id="user-search-grid">
+      <!-- Big user cards rendered by JS -->
     </div>
   </div>
 
-  <div class="user-directory-split" style="display:grid;grid-template-columns:320px minmax(0, 1fr);gap:20px;align-items:flex-start;">
-    
-    <!-- LEFT SIDEBAR: USER LIST -->
-    <div style="background:#090b12;border:1px solid #1a2234;border-radius:14px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,0.5);">
-      <div style="margin-bottom:12px;">
-        <input type="text" id="user-search-input" placeholder="User oder Rolle suchen..." oninput="filterUserSearch()" style="width:100%;box-sizing:border-box;background:#0e121e;border:1px solid #1d253a;color:#cbd5e1;padding:8px 12px;border-radius:8px;font-size:11.5px;outline:none;">
+  <!-- VIEW 2: SPLIT DETAIL VIEW (PROFILE ON LEFT, COMPACT LIST ON RIGHT) -->
+  <div id="tab9-detail-view" style="display:none;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <button type="button" onclick="closeTab9UserProfile()" class="btn-nav-action" style="background:#121624;border:1px solid #e5a93c;color:#e5a93c;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">
+          <span>&#11013;&#65039;</span> ZUR&#220;CK ZUR &#220;BERSICHT
+        </button>
+        <span style="color:#64748b;font-size:13px;">|</span>
+        <h3 id="tab9-detail-user-title" style="margin:0;font-size:16px;font-weight:900;color:#f8fafc;letter-spacing:0.5px;">PROFIL DETAILS</h3>
       </div>
-      <div style="font-size:10px;font-weight:800;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
-        <span>AKTIVE BENUTZER</span>
-        <span id="user-search-total-count" style="color:#e5a93c;font-weight:900;">0</span>
-      </div>
-      <div id="user-search-grid" style="display:flex;flex-direction:column;gap:8px;max-height:720px;overflow-y:auto;padding-right:4px;">
-        <!-- Compact user cards rendered by JS -->
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button onclick="renderUserSearch()" class="btn-nav-action" style="background:#121624;border:1px solid rgba(56,189,248,0.4);color:#38bdf8;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;">
+          &#128260; AKTUALISIEREN
+        </button>
       </div>
     </div>
 
-    <!-- RIGHT MAIN: INTEGRATED PROFILE WORKSPACE -->
-    <div id="tab9-profile-workspace" style="background:#090b12;border:1px solid #1a2234;border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.6);min-height:500px;">
-      <!-- Profile rendered dynamically by renderTab9UserProfile(username) -->
+    <div class="user-directory-split" style="display:grid;grid-template-columns:minmax(0, 1fr) 300px;gap:20px;align-items:flex-start;">
+      <!-- LEFT MAIN: INTEGRATED PROFILE WORKSPACE -->
+      <div id="tab9-profile-workspace" style="background:#090b12;border:1px solid #1a2234;border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.6);min-height:500px;">
+        <!-- Profile rendered dynamically by renderTab9UserProfile(username) -->
+      </div>
+
+      <!-- RIGHT SIDEBAR: USER LIST -->
+      <div style="background:#090b12;border:1px solid #1a2234;border-radius:14px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+        <div style="margin-bottom:12px;">
+          <input type="text" id="tab9-sidebar-search-input" placeholder="User suchen..." oninput="filterSidebarUserSearch()" style="width:100%;box-sizing:border-box;background:#0e121e;border:1px solid #1d253a;color:#cbd5e1;padding:8px 12px;border-radius:8px;font-size:11.5px;outline:none;">
+        </div>
+        <div style="font-size:10px;font-weight:800;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+          <span>AKTIVE BENUTZER</span>
+          <span id="tab9-sidebar-total-count" style="color:#e5a93c;font-weight:900;">0</span>
+        </div>
+        <div id="tab9-sidebar-user-grid" style="display:flex;flex-direction:column;gap:8px;max-height:720px;overflow-y:auto;padding-right:4px;">
+          <!-- Compact user cards rendered by JS -->
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -7858,7 +7882,12 @@ const ROLE_COLOR_PRESETS = ['#fbbf24', '#38bdf8', '#f87171', '#34d399', '#c084fc
 
 function getAllRoles() {
   const custom = (Array.isArray(CUSTOM_ROLES) && CUSTOM_ROLES.length > 0) ? CUSTOM_ROLES : [];
-  const combined = [...DEFAULT_GLOBAL_ROLES];
+  const combined = [];
+  DEFAULT_GLOBAL_ROLES.forEach(dr => {
+    const overridden = custom.find(c => c.id === dr.id);
+    if(overridden) combined.push(overridden);
+    else combined.push(dr);
+  });
   custom.forEach(cr => {
     if(!combined.some(r => r.id === cr.id)) combined.push(cr);
   });
@@ -7967,14 +7996,14 @@ function renderDynamicRolePills(prof, targetContainerId = "profile-dynamic-roles
         </label>
 
         ${isChecked ? `
-          <button type="button" onclick="setPrimaryRole('${r.id}', '${targetContainerId}')" title="${isPrimary ? 'Dies ist die aktuelle Hauptrolle (wird zuerst angezeigt)' : 'Als Hauptrolle (zuerst angezeigt) setzen'}" style="background:${isPrimary ? 'rgba(251,191,36,0.2)' : '#141826'};border:1px solid ${isPrimary ? '#fbbf24' : '#232d44'};color:${isPrimary ? '#fbbf24' : '#64748b'};padding:2px 6px;border-radius:4px;font-size:9.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:3px;transition:all .15s;" onmouseover="this.style.borderColor='#fbbf24';this.style.color='#fbbf24'">
+          <button type="button" onclick="setPrimaryRole('${r.id}', '${targetContainerId}')" title="${isPrimary ? 'Dies ist die aktuelle Hauptrolle' : 'Als Hauptrolle (zuerst angezeigt) setzen'}" style="background:${isPrimary ? 'rgba(251,191,36,0.2)' : '#141826'};border:1px solid ${isPrimary ? '#fbbf24' : '#232d44'};color:${isPrimary ? '#fbbf24' : '#64748b'};padding:2px 6px;border-radius:4px;font-size:9.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:3px;transition:all .15s;" onmouseover="this.style.borderColor='#fbbf24';this.style.color='#fbbf24'">
             <span>${isPrimary ? '\u2B50' : '\u2606'}</span> <span>${isPrimary ? 'HAUPT' : 'SETZEN'}</span>
           </button>
         ` : ''}
 
-        ${(isOwner && isCustom) ? `
-          <button type="button" onclick="editCustomRole('${r.id}')" style="background:#141826;border:1px solid #232d44;color:#e5a93c;padding:2px 5px;border-radius:4px;font-size:9.5px;cursor:pointer;" title="Rolle bearbeiten">&#9998;</button>
-          <button type="button" onclick="deleteCustomRole('${r.id}')" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.3);color:#f43f5e;padding:2px 5px;border-radius:4px;font-size:9.5px;cursor:pointer;" title="Rolle l\u00f6schen">&#128465;&#65039;</button>
+        ${isOwner ? `
+          <button type="button" onclick="editCustomRole('${r.id}')" style="background:#141826;border:1px solid #232d44;color:#e5a93c;padding:2px 5px;border-radius:4px;font-size:9.5px;cursor:pointer;" title="Rolle bearbeiten (Name, Icon, Farbe)">&#9998;</button>
+          ${isCustom ? `<button type="button" onclick="deleteCustomRole('${r.id}')" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.3);color:#f43f5e;padding:2px 5px;border-radius:4px;font-size:9.5px;cursor:pointer;" title="Rolle l\u00f6schen">&#128465;&#65039;</button>` : ''}
         ` : ''}
       </div>
     `;
@@ -7984,15 +8013,16 @@ function renderDynamicRolePills(prof, targetContainerId = "profile-dynamic-roles
 async function setPrimaryRole(roleId, targetContainerId) {
   if(!_activeProfileTarget) return;
   const target = _activeProfileTarget;
-  const prof = getUserProfile(target) || { username: target };
+  let prof = getUserProfile(target) || { username: target };
   
   let ranks = Array.isArray(prof.rank) ? [...prof.rank] : [prof.rank || "premium"];
   ranks = ranks.filter(r => String(r).toLowerCase() !== roleId.toLowerCase());
-  ranks.unshift(roleId.toLowerCase()); // Move to first index
+  ranks.unshift(roleId.toLowerCase()); // Placed at index 0
   
   prof.rank = ranks;
   USER_PROFILES[target] = prof;
-  if(USER_PROFILES[target.toLowerCase()]) USER_PROFILES[target.toLowerCase()].rank = ranks;
+  if(!USER_PROFILES[target.toLowerCase()]) USER_PROFILES[target.toLowerCase()] = prof;
+  USER_PROFILES[target.toLowerCase()].rank = ranks;
   
   const isOwnerProfile = target.toUpperCase() === "ADMIN" || (CURRENT_USER && CURRENT_USER.is_admin && target.toLowerCase() === CURRENT_USER.name.toLowerCase());
   if (isOwnerProfile) {
@@ -8018,6 +8048,7 @@ async function setPrimaryRole(roleId, targetContainerId) {
   if(tab9BadgeWrap) tab9BadgeWrap.innerHTML = getRankBadge(target, ranks, true);
   
   renderUserSearch();
+  renderTab9SidebarUserList();
   renderGlobalUserBadges();
   
   try {
@@ -8047,8 +8078,7 @@ function openCreateCustomRoleModal() {
 
 function editCustomRole(roleId) {
   initCustomRoleModalControls();
-  const r = getAllRoles().find(x => x.id === roleId);
-  if(!r) return;
+  const r = getAllRoles().find(x => x.id === roleId) || { id: roleId, name: roleId.toUpperCase(), icon: "&#11088;", color: "#fbbf24" };
 
   document.getElementById("custom-role-modal-title").innerHTML = `<span style="color:#e5a93c;">&#9998;</span> ROLLE '${escapeHtml(r.name)}' BEARBEITEN`;
   document.getElementById("custom-role-orig-id").value = r.id;
@@ -8092,12 +8122,11 @@ async function saveCustomRoleSubmit() {
 
   if(!CUSTOM_ROLES) CUSTOM_ROLES = [];
 
-  if(origId) {
-    const idx = CUSTOM_ROLES.findIndex(x => x.id === origId);
-    if(idx >= 0) CUSTOM_ROLES[idx] = roleObj;
-    else CUSTOM_ROLES.push(roleObj);
+  const targetId = origId || rawId;
+  const idx = CUSTOM_ROLES.findIndex(x => x.id === targetId);
+  if(idx >= 0) {
+    CUSTOM_ROLES[idx] = roleObj;
   } else {
-    CUSTOM_ROLES = CUSTOM_ROLES.filter(x => x.id !== rawId);
     CUSTOM_ROLES.push(roleObj);
   }
 
@@ -8106,6 +8135,8 @@ async function saveCustomRoleSubmit() {
   renderDynamicRolePills(prof, "profile-dynamic-roles-list");
   renderDynamicRolePills(prof, "tab9-profile-dynamic-roles-list");
   renderUserSearch();
+  renderTab9SidebarUserList();
+  renderGlobalUserBadges();
   showToast(`Rolle '${name}' erfolgreich gespeichert!`, "ok");
 
   try {
@@ -8123,6 +8154,7 @@ async function deleteCustomRole(roleId) {
   renderDynamicRolePills(prof, "profile-dynamic-roles-list");
   renderDynamicRolePills(prof, "tab9-profile-dynamic-roles-list");
   renderUserSearch();
+  renderTab9SidebarUserList();
   showToast(`Rolle '${roleId}' gel\u00f6scht!`, "ok");
 
   try {
