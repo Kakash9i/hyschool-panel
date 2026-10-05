@@ -3875,8 +3875,27 @@ function handleLoginSuccess(user, pass) {
   if(loginScreen) loginScreen.style.display = "none";
   if(mainPanel) mainPanel.style.display = "block";
   
-  try { loadProfiles(); } catch(_) {} try { applyUserPermissions(); } catch(e) { console.error("applyUserPermissions err:", e); }
+  try { applyUserPermissions(); } catch(e) { console.error("applyUserPermissions err:", e); }
   try { buildUI(); } catch(e) { console.error("buildUI err:", e); }
+
+  // Eagerly pre-load all collections in parallel so search, active users, stats, configs and clips are immediately available
+  Promise.all([
+    loadProfiles(),
+    loadStaffList(true),
+    loadLicenses(true),
+    loadUserConfigs(true),
+    loadHighlights(true, true),
+    loadLiveLogs(true)
+  ]).then(() => {
+    try { applyUserPermissions(); } catch(_) {}
+    const tc9 = document.getElementById("tc-9");
+    if (tc9 && tc9.classList.contains("active")) {
+      try { renderTab9SidebarUserList(); } catch(_) {}
+      if (typeof _activeProfileTarget !== 'undefined' && _activeProfileTarget) {
+        try { renderTab9UserProfile(_activeProfileTarget); } catch(_) {}
+      }
+    }
+  }).catch(err => console.error("Preload collections err:", err));
   
   try {
     if(CURRENT_USER.is_admin || (CURRENT_USER.permissions && CURRENT_USER.permissions.can_manage_cheats)) {
@@ -3895,7 +3914,7 @@ function handleLoginSuccess(user, pass) {
   try { switchMainTab(initialTab); } catch(e) { console.error("switchMainTab err:", e); }
 
   try { logADMINAction("LOGIN", "-", `${CURRENT_USER.name} (${CURRENT_USER.role}) hat sich eingeloggt`); } catch(_) {}
-  try { showToast(`Willkommen zur\u00fcck, ${CURRENT_USER.name || user}!`, "ok"); } catch(_) {}
+  try { showToast(`Willkommen zurück, ${CURRENT_USER.name || user}!`, "ok"); } catch(_) {}
 }
 
 function doLogout() {
@@ -3929,14 +3948,11 @@ function applyUserPermissions() {
   const dashImg = document.getElementById("dash-avatar-img");
 
   const prof = getUserProfile(CURRENT_USER.name) || getUserProfile("ADMIN") || {};
-  // Per-user avatar: admin gets their own key, staff each get their own key by username
-  const savedAvatar = CURRENT_USER.is_admin
-    ? (localStorage.getItem("hyschool_admin_avatar") || prof.avatar)
-    : (localStorage.getItem("hyschool_avatar_" + CURRENT_USER.name) || prof.avatar);
-  const defaultSeed = CURRENT_USER.is_admin ? "ADMIN" : encodeURIComponent(CURRENT_USER.name || "User");
-  if(dashImg) dashImg.src = savedAvatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${defaultSeed}`;
+  const liveAvatar = prof.avatar || (typeof getAvatarUrl === 'function' ? getAvatarUrl(CURRENT_USER.name) : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(CURRENT_USER.name || "ADMIN")}`);
+
+  if(dashImg) dashImg.src = liveAvatar;
   const headerAvatarEl = document.getElementById("header-user-avatar");
-  if(headerAvatarEl) headerAvatarEl.src = savedAvatar || (typeof getAvatarUrl === 'function' ? getAvatarUrl(CURRENT_USER.name || "ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${defaultSeed}`);
+  if(headerAvatarEl) headerAvatarEl.src = liveAvatar;
 
 
   if(dashUser) dashUser.textContent = CURRENT_USER.is_admin ? "ADMIN" : CURRENT_USER.name;
@@ -4535,9 +4551,14 @@ function switchMainTab(idx) {
     loadProfiles();
   }
   if(idx === 9) {
-    loadProfiles().then(() => {
-      if(ALL_LICENSES.length === 0) loadLicenses(true).then(() => renderUserSearch());
-      else renderUserSearch();
+    Promise.all([
+      loadProfiles(),
+      ALL_LICENSES.length === 0 ? loadLicenses(true) : Promise.resolve(),
+      ALL_STAFF.length === 0 ? loadStaffList(true) : Promise.resolve(),
+      ALL_CONFIGS.length === 0 ? loadUserConfigs(true) : Promise.resolve(),
+      ALL_HIGHLIGHTS.length === 0 ? loadHighlights(true, true) : Promise.resolve()
+    ]).then(() => {
+      renderUserSearch();
       renderTab9SidebarUserList();
       if(_activeProfileTarget) renderTab9UserProfile(_activeProfileTarget);
     });
@@ -7603,6 +7624,25 @@ async function loadProfiles() {
 
           try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
           renderGlobalUserBadges();
+          
+          // Immediate live avatar sync for current user across header and dashboard
+          if (typeof CURRENT_USER !== 'undefined' && CURRENT_USER) {
+            const myProf = getUserProfile(CURRENT_USER.name) || getUserProfile("ADMIN") || {};
+            const myAvatar = myProf.avatar || (typeof getAvatarUrl === 'function' ? getAvatarUrl(CURRENT_USER.name) : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(CURRENT_USER.name || "ADMIN")}`);
+            const headImg = document.getElementById("header-user-avatar");
+            const dashImg = document.getElementById("dash-avatar-img");
+            if (headImg) headImg.src = myAvatar;
+            if (dashImg) dashImg.src = myAvatar;
+          }
+
+          // If Tab 9 is open, refresh user list and profile immediately
+          const tc9 = document.getElementById("tc-9");
+          if (tc9 && tc9.classList.contains("active")) {
+            try { renderTab9SidebarUserList(); } catch(_) {}
+            if (typeof _activeProfileTarget !== 'undefined' && _activeProfileTarget) {
+              try { renderTab9UserProfile(_activeProfileTarget); } catch(_) {}
+            }
+          }
         }
       }
     }
