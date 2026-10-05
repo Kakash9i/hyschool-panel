@@ -2360,9 +2360,9 @@
   </div>
 
 <!-- ADD NEW CHEAT MODAL POPUP -->
-<div id="add-cheat-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999999;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px;">
-  <div style="background:linear-gradient(165deg, #121624 0%, #080a10 100%);border:1px solid #e5a93c;border-radius:14px;padding:26px 30px;width:480px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.9);position:relative;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+<div id="add-cheat-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:999999;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px;">
+  <div style="background:linear-gradient(165deg, #121624 0%, #080a10 100%);border:1px solid #e5a93c;border-radius:14px;padding:24px 28px;width:520px;max-width:94vw;box-shadow:0 20px 60px rgba(0,0,0,0.9);position:relative;max-height:92vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <h3 style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
         <span style="color:#e5a93c;">&#10010;</span> NEUEN CHEAT-REITER ANLEGEN
       </h3>
@@ -2376,6 +2376,41 @@
       <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">CHEAT KEY / ID (Z.B. apex)</label>
       <input type="text" id="add-cheat-key" placeholder="z.B. apex" style="background:#090a0f;border:1px solid #1f2538;color:#e5a93c;padding:10px 14px;border-radius:6px;width:100%;font-size:12px;font-weight:800;outline:none;box-sizing:border-box;" />
     </div>
+
+    <!-- ICON SELECTION & UPLOAD FOR MAYA LOADER & ADMIN PANEL -->
+    <div class="modal-field-group" style="margin-bottom:12px;background:#090c15;padding:12px;border-radius:8px;border:1px solid #1a2234;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <label style="font-size:10px;color:#94a3b8;font-weight:700;display:block;margin:0;">CHEAT ICON (F&#220;R MAYA LOADER &amp; PANEL)</label>
+        <label style="background:rgba(229,169,60,0.15);border:1px solid rgba(229,169,60,0.4);color:#e5a93c;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+          <span>&#128193;</span> ICON BILD HOCHLADEN
+          <input type="file" id="add-cheat-icon-file" accept="image/*" style="display:none;" onchange="handleCheatIconUpload(event)">
+        </label>
+      </div>
+      
+      <!-- Preset Quick Game Icons -->
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;" id="add-cheat-icon-palette">
+        <button type="button" onclick="selectCheatIcon('&#9889;')" style="background:#131826;border:1px solid #232d42;color:#fff;padding:3px 7px;border-radius:4px;font-size:12px;cursor:pointer;">&#9889;</button>
+        <button type="button" onclick="selectCheatIcon('&#127918;')" style="background:#131826;border:1px solid #232d42;color:#fff;padding:3px 7px;border-radius:4px;font-size:12px;cursor:pointer;">&#127918;</button>
+        <button type="button" onclick="selectCheatIcon('&#128737;&#65039;')" style="background:#131826;border:1px solid #232d42;color:#fff;padding:3px 7px;border-radius:4px;font-size:12px;cursor:pointer;">&#128737;&#65039;</button>
+        <button type="button" onclick="selectCheatIcon('&#128081;')" style="background:#131826;border:1px solid #232d42;color:#fff;padding:3px 7px;border-radius:4px;font-size:12px;cursor:pointer;">&#128081;</button>
+        <button type="button" onclick="selectCheatIcon('&#11088;')" style="background:#131826;border:1px solid #232d42;color:#fff;padding:3px 7px;border-radius:4px;font-size:12px;cursor:pointer;">&#11088;</button>
+        <button type="button" onclick="selectCheatIcon('&#128142;')" style="background:#131826;border:1px solid #232d42;color:#fff;padding:3px 7px;border-radius:4px;font-size:12px;cursor:pointer;">&#128142;</button>
+        <button type="button" onclick="selectCheatIcon('&#127919;')" style="background:#131826;border:1px solid #232d42;color:#fff;padding:3px 7px;border-radius:4px;font-size:12px;cursor:pointer;">&#127919;</button>
+        <button type="button" onclick="selectCheatIcon('&#128640;')" style="background:#131826;border:1px solid #232d42;color:#fff;padding:3px 7px;border-radius:4px;font-size:12px;cursor:pointer;">&#128640;</button>
+        <button type="button" onclick="selectCheatIcon('&#128128;')" style="background:#131826;border:1px solid #232d42;color:#fff;padding:3px 7px;border-radius:4px;font-size:12px;cursor:pointer;">&#128128;</button>
+        <button type="button" onclick="selectCheatIcon('&#128481;&#65039;')" style="background:#131826;border:1px solid #232d42;color:#fff;padding:3px 7px;border-radius:4px;font-size:12px;cursor:pointer;">&#128481;&#65039;</button>
+        <button type="button" onclick="selectCheatIcon('&#128293;')" style="background:#131826;border:1px solid #232d42;color:#fff;padding:3px 7px;border-radius:4px;font-size:12px;cursor:pointer;">&#128293;</button>
+        <button type="button" onclick="selectCheatIcon('&#129413;')" style="background:#131826;border:1px solid #232d42;color:#fff;padding:3px 7px;border-radius:4px;font-size:12px;cursor:pointer;">&#129413;</button>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div id="add-cheat-icon-preview" style="width:34px;height:34px;background:#111522;border:1px solid #232c42;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;overflow:hidden;flex-shrink:0;">
+          &#9889;
+        </div>
+        <input type="text" id="add-cheat-icon" placeholder="Icon / Emoji / Bild-URL" value="&#9889;" oninput="updateAddCheatIconPreview(this.value)" style="flex:1;background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:8px 12px;border-radius:6px;font-size:11px;outline:none;" />
+      </div>
+    </div>
+
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
       <div class="modal-field-group" style="margin-bottom:0;">
         <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">VERSION</label>
@@ -2390,7 +2425,7 @@
         </select>
       </div>
     </div>
-    <div style="display:flex;gap:10px;margin-top:20px;">
+    <div style="display:flex;gap:10px;margin-top:18px;">
       <button type="button" onclick="createNewCheatSubmit()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#10010; REITER ERSTELLEN &amp; PUSHEN</button>
       <button type="button" onclick="closeAddCheatModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Abbrechen</button>
     </div>
@@ -4060,16 +4095,91 @@ function openAddCheatModal() {
 function closeAddCheatModal() {
   document.getElementById("add-cheat-modal").style.display = "none";
 }
+
+function compressImageToDataUrl(file, maxW = 800, maxH = 600, quality = 0.7, callback) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement("canvas");
+      let w = img.width;
+      let h = img.height;
+      if (w > maxW || h > maxH) {
+        if (w / h > maxW / maxH) {
+          h = Math.round(h * (maxW / w));
+          w = maxW;
+        } else {
+          w = Math.round(w * (maxH / h));
+          h = maxH;
+        }
+      }
+      canvas.width = Math.max(1, w);
+      canvas.height = Math.max(1, h);
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      let dataUrl;
+      try {
+        dataUrl = canvas.toDataURL("image/webp", quality);
+      } catch(_) {
+        dataUrl = canvas.toDataURL("image/jpeg", quality);
+      }
+      if(callback) callback(dataUrl);
+    };
+    img.onerror = function() {
+      if(callback) callback(evt.target.result);
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function selectCheatIcon(icon) {
+  const inp = document.getElementById("add-cheat-icon");
+  if(inp) {
+    inp.value = icon;
+    updateAddCheatIconPreview(icon);
+  }
+}
+
+function updateAddCheatIconPreview(val) {
+  const box = document.getElementById("add-cheat-icon-preview");
+  if(box) box.innerHTML = renderRoleIconHtml(val || '⚡');
+}
+
+function handleCheatIconUpload(e) {
+  const file = e.target.files[0];
+  if(!file) return;
+  compressImageToDataUrl(file, 64, 64, 0.8, (url) => {
+    const inp = document.getElementById("add-cheat-icon");
+    if(inp) inp.value = url;
+    updateAddCheatIconPreview(url);
+  });
+}
+
+function handleExistingCheatIconUpload(e, prefix) {
+  const file = e.target.files[0];
+  if(!file) return;
+  compressImageToDataUrl(file, 64, 64, 0.8, (url) => {
+    const inp = document.getElementById(`${prefix}-icon`);
+    const prev = document.getElementById(`${prefix}-icon-preview`);
+    if(inp) inp.value = url;
+    if(prev) prev.innerHTML = renderRoleIconHtml(url);
+  });
+}
+
 async function createNewCheatSubmit() {
   const labelInput = document.getElementById("add-cheat-label");
   const keyInput = document.getElementById("add-cheat-key");
   const verInput = document.getElementById("add-cheat-ver");
   const statInput = document.getElementById("add-cheat-status");
+  const iconInput = document.getElementById("add-cheat-icon");
 
   const label = (labelInput ? labelInput.value : "").trim();
   let rawKey = (keyInput ? keyInput.value : "").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
   const ver = (verInput && verInput.value.trim()) ? verInput.value.trim() : "1.0.0";
   const stat = statInput ? statInput.value : "UNDETECTED";
+  const icon = (iconInput && iconInput.value.trim()) ? iconInput.value.trim() : "⚡";
 
   if (!label) {
     alert("Bitte gib einen Cheat-Namen ein!");
@@ -4097,6 +4207,7 @@ async function createNewCheatSubmit() {
   const newCheatObj = {
     key: finalKey,
     label: label.toUpperCase(),
+    icon: icon,
     color: "#e5a93c",
     prefix: prefix,
     subscription: "AKTIV",
@@ -4118,6 +4229,8 @@ async function createNewCheatSubmit() {
 
   if (labelInput) labelInput.value = "";
   if (keyInput) keyInput.value = "";
+  if (iconInput) iconInput.value = "⚡";
+  updateAddCheatIconPreview("⚡");
 
   showToast("Speichere neuen Cheat '" + label + "' auf GitHub...", "ok");
   try {
@@ -4201,11 +4314,11 @@ function buildCheatsUI() {
 
   subTabs.innerHTML = CHEATS.map((c, i) => `
     <div class="sub-tab ${i === _activeCheatIdx ? 'active' : ''}" onclick="switchCheatSubTab(${i})" id="csub-${i}" style="display:inline-flex;align-items:center;gap:6px;user-select:none;">
-      <span style="color:#e5a93c">&#9679;</span>
+      <span id="csub-icon-${c.prefix}" style="display:inline-flex;align-items:center;justify-content:center;font-size:13px;width:16px;height:16px;overflow:hidden;">${renderRoleIconHtml(c.icon || '⚡')}</span>
       <span id="tab-label-text-${c.prefix}">${c.label}</span>
       <div style="display:inline-flex;align-items:center;gap:3px;margin-left:6px;" onclick="event.stopPropagation()">
-        ${i > 0 ? `<button type="button" onclick="moveCheatTab(${i}, -1)" title="Nach links verschieben" style="background:#10131d;border:1px solid #232d42;color:#94a3b8;font-size:9px;padding:1px 5px;border-radius:3px;cursor:pointer;line-height:1;transition:.15s;" onmouseover="this.style.color='#e5a93c';this.style.borderColor='#e5a93c'" onmouseout="this.style.color='#94a3b8';this.style.borderColor='#232d42'">&#9664;</button>` : ''}
-        ${i < CHEATS.length - 1 ? `<button type="button" onclick="moveCheatTab(${i}, 1)" title="Nach rechts verschieben" style="background:#10131d;border:1px solid #232d42;color:#94a3b8;font-size:9px;padding:1px 5px;border-radius:3px;cursor:pointer;line-height:1;transition:.15s;" onmouseover="this.style.color='#e5a93c';this.style.borderColor='#e5a93c'" onmouseout="this.style.color='#94a3b8';this.style.borderColor='#232d42'">&#9654;</button>` : ''}
+        ${i > 0 ? `<button type="button" onclick="moveCheatTab(${i}, -1)" title="Nach links verschieben" style="background:#10131d;border:1px solid #232d42;color:#94a3b8;font-size:9px;padding:1px 5px;border-radius:3px;cursor:pointer;line-height:1;transition:.15s;" onmouseover="this.style.color='#e5a93c';this.style.borderColor='#e5a93c'" onmouseout="this.style.color='#94a3b8';this.style.borderColor='#232d42'">◀</button>` : ''}
+        ${i < CHEATS.length - 1 ? `<button type="button" onclick="moveCheatTab(${i}, 1)" title="Nach rechts verschieben" style="background:#10131d;border:1px solid #232d42;color:#94a3b8;font-size:9px;padding:1px 5px;border-radius:3px;cursor:pointer;line-height:1;transition:.15s;" onmouseover="this.style.color='#e5a93c';this.style.borderColor='#e5a93c'" onmouseout="this.style.color='#94a3b8';this.style.borderColor='#232d42'">▶</button>` : ''}
       </div>
     </div>
   `).join("");
@@ -4216,11 +4329,25 @@ function buildCheatsUI() {
       <div class="info-panel">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;border-bottom:1px solid #1c2235;padding-bottom:12px;flex-wrap:wrap;gap:8px;">
           <h3 style="margin:0;font-size:12.5px;font-weight:900;color:#f8fafc;display:flex;align-items:center;gap:6px;letter-spacing:0.5px;">
-            <span style="color:#e5a93c;">&#9889;</span> CHEAT KONFIGURATION (<span style="color:#e5a93c;">${c.label}</span>)
+            <span id="${c.prefix}-header-icon" style="display:inline-flex;align-items:center;justify-content:center;">${renderRoleIconHtml(c.icon || '⚡')}</span> CHEAT KONFIGURATION (<span style="color:#e5a93c;">${c.label}</span>)
           </h3>
           <button type="button" onclick="renameCheatTab('${c.key}')" style="background:#141724;border:1px solid #283046;color:#e5a93c;padding:5px 12px;border-radius:5px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;transition:.15s;" onmouseover="this.style.borderColor='#e5a93c';this.style.background='#192033'" onmouseout="this.style.borderColor='#283046';this.style.background='#141724'" title="Tab-Namen bearbeiten">
-            &#9998; TAB UMBENENNEN
+            ✎ TAB UMBENENNEN
           </button>
+        </div>
+
+        <div class="field" style="margin-bottom:12px;">
+          <label style="font-size:10px;color:#94a3b8;font-weight:700;display:block;margin-bottom:6px;">CHEAT ICON (FÜR MAYA LOADER & PANEL)</label>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div id="${c.prefix}-icon-preview" style="width:34px;height:34px;background:#111522;border:1px solid #232c42;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;overflow:hidden;flex-shrink:0;">
+              ${renderRoleIconHtml(c.icon || '⚡')}
+            </div>
+            <input type="text" id="${c.prefix}-icon" value="${escapeHtml(c.icon || '⚡')}" oninput="const p=document.getElementById('${c.prefix}-icon-preview');if(p)p.innerHTML=renderRoleIconHtml(this.value);" style="flex:1;background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:8px 12px;border-radius:6px;font-size:11px;outline:none;" />
+            <label style="background:#151c2e;border:1px solid #24304c;color:#cbd5e1;padding:8px 12px;border-radius:6px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">
+              <span>📁</span> ICON BILD
+              <input type="file" accept="image/*" style="display:none;" onchange="handleExistingCheatIconUpload(event, '${c.prefix}')">
+            </label>
+          </div>
         </div>
 
         <div class="field"><label>SUBSCRIPTION</label><input type="text" id="${c.prefix}-sub" value="${c.subscription || ''}" /></div>
@@ -4557,6 +4684,7 @@ async function loadCheats() {
             return {
               key: k,
               label: existing.label || k.toUpperCase(),
+              icon: item.icon || existing.icon || "⚡",
               color: existing.color || "#ffcc00",
               prefix: existing.prefix || k.slice(0, 4),
               subscription: item.subscription || "",
@@ -4576,6 +4704,7 @@ async function loadCheats() {
     CHEATS = data.map(c => ({
       key: c.key,
       label: c.label || c.key.toUpperCase(),
+      icon: c.icon || "⚡",
       color: c.color || "#ffcc00",
       prefix: c.prefix || c.key.slice(0, 4),
       subscription: c.subscription || "",
@@ -4605,6 +4734,8 @@ function applyCheatsDataToDOM(list) {
     }
   }
   list.forEach(c => {
+    const iconInp = document.getElementById(`${c.prefix}-icon`);
+    const iconPrev = document.getElementById(`${c.prefix}-icon-preview`);
     const sub = document.getElementById(`${c.prefix}-sub`);
     const ver = document.getElementById(`${c.prefix}-ver`);
     const st  = document.getElementById(`${c.prefix}-status`);
@@ -4614,6 +4745,8 @@ function applyCheatsDataToDOM(list) {
     const activeFileEl = document.getElementById(`${c.prefix}-active-file`);
     const delBtn = document.getElementById(`${c.prefix}-del-file-btn`);
 
+    if(iconInp && c.icon !== undefined) iconInp.value = c.icon || "⚡";
+    if(iconPrev && c.icon !== undefined) iconPrev.innerHTML = renderRoleIconHtml(c.icon || "⚡");
     if(sub && c.subscription !== undefined) sub.value = c.subscription || "";
     if(ver && c.version !== undefined) ver.value = c.version || "";
     if(st && c.status) st.value = c.status || "UNDETECTED";
@@ -4767,6 +4900,7 @@ async function saveAllToGitHub() {
     const legacyOut = {};
 
     CHEATS.forEach(c => {
+      const iconVal = (document.getElementById(`${c.prefix}-icon`)||{}).value || c.icon || "⚡";
       const subVal = (document.getElementById(`${c.prefix}-sub`)||{}).value || c.subscription || "";
       const verVal = (document.getElementById(`${c.prefix}-ver`)||{}).value || c.version || "";
       const statVal = (document.getElementById(`${c.prefix}-status`)||{}).value || c.status || "UNDETECTED";
@@ -4774,6 +4908,7 @@ async function saveAllToGitHub() {
       const urlVal = (document.getElementById(`${c.prefix}-url`)||{}).value || c.download_url || "";
       const loadVal = document.getElementById(`${c.prefix}-load`) ? document.getElementById(`${c.prefix}-load`).checked : (c.loadable !== false);
 
+      c.icon = iconVal;
       c.subscription = subVal;
       c.version = verVal;
       c.status = statVal;
@@ -4784,6 +4919,7 @@ async function saveAllToGitHub() {
       configArray.push({
         key: c.key,
         label: c.label,
+        icon: iconVal,
         color: c.color || "#ffcc00",
         prefix: c.prefix,
         subscription: subVal,
@@ -4795,6 +4931,7 @@ async function saveAllToGitHub() {
       });
 
       legacyOut[c.key] = {
+        icon: iconVal,
         subscription: subVal,
         version: verVal,
         status: statVal,
@@ -7672,12 +7809,10 @@ function generateRandomAvatar() {
 
 function handleBannerFileUpload(input) {
   if (input.files && input.files[0]) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      document.getElementById("settings-banner-url").value = e.target.result;
-      updateSettingsBannerPreview(e.target.result);
-    };
-    reader.readAsDataURL(input.files[0]);
+    compressImageToDataUrl(input.files[0], 900, 320, 0.75, (dataUrl) => {
+      document.getElementById("settings-banner-url").value = dataUrl;
+      updateSettingsBannerPreview(dataUrl);
+    });
   }
 }
 
@@ -7686,6 +7821,8 @@ function updateSettingsBannerPreview(url) {
   if(preview) {
     if(url && url.trim().length > 0) {
       preview.style.backgroundImage = `url(${url})`;
+      preview.style.backgroundSize = "cover";
+      preview.style.backgroundPosition = "center";
     } else {
       preview.style.backgroundImage = `linear-gradient(45deg, #1e293b, #0f172a)`;
     }
@@ -7694,18 +7831,10 @@ function updateSettingsBannerPreview(url) {
 
 function handleAvatarFileUpload(input) {
   if (input.files && input.files[0]) {
-    const file = input.files[0];
-    if(file.size > 2 * 1024 * 1024) {
-      alert("Bild darf maximal 2MB gro\u00df sein!");
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const dataUrl = e.target.result;
+    compressImageToDataUrl(input.files[0], 256, 256, 0.8, (dataUrl) => {
       document.getElementById("settings-avatar-url").value = dataUrl;
       updateSettingsAvatarPreview(dataUrl);
-    };
-    reader.readAsDataURL(file);
+    });
   }
 }
 
@@ -8746,49 +8875,76 @@ function renderUserSearch() {
 function handleBannerUpload(e) {
   const file = e.target.files[0];
   if(!file) return;
-  if(file.size > 5 * 1024 * 1024) {
-    showToast("Banner darf maximal 5MB gross sein!", "err");
+  if(file.size > 15 * 1024 * 1024) {
+    showToast("Banner darf maximal 15MB gross sein!", "err");
     return;
   }
-  const reader = new FileReader();
-  reader.onload = async function(evt) {
-    const dataUrl = evt.target.result;
+  
+  showToast("Banner wird optimiert...", "ok");
+  compressImageToDataUrl(file, 900, 320, 0.75, async function(dataUrl) {
     const target = _activeProfileTarget || (CURRENT_USER ? CURRENT_USER.name : "ADMIN");
+    const isMe = (CURRENT_USER && (target.toLowerCase() === CURRENT_USER.name.toLowerCase() || (CURRENT_USER.is_admin && target.toUpperCase() === "ADMIN")));
     
     // Save to local storage
-    if(target.toUpperCase() === "ADMIN" || (CURRENT_USER && CURRENT_USER.is_admin)) {
-      localStorage.setItem("hyschool_admin_banner", dataUrl);
+    if(isMe) {
+      if(CURRENT_USER.is_admin) {
+        localStorage.setItem("hyschool_admin_banner", dataUrl);
+      }
+      localStorage.setItem("hyschool_banner_" + target, dataUrl);
+      localStorage.setItem("hyschool_banner_" + target.toLowerCase(), dataUrl);
     }
-    localStorage.setItem("hyschool_banner_" + target, dataUrl);
-    localStorage.setItem("hyschool_banner_" + target.toLowerCase(), dataUrl);
     
-    // Save to prof memory
+    // Save to prof memory - PRESERVE EXISTING AVATAR & PROPERTIES
     if(!USER_PROFILES) USER_PROFILES = {};
-    if(!USER_PROFILES[target]) USER_PROFILES[target] = { username: target };
-    USER_PROFILES[target].banner = dataUrl;
+    const existingProf = (typeof getUserProfile === 'function' ? getUserProfile(target) : USER_PROFILES[target]) || { username: target };
+    
+    USER_PROFILES[target] = {
+      ...existingProf,
+      username: existingProf.username || target,
+      banner: dataUrl
+    };
     USER_PROFILES[target.toLowerCase()] = USER_PROFILES[target];
+    if(existingProf.key) USER_PROFILES[existingProf.key] = USER_PROFILES[target];
     
     try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
     
     const bannerEl = document.getElementById("tab9-profile-banner");
     if(bannerEl) {
       bannerEl.style.backgroundImage = `url(${dataUrl})`;
+      bannerEl.style.backgroundSize = "cover";
+      bannerEl.style.backgroundPosition = "center";
     }
     const modalBanner = document.getElementById("profile-modal-banner");
     if(modalBanner) {
       modalBanner.style.backgroundImage = `url(${dataUrl})`;
+      modalBanner.style.backgroundSize = "cover";
+      modalBanner.style.backgroundPosition = "center";
     }
-    showToast("Banner erfolgreich aktualisiert!", "ok");
+
+    // Keep header & dash avatars perfectly intact
+    const headerAvatarEl = document.getElementById("header-user-avatar");
+    if(headerAvatarEl && typeof getAvatarUrl === 'function') {
+      const myAvatar = getAvatarUrl(CURRENT_USER ? CURRENT_USER.name : "ADMIN");
+      if(myAvatar) headerAvatarEl.src = myAvatar;
+    }
+    const dashAvatarEl = document.getElementById("dash-avatar-img");
+    if(dashAvatarEl && typeof getAvatarUrl === 'function') {
+      const myAvatar = getAvatarUrl(CURRENT_USER ? CURRENT_USER.name : "ADMIN");
+      if(myAvatar) dashAvatarEl.src = myAvatar;
+    }
+
+    showToast("Banner erfolgreich aktualisiert! Synchronisiere...", "ok");
 
     // Background push to GitHub
     try {
       const fullJson = JSON.stringify(USER_PROFILES, null, 2);
       await uploadFileToGitHub("profiles.json", utf8_to_b64(fullJson), `Update banner for ${target}`);
+      showToast("Banner für alle Benutzer synchronisiert!", "ok");
     } catch(err) {
       console.warn("Banner sync error:", err);
+      showToast("Banner lokal gespeichert", "warn");
     }
-  };
-  reader.readAsDataURL(file);
+  });
 }
 
 function closeProfileModal() {
