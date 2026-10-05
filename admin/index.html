@@ -2322,6 +2322,41 @@
   </div>
 </div>
 
+<!-- CHEAT PERMISSIONS MODAL POPUP -->
+<div id="edit-cheat-perms-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999999;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px;">
+  <div style="background:linear-gradient(165deg, #121624 0%, #080a10 100%);border:1px solid #e5a93c;border-radius:14px;padding:26px 30px;width:540px;max-width:94vw;box-shadow:0 20px 60px rgba(0,0,0,0.9);position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;border-bottom:1px solid #1a1e2b;padding-bottom:12px;">
+      <div>
+        <h3 style="color:#f8fafc;font-size:15px;letter-spacing:0.5px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
+          <span style="color:#e5a93c;">&#128737;&#65039;</span> CHEAT-FREISCHALTUNGEN ANPASSEN
+        </h3>
+        <div style="font-size:11px;color:#94a3b8;margin-top:4px;">
+          Key: <span id="modal-cperm-key" style="color:#e5a93c;font-family:'JetBrains Mono',monospace;font-weight:800;">---</span>
+          &bull; User: <span id="modal-cperm-user" style="color:#f8fafc;font-weight:800;">---</span>
+        </div>
+      </div>
+      <button type="button" onclick="closeCheatPermsModal()" style="background:none;border:none;color:#64748b;font-size:24px;cursor:pointer;line-height:1;">&times;</button>
+    </div>
+
+    <!-- Quick select buttons -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <button type="button" onclick="setAllCheatPerms(true)" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.35);color:#10b981;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;">&#9989; Alle freischalten</button>
+      <button type="button" onclick="setAllCheatPerms(false)" style="background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;">&#128683; Alle sperren</button>
+    </div>
+
+    <!-- Dynamic cheat list from CHEATS array -->
+    <div id="modal-cheat-perms-list" style="display:flex;flex-direction:column;gap:10px;max-height:360px;overflow-y:auto;padding-right:4px;">
+      <!-- Populated dynamically via JS -->
+    </div>
+
+    <!-- Modal footer -->
+    <div style="display:flex;gap:10px;margin-top:22px;border-top:1px solid #1a1e2b;padding-top:16px;">
+      <button type="button" onclick="saveCheatPermsFromModal()" id="modal-save-perms-btn" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128190; FREISCHALTUNGEN SPEICHERN &amp; PUSHEN</button>
+      <button type="button" onclick="closeCheatPermsModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
 <!-- TAB 0: CHEATS -->
   <div class="tab-content active" id="tc-0">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
@@ -2587,25 +2622,21 @@
     <!-- VIEW 2: PERMISSIONS -->
     <div id="view-permissions" style="display:none;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
-        <p style="font-size:12px;color:#94a3b8;margin:0;">Hier kannst du festlegen, welche Cheats f&#252;r die jeweiligen License Keys freigeschaltet sind.</p>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <button onclick="saveUserPermissions()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:900;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128190; RECHTE SPEICHERN &amp; ANWENDEN</button>
-        </div>
+        <p style="font-size:12px;color:#94a3b8;margin:0;">Hier kannst du festlegen, welche Cheats f&#252;r die jeweiligen License Keys freigeschaltet sind. Klicke auf 'Cheats anpassen', um die Freigaben flexibel auszuw&#228;hlen.</p>
       </div>
 
       <div class="logs-table-wrap">
         <table class="logs-table">
           <thead>
             <tr>
-              <th style="width:28%;">KEYAUTH LICENSE KEY</th>
-              <th style="width:22%;">BENUTZER / INHABER</th>
-              <th style="width:15%;text-align:center;">VALORANT</th>
-              <th style="width:15%;text-align:center;">AI HYSCHOOL</th>
-              <th style="width:15%;text-align:center;">CLASH OF CLANS</th>
+              <th style="width:25%;">KEYAUTH LICENSE KEY</th>
+              <th style="width:18%;">BENUTZER / INHABER</th>
+              <th style="width:42%;">AKTIVE FREIGESCHALTETE CHEATS</th>
+              <th style="width:15%;text-align:center;">AKTION</th>
             </tr>
           </thead>
           <tbody id="permissions-table-body">
-            <tr><td colspan="7" style="text-align:center;color:#64748b;padding:24px;">Lade Benutzerberechtigungen...</td></tr>
+            <tr><td colspan="4" style="text-align:center;color:#64748b;padding:24px;">Lade Benutzerberechtigungen...</td></tr>
           </tbody>
         </table>
       </div>
@@ -5108,47 +5139,34 @@ async function deleteAllUserLogs() {
   }
 }
 
-// PERMISSIONS HELPER: Ermittelt Standardberechtigungen anhand des Keys / Lizenztyps
+// PERMISSIONS HELPER: Ermittelt Standardberechtigungen dynamisch anhand des Keys / Lizenztyps & CHEATS
 function getDefaultPermissionsForKey(key, lic) {
   const k = (key || "").toUpperCase();
   const prod = lic && lic.product ? lic.product.toUpperCase() : "";
+  const perms = {};
 
-  if (k.includes("HYS-ALL") || prod === "ALL") {
-    return { valorant: true, apex: true, tft_helper: true, naraka: true, coc: true };
-  }
-  if (k.includes("HYS-VAL") || prod === "VALORANT") {
-    return { valorant: true, apex: false, tft_helper: false, naraka: false, coc: false };
-  }
-  if (k.includes("HYS-APEX") || k.includes("HYS-AI") || prod === "APEX") {
-    return { valorant: false, apex: true, tft_helper: false, naraka: false, coc: false };
-  }
-  if (k.includes("HYS-TFT") || prod === "TFT_HELPER") {
-    return { valorant: false, apex: false, tft_helper: true, naraka: false, coc: false };
-  }
-  if (k.includes("HYS-NAR") || prod === "NARAKA") {
-    return { valorant: false, apex: false, tft_helper: false, naraka: true, coc: false };
-  }
-  if (k.includes("HYS-COC") || prod === "COC") {
-    return { valorant: false, apex: false, tft_helper: false, naraka: false, coc: true };
-  }
+  const isAll = k.includes("HYS-ALL") || prod === "ALL";
+  CHEATS.forEach(c => {
+    if (isAll) {
+      perms[c.key] = true;
+    } else if (k.includes("HYS-" + c.key.toUpperCase()) || prod === c.key.toUpperCase() || (lic && lic.product && lic.product.toLowerCase().includes(c.key.toLowerCase()))) {
+      perms[c.key] = true;
+    } else {
+      perms[c.key] = false;
+    }
+  });
 
-  // Falls lic.product gesetzt ist (z. B. kombinierte Produkte)
-  if (lic && lic.product) {
-    const p = lic.product.toLowerCase();
-    return {
-      valorant: p.includes("valorant"),
-      apex: p.includes("apex") || p.includes("ai"),
-      tft_helper: p.includes("tft"),
-      naraka: p.includes("naraka"),
-      coc: p.includes("coc")
-    };
+  // Fallback: If no cheat is active, default to first cheat if available
+  const hasAnyActive = Object.values(perms).some(v => v === true);
+  if (!hasAnyActive && CHEATS.length > 0) {
+    perms[CHEATS[0].key] = true;
   }
-
-  return { valorant: true, apex: false, tft_helper: false, naraka: false, coc: false };
+  return perms;
 }
 
 // PERMISSIONS
 let USER_PERMISSIONS = {};
+let _currentPermModalKey = null;
 
 async function loadUserPermissions() {
   const tbody = document.getElementById("permissions-table-body");
@@ -5206,7 +5224,7 @@ function renderPermissionsRows() {
   const validKeys = Object.keys(validLicMap);
 
   if(validKeys.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#64748b;padding:24px;">Keine aktiven Lizenzschl\u00fcssel vorhanden. Erstelle zuerst einen Key in der Lizenz-Verwaltung!</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:#64748b;padding:24px;">Keine aktiven Lizenzschl\u00fcssel vorhanden. Erstelle zuerst einen Key in der Lizenz-Verwaltung!</td></tr>`;
     return;
   }
 
@@ -5221,9 +5239,6 @@ function renderPermissionsRows() {
     const userPerms = USER_PERMISSIONS[key] || defPerms;
     const userName = validLicMap[key] || "---";
 
-    // Staff restrictions:
-    // 1. Never allowed to edit ADMIN accounts
-    // 2. If editScope === 'own', only allowed to edit keys where created_by matches their name
     const isOwnKey = lic && (lic.created_by === CURRENT_USER.name || (lic.note && lic.note === CURRENT_USER.name));
     const canEditThisKey = CURRENT_USER.is_admin || (!isProtectedADMIN && (editScope === "all" || isOwnKey));
     const disabledAttr = canEditThisKey ? "" : "disabled";
@@ -5235,6 +5250,19 @@ function renderPermissionsRows() {
       labelExtra = `<span style="background:#141724;color:#64748b;border:1px solid #1f2538;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;margin-left:6px;">\uD83D\uDD12 Fremder Key</span>`;
     }
 
+    // Build active badges for all cheats
+    const badges = [];
+    CHEATS.forEach(c => {
+      const isEnabled = userPerms[c.key] === true;
+      if (isEnabled) {
+        badges.push(`<span style="background:rgba(229,169,60,0.12);color:#fbbf24;border:1px solid rgba(229,169,60,0.3);padding:3px 8px;border-radius:5px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:4px;">&#9889; ${c.label}</span>`);
+      }
+    });
+
+    const badgesHtml = badges.length > 0 
+      ? `<div style="display:flex;flex-wrap:wrap;gap:5px;">${badges.join("")}</div>`
+      : `<span style="color:#64748b;font-size:11px;font-style:italic;">Keine Cheats freigeschaltet (Gesperrt)</span>`;
+
     return `
       <tr style="${!canEditThisKey ? 'opacity:0.75;' : ''}">
         <td><span class="tag-key-box">${key}</span></td>
@@ -5242,14 +5270,145 @@ function renderPermissionsRows() {
           <span style="color:#38bdf8;margin-right:5px;">&#128084;</span> ${userName}
           ${labelExtra}
         </td>
-        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-valorant" ${userPerms.valorant===true?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
-        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-apex" ${userPerms.apex===true?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
-        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-tft_helper" ${userPerms.tft_helper===true?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
-        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-naraka" ${userPerms.naraka===true?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
-        <td style="text-align:center;"><label class="toggle" style="display:inline-block;"><input type="checkbox" id="perm-${key}-coc" ${userPerms.coc===true?'checked':''} ${disabledAttr}><span class="slider"></span></label></td>
+        <td>
+          ${badgesHtml}
+        </td>
+        <td style="text-align:center;">
+          <button type="button" onclick="openCheatPermsModal('${key}')" ${disabledAttr} style="background:linear-gradient(135deg,#e5a93c,#c68924);border:none;color:#0b0c10;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 3px 10px rgba(229,169,60,0.2);transition:.15s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+            <span>&#127918;</span> Cheats anpassen
+          </button>
+        </td>
       </tr>
     `;
   }).join("");
+}
+
+function openCheatPermsModal(key) {
+  _currentPermModalKey = key;
+  const lic = ALL_LICENSES.find(l => l.key === key);
+  const userName = lic ? (lic.used_by || (lic.used ? "Kunde" : (lic.note && lic.note !== "---" ? lic.note : "Unbenutzt"))) : "---";
+
+  const keyEl = document.getElementById("modal-cperm-key");
+  const userEl = document.getElementById("modal-cperm-user");
+  if (keyEl) keyEl.textContent = key;
+  if (userEl) userEl.textContent = userName;
+
+  const defPerms = getDefaultPermissionsForKey(key, lic);
+  const curPerms = USER_PERMISSIONS[key] || defPerms;
+
+  const listEl = document.getElementById("modal-cheat-perms-list");
+  if (listEl) {
+    listEl.innerHTML = CHEATS.map(c => {
+      const isChecked = curPerms[c.key] === true;
+      return `
+        <div style="background:#0e111a;border:1px solid #1c2235;border-radius:8px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:all .15s ease;" onmouseover="this.style.borderColor='#e5a93c'" onmouseout="this.style.borderColor='#1c2235'">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:16px;color:#e5a93c;">&#9889;</span>
+            <div>
+              <div style="font-size:12.5px;font-weight:900;color:#f8fafc;letter-spacing:0.5px;">${c.label}</div>
+              <div style="font-size:10px;color:#64748b;margin-top:2px;">Key: <span style="color:#94a3b8;font-family:monospace;">${c.key}</span> &bull; Status: <span style="color:#10b981;font-weight:700;">${c.status || 'UNDETECTED'}</span></div>
+            </div>
+          </div>
+          <label class="toggle" style="margin:0;">
+            <input type="checkbox" id="modal-cperm-chk-${c.key}" ${isChecked ? 'checked' : ''}>
+            <span class="slider"></span>
+          </label>
+        </div>
+      `;
+    }).join("");
+  }
+
+  const modal = document.getElementById("edit-cheat-perms-modal");
+  if (modal) modal.style.display = "flex";
+}
+
+function closeCheatPermsModal() {
+  const modal = document.getElementById("edit-cheat-perms-modal");
+  if (modal) modal.style.display = "none";
+  _currentPermModalKey = null;
+}
+
+function setAllCheatPerms(enable) {
+  CHEATS.forEach(c => {
+    const chk = document.getElementById(`modal-cperm-chk-${c.key}`);
+    if (chk) chk.checked = !!enable;
+  });
+}
+
+async function saveCheatPermsFromModal() {
+  if (!_currentPermModalKey) return;
+  if (!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_edit_keys) {
+    showToast("Keine Berechtigung zum Bearbeiten von Cheat-Permissions!", "err");
+    return;
+  }
+
+  const key = _currentPermModalKey;
+  const lic = ALL_LICENSES.find(l => l.key === key);
+
+  const updatedKeyPerms = {};
+  const activeCheats = [];
+
+  CHEATS.forEach(c => {
+    const chk = document.getElementById(`modal-cperm-chk-${c.key}`);
+    const isChecked = chk ? chk.checked : false;
+    updatedKeyPerms[c.key] = isChecked;
+    if (isChecked) activeCheats.push(c);
+  });
+
+  USER_PERMISSIONS[key] = updatedKeyPerms;
+
+  // Sync license product name & product slug
+  let licenseChangesMade = false;
+  if (lic) {
+    if (activeCheats.length === CHEATS.length && CHEATS.length > 0) {
+      lic.product = "ALL";
+      lic.product_name = "ALL CHEATS";
+    } else if (activeCheats.length === 0) {
+      lic.product = "NONE";
+      lic.product_name = "KEINE CHEATS (GESPERRT)";
+    } else if (activeCheats.length === 1) {
+      lic.product = activeCheats[0].key;
+      lic.product_name = activeCheats[0].label;
+    } else {
+      lic.product = activeCheats.map(c => c.key).join(",");
+      lic.product_name = activeCheats.map(c => c.label).join(" + ");
+    }
+    licenseChangesMade = true;
+  }
+
+  const saveBtn = document.getElementById("modal-save-perms-btn");
+  const origBtnText = saveBtn ? saveBtn.innerHTML : "";
+  if (saveBtn) {
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = "&#8987; SPEICHERE AUF GITHUB...";
+  }
+
+  try {
+    const jsonStr = JSON.stringify(USER_PERMISSIONS, null, 2);
+    const b64 = utf8_to_b64(jsonStr);
+
+    try { localStorage.setItem("hyschool_perms_cache", jsonStr); } catch(_) {}
+
+    await uploadFileToGitHub("permissions.json", b64, `Update permissions for key ${key} via ADMIN Panel`);
+
+    if (licenseChangesMade) {
+      await saveLicenses();
+    }
+
+    closeCheatPermsModal();
+    renderPermissionsRows();
+    if (typeof filterLicenses === 'function') filterLicenses();
+
+    showToast(`Freischaltungen f\u00fcr Key '${key}' erfolgreich gespeichert & gepusht!`, "ok");
+    logADMINAction("CHEAT_PERMS_UPDATED", key, `Freischaltungen angepasst: ${activeCheats.map(c=>c.label).join(", ") || "Keine"}`);
+  } catch(e) {
+    showToast("Fehler beim Speichern der Berechtigungen: " + e.message, "err");
+  } finally {
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = origBtnText;
+    }
+  }
 }
 
 async function saveUserPermissions(fromDom = true) {
@@ -5258,98 +5417,16 @@ async function saveUserPermissions(fromDom = true) {
     return;
   }
 
-  const allKeys = new Set();
-  ALL_LICENSES.forEach(l => { if(l.key) allKeys.add(l.key); });
-
-  const prodNamesMap = {
-    "valorant": "VALORANT",
-    "apex": "AI HYSCHOOL",
-    "tft_helper": "TFT HELPER",
-    "naraka": "NARAKA",
-    "coc": "CLASH OF CLANS"
-  };
-
-  const newPerms = {};
-  let licenseChangesMade = false;
-  const p = CURRENT_USER.permissions || {};
-  const editScope = p.edit_scope || "own";
-
-  allKeys.forEach(k => {
-    const lic = ALL_LICENSES.find(l => l.key === k);
-    const isProtectedADMIN = isADMINAccountKey(k, lic);
-    const isOwnKey = lic && (lic.created_by === CURRENT_USER.name || (lic.note && lic.note === CURRENT_USER.name));
-    const canEditThisKey = CURRENT_USER.is_admin || (!isProtectedADMIN && (editScope === "all" || isOwnKey));
-    const defPerms = getDefaultPermissionsForKey(k, lic);
-
-    let valChecked, apexChecked, tftChecked, narChecked, cocChecked;
-
-    if(fromDom && canEditThisKey) {
-      valChecked = document.getElementById(`perm-${k}-valorant`) ? document.getElementById(`perm-${k}-valorant`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].valorant === true : defPerms.valorant);
-      apexChecked = document.getElementById(`perm-${k}-apex`) ? document.getElementById(`perm-${k}-apex`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].apex === true : defPerms.apex);
-      tftChecked = document.getElementById(`perm-${k}-tft_helper`) ? document.getElementById(`perm-${k}-tft_helper`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].tft_helper === true : defPerms.tft_helper);
-      narChecked = document.getElementById(`perm-${k}-naraka`) ? document.getElementById(`perm-${k}-naraka`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].naraka === true : defPerms.naraka);
-      cocChecked = document.getElementById(`perm-${k}-coc`) ? document.getElementById(`perm-${k}-coc`).checked : (USER_PERMISSIONS[k] ? USER_PERMISSIONS[k].coc === true : defPerms.coc);
-    } else {
-      const cur = USER_PERMISSIONS[k] || defPerms;
-      valChecked = cur.valorant === true;
-      apexChecked = cur.apex === true;
-      tftChecked = cur.tft_helper === true;
-      narChecked = cur.naraka === true;
-      cocChecked = cur.coc === true;
-    }
-
-    newPerms[k] = {
-      valorant: valChecked,
-      apex: apexChecked,
-      tft_helper: tftChecked,
-      naraka: narChecked,
-      coc: cocChecked
-    };
-
-    if(fromDom) {
-      const lic = ALL_LICENSES.find(l => l.key === k);
-      if (lic) {
-        const activeCheats = [];
-        if(valChecked) activeCheats.push("valorant");
-        if(apexChecked) activeCheats.push("apex");
-        if(tftChecked) activeCheats.push("tft_helper");
-        if(narChecked) activeCheats.push("naraka");
-        if(cocChecked) activeCheats.push("coc");
-
-        if (activeCheats.length === 5) {
-          lic.product = "ALL";
-          lic.product_name = "ALL CHEATS";
-        } else if (activeCheats.length === 0) {
-          lic.product = "NONE";
-          lic.product_name = "KEINE CHEATS (GESPERRT)";
-        } else if (activeCheats.length === 1) {
-          lic.product = activeCheats[0];
-          lic.product_name = prodNamesMap[activeCheats[0]] || activeCheats[0];
-        } else {
-          lic.product = activeCheats.join(",");
-          lic.product_name = activeCheats.map(c => prodNamesMap[c] || c).join(" + ");
-        }
-        licenseChangesMade = true;
-      }
-    }
-  });
-
   try {
-    const jsonStr = JSON.stringify(newPerms, null, 2);
+    const jsonStr = JSON.stringify(USER_PERMISSIONS, null, 2);
     const b64 = utf8_to_b64(jsonStr);
 
     try { localStorage.setItem("hyschool_perms_cache", jsonStr); } catch(_) {}
     
     await uploadFileToGitHub("permissions.json", b64, "Update key permissions via ADMIN Panel");
 
-    USER_PERMISSIONS = newPerms;
-
-    if (licenseChangesMade && fromDom) {
-      await saveLicenses();
-    }
-
     if(fromDom) {
-      showToast("Key-Berechtigungen & Lizenz-Spiele erfolgreich synchronisiert!", "ok");
+      showToast("Key-Berechtigungen erfolgreich synchronisiert!", "ok");
     }
   } catch(e) {
     showToast("Fehler beim Speichern der Berechtigungen: " + e.message, "err");
