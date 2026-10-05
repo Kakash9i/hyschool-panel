@@ -8644,11 +8644,20 @@ function closeTab9UserProfile() {
 }
 
 function selectUserInDirectory(username) {
+  if(!username) return;
   _activeProfileTarget = username;
+  const gridView = document.getElementById("tab9-grid-view");
+  const detailView = document.getElementById("tab9-detail-view");
+  if(gridView) gridView.style.display = "none";
+  if(detailView) detailView.style.display = "block";
   const titleEl = document.getElementById("tab9-detail-user-title");
   if(titleEl) titleEl.textContent = `PROFIL: ${formatNameUpper(username)}`;
   renderTab9SidebarUserList();
   renderTab9UserProfile(username);
+}
+
+function openTab9UserProfile(username) {
+  selectUserInDirectory(username);
 }
 
 function renderTab9SidebarUserList() {
@@ -9856,42 +9865,64 @@ async function deleteUserConfig(configId) {
     showToast("Cloud-Sync Fehler: " + e.message, "err");
   }
 }
-// Silent Auto-Polling alle 3.5 Sekunden für Live-Synchronisation unter Kollegen
-setInterval(() => {
-  const tc3 = document.getElementById("tc-3");
-  if(tc3 && tc3.classList.contains("active")) {
-    const vLic = document.getElementById("view-licenses");
-    if(vLic && vLic.style.display !== "none") loadLicenses(true);
-  }
-  const tc2 = document.getElementById("tc-2");
-  if(tc2 && tc2.classList.contains("active")) loadLiveLogs(true);
-  const tc5 = document.getElementById("tc-5");
-  if(tc5 && tc5.classList.contains("active")) loadAuditLogs(true);
-  const tc7 = document.getElementById("tc-7");
-  if(tc7 && tc7.classList.contains("active")) loadUserConfigs(true);
-  const tc8 = document.getElementById("tc-8");
-  if(tc8 && tc8.classList.contains("active")) loadHighlights(true);
-  const tc9 = document.getElementById("tc-9");
-  if(tc9 && tc9.classList.contains("active")) {
-    loadProfiles().then(() => {
-      renderTab9SidebarUserList();
-      if(_activeProfileTarget) renderTab9UserProfile(_activeProfileTarget);
-    }).catch(()=>{});
-  } else {
-    loadProfiles().catch(()=>{});
-  }
+// Silent Auto-Polling alle 3.5 Sekunden für vollständige Live-Synchronisation unter Kollegen
+setInterval(async () => {
+  try {
+    // 1. Always sync global profiles & roles in background
+    await loadProfiles();
 
-  const tc6 = document.getElementById("tc-6");
-  if(tc6 && tc6.classList.contains("active")) {
-    const commPanel = document.getElementById("admin-community-chat-panel");
-    if(commPanel && commPanel.style.display !== "none") {
-      loadTeamChat(true);
+    // 2. Tab-specific silent data refresh
+    const tc0 = document.getElementById("tc-0");
+    if(tc0 && tc0.classList.contains("active")) {
+      loadCheats();
+    }
+    const tc2 = document.getElementById("tc-2");
+    if(tc2 && tc2.classList.contains("active")) {
+      loadLiveLogs(true);
+    }
+    const tc3 = document.getElementById("tc-3");
+    if(tc3 && tc3.classList.contains("active")) {
+      const vLic = document.getElementById("view-licenses");
+      if(vLic && vLic.style.display !== "none") loadLicenses(true);
+      else loadUserPermissions();
+    }
+    const tc4 = document.getElementById("tc-4");
+    if(tc4 && tc4.classList.contains("active")) {
+      loadStaffList(true);
+    }
+    const tc5 = document.getElementById("tc-5");
+    if(tc5 && tc5.classList.contains("active")) {
+      loadAuditLogs(true);
+    }
+    const tc6 = document.getElementById("tc-6");
+    if(tc6 && tc6.classList.contains("active")) {
+      const commPanel = document.getElementById("admin-community-chat-panel");
+      if(commPanel && commPanel.style.display !== "none") {
+        loadTeamChat(true);
+      } else {
+        loadADMINSupportTickets(false, true);
+      }
     } else {
       loadADMINSupportTickets(false, true);
     }
-  } else {
-    // Global ticket poll for audio notification & badge count
-    loadADMINSupportTickets(false, true);
+    const tc7 = document.getElementById("tc-7");
+    if(tc7 && tc7.classList.contains("active")) {
+      loadUserConfigs(true);
+    }
+    const tc8 = document.getElementById("tc-8");
+    if(tc8 && tc8.classList.contains("active")) {
+      loadHighlights(true);
+    }
+    const tc9 = document.getElementById("tc-9");
+    if(tc9 && tc9.classList.contains("active")) {
+      renderTab9SidebarUserList();
+      const detailView = document.getElementById("tab9-detail-view");
+      if(!detailView || detailView.style.display === "none") {
+        renderUserSearch();
+      }
+    }
+  } catch(err) {
+    console.warn("Live sync poll error:", err);
   }
 }, 3500);
 
