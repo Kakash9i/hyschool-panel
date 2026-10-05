@@ -4074,6 +4074,24 @@ function applyUserPermissions() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  // Clean legacy local storage override keys so GitHub is 100% fresh and live
+  try {
+    const keysToRemove = [
+      "hyschool_admin_ranks",
+      "hyschool_admin_avatar",
+      "hyschool_admin_banner",
+      "hyschool_admin_bio",
+      "hyschool_admin_discord"
+    ];
+    for(let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if(k && (k.startsWith("hyschool_ranks_") || k.startsWith("hyschool_avatar_") || k.startsWith("hyschool_banner_") || k.startsWith("hyschool_bio_") || k.startsWith("hyschool_discord_"))) {
+        localStorage.removeItem(k);
+      }
+    }
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+  } catch(_) {}
+
   try { loadProfiles(); } catch(_) {}
   const savedUser = localStorage.getItem("admin_user");
   const savedPw = localStorage.getItem("admin_pw");
@@ -7561,9 +7579,14 @@ const PRESET_AVATARS = [
 async function loadProfiles() {
   const token = getToken();
   try {
-    const res = await fetch(`${API_BASE}/profiles.json?nc=${Date.now()}`, {
+    const res = await fetch(`${API_BASE}/profiles.json?nc=${Date.now()}_${Math.random()}`, {
       cache: "no-store",
-      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+      headers: { 
+        Authorization: `token ${token}`, 
+        Accept: "application/vnd.github.v3+json",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache"
+      }
     });
     if(res.ok) {
       const info = await res.json();
@@ -7586,7 +7609,7 @@ async function loadProfiles() {
   } catch(_) {
     try {
       const cached = localStorage.getItem("hyschool_profiles_cache");
-      if(cached) {
+      if(cached && (!USER_PROFILES || Object.keys(USER_PROFILES).length === 0)) {
         const parsed = JSON.parse(cached);
         if(parsed && typeof parsed === "object") {
           USER_PROFILES = parsed;
@@ -7601,9 +7624,14 @@ async function loadProfiles() {
 
   // Also load custom roles from GitHub
   try {
-    const rolesRes = await fetch(`${API_BASE}/roles.json?nc=${Date.now()}`, {
+    const rolesRes = await fetch(`${API_BASE}/roles.json?nc=${Date.now()}_${Math.random()}`, {
       cache: "no-store",
-      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+      headers: { 
+        Authorization: `token ${token}`, 
+        Accept: "application/vnd.github.v3+json",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache"
+      }
     });
     if(rolesRes.ok) {
       const rInfo = await rolesRes.json();
@@ -7854,50 +7882,31 @@ function getUserProfile(usernameOrKey) {
     }
   }
 
-  // Check localStorage for assigned user ranks
-  let localRank = null;
-  try {
-    const isOwnerProfile = lower === "admin" || (CURRENT_USER && CURRENT_USER.is_admin && isMe);
-    const stored = (isOwnerProfile) ? localStorage.getItem("hyschool_admin_ranks") : (localStorage.getItem("hyschool_ranks_" + target) || localStorage.getItem("hyschool_ranks_" + lower));
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed) && parsed.length > 0) localRank = parsed;
-    }
-  } catch(_) {}
-
-  // Calculate accurate joined date from license/logs/profile
+  // Accurate joined date from license/logs/profile
   const joinedDate = getUserJoinedDate(target);
 
   if (p) {
-    if (localRank && Array.isArray(localRank) && localRank.length > 0) {
-      p.rank = localRank;
+    if (!p.rank || (Array.isArray(p.rank) && p.rank.length === 0)) {
+      p.rank = (lower === "admin" || (CURRENT_USER && CURRENT_USER.is_admin && isMe)) ? ["admin"] : ["premium"];
     }
     p.joined = joinedDate;
-    if (isMe) {
-      const myAvatar = localStorage.getItem("hyschool_avatar_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_avatar") : null);
-      const myBanner = localStorage.getItem("hyschool_banner_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_banner") : null);
-      const myBio = localStorage.getItem("hyschool_bio_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_bio") : null);
-      const myDiscord = localStorage.getItem("hyschool_discord_" + CURRENT_USER.name) || (CURRENT_USER.is_admin ? localStorage.getItem("hyschool_admin_discord") : null);
-      
-      if (myAvatar) p.avatar = myAvatar;
-      if (myBanner) p.banner = myBanner;
-      if (myBio) p.bio = myBio;
-      if (myDiscord !== null && myDiscord !== undefined) p.discord = myDiscord;
+    if (!p.avatar) {
+      p.avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(target)}`;
     }
     return p;
   }
 
   const isOwner = (lower === "admin" || (CURRENT_USER && CURRENT_USER.is_admin && isMe));
-  let fallbackRanks = localRank || (isOwner ? ["admin"] : ["premium"]);
+  let fallbackRanks = isOwner ? ["admin"] : ["premium"];
 
   return {
     username: isOwner ? "ADMIN" : target,
     key: isOwner ? "MASTER-ADMIN" : (CURRENT_USER && isMe ? (CURRENT_USER.key || "") : ""),
     rank: fallbackRanks,
-    avatar: isOwner ? (localStorage.getItem("hyschool_admin_avatar") || "https://api.dicebear.com/7.x/bottts/svg?seed=ADMIN") : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(target)}`,
-    banner: isOwner ? (localStorage.getItem("hyschool_admin_banner") || "") : "",
-    bio: isOwner ? (localStorage.getItem("hyschool_admin_bio") || "HySchool Owner & Lead Developer.") : "Dieser User hat noch keine Bio hinzugef\u00fcgt.",
-    discord: isOwner ? (localStorage.getItem("hyschool_admin_discord") || "") : "Nicht angegeben",
+    avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(target)}`,
+    banner: "",
+    bio: isOwner ? "HySchool Owner & Lead Developer." : "Dieser User hat noch keine Bio hinzugefügt.",
+    discord: "Nicht angegeben",
     joined: joinedDate,
     guestbook: []
   };
