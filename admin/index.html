@@ -3213,11 +3213,13 @@ const REPO        = "Kakash9i/loader";
 const API_BASE    = "https://api.github.com/repos/" + REPO + "/contents";
 const RAW_BASE    = "https://raw.githubusercontent.com/" + REPO + "/main";
 
-let CHEATS = [
-  { key:"valorant", label:"VALORANT", color:"#ffcc00", prefix:"val" },
-  { key:"apex", label:"AI HYSCHOOL", color:"#ffb700", prefix:"apex" },
-  { key:"coc", label:"CLASH OF CLANS", color:"#ffcc00", prefix:"coc" }
+const DEFAULT_CHEATS = [
+  { key:"valorant", label:"VALORANT", color:"#ffcc00", prefix:"val", subscription:"AKTIV", version:"v2.4", status:"UNDETECTED", last_update:"05.10.2026", download_url:"", loadable:true },
+  { key:"apex", label:"AI HYSCHOOL", color:"#ffb700", prefix:"apex", subscription:"AKTIV", version:"1.0.0", status:"UNDETECTED", last_update:"05.10.2026", download_url:"", loadable:true },
+  { key:"coc", label:"CLASH OF CLANS", color:"#ffcc00", prefix:"coc", subscription:"AKTIV", version:"v1.0", status:"UNDETECTED", last_update:"05.10.2026", download_url:"", loadable:true }
 ];
+
+let CHEATS = JSON.parse(JSON.stringify(DEFAULT_CHEATS));
 
 function formatNameUpper(n) {
   if (!n) return 'ADMIN';
@@ -3842,39 +3844,86 @@ function closeAddCheatModal() {
   document.getElementById("add-cheat-modal").style.display = "none";
 }
 async function createNewCheatSubmit() {
-  const label = (document.getElementById("add-cheat-label").value || "").trim();
-  const key = (document.getElementById("add-cheat-key").value || "").trim().toLowerCase();
-  const ver = (document.getElementById("add-cheat-ver").value || "1.0.0").trim();
-  const stat = document.getElementById("add-cheat-status").value || "UNDETECTED";
-  if(!label || !key) { alert("Bitte gib einen Namen und eine Key-ID an!"); return; }
-  const prefix = key.slice(0, 4);
-  if(!CHEATS.some(c => c.key === key)) {
-    CHEATS.push({ key: key, label: label.toUpperCase(), color: "#e5a93c", prefix: prefix });
-    state[prefix] = { files: [], url: "", script: "" };
+  const labelInput = document.getElementById("add-cheat-label");
+  const keyInput = document.getElementById("add-cheat-key");
+  const verInput = document.getElementById("add-cheat-ver");
+  const statInput = document.getElementById("add-cheat-status");
+
+  const label = (labelInput ? labelInput.value : "").trim();
+  let key = (keyInput ? keyInput.value : "").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
+  const ver = (verInput && verInput.value.trim()) ? verInput.value.trim() : "1.0.0";
+  const stat = statInput ? statInput.value : "UNDETECTED";
+
+  if (!label) {
+    alert("Bitte gib einen Cheat-Namen ein!");
+    return;
   }
+  if (!key) {
+    key = label.toLowerCase().replace(/[^a-z0-9_-]/g, "");
+  }
+  if (!key) {
+    alert("UngÃ¼ltiger Key-Identifier!");
+    return;
+  }
+
+  const prefix = "c_" + key.slice(0, 6) + "_" + Math.floor(Math.random()*1000);
+  const now = new Date();
+  const todayStr = String(now.getDate()).padStart(2, '0') + "." + String(now.getMonth() + 1).padStart(2, '0') + "." + now.getFullYear();
+
+  const existingIdx = CHEATS.findIndex(c => c.key === key);
+  const newCheatObj = {
+    key: key,
+    label: label.toUpperCase(),
+    color: "#e5a93c",
+    prefix: prefix,
+    subscription: "AKTIV",
+    version: ver,
+    status: stat,
+    last_update: todayStr,
+    download_url: "",
+    loadable: true
+  };
+
+  if (existingIdx >= 0) {
+    CHEATS[existingIdx] = newCheatObj;
+  } else {
+    CHEATS.push(newCheatObj);
+  }
+
+  state[prefix] = { files: [], url: "", script: "" };
+  _activeCheatIdx = CHEATS.length - 1;
+
   closeAddCheatModal();
   buildCheatsUI();
-  const subEl = document.getElementById(prefix + "-sub");
-  const verEl = document.getElementById(prefix + "-ver");
-  const statEl = document.getElementById(prefix + "-status");
-  const loadEl = document.getElementById(prefix + "-load");
-  if(subEl) subEl.value = "AKTIV";
-  if(verEl) verEl.value = ver;
-  if(statEl) statEl.value = stat;
-  if(loadEl) loadEl.checked = true;
-  await saveAllToGitHub();
-  await loadCheats();
-  showToast("Neuer Cheat \x27" + label + "\x27 erfolgreich angelegt!", "ok");
+  applyCheatsDataToDOM(CHEATS);
+
+  if (labelInput) labelInput.value = "";
+  if (keyInput) keyInput.value = "";
+
+  showToast("Speichere neuen Cheat '" + label + "' auf GitHub...", "ok");
+  try {
+    await saveAllToGitHub();
+    await loadCheats();
+    showToast("Neuer Cheat '" + label + "' erfolgreich angelegt und live synchronisiert!", "ok");
+    logADMINAction("CHEAT_CREATED", key, "Neuer Cheat '" + label + "' (" + key + ") angelegt");
+  } catch(err) {
+    showToast("Fehler beim Speichern: " + err.message, "err");
+  }
 }
 
 async function removeCheatTab(key) {
-  if(!confirm("M\u00f6chtest du den Cheat-Reiter \x27" + key + "\x27 wirklich lÃ¶schen?")) return;
+  if(!confirm("MÃ¶chtest du den Cheat-Reiter '" + key + "' wirklich lÃ¶schen?")) return;
   CHEATS = CHEATS.filter(c => c.key !== key);
-  _activeCheatIdx = 0;
+  if (_activeCheatIdx >= CHEATS.length) _activeCheatIdx = 0;
   buildCheatsUI();
-  await saveAllToGitHub();
-  await loadCheats();
-  showToast("Cheat-Reiter entfernt!", "ok");
+  try {
+    await saveAllToGitHub();
+    await loadCheats();
+    showToast("Cheat-Reiter entfernt!", "ok");
+    logADMINAction("CHEAT_REMOVED", key, "Cheat-Reiter '" + key + "' entfernt");
+  } catch(err) {
+    showToast("Fehler: " + err.message, "err");
+  }
 }
 
 function buildCheatsUI() {
@@ -4197,20 +4246,27 @@ function renderFileList(prefix) {
 
 // GITHUB CHEATS SYNC
 async function loadCheats() {
-  // 1. Instant load from local cache if available
   try {
-    const cached = localStorage.getItem("hyschool_cheats_cache");
+    const cached = localStorage.getItem("hyschool_cheats_config_cache");
     if(cached) {
-      applyCheatsDataToDOM(JSON.parse(cached));
+      const parsed = JSON.parse(cached);
+      if(Array.isArray(parsed) && parsed.length > 0) {
+        CHEATS = parsed;
+        CHEATS.forEach(c => {
+          if(!c.prefix) c.prefix = c.key.slice(0, 4);
+          if(!state[c.prefix]) state[c.prefix] = { files: [], url: "", script: "" };
+        });
+        buildCheatsUI();
+        applyCheatsDataToDOM(CHEATS);
+      }
     }
   } catch(_) {}
 
   const token = getToken();
   let data = null;
 
-  // 2. Fetch directly from RAW_BASE or API_BASE
   try {
-    const rawRes = await fetch(`${RAW_BASE}/cheats.json?nc=${Date.now()}`, {
+    const rawRes = await fetch(`${RAW_BASE}/cheats_config.json?nc=${Date.now()}_${Math.random()}`, {
       cache: "no-store",
       headers: { Authorization: `token ${token}` }
     });
@@ -4221,7 +4277,7 @@ async function loadCheats() {
 
   if(!data) {
     try {
-      const apiRes = await fetch(`${API_BASE}/cheats.json?nc=${Date.now()}`, {
+      const apiRes = await fetch(`${API_BASE}/cheats_config.json?nc=${Date.now()}_${Math.random()}`, {
         cache: "no-store",
         headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
       });
@@ -4229,24 +4285,75 @@ async function loadCheats() {
         const info = await apiRes.json();
         if(info && info.content) {
           data = JSON.parse(b64_to_utf8(info.content));
-        } else if(info && typeof info === 'object') {
-          data = info;
         }
       }
     } catch(_) {}
   }
 
-  if(data && typeof data === 'object') {
-    try { localStorage.setItem("hyschool_cheats_cache", JSON.stringify(data)); } catch(_) {}
-    applyCheatsDataToDOM(data);
+  // Fallback to legacy cheats.json if cheats_config.json is missing
+  if(!data || !Array.isArray(data) || data.length === 0) {
+    try {
+      const legacyRaw = await fetch(`${RAW_BASE}/cheats.json?nc=${Date.now()}_${Math.random()}`, {
+        cache: "no-store",
+        headers: { Authorization: `token ${token}` }
+      });
+      if(legacyRaw.ok) {
+        const legacyObj = await legacyRaw.json();
+        if(legacyObj && typeof legacyObj === "object") {
+          data = Object.keys(legacyObj).map(k => {
+            const item = legacyObj[k];
+            const existing = CHEATS.find(c => c.key === k) || {};
+            return {
+              key: k,
+              label: existing.label || k.toUpperCase(),
+              color: existing.color || "#ffcc00",
+              prefix: existing.prefix || k.slice(0, 4),
+              subscription: item.subscription || "",
+              version: item.version || "",
+              status: item.status || "UNDETECTED",
+              last_update: item.last_update || "",
+              download_url: item.download_url || "",
+              loadable: item.loadable !== false
+            };
+          });
+        }
+      }
+    } catch(_) {}
+  }
+
+  if(Array.isArray(data) && data.length > 0) {
+    CHEATS = data.map(c => ({
+      key: c.key,
+      label: c.label || c.key.toUpperCase(),
+      color: c.color || "#ffcc00",
+      prefix: c.prefix || c.key.slice(0, 4),
+      subscription: c.subscription || "",
+      version: c.version || "",
+      status: c.status || "UNDETECTED",
+      last_update: c.last_update || "",
+      download_url: c.download_url || "",
+      loadable: c.loadable !== false
+    }));
+
+    CHEATS.forEach(c => {
+      if(!state[c.prefix]) state[c.prefix] = { files: [], url: "", script: "" };
+    });
+
+    try { localStorage.setItem("hyschool_cheats_config_cache", JSON.stringify(CHEATS)); } catch(_) {}
+    buildCheatsUI();
+    applyCheatsDataToDOM(CHEATS);
   }
 }
 
-function applyCheatsDataToDOM(data) {
-  if(!data || typeof data !== 'object') return;
-  CHEATS.forEach(c => {
-    const d = data[c.key];
-    if(!d) return;
+function applyCheatsDataToDOM(list) {
+  if(!Array.isArray(list)) {
+    if(typeof list === 'object' && list !== null) {
+      list = Object.keys(list).map(k => Object.assign({ key: k }, list[k]));
+    } else {
+      return;
+    }
+  }
+  list.forEach(c => {
     const sub = document.getElementById(`${c.prefix}-sub`);
     const ver = document.getElementById(`${c.prefix}-ver`);
     const st  = document.getElementById(`${c.prefix}-status`);
@@ -4256,17 +4363,17 @@ function applyCheatsDataToDOM(data) {
     const activeFileEl = document.getElementById(`${c.prefix}-active-file`);
     const delBtn = document.getElementById(`${c.prefix}-del-file-btn`);
 
-    if(sub && d.subscription !== undefined) sub.value = d.subscription || "";
-    if(ver && d.version !== undefined) ver.value = d.version || "";
-    if(st && d.status) st.value = d.status || "UNDETECTED";
-    if(lu && d.last_update !== undefined) lu.value = d.last_update || "";
-    if(url && d.download_url !== undefined) url.value = d.download_url || "";
-    if(lod && d.loadable !== undefined) lod.checked = !!d.loadable;
+    if(sub && c.subscription !== undefined) sub.value = c.subscription || "";
+    if(ver && c.version !== undefined) ver.value = c.version || "";
+    if(st && c.status) st.value = c.status || "UNDETECTED";
+    if(lu && c.last_update !== undefined) lu.value = c.last_update || "";
+    if(url && c.download_url !== undefined) url.value = c.download_url || "";
+    if(lod && c.loadable !== undefined) lod.checked = !!c.loadable;
 
     if(activeFileEl) {
-      if(d.download_url && d.download_url.trim()) {
-        const fileName = d.download_url.split('/').pop();
-        activeFileEl.innerHTML = `<span style="color:#10b981;font-weight:700;">\uD83D\uDFE2 Online:</span> <a href="${d.download_url}" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">${fileName}</a>`;
+      if(c.download_url && c.download_url.trim()) {
+        const fileName = c.download_url.split('/').pop();
+        activeFileEl.innerHTML = `<span style="color:#10b981;font-weight:700;">ðŸŸ¢ Online:</span> <a href="${c.download_url}" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">${fileName}</a>`;
         if(delBtn) delBtn.style.display = "inline-flex";
       } else {
         activeFileEl.innerHTML = `<span style="color:#64748b;font-size:11px;">Keine Datei hinterlegt</span>`;
@@ -4279,7 +4386,7 @@ function applyCheatsDataToDOM(data) {
 
 async function deleteCheatFile(prefix, key) {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
-    alert("Keine Berechtigung zum L\u00f6schen von Cheat-Dateien!");
+    alert("Keine Berechtigung zum LÃ¶schen von Cheat-Dateien!");
     return;
   }
 
@@ -4287,17 +4394,17 @@ async function deleteCheatFile(prefix, key) {
   const curUrl = (urlInput ? urlInput.value : "").trim();
   
   if(!curUrl) {
-    alert("Keine Datei f\u00fcr diesen Cheat hinterlegt!");
+    alert("Keine Datei fÃ¼r diesen Cheat hinterlegt!");
     return;
   }
 
   const fileName = curUrl.split('/').pop();
-  if(!confirm(`M\u00f6chtest du die Cheat-Datei '${fileName}' wirklich komplett vom Server / GitHub l\u00f6schen?`)) {
+  if(!confirm(`MÃ¶chtest du die Cheat-Datei '${fileName}' wirklich komplett vom Server / GitHub lÃ¶schen?`)) {
     return;
   }
 
   try {
-    showToast(`L\u00f6sche ${fileName} von GitHub...`, "ok");
+    showToast(`LÃ¶sche ${fileName} von GitHub...`, "ok");
     
     // 1. Delete release file on GitHub
     try {
@@ -4313,43 +4420,79 @@ async function deleteCheatFile(prefix, key) {
     state[prefix].files = [];
     renderFileList(prefix);
 
-    // 4. Save cheats.json & reload
+    // 4. Save & reload
     await saveAllToGitHub();
     await loadCheats();
 
-    logADMINAction("CHEAT_FILE_DELETED", fileName, `Cheat-Datei '${fileName}' f\u00fcr ${key} restlos gel\u00f6scht`);
-    showToast(`Cheat-Datei '${fileName}' wurde erfolgreich gel\u00f6scht!`, "ok");
+    logADMINAction("CHEAT_FILE_DELETED", fileName, `Cheat-Datei '${fileName}' fÃ¼r ${key} restlos gelÃ¶scht`);
+    showToast(`Cheat-Datei '${fileName}' wurde erfolgreich gelÃ¶scht!`, "ok");
   } catch(e) {
-    showToast("Fehler beim L\u00f6schen: " + e.message, "err");
+    showToast("Fehler beim LÃ¶schen: " + e.message, "err");
   }
 }
 
 async function saveAllToGitHub() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
-    alert("Keine Berechtigung zum \u00c4ndern der Cheats!");
+    alert("Keine Berechtigung zum Ã„ndern der Cheats!");
     return;
   }
   try {
-    const out = {};
+    const configArray = [];
+    const legacyOut = {};
+
     CHEATS.forEach(c => {
-      out[c.key] = {
-        subscription: (document.getElementById(`${c.prefix}-sub`)||{}).value || "",
-        version:      (document.getElementById(`${c.prefix}-ver`)||{}).value || "",
-        status:       (document.getElementById(`${c.prefix}-status`)||{}).value || "UNDETECTED",
-        last_update:  (document.getElementById(`${c.prefix}-last`)||{}).value || "",
-        download_url: (document.getElementById(`${c.prefix}-url`)||{}).value || "",
-        loadable:     !!(document.getElementById(`${c.prefix}-load`)||{}).checked
+      const subVal = (document.getElementById(`${c.prefix}-sub`)||{}).value || c.subscription || "";
+      const verVal = (document.getElementById(`${c.prefix}-ver`)||{}).value || c.version || "";
+      const statVal = (document.getElementById(`${c.prefix}-status`)||{}).value || c.status || "UNDETECTED";
+      const lastVal = (document.getElementById(`${c.prefix}-last`)||{}).value || c.last_update || "";
+      const urlVal = (document.getElementById(`${c.prefix}-url`)||{}).value || c.download_url || "";
+      const loadVal = document.getElementById(`${c.prefix}-load`) ? document.getElementById(`${c.prefix}-load`).checked : (c.loadable !== false);
+
+      c.subscription = subVal;
+      c.version = verVal;
+      c.status = statVal;
+      c.last_update = lastVal;
+      c.download_url = urlVal;
+      c.loadable = loadVal;
+
+      configArray.push({
+        key: c.key,
+        label: c.label,
+        color: c.color || "#ffcc00",
+        prefix: c.prefix,
+        subscription: subVal,
+        version: verVal,
+        status: statVal,
+        last_update: lastVal,
+        download_url: urlVal,
+        loadable: loadVal
+      });
+
+      legacyOut[c.key] = {
+        subscription: subVal,
+        version: verVal,
+        status: statVal,
+        last_update: lastVal,
+        download_url: urlVal,
+        loadable: loadVal
       };
     });
 
-    try { localStorage.setItem("hyschool_cheats_cache", JSON.stringify(out)); } catch(_) {}
+    try { localStorage.setItem("hyschool_cheats_config_cache", JSON.stringify(configArray)); } catch(_) {}
 
-    await uploadFileToGitHub("cheats.json", utf8_to_b64(JSON.stringify(out, null, 2)), "Update cheats configuration via ADMIN Panel");
+    // 1. Upload cheats_config.json (Maya Loader + Admin Panel Dynamic Source)
+    await uploadFileToGitHub("cheats_config.json", utf8_to_b64(JSON.stringify(configArray, null, 2)), "Update cheats_config.json via ADMIN Panel");
+
+    // 2. Upload cheats.json (Legacy Support)
+    try {
+      await uploadFileToGitHub("cheats.json", utf8_to_b64(JSON.stringify(legacyOut, null, 2)), "Update legacy cheats.json via ADMIN Panel");
+    } catch(_) {}
 
     showToast("Cheat-Einstellungen erfolgreich gespeichert & gepusht!", "ok");
-    logADMINAction("CHEAT_CONFIG", "cheats.json", "Cheat-Konfigurationen und Status aktualisiert");
+    logADMINAction("CHEAT_CONFIG", "cheats_config.json", "Cheat-Konfigurationen und Status aktualisiert");
   } catch(e) {
     showToast("Fehler: " + e.message, "err");
+    throw e;
   }
 }
 
