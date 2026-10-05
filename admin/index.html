@@ -62,9 +62,23 @@
   .login-box button:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(229,169,60,0.35); }
   #login-error { color: #f43f5e; font-size: 12px; margin-top: 12px; display: none; font-weight: 700; }
 
-  /* MAIN PANEL */
-  #main-panel { display: none; padding: 24px 36px; max-width: 1440px; width: 100%; margin: 0 auto; }
+  /* MAIN PANEL RESPONSIVE SCALING */
+  #main-panel { 
+    display: none; 
+    padding: 24px 32px; 
+    max-width: 1560px; 
+    width: 100%; 
+    margin: 0 auto; 
+    box-sizing: border-box;
+  }
   
+  @media (max-width: 1200px) {
+    #main-panel { padding: 18px 20px; }
+  }
+  @media (max-width: 768px) {
+    #main-panel { padding: 14px 12px; }
+  }
+
   .header { 
     display: flex; 
     align-items: center; 
@@ -72,11 +86,13 @@
     margin-bottom: 22px; 
     padding-bottom: 18px; 
     border-bottom: 1px solid #1a1d28; 
+    flex-wrap: wrap;
+    gap: 12px;
   }
   .header h1 { 
     color: #f8fafc; 
     font-size: 18px; 
-    letter-spacing: 2.5px; 
+    letter-spacing: 2px; 
     font-weight: 900; 
     display: flex; 
     align-items: center; 
@@ -95,6 +111,7 @@
     border: 1px solid rgba(16, 185, 129, 0.25);
     padding: 6px 14px;
     border-radius: 20px;
+    white-space: nowrap;
   }
   .blink-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #10b981; animation: pulse 1.5s infinite; }
   @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.85); } 100% { opacity: 1; transform: scale(1); } }
@@ -135,13 +152,27 @@
     background: #10121a; 
     border: 1px solid #1a1e2b; 
     border-radius: 12px; 
-    padding: 26px; 
+    padding: 24px; 
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-sizing: border-box;
+    width: 100%;
+  }
+  @media (max-width: 768px) {
+    .tab-content { padding: 16px; }
   }
   .tab-content.active { display: block; }
 
   /* SUB-TABS (CHEAT SELECTOR) */
-  .sub-tabs-container { display: flex; gap: 8px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #1a1e2b; overflow-x: auto; }
+  .sub-tabs-container { 
+    display: flex; 
+    gap: 8px; 
+    margin-bottom: 20px; 
+    padding-bottom: 16px; 
+    border-bottom: 1px solid #1a1e2b; 
+    overflow-x: auto; 
+    flex-wrap: wrap;
+    align-items: center;
+  }
   .sub-tab { 
     padding: 9px 18px; 
     border-radius: 6px; 
@@ -161,13 +192,33 @@
   .sub-tab:hover { color: #f8fafc; background: #1a1f30; }
   .sub-tab.active { background: #1c2133; color: #e5a93c; border-color: #e5a93c; box-shadow: 0 2px 10px rgba(229,169,60,0.15); }
 
-  /* CHEAT VIEW GRID */
-  .cheat-view-grid { display: grid; grid-template-columns: 320px 1fr; gap: 24px; }
+  /* CHEAT VIEW GRID & RESPONSIVE LAYOUT */
+  .cheat-view-grid { 
+    display: grid; 
+    grid-template-columns: minmax(360px, 420px) minmax(0, 1fr); 
+    gap: 24px; 
+    align-items: flex-start;
+  }
+
+  @media (max-width: 1024px) {
+    .cheat-view-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
 
   /* LEFT PANEL - CHEAT INFO */
-  .info-panel { background: #0c0d13; border: 1px solid #1a1e2b; border-radius: 8px; padding: 20px; }
-  .info-panel h3 { font-size: 11px; color: #e5a93c; letter-spacing: 1.5px; margin-bottom: 16px; font-weight: 800; }
-  .field { margin-bottom: 12px; }
+  .info-panel { 
+    background: #0c0d13; 
+    border: 1px solid #1a1e2b; 
+    border-radius: 10px; 
+    padding: 22px; 
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .info-panel h3 { font-size: 12px; color: #e5a93c; letter-spacing: 1px; font-weight: 900; }
+  .field { margin-bottom: 12px; min-width: 0; }
   .field label { display: block; font-size: 10px; color: #64748b; letter-spacing: 1px; margin-bottom: 5px; font-weight: 700; }
   .field input, .field select { 
     width: 100%; 
@@ -179,12 +230,13 @@
     font-size: 12px; 
     outline: none; 
     transition: .2s; 
+    box-sizing: border-box;
   }
   .field input:focus, .field select:focus { border-color: #e5a93c; box-shadow: 0 0 10px rgba(229,169,60,0.15); }
   
   .loadable-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-top: 1px solid #1a1e2b; border-bottom: 1px solid #1a1e2b; margin: 16px 0; }
   .lbl { font-size: 11px; color: #cbd5e1; letter-spacing: 1px; font-weight: 700; }
-  .toggle { position: relative; width: 38px; height: 20px; }
+  .toggle { position: relative; width: 38px; height: 20px; flex-shrink: 0; }
   .toggle input { opacity: 0; width: 0; height: 0; }
   .toggle .slider { position: absolute; cursor: pointer; inset: 0; background: #1e2333; border-radius: 20px; transition: .2s; }
   .toggle .slider:before { content:''; position:absolute; height:14px; width:14px; left:3px; bottom:3px; background:#64748b; border-radius:50%; transition:.2s; }
@@ -192,7 +244,16 @@
   .toggle input:checked + .slider:before { transform: translateX(18px); background: #0b0c10; }
 
   /* RIGHT PANEL - UPLOAD */
-  .upload-panel { display: flex; flex-direction: column; gap: 16px; background: #0c0d13; border: 1px solid #1a1e2b; border-radius: 8px; padding: 20px; }
+  .upload-panel { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px; 
+    background: #0c0d13; 
+    border: 1px solid #1a1e2b; 
+    border-radius: 10px; 
+    padding: 22px; 
+    min-width: 0;
+  }
   .section-title { font-size: 11px; color: #e5a93c; letter-spacing: 1.5px; margin-bottom: 12px; font-weight: 800; }
 
   .drop-zone { 
@@ -2359,9 +2420,9 @@
 
 <!-- TAB 0: CHEATS -->
   <div class="tab-content active" id="tc-0">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
-      <div class="sub-tabs-container" id="cheat-sub-tabs" style="margin-bottom:0;"></div>
-      <button onclick="openAddCheatModal()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:900;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 15px rgba(229,169,60,0.25);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;border-bottom:1px solid #1a1e2b;padding-bottom:14px;">
+      <div class="sub-tabs-container" id="cheat-sub-tabs" style="margin-bottom:0;border-bottom:none;padding-bottom:0;flex:1;min-width:280px;"></div>
+      <button onclick="openAddCheatModal()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:9px 18px;border-radius:6px;font-size:12px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 15px rgba(229,169,60,0.25);white-space:nowrap;flex-shrink:0;">
         <span>&#10010;</span> NEUEN CHEAT ANLEGEN
       </button>
     </div>
@@ -4028,11 +4089,11 @@ function buildCheatsUI() {
     <div class="cheat-view-grid" id="cview-${i}" style="${i === _activeCheatIdx ? '' : 'display:none;'}">
       <!-- INFO PANEL -->
       <div class="info-panel">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;border-bottom:1px solid #1c2235;padding-bottom:10px;">
-          <h3 style="margin:0;font-size:13px;font-weight:900;color:#f8fafc;display:flex;align-items:center;gap:6px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;border-bottom:1px solid #1c2235;padding-bottom:12px;flex-wrap:wrap;gap:8px;">
+          <h3 style="margin:0;font-size:12.5px;font-weight:900;color:#f8fafc;display:flex;align-items:center;gap:6px;letter-spacing:0.5px;">
             <span style="color:#e5a93c;">&#9889;</span> CHEAT KONFIGURATION (<span style="color:#e5a93c;">${c.label}</span>)
           </h3>
-          <button type="button" onclick="renameCheatTab('${c.key}')" style="background:#141724;border:1px solid #283046;color:#e5a93c;padding:5px 12px;border-radius:5px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:4px;" title="Tab-Namen bearbeiten">
+          <button type="button" onclick="renameCheatTab('${c.key}')" style="background:#141724;border:1px solid #283046;color:#e5a93c;padding:5px 12px;border-radius:5px;font-size:10.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;transition:.15s;" onmouseover="this.style.borderColor='#e5a93c';this.style.background='#192033'" onmouseout="this.style.borderColor='#283046';this.style.background='#141724'" title="Tab-Namen bearbeiten">
             &#9998; TAB UMBENENNEN
           </button>
         </div>
