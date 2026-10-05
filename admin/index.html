@@ -1267,7 +1267,7 @@
     gap: 8px;
   }
 
-  /* === MAIN TABS — wrap on smaller screens === */
+  /* === MAIN TABS  wrap on smaller screens === */
   .main-tabs {
     flex-wrap: wrap !important;
     gap: 4px !important;
@@ -1288,7 +1288,7 @@
     overflow-x: auto;
   }
 
-  /* === TABLES — always scrollable === */
+  /* === TABLES  always scrollable === */
   .logs-table-wrap {
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
@@ -1298,7 +1298,7 @@
     min-width: 700px;
   }
 
-  /* === CHEAT GRID — responsive columns === */
+  /* === CHEAT GRID  responsive columns === */
   .cheat-view-grid {
     grid-template-columns: minmax(0, 280px) minmax(0, 1fr) !important;
     gap: clamp(12px, 2vw, 24px) !important;
@@ -1309,7 +1309,7 @@
     grid-template-columns: minmax(0, 300px) minmax(0, 1fr) !important;
   }
 
-  /* === MODALS — mobile friendly === */
+  /* === MODALS  mobile friendly === */
   .edit-lic-modal-box,
   .hwid-modal-box,
   .staff-modal-box,
@@ -1324,13 +1324,13 @@
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
   }
 
-  /* 1600px — large screens, subtle adjustments */
+  /* 1600px  large screens, subtle adjustments */
   @media (max-width: 1600px) {
     html { font-size: 15px; }
     .main-tab { font-size: clamp(9px, 0.85vw, 10.5px) !important; }
   }
 
-  /* 1400px — standard office monitors */
+  /* 1400px  standard office monitors */
   @media (max-width: 1400px) {
     html { font-size: 14px; }
 
@@ -1343,7 +1343,7 @@
     }
   }
 
-  /* 1280px — common laptop resolution */
+  /* 1280px  common laptop resolution */
   @media (max-width: 1280px) {
     html { font-size: 13.5px; }
 
@@ -1377,7 +1377,7 @@
     }
   }
 
-  /* 1100px — small laptops, tablets landscape */
+  /* 1100px  small laptops, tablets landscape */
   @media (max-width: 1100px) {
     html { font-size: 13px; }
 
@@ -1410,7 +1410,7 @@
     }
   }
 
-  /* 900px — tablets portrait */
+  /* 900px  tablets portrait */
   @media (max-width: 900px) {
     html { font-size: 12.5px; }
 
@@ -1438,7 +1438,7 @@
     }
   }
 
-  /* 768px — mobile landscape / small tablet */
+  /* 768px  mobile landscape / small tablet */
   @media (max-width: 768px) {
     html { font-size: 12px; }
 
@@ -3747,7 +3747,7 @@ function applyUserPermissions() {
   function _showTab(el) { if(el) { el.style.setProperty("display","inline-flex","important"); } }
   function _hideTab(el) { if(el) { el.style.setProperty("display","none","important"); } }
 
-  // Tabs 6-9 ALWAYS visible for EVERYONE — no permission needed
+  // Tabs 6-9 ALWAYS visible for EVERYONE  no permission needed
   _showTab(mtab6);
   _showTab(mtab7);
   _showTab(mtab8);
@@ -3928,7 +3928,7 @@ function moveCheatTab(idx, dir) {
 function renameCheatTab(key) {
   const c = CHEATS.find(x => x.key === key);
   if (!c) return;
-  const newName = prompt("Neuen Namen fÃ¼r den Cheat-Tab eingeben:", c.label);
+  const newName = prompt("Neuen Namen fr den Cheat-Tab eingeben:", c.label);
   if (newName === null) return;
   const cleanName = newName.trim();
   if (!cleanName) {
@@ -3946,7 +3946,7 @@ function renameCheatTab(key) {
 async function removeCheatTab(key) {
   const c = CHEATS.find(x => x.key === key);
   const name = c ? c.label : key;
-  if(!confirm("MÃ¶chtest du den Cheat-Reiter '" + name + "' wirklich komplett lÃ¶schen?")) return;
+  if(!confirm("Mchtest du den Cheat-Reiter '" + name + "' wirklich komplett lschen?")) return;
   
   CHEATS = CHEATS.filter(x => x.key !== key);
   if (_activeCheatIdx >= CHEATS.length) _activeCheatIdx = Math.max(0, CHEATS.length - 1);
@@ -3957,10 +3957,10 @@ async function removeCheatTab(key) {
   try {
     await saveAllToGitHub();
     await loadCheats();
-    showToast("Cheat-Reiter erfolgreich gelÃ¶scht!", "ok");
+    showToast("Cheat-Reiter erfolgreich gelscht!", "ok");
     logADMINAction("CHEAT_REMOVED", key, "Cheat-Reiter '" + name + "' entfernt");
   } catch(err) {
-    showToast("Fehler beim LÃ¶schen: " + err.message, "err");
+    showToast("Fehler beim Lschen: " + err.message, "err");
   }
 }
 
@@ -3974,7 +3974,7 @@ function buildCheatsUI() {
     subContents.innerHTML = `<div style="background:#0c0d14;border:1px solid #1a2030;border-radius:12px;padding:40px;text-align:center;color:#94a3b8;">
       <div style="font-size:32px;margin-bottom:12px;">&#127918;</div>
       <div style="font-size:14px;font-weight:800;color:#f8fafc;margin-bottom:6px;">Noch keine Cheats angelegt</div>
-      <div style="font-size:12px;color:#64748b;margin-bottom:18px;">Erstelle deinen ersten Cheat-Tab Ã¼ber den Button oben rechts.</div>
+      <div style="font-size:12px;color:#64748b;margin-bottom:18px;">Erstelle deinen ersten Cheat-Tab ber den Button oben rechts.</div>
       <button onclick="openAddCheatModal()" style="background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:10px 20px;border-radius:6px;font-size:12px;font-weight:900;cursor:pointer;">+ NEUEN CHEAT ANLEGEN</button>
     </div>`;
     return;
@@ -4043,7 +4043,7 @@ function buildCheatsUI() {
           <input type="file" id="fi-${c.prefix}" onchange="addFiles(this,'${c.prefix}')">
           <div style="font-size:26px;color:#e5a93c;">&#8597;</div>
           <div style="font-weight:800;color:#f8fafc;font-size:13px;">${c.label} Datei hier reinziehen oder klicken</div>
-          <div style="font-size:11px;color:#64748b">LÃ¤dt die Datei hoch und aktiviert den Download im Loader</div>
+          <div style="font-size:11px;color:#64748b">Laedt die Datei hoch und aktiviert den Download im Loader</div>
         </div>
         
         <div class="file-list" id="fl-${c.prefix}"></div>
@@ -4055,7 +4055,7 @@ function buildCheatsUI() {
               <span style="color:#64748b;font-size:11px;">Lade Datei-Info...</span>
             </div>
             <button id="${c.prefix}-del-file-btn" onclick="deleteCheatFile('${c.prefix}','${c.key}')" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;">
-              &#128465;&#65039; DATEI LÃ–SCHEN
+              &#128465;&#65039; DATEI LOESCHEN
             </button>
           </div>
         </div>
@@ -4084,9 +4084,9 @@ function buildCheatsUI() {
           <div style="display:flex;gap:10px;align-items:center;">
             <input type="file" id="razer-file-input" accept=".dll" style="display:none;" onchange="onRazerFileSelected(this)">
             <button onclick="document.getElementById('razer-file-input').click()" style="background:#141724;border:1px solid #283046;color:#cbd5e1;padding:8px 14px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;">
-              &#128190; RAZER.dll AUSWÃ„HLEN
+              &#128190; RAZER.dll AUSWAEHLEN
             </button>
-            <span id="razer-file-name" style="font-size:11px;color:#e5a93c;font-weight:700;">Keine neue Datei gewÃ¤hlt</span>
+            <span id="razer-file-name" style="font-size:11px;color:#e5a93c;font-weight:700;">Keine neue Datei gewaehlt</span>
           </div>
 
           <div id="razer-status-wrap" style="background:#10121a;border:1px solid #1e2333;padding:8px 12px;border-radius:6px;font-size:11px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
@@ -4095,7 +4095,7 @@ function buildCheatsUI() {
             </div>
             <div style="display:flex;gap:6px;align-items:center;">
               <button id="razer-del-btn" onclick="deleteRazerDll()" style="display:none;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.35);color:#f43f5e;padding:6px 12px;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s;">
-                &#128465;&#65039; RAZER.dll LÃ–SCHEN
+                &#128465;&#65039; RAZER.dll LOESCHEN
               </button>
               <button id="razer-upload-btn" onclick="uploadRazerDll()" disabled style="background:linear-gradient(135deg, #10b981, #059669);border:none;color:#0b0c10;padding:6px 14px;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;">
                 &#128640; RAZER.dll PUSHEN
@@ -4316,7 +4316,7 @@ function renderFileList(prefix) {
 // GITHUB CHEATS SYNC
 async function loadCheats() {
   try {
-    const cached = localStorage.getItem("hyschool_cheats_config_cache");
+    const cached = null;
     if(cached) {
       const parsed = JSON.parse(cached);
       if(Array.isArray(parsed) && parsed.length > 0) {
@@ -4442,7 +4442,7 @@ function applyCheatsDataToDOM(list) {
     if(activeFileEl) {
       if(c.download_url && c.download_url.trim()) {
         const fileName = c.download_url.split('/').pop();
-        activeFileEl.innerHTML = `<span style="color:#10b981;font-weight:700;">ðŸŸ¢ Online:</span> <a href="${c.download_url}" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">${fileName}</a>`;
+        activeFileEl.innerHTML = `<span style="color:#10b981;font-weight:700;">&#128994; Online:</span> <a href="${c.download_url}" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">${fileName}</a>`;
         if(delBtn) delBtn.style.display = "inline-flex";
       } else {
         activeFileEl.innerHTML = `<span style="color:#64748b;font-size:11px;">Keine Datei hinterlegt</span>`;
@@ -4455,7 +4455,7 @@ function applyCheatsDataToDOM(list) {
 
 async function deleteCheatFile(prefix, key) {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
-    alert("Keine Berechtigung zum LÃ¶schen von Cheat-Dateien!");
+    alert("Keine Berechtigung zum Loeschen von Cheat-Dateien!");
     return;
   }
 
@@ -4463,17 +4463,17 @@ async function deleteCheatFile(prefix, key) {
   const curUrl = (urlInput ? urlInput.value : "").trim();
   
   if(!curUrl) {
-    alert("Keine Datei fÃ¼r diesen Cheat hinterlegt!");
+    alert("Keine Datei fr diesen Cheat hinterlegt!");
     return;
   }
 
   const fileName = curUrl.split('/').pop();
-  if(!confirm(`MÃ¶chtest du die Cheat-Datei '${fileName}' wirklich komplett vom Server / GitHub lÃ¶schen?`)) {
+  if(!confirm(`Mchtest du die Cheat-Datei '${fileName}' wirklich komplett vom Server / GitHub lschen?`)) {
     return;
   }
 
   try {
-    showToast(`LÃ¶sche ${fileName} von GitHub...`, "ok");
+    showToast(`Lsche ${fileName} von GitHub...`, "ok");
     
     // 1. Delete release file on GitHub
     try {
@@ -4493,16 +4493,16 @@ async function deleteCheatFile(prefix, key) {
     await saveAllToGitHub();
     await loadCheats();
 
-    logADMINAction("CHEAT_FILE_DELETED", fileName, `Cheat-Datei '${fileName}' fÃ¼r ${key} restlos gelÃ¶scht`);
-    showToast(`Cheat-Datei '${fileName}' wurde erfolgreich gelÃ¶scht!`, "ok");
+    logADMINAction("CHEAT_FILE_DELETED", fileName, `Cheat-Datei '${fileName}' fr ${key} restlos gelscht`);
+    showToast(`Cheat-Datei '${fileName}' wurde erfolgreich gelscht!`, "ok");
   } catch(e) {
-    showToast("Fehler beim LÃ¶schen: " + e.message, "err");
+    showToast("Fehler beim Lschen: " + e.message, "err");
   }
 }
 
 async function saveAllToGitHub() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
-    alert("Keine Berechtigung zum Ã„ndern der Cheats!");
+    alert("Keine Berechtigung zum ndern der Cheats!");
     return;
   }
   try {
@@ -4748,7 +4748,7 @@ async function checkRazerDllStatus() {
     if(res.ok) {
       const data = await res.json();
       const mbSize = data.size ? (data.size / 1024 / 1024).toFixed(2) + ' MB' : '';
-      statusEl.innerHTML = `<span style="color:#10b981;font-weight:700;">\uD83D\uDFE2 Online auf GitHub:</span> <a href="${RAW_BASE}/releases/RAZER.dll" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">RAZER.dll</a> <span style="color:#64748b;">(${mbSize})</span>`;
+      statusEl.innerHTML = `<span style="color:#10b981;font-weight:700;">&#128994; Online auf GitHub:</span> <a href="${RAW_BASE}/releases/RAZER.dll" target="_blank" style="color:#e5a93c;text-decoration:none;font-weight:800;font-family:'JetBrains Mono',monospace;">RAZER.dll</a> <span style="color:#64748b;">(${mbSize})</span>`;
       if(delBtn) delBtn.style.display = "inline-flex";
     } else {
       statusEl.innerHTML = `<span style="color:#f43f5e;font-weight:700;">&#x1F511; Nicht vorhanden</span>`;
@@ -7724,7 +7724,7 @@ async function submitGuestbookEntry() {
   input.value = "";
   renderGuestbookEntries(targetProf.guestbook);
   try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
-  showToast("G\u00e4stebuch-Eintrag hinzugefÃ¼gt!", "ok");
+  showToast("G\u00e4stebuch-Eintrag hinzugefgt!", "ok");
 
   try {
     const fullJson = JSON.stringify(USER_PROFILES, null, 2);
@@ -7775,7 +7775,7 @@ function onConfigFileSelected(input) {
     const nameInp = document.getElementById("cfg-upload-name");
     
     if (lbl) lbl.textContent = `Ausgew\u00e4hlt: ${_selectedConfigFile.name}`;
-    if (sublbl) sublbl.textContent = `GrÃ¶ÃŸe: ${formatBytes(_selectedConfigFile.size)}`;
+    if (sublbl) sublbl.textContent = `Gre: ${formatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
     }
@@ -7794,7 +7794,7 @@ function handleConfigDrop(e) {
     const nameInp = document.getElementById("cfg-upload-name");
     
     if (lbl) lbl.textContent = `Ausgew\u00e4hlt: ${_selectedConfigFile.name}`;
-    if (sublbl) sublbl.textContent = `GrÃ¶ÃŸe: ${formatBytes(_selectedConfigFile.size)}`;
+    if (sublbl) sublbl.textContent = `Gre: ${formatBytes(_selectedConfigFile.size)}`;
     if (nameInp && !nameInp.value) {
       nameInp.value = _selectedConfigFile.name.replace(/\.[^/.]+$/, "");
     }
@@ -8200,7 +8200,7 @@ async function uploadUserConfig() {
         if(descInp) descInp.value = "";
         const lbl = document.getElementById("cfg-drop-label");
         const sublbl = document.getElementById("cfg-drop-sublabel");
-        if(lbl) lbl.textContent = "Datei auswÃ¤hlen oder ablegen";
+        if(lbl) lbl.textContent = "Datei auswhlen oder ablegen";
         if(sublbl) sublbl.textContent = "Erlaubt: .css, .cfg, .ini, .json, .txt, .zip, .lua";
         const fileInput = document.getElementById("cfg-file-input");
         if(fileInput) fileInput.value = "";
@@ -8596,7 +8596,7 @@ function onHighlightUrlChanged(val) {
   if(val && val.trim()) {
     _uploadedHighlightFile = null;
     document.getElementById("hl-drop-label").textContent = "\uD83C\uDFAC Video hier ablegen oder klicken";
-    document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (fÃ¼r grÃ¶ÃŸere Clips bitte Link nutzen)";
+    document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (fr grere Clips bitte Link nutzen)";
   }
 }
 
@@ -8683,7 +8683,7 @@ async function uploadHighlightClip() {
       document.getElementById("hl-file-input").value = "";
       document.getElementById("hl-censor-name-cb").checked = false;
       document.getElementById("hl-drop-label").textContent = "\uD83C\uDFAC Video hier ablegen oder klicken";
-      document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (fÃ¼r grÃ¶ÃŸere Clips bitte Link nutzen)";
+      document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (fr grere Clips bitte Link nutzen)";
       _uploadedHighlightFile = null;
             toggleHighlightUploadCard();
     } catch(err) {
@@ -8788,7 +8788,7 @@ function openHighlightPlayer(highlightId) {
 
   if(modal) modal.style.display = "flex";
 
-  // Censor blur overlay Ã¢â‚¬ covers top-right (scoreboard/name area) when isCensored
+  // Censor blur overlay  covers top-right (scoreboard/name area) when isCensored
   const oldBlur = document.getElementById("hl-censor-blur");
   if(oldBlur) oldBlur.remove();
   if(h.isCensored) {
@@ -9407,7 +9407,7 @@ async function claimCurrentTicket() {
     t.messages.push({
         sender: myName,
         role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben Ã¼bernommen. Wie kann ich dir heute weiterhelfen? \uD83D\uDC4B`,
+        text: `Hey! Mein Name ist ${myName} und ich habe dein Ticket soeben bernommen. Wie kann ich dir heute weiterhelfen? \uD83D\uDC4B`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         timestamp: Date.now()
     });
@@ -9415,7 +9415,7 @@ async function claimCurrentTicket() {
     await saveADMINTicketsToGitHub(`Claim ticket ${t.id} by ${myName}`);
     renderActiveADMINTicketRoom(t);
     renderADMINTicketsList();
-    showToast('Ticket Ã¼bernommen!', 'ok');
+    showToast('Ticket bernommen!', 'ok');
 }
 
 async function closeCurrentTicket() {
@@ -9432,18 +9432,18 @@ async function closeCurrentTicket() {
         t.messages.push({
             sender: myName,
             role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-            text: `[Info: Ticket wurde von ${myName} wiedererÃ¶ffnet]`,
+            text: `[Info: Ticket wurde von ${myName} wiedererffnet]`,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             timestamp: Date.now()
         });
-        showToast('Ticket wiedererÃ¶ffnet!', 'ok');
+        showToast('Ticket wiedererffnet!', 'ok');
     } else {
         t.status = 'closed';
         t.closedAt = new Date().toISOString();
         t.messages.push({
             sender: myName,
             role: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role : 'Mitarbeiter',
-            text: `[Info: Ticket wurde geschlossen und wird nach 24h gelÃ¶scht]`,
+            text: `[Info: Ticket wurde geschlossen und wird nach 24h gelscht]`,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             timestamp: Date.now()
         });
@@ -9457,11 +9457,11 @@ async function closeCurrentTicket() {
 
 async function deleteCurrentTicket() {
     if (!canDeleteTickets()) {
-        showToast('Nur ADMINs und Moderatoren dÃ¼rfen Tickets lÃ¶schen!', 'err');
+        showToast('Nur ADMINs und Moderatoren drfen Tickets lschen!', 'err');
         return;
     }
     if (!_adminActiveTicketId) return;
-    if (!confirm('MÃ¶chtest du dieses Support Ticket wirklich endgÃ¼ltig lÃ¶schen?')) return;
+    if (!confirm('Mchtest du dieses Support Ticket wirklich endgltig lschen?')) return;
 
     _adminTicketsData = _adminTicketsData.filter(x => x.id !== _adminActiveTicketId);
     _adminActiveTicketId = null;
@@ -9473,7 +9473,7 @@ async function deleteCurrentTicket() {
 
     await saveADMINTicketsToGitHub(`Deleted support ticket by ${(CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : 'ADMIN'}`);
     renderADMINTicketsList();
-    showToast('Support Ticket gelÃ¶scht!', 'ok');
+    showToast('Support Ticket gelscht!', 'ok');
 }
 
 async function sendADMINTicketMsg() {
