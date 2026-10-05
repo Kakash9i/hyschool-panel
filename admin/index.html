@@ -1851,19 +1851,33 @@
           Keine Profilbeschreibung hinterlegt.
         </p>
 
-                <!-- STATIC MULTI-ROLE MANAGER (UNDER BIO) -->
+        <!-- DYNAMIC MULTI-ROLE & BAN MANAGER (UNDER BIO) -->
         <div id="profile-role-manager" style="display:none;margin-top:16px;background:rgba(9,11,18,0.6);border:1px solid #1a2234;padding:16px;border-radius:10px;box-shadow:inset 0 0 10px rgba(0,0,0,0.5);">
-          <div style="font-size:10px;color:#94a3b8;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">&#9881;&#65039; ROLLEN VERWALTEN</div>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;">
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="admin" onchange="updateProfileRoles(this)"> &#128081; INHABER</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="co-admin" onchange="updateProfileRoles(this)"> &#128737;&#65039; CO-ADMIN</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="developer" onchange="updateProfileRoles(this)"> &#128187; DEVELOPER</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="moderator" onchange="updateProfileRoles(this)"> &#128737;&#65039; MODERATOR</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="supporter" onchange="updateProfileRoles(this)"> &#128737;&#65039; SUPPORTER</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="elite" onchange="updateProfileRoles(this)"> &#9889; ELITE</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="vip" onchange="updateProfileRoles(this)"> &#11088; VIP</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="donator" onchange="updateProfileRoles(this)"> &#128150; DONATOR</label>
-            <label class="role-pill"><input type="checkbox" class="role-checkbox" value="premium" onchange="updateProfileRoles(this)"> &#128142; PREMIUM</label>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+            <div style="font-size:10.5px;color:#94a3b8;font-weight:900;letter-spacing:1px;text-transform:uppercase;">&#9881;&#65039; ROLLEN VERWALTEN</div>
+            <div id="admin-role-crud-btns" style="display:none;gap:6px;">
+              <button type="button" onclick="openCreateCustomRoleModal()" style="background:rgba(229,169,60,0.15);border:1px solid rgba(229,169,60,0.4);color:#e5a93c;padding:4px 10px;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                <span>&#10010;</span> NEUE ROLLE ERSTELLEN
+              </button>
+            </div>
+          </div>
+          <div id="profile-dynamic-roles-list" style="display:flex;flex-wrap:wrap;gap:8px;">
+            <!-- Rendered dynamically by JS -->
+          </div>
+
+          <!-- ADMIN USER BAN & UNBAN ACTION BOX -->
+          <div id="profile-admin-ban-box" style="display:none;margin-top:16px;padding-top:14px;border-top:1px solid #1a2234;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+            <div id="profile-ban-status-label" style="font-size:11px;color:#94a3b8;display:flex;align-items:center;gap:6px;">
+              <span>&#128737;&#65039;</span> <span>Account-Status: <b id="profile-ban-status-text" style="color:#10b981;">Aktiv</b></span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button type="button" id="profile-btn-ban" onclick="banActiveProfileUser()" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.4);color:#f43f5e;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                <span>&#128683;</span> USER BANNEN
+              </button>
+              <button type="button" id="profile-btn-unban" onclick="unbanActiveProfileUser()" style="display:none;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#10b981;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                <span>&#9989;</span> ENTBANNEN
+              </button>
+            </div>
           </div>
         </div>
 
@@ -2414,6 +2428,41 @@
     <div style="display:flex;gap:10px;margin-top:22px;border-top:1px solid #1a1e2b;padding-top:16px;">
       <button type="button" onclick="saveCheatPermsFromModal()" id="modal-save-perms-btn" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128190; FREISCHALTUNGEN SPEICHERN &amp; PUSHEN</button>
       <button type="button" onclick="closeCheatPermsModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOM ROLE CREATE / EDIT MODAL POPUP -->
+<div id="custom-role-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999999;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:20px;">
+  <div style="background:linear-gradient(165deg, #121624 0%, #080a10 100%);border:1px solid #e5a93c;border-radius:14px;padding:26px 30px;width:480px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.9);position:relative;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+      <h3 id="custom-role-modal-title" style="color:#f8fafc;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:10px;font-weight:900;margin:0;">
+        <span style="color:#e5a93c;">&#128081;</span> NEUE ROLLE ERSTELLEN
+      </h3>
+      <button type="button" onclick="closeCustomRoleModal()" style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;">&times;</button>
+    </div>
+    <input type="hidden" id="custom-role-orig-id" value="" />
+    <div class="modal-field-group" style="margin-bottom:12px;">
+      <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">ROLLEN ID (EINZIGARTIG, Z.B. vip_gold)</label>
+      <input type="text" id="custom-role-id" placeholder="z.B. vip_gold" style="background:#090a0f;border:1px solid #1f2538;color:#e5a93c;padding:10px 14px;border-radius:6px;width:100%;font-size:12px;font-weight:800;outline:none;box-sizing:border-box;" />
+    </div>
+    <div class="modal-field-group" style="margin-bottom:12px;">
+      <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">NAME DER ROLLE</label>
+      <input type="text" id="custom-role-name" placeholder="z.B. VIP GOLD" style="background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:10px 14px;border-radius:6px;width:100%;font-size:12px;outline:none;box-sizing:border-box;" />
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+      <div class="modal-field-group" style="margin-bottom:0;">
+        <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">ICON / EMOJI</label>
+        <input type="text" id="custom-role-icon" placeholder="z.B. &#11088; oder &#128081;" value="&#11088;" style="background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:10px 14px;border-radius:6px;width:100%;font-size:12px;outline:none;box-sizing:border-box;" />
+      </div>
+      <div class="modal-field-group" style="margin-bottom:0;">
+        <label style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;display:block;">FARBE (HEX / FARBCODE)</label>
+        <input type="text" id="custom-role-color" placeholder="z.B. #fbbf24" value="#fbbf24" style="background:#090a0f;border:1px solid #1f2538;color:#f8fafc;padding:10px 14px;border-radius:6px;width:100%;font-size:12px;outline:none;box-sizing:border-box;" />
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button type="button" onclick="saveCustomRoleSubmit()" style="flex:1;background:linear-gradient(135deg, #e5a93c, #c68924);border:none;color:#0b0c10;padding:12px;border-radius:6px;font-weight:900;font-size:12px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(229,169,60,0.2);">&#128190; ROLLE SPEICHERN &amp; PUSHEN</button>
+      <button type="button" onclick="closeCustomRoleModal()" style="background:#141724;border:1px solid #1f2538;color:#94a3b8;padding:12px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Abbrechen</button>
     </div>
   </div>
 </div>
@@ -4262,51 +4311,9 @@ function switchMainTab(idx) {
     loadHighlights();
   }
   if(idx === 9) {
-    renderUserSearch();
+    if(ALL_LICENSES.length === 0) loadLicenses(true).then(() => renderUserSearch());
+    else renderUserSearch();
   }
-}
-
-function renderUserSearch() {
-  const grid = document.getElementById("user-search-grid");
-  if(!grid) return;
-  const q = (document.getElementById("user-search-input")?.value || "").toLowerCase().trim();
-  
-  if(!USER_PROFILES) return;
-  
-  const uniqueUsers = [];
-  const seen = new Set();
-  for(const key of Object.keys(USER_PROFILES)) {
-    const p = USER_PROFILES[key];
-    const realName = p.username || key;
-    if(!seen.has(realName.toLowerCase())) {
-      seen.add(realName.toLowerCase());
-      uniqueUsers.push(p);
-    }
-  }
-  
-  uniqueUsers.sort((a,b) => (a.username||"").localeCompare(b.username||""));
-  
-  const filtered = uniqueUsers.filter(u => (u.username||"").toLowerCase().includes(q));
-  
-  if(filtered.length === 0) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#64748b;padding:30px;font-size:12px;">Keine User gefunden.</div>';
-    return;
-  }
-  
-  grid.innerHTML = filtered.map(u => {
-    const name = u.username || "Unbekannt";
-    const avatar = u.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${name}`;
-    const rankHtml = getRankBadge(name, u.rank);
-    return `
-      <div onclick="openUserProfileModal('${escapeHtml(name)}')" style="background:#090a0f;border:1px solid #1e2333;border-radius:10px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:.2s;box-shadow:0 4px 15px rgba(0,0,0,0.3);" onmouseover="this.style.borderColor='#38bdf8';this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='#1e2333';this.style.transform='translateY(0)';">
-        <img src="${avatar}" style="width:54px;height:54px;border-radius:14px;border:2px solid #141826;object-fit:cover;">
-        <div style="text-align:center;">
-          <div style="color:#ffffff;font-size:14px;font-weight:900;margin-bottom:4px;">${escapeHtml(formatNameUpper(name))}</div>
-          ${rankHtml}
-        </div>
-      </div>
-    `;
-  }).join("");
 }
 
 function filterUserSearch() {
@@ -7327,6 +7334,23 @@ async function loadProfiles() {
       }
     }
   } catch(_) {}
+
+  // Also load custom roles from GitHub
+  try {
+    const rolesRes = await fetch(`${API_BASE}/roles.json?nc=${Date.now()}`, {
+      cache: "no-store",
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+    });
+    if(rolesRes.ok) {
+      const rInfo = await rolesRes.json();
+      if(rInfo && rInfo.content) {
+        const rData = JSON.parse(b64_to_utf8(rInfo.content));
+        if(Array.isArray(rData)) {
+          CUSTOM_ROLES = rData;
+        }
+      }
+    }
+  } catch(_) {}
 }
 
 function getUserProfile(usernameOrKey) {
@@ -7402,6 +7426,55 @@ function getUserProfile(usernameOrKey) {
     joined: "01.01.2026",
     guestbook: []
   };
+}
+
+function getRankBadge(usernameOrKey, overrideRanks = null, showAll = false) {
+  let ranks = overrideRanks;
+  if (!ranks) {
+    const prof = (typeof getUserProfile === 'function') ? getUserProfile(usernameOrKey) : null;
+    ranks = (prof && prof.rank) ? prof.rank : null;
+  }
+  if (!ranks) {
+    const isOwner = (String(usernameOrKey).toLowerCase() === "admin") || (typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.is_admin && String(usernameOrKey).toLowerCase() === CURRENT_USER.name.toLowerCase());
+    ranks = isOwner ? ["admin"] : ["premium"];
+  }
+  if (typeof ranks === "string") {
+    ranks = ranks.split(",").map(r => r.trim().toLowerCase());
+  }
+  if (!Array.isArray(ranks) || ranks.length === 0) {
+    ranks = ["premium"];
+  }
+
+  const allRoles = (typeof getAllRoles === 'function') ? getAllRoles() : DEFAULT_GLOBAL_ROLES;
+
+  const renderedBadges = [];
+  ranks.forEach(rk => {
+    let clean = String(rk).toLowerCase().trim();
+    if (clean === "inhaber") clean = "admin";
+    if (clean === "coadmin") clean = "co-admin";
+    if (clean === "dev") clean = "developer";
+    if (clean === "mod") clean = "moderator";
+    if (clean === "support") clean = "supporter";
+    if (clean === "kunde") clean = "premium";
+
+    const roleDef = allRoles.find(r => r.id === clean) || {
+      id: clean,
+      name: clean.toUpperCase(),
+      icon: "&#11088;",
+      color: "#fbbf24",
+      bg: "rgba(229,169,60,0.15)"
+    };
+
+    const cls = `badge-rank badge-rank-${roleDef.id.replace(/[^a-z0-9]/g, '')}`;
+    const styleAttr = `background:${roleDef.bg || 'rgba(255,255,255,0.1)'};color:${roleDef.color};border:1px solid ${roleDef.color}88;`;
+    
+    renderedBadges.push(`<span class="${cls}" style="${styleAttr}">${roleDef.icon || '&#11088;'} ${escapeHtml(roleDef.name)}</span>`);
+  });
+
+  if (showAll) {
+    return renderedBadges.join(" ");
+  }
+  return renderedBadges[0] || `<span class="badge-rank badge-rank-premium">&#128142; PREMIUM</span>`;
 }
 
 function renderGlobalUserBadges() {
@@ -7632,44 +7705,40 @@ async function openUserProfileModal(usernameOrKey) {
   if(badgeEl) badgeEl.innerHTML = getRankBadge(usernameOrKey, prof ? prof.rank : null, true);
 
   const roleManager = document.getElementById("profile-role-manager");
+  const adminRoleCrudBtns = document.getElementById("admin-role-crud-btns");
+  const adminBanBox = document.getElementById("profile-admin-ban-box");
+  const banStatusText = document.getElementById("profile-ban-status-text");
+  const btnBan = document.getElementById("profile-btn-ban");
+  const btnUnban = document.getElementById("profile-btn-unban");
+
+  const isOwner = typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.is_admin;
+
   if(roleManager) {
-    const isOwner = typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.is_admin;
     const assignableRoles = (CURRENT_USER && CURRENT_USER.permissions && CURRENT_USER.permissions.assignable_roles) || [];
     const canManageRoles = isOwner || assignableRoles.length > 0;
     
     if(canManageRoles) {
       roleManager.style.display = "block";
-      const checkboxes = document.querySelectorAll(".role-checkbox");
-      let currentRanks = (prof && prof.rank) ? prof.rank : ["premium"];
-      if (typeof currentRanks === "string") currentRanks = currentRanks.split(",").map(r => r.trim().toLowerCase());
-      if (Array.isArray(currentRanks)) {
-        currentRanks = currentRanks.map(r => {
-          let s = String(r).toLowerCase().trim();
-          if (s === "inhaber") return "admin";
-          if (s === "coadmin") return "co-admin";
-          if (s === "dev") return "developer";
-          if (s === "mod") return "moderator";
-          if (s === "support") return "supporter";
-          if (s === "kunde") return "premium";
-          return s;
-        });
-      }
-      
-      checkboxes.forEach(cb => {
-        const val = cb.value.toLowerCase();
-        
-        if(!isOwner && !assignableRoles.includes(val)) {
-           cb.parentElement.style.display = "none";
-        } else {
-           cb.parentElement.style.display = "inline-flex";
-        }
-        
-        cb.checked = currentRanks.includes(val);
-        if(cb.checked) cb.parentElement.classList.add("active");
-        else cb.parentElement.classList.remove("active");
-      });
+      if(adminRoleCrudBtns) adminRoleCrudBtns.style.display = isOwner ? "flex" : "none";
+
+      renderDynamicRolePills(prof);
     } else {
       roleManager.style.display = "none";
+    }
+  }
+
+  // Ban management for Admin
+  if(adminBanBox) {
+    if(isOwner && !isSelf) {
+      adminBanBox.style.display = "flex";
+      const isBanned = !!(prof && prof.is_banned);
+      if(banStatusText) {
+        banStatusText.innerHTML = isBanned ? `<span style="color:#f43f5e;font-weight:900;">&#128683; GEBANNT (${escapeHtml(prof.ban_reason || 'Verstoss gegen die Regeln')})</span>` : `<span style="color:#10b981;font-weight:900;">&#9989; Aktiv</span>`;
+      }
+      if(btnBan) btnBan.style.display = isBanned ? "none" : "inline-flex";
+      if(btnUnban) btnUnban.style.display = isBanned ? "inline-flex" : "none";
+    } else {
+      adminBanBox.style.display = "none";
     }
   }
 
@@ -7704,6 +7773,234 @@ async function openUserProfileModal(usernameOrKey) {
   }
 
   if(modal) modal.style.display = "flex";
+}
+
+// DEFAULT & CUSTOM ROLES DEFINITION
+const DEFAULT_GLOBAL_ROLES = [
+  { id: "admin", name: "INHABER", icon: "&#128081;", color: "#fbbf24", bg: "rgba(229,169,60,0.2)" },
+  { id: "co-admin", name: "CO-ADMIN", icon: "&#128737;&#65039;", color: "#f87171", bg: "rgba(239,68,68,0.2)" },
+  { id: "developer", name: "DEVELOPER", icon: "&#128187;", color: "#2dd4bf", bg: "rgba(20,184,166,0.2)" },
+  { id: "moderator", name: "MODERATOR", icon: "&#128737;&#65039;", color: "#c084fc", bg: "rgba(168,85,247,0.2)" },
+  { id: "supporter", name: "SUPPORTER", icon: "&#128737;&#65039;", color: "#38bdf8", bg: "rgba(56,189,248,0.2)" },
+  { id: "elite", name: "ELITE", icon: "&#9889;", color: "#fb923c", bg: "rgba(249,115,22,0.2)" },
+  { id: "vip", name: "VIP", icon: "&#11088;", color: "#facc15", bg: "rgba(250,204,21,0.2)" },
+  { id: "donator", name: "DONATOR", icon: "&#128150;", color: "#f472b6", bg: "rgba(244,114,182,0.2)" },
+  { id: "premium", name: "PREMIUM", icon: "&#128142;", color: "#60a5fa", bg: "rgba(59,130,246,0.2)" }
+];
+
+let CUSTOM_ROLES = [];
+
+function getAllRoles() {
+  const custom = (Array.isArray(CUSTOM_ROLES) && CUSTOM_ROLES.length > 0) ? CUSTOM_ROLES : [];
+  const combined = [...DEFAULT_GLOBAL_ROLES];
+  custom.forEach(cr => {
+    if(!combined.some(r => r.id === cr.id)) combined.push(cr);
+  });
+  return combined;
+}
+
+function renderDynamicRolePills(prof) {
+  const container = document.getElementById("profile-dynamic-roles-list");
+  if(!container) return;
+
+  const roles = getAllRoles();
+  let currentRanks = (prof && prof.rank) ? prof.rank : ["premium"];
+  if (typeof currentRanks === "string") currentRanks = currentRanks.split(",").map(r => r.trim().toLowerCase());
+  if (Array.isArray(currentRanks)) {
+    currentRanks = currentRanks.map(r => {
+      let s = String(r).toLowerCase().trim();
+      if (s === "inhaber") return "admin";
+      if (s === "coadmin") return "co-admin";
+      if (s === "dev") return "developer";
+      if (s === "mod") return "moderator";
+      if (s === "support") return "supporter";
+      if (s === "kunde") return "premium";
+      return s;
+    });
+  }
+
+  const isOwner = typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.is_admin;
+
+  container.innerHTML = roles.map(r => {
+    const isChecked = currentRanks.includes(r.id.toLowerCase());
+    const isCustom = !DEFAULT_GLOBAL_ROLES.some(dr => dr.id === r.id);
+
+    return `
+      <div style="display:inline-flex;align-items:center;gap:4px;">
+        <label class="role-pill ${isChecked ? 'active' : ''}" style="${isChecked ? `border-color:${r.color};color:${r.color};background:${r.bg || 'rgba(255,255,255,0.1)'};` : ''}">
+          <input type="checkbox" class="role-checkbox" value="${r.id}" ${isChecked ? 'checked' : ''} onchange="updateProfileRoles(this)">
+          <span>${r.icon || '&#11088;'}</span> <span>${escapeHtml(r.name)}</span>
+        </label>
+        ${(isOwner && isCustom) ? `
+          <button type="button" onclick="editCustomRole('${r.id}')" style="background:#111522;border:1px solid #222a3e;color:#e5a93c;padding:3px 6px;border-radius:4px;font-size:9px;cursor:pointer;" title="Rolle bearbeiten">&#9998;</button>
+          <button type="button" onclick="deleteCustomRole('${r.id}')" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.3);color:#f43f5e;padding:3px 6px;border-radius:4px;font-size:9px;cursor:pointer;" title="Rolle l\u00f6schen">&#128465;&#65039;</button>
+        ` : ''}
+      </div>
+    `;
+  }).join("");
+}
+
+function openCreateCustomRoleModal() {
+  document.getElementById("custom-role-modal-title").innerHTML = `<span style="color:#e5a93c;">&#128081;</span> NEUE ROLLE ERSTELLEN`;
+  document.getElementById("custom-role-orig-id").value = "";
+  document.getElementById("custom-role-id").value = "";
+  document.getElementById("custom-role-id").disabled = false;
+  document.getElementById("custom-role-name").value = "";
+  document.getElementById("custom-role-icon").value = "&#11088;";
+  document.getElementById("custom-role-color").value = "#fbbf24";
+
+  const modal = document.getElementById("custom-role-modal");
+  if(modal) modal.style.display = "flex";
+}
+
+function editCustomRole(roleId) {
+  const r = getAllRoles().find(x => x.id === roleId);
+  if(!r) return;
+
+  document.getElementById("custom-role-modal-title").innerHTML = `<span style="color:#e5a93c;">&#9998;</span> ROLLE '${escapeHtml(r.name)}' BEARBEITEN`;
+  document.getElementById("custom-role-orig-id").value = r.id;
+  document.getElementById("custom-role-id").value = r.id;
+  document.getElementById("custom-role-id").disabled = true;
+  document.getElementById("custom-role-name").value = r.name;
+  document.getElementById("custom-role-icon").value = r.icon || "&#11088;";
+  document.getElementById("custom-role-color").value = r.color || "#fbbf24";
+
+  const modal = document.getElementById("custom-role-modal");
+  if(modal) modal.style.display = "flex";
+}
+
+function closeCustomRoleModal() {
+  const modal = document.getElementById("custom-role-modal");
+  if(modal) modal.style.display = "none";
+}
+
+async function saveCustomRoleSubmit() {
+  const origId = (document.getElementById("custom-role-orig-id").value || "").trim();
+  const rawId = (document.getElementById("custom-role-id").value || "").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
+  const name = (document.getElementById("custom-role-name").value || "").trim();
+  const icon = (document.getElementById("custom-role-icon").value || "").trim() || "&#11088;";
+  const color = (document.getElementById("custom-role-color").value || "").trim() || "#fbbf24";
+
+  if(!rawId || !name) {
+    alert("Bitte gib eine Rollen-ID und einen Namen ein!");
+    return;
+  }
+
+  const roleObj = {
+    id: rawId,
+    name: name.toUpperCase(),
+    icon: icon,
+    color: color,
+    bg: `${color}25`
+  };
+
+  if(!CUSTOM_ROLES) CUSTOM_ROLES = [];
+
+  if(origId) {
+    const idx = CUSTOM_ROLES.findIndex(x => x.id === origId);
+    if(idx >= 0) CUSTOM_ROLES[idx] = roleObj;
+    else CUSTOM_ROLES.push(roleObj);
+  } else {
+    CUSTOM_ROLES = CUSTOM_ROLES.filter(x => x.id !== rawId);
+    CUSTOM_ROLES.push(roleObj);
+  }
+
+  closeCustomRoleModal();
+  const prof = getUserProfile(_activeProfileTarget);
+  renderDynamicRolePills(prof);
+  showToast(`Rolle '${name}' erfolgreich gespeichert!`, "ok");
+
+  try {
+    const jsonStr = JSON.stringify(CUSTOM_ROLES, null, 2);
+    await uploadFileToGitHub("roles.json", utf8_to_b64(jsonStr), `Save custom role: ${name}`);
+  } catch(e) {
+    console.warn("Roles upload err:", e);
+  }
+}
+
+async function deleteCustomRole(roleId) {
+  if(!confirm(`M\u00f6chtest du die Rolle '${roleId}' wirklich l\u00f6schen?`)) return;
+  CUSTOM_ROLES = CUSTOM_ROLES.filter(r => r.id !== roleId);
+  const prof = getUserProfile(_activeProfileTarget);
+  renderDynamicRolePills(prof);
+  showToast(`Rolle '${roleId}' gel\u00f6scht!`, "ok");
+
+  try {
+    const jsonStr = JSON.stringify(CUSTOM_ROLES, null, 2);
+    await uploadFileToGitHub("roles.json", utf8_to_b64(jsonStr), `Delete custom role: ${roleId}`);
+  } catch(_) {}
+}
+
+async function banActiveProfileUser() {
+  if(!_activeProfileTarget) return;
+  const reason = prompt(`Grund f\u00fcr den Bann von '${_activeProfileTarget}':`, "Verstoss gegen die HySchool Community-Regeln");
+  if(reason === null) return;
+
+  const prof = getUserProfile(_activeProfileTarget) || { username: _activeProfileTarget };
+  prof.is_banned = true;
+  prof.ban_reason = reason.trim() || "Verstoss gegen die Regeln";
+  prof.banned_at = new Date().toLocaleString("de-DE");
+  prof.banned_by = CURRENT_USER.name || "ADMIN";
+
+  USER_PROFILES[_activeProfileTarget] = prof;
+  if(prof.key) USER_PROFILES[prof.key] = prof;
+
+  try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
+
+  // Also pause/lock key in licenses if found
+  const lic = ALL_LICENSES.find(l => l.used_by === _activeProfileTarget || l.note === _activeProfileTarget || l.key === prof.key);
+  if(lic) {
+    lic.paused = true;
+    lic.note = `[GEBANNT: ${prof.ban_reason}]`;
+    try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
+    saveLicenses(false);
+  }
+
+  showToast(`User '${_activeProfileTarget}' wurde erfolgreich gebannt!`, "ok");
+  logADMINAction("USER_BANNED", _activeProfileTarget, `User gebannt wegen: ${prof.ban_reason}`);
+
+  openUserProfileModal(_activeProfileTarget);
+  renderUserSearch();
+
+  try {
+    const fullJson = JSON.stringify(USER_PROFILES, null, 2);
+    await uploadFileToGitHub("profiles.json", utf8_to_b64(fullJson), `Ban user ${_activeProfileTarget}: ${prof.ban_reason}`);
+  } catch(_) {}
+}
+
+async function unbanActiveProfileUser() {
+  if(!_activeProfileTarget) return;
+  if(!confirm(`M\u00f6chtest du '${_activeProfileTarget}' wirklich entbannen?`)) return;
+
+  const prof = getUserProfile(_activeProfileTarget) || {};
+  prof.is_banned = false;
+  delete prof.ban_reason;
+  delete prof.banned_at;
+  delete prof.banned_by;
+
+  USER_PROFILES[_activeProfileTarget] = prof;
+  if(prof.key) USER_PROFILES[prof.key] = prof;
+
+  try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
+
+  const lic = ALL_LICENSES.find(l => l.used_by === _activeProfileTarget || (l.note && l.note.includes("[GEBANNT")));
+  if(lic) {
+    lic.paused = false;
+    lic.note = _activeProfileTarget;
+    try { localStorage.setItem("hyschool_licenses_cache", JSON.stringify(ALL_LICENSES)); } catch(_) {}
+    saveLicenses(false);
+  }
+
+  showToast(`User '${_activeProfileTarget}' erfolgreich entbannt!`, "ok");
+  logADMINAction("USER_UNBANNED", _activeProfileTarget, `User entbannt`);
+
+  openUserProfileModal(_activeProfileTarget);
+  renderUserSearch();
+
+  try {
+    const fullJson = JSON.stringify(USER_PROFILES, null, 2);
+    await uploadFileToGitHub("profiles.json", utf8_to_b64(fullJson), `Unban user ${_activeProfileTarget}`);
+  } catch(_) {}
 }
 
 async function updateProfileRoles(el) {
@@ -7776,6 +8073,85 @@ async function updateProfileRoles(el) {
   }
   
   renderGlobalUserBadges();
+  renderUserSearch();
+}
+
+// USER VERZEICHNIS & SEARCH
+function filterUserSearch() {
+  renderUserSearch();
+}
+
+function renderUserSearch() {
+  const grid = document.getElementById("user-search-grid");
+  if(!grid) return;
+
+  const searchInp = document.getElementById("user-search-input");
+  const q = (searchInp ? searchInp.value : "").toLowerCase().trim();
+
+  // ONLY show REAL, existing users from licenses, staff, chat, and admin!
+  const validUsersSet = new Map();
+
+  // 1. Admin
+  validUsersSet.set("ADMIN", { name: "ADMIN", source: "Inhaber" });
+
+  // 2. Staff members
+  if (Array.isArray(ALL_STAFF)) {
+    ALL_STAFF.forEach(st => {
+      if(st && st.name) validUsersSet.set(st.name, { name: st.name, source: st.role || "Staff" });
+    });
+  }
+
+  // 3. Real License customers
+  if (Array.isArray(ALL_LICENSES)) {
+    ALL_LICENSES.forEach(lic => {
+      const u = lic.used_by || (lic.note && lic.note !== "---" && !lic.note.includes("MASTER") ? lic.note : "");
+      if(u && u.trim() && u.trim() !== "---" && !validUsersSet.has(u)) {
+        validUsersSet.set(u, { name: u, source: "Kunde", key: lic.key });
+      }
+    });
+  }
+
+  // 4. Chat participants
+  if (Array.isArray(ALL_CHAT_MESSAGES)) {
+    ALL_CHAT_MESSAGES.forEach(msg => {
+      if(msg && msg.user && msg.user.trim() && !validUsersSet.has(msg.user)) {
+        validUsersSet.set(msg.user, { name: msg.user, source: msg.role || "Kunde" });
+      }
+    });
+  }
+
+  let users = Array.from(validUsersSet.values());
+
+  if(q) {
+    users = users.filter(u => u.name.toLowerCase().includes(q) || u.source.toLowerCase().includes(q));
+  }
+
+  if(users.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#64748b;padding:40px;font-size:12px;">Keine Benutzer gefunden.</div>`;
+    return;
+  }
+
+  grid.innerHTML = users.map(u => {
+    const prof = getUserProfile(u.name) || {};
+    const avatar = (prof && prof.avatar) ? prof.avatar : getAvatarUrl(u.name);
+    const ranks = (prof && prof.rank) ? prof.rank : [u.name === "ADMIN" ? "admin" : "premium"];
+    const isBanned = !!(prof && prof.is_banned);
+    const badgeHtml = isBanned ? `<span style="background:rgba(244,63,94,0.15);color:#f43f5e;border:1px solid rgba(244,63,94,0.4);padding:2px 6px;border-radius:4px;font-size:9.5px;font-weight:900;">&#128683; GEBANNT</span>` : getRankBadge(u.name, ranks);
+
+    return `
+      <div onclick="openUserProfileModal('${escapeHtml(u.name)}')" style="background:#0c0f18;border:1px solid #1a2234;border-radius:12px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;cursor:pointer;transition:all .2s ease;box-shadow:0 4px 16px rgba(0,0,0,0.3);" onmouseover="this.style.borderColor='#e5a93c';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#1a2234';this.style.transform='translateY(0)'">
+        <div style="width:58px;height:58px;border-radius:14px;border:2px solid ${u.name === 'ADMIN' ? '#e5a93c' : '#28344e'};overflow:hidden;background:#141926;display:flex;align-items:center;justify-content:center;">
+          <img src="${avatar}" style="width:100%;height:100%;object-fit:cover;" alt="${escapeHtml(u.name)}">
+        </div>
+        <div>
+          <div style="color:#ffffff;font-weight:900;font-size:13px;margin-bottom:4px;">${escapeHtml(formatNameUpper(u.name))}</div>
+          <div style="display:flex;align-items:center;justify-content:center;">
+            ${badgeHtml}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
 function handleBannerUpload(e) {
