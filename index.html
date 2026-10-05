@@ -10207,28 +10207,52 @@ async function uploadHighlightClip() {
 
   if(file) {
     progFill.style.width = "40%";
-    progLbl.textContent = "Lade Video in Cloud hoch...";
+    progLbl.textContent = "Lade Video auf Webserver hoch...";
+    let uploadedSuccessfully = false;
+
+    // 1. Try Aeonfree direct PHP upload endpoint
     try {
       const formData = new FormData();
-      formData.append("reqtype", "fileupload");
-      formData.append("fileToUpload", file);
-      const res = await fetch("https://catbox.moe/user/api.php", {
+      formData.append("file", file);
+      const res = await fetch("http://hyschool.zya.me/api/upload.php", {
         method: "POST",
         body: formData
       });
       if(res.ok) {
-        const hostedUrl = await res.text();
-        if(hostedUrl && hostedUrl.startsWith("http")) {
-          videoUrl = hostedUrl.trim();
+        const json = await res.json();
+        if(json && json.success && json.url) {
+          videoUrl = json.url;
           videoType = "direct";
-        } else {
-          throw new Error("Invalid response from cloud host");
+          uploadedSuccessfully = true;
         }
-      } else {
-        throw new Error("Upload HTTP status " + res.status);
       }
-    } catch(uploadErr) {
-      console.warn("Cloud video host fallback:", uploadErr);
+    } catch(aeonErr) {
+      console.warn("Aeonfree upload fallback:", aeonErr);
+    }
+
+    // 2. Fallback to Catbox if webserver is unreachable
+    if(!uploadedSuccessfully) {
+      try {
+        const formData = new FormData();
+        formData.append("reqtype", "fileupload");
+        formData.append("fileToUpload", file);
+        const res = await fetch("https://catbox.moe/user/api.php", {
+          method: "POST",
+          body: formData
+        });
+        if(res.ok) {
+          const hostedUrl = await res.text();
+          if(hostedUrl && hostedUrl.startsWith("http")) {
+            videoUrl = hostedUrl.trim();
+            videoType = "direct";
+            uploadedSuccessfully = true;
+          }
+        }
+      } catch(_) {}
+    }
+
+    // 3. Fallback to DataURL
+    if(!uploadedSuccessfully) {
       const reader = new FileReader();
       const b64Data = await new Promise(resolve => {
         reader.onload = e => resolve(e.target.result);
