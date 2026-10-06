@@ -10224,30 +10224,58 @@ async function uploadHighlightClip() {
 
   if(file) {
     progFill.style.width = "40%";
-    progLbl.textContent = "Lade Video auf Webserver hoch...";
+    progLbl.textContent = "Lade Video in HySchool Cloud hoch...";
     let uploadedSuccessfully = false;
 
-    // 1. Try Aeonfree direct PHP upload endpoint
+    // 1. Direct GitHub Release Asset Storage (Fast CDN, Permanent, No Size Limits)
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("http://hyschool.zya.me/api/upload.php", {
+      const token = getToken();
+      const cleanFileName = "hl_" + Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9_\.-]/g, "_");
+      const uploadRes = await fetch("https://uploads.github.com/repos/Kakash9i/hyschool-panel/releases/405118091/assets?name=" + encodeURIComponent(cleanFileName), {
         method: "POST",
-        body: formData
+        headers: {
+          "Authorization": "token " + token,
+          "Content-Type": file.type || "application/octet-stream"
+        },
+        body: file
       });
-      if(res.ok) {
-        const json = await res.json();
-        if(json && json.success && json.url) {
-          videoUrl = json.url;
+      if (uploadRes.ok) {
+        const assetData = await uploadRes.json();
+        if (assetData && assetData.browser_download_url) {
+          videoUrl = assetData.browser_download_url;
           videoType = "direct";
           uploadedSuccessfully = true;
         }
+      } else {
+        console.warn("GitHub Release asset upload status:", uploadRes.status);
       }
-    } catch(aeonErr) {
-      console.warn("Aeonfree upload fallback:", aeonErr);
+    } catch(ghErr) {
+      console.warn("GitHub Release upload error:", ghErr);
     }
 
-    // 2. Fallback to Catbox if webserver is unreachable
+    // 2. Try Aeonfree direct PHP upload endpoint
+    if(!uploadedSuccessfully) {
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await fetch("http://hyschool.zya.me/api/upload.php", {
+          method: "POST",
+          body: formData
+        });
+        if(res.ok) {
+          const json = await res.json();
+          if(json && json.success && json.url) {
+            videoUrl = json.url;
+            videoType = "direct";
+            uploadedSuccessfully = true;
+          }
+        }
+      } catch(aeonErr) {
+        console.warn("Aeonfree upload fallback:", aeonErr);
+      }
+    }
+
+    // 3. Fallback to Catbox if webserver is unreachable
     if(!uploadedSuccessfully) {
       try {
         const formData = new FormData();
@@ -10268,7 +10296,7 @@ async function uploadHighlightClip() {
       } catch(_) {}
     }
 
-    // 3. Fallback to DataURL
+    // 4. Fallback to DataURL
     if(!uploadedSuccessfully) {
       const reader = new FileReader();
       const b64Data = await new Promise(resolve => {
