@@ -4903,50 +4903,62 @@ async function deleteCheatFile(prefix, key) {
     return;
   }
 
+  const c = CHEATS.find(x => x.prefix === prefix || x.key === key);
   const urlInput = document.getElementById(`${prefix}-url`);
-  const curUrl = (urlInput ? urlInput.value : "").trim();
+  const curUrl = (urlInput ? urlInput.value : (c ? c.download_url : "")).trim();
   
-  if(!curUrl) {
-    alert("Keine Datei fr diesen Cheat hinterlegt!");
+  if(!curUrl && (!c || !c.download_url)) {
+    alert("Keine Datei fuer diesen Cheat hinterlegt!");
     return;
   }
 
-  const fileName = curUrl.split('/').pop();
-  if(!confirm(`Mchtest du die Cheat-Datei '${fileName}' wirklich komplett vom Server / GitHub lschen?`)) {
+  const targetUrl = curUrl || (c ? c.download_url : "");
+  const fileName = targetUrl.split('/').pop();
+  if(!confirm(`Moechtest du die Cheat-Datei '${fileName}' wirklich komplett vom Server / GitHub loeschen?`)) {
     return;
   }
 
   try {
-    showToast(`Lsche ${fileName} von GitHub...`, "ok");
+    showToast(`Loesche ${fileName} von GitHub...`, "ok");
     
     // 1. Delete release file on GitHub
     try {
       await deleteFileFromGitHub(`releases/${fileName}`, `Delete ${fileName} via ADMIN Panel`);
     } catch(_) {}
 
-    // 2. Clear URL & uncheck loadable in config
+    // 2. Clear URL & uncheck loadable in config and DOM
+    if(c) {
+      c.download_url = "";
+      c.loadable = false;
+    }
     if(urlInput) urlInput.value = "";
     const loadCb = document.getElementById(`${prefix}-load`);
     if(loadCb) loadCb.checked = false;
 
-    // 3. Clear file selection list
-    state[prefix].files = [];
+    // 3. Update DOM active file element immediately
+    const activeFileEl = document.getElementById(`${prefix}-active-file`);
+    if(activeFileEl) activeFileEl.innerHTML = `<span style="color:#64748b;font-size:11px;">Keine Datei hinterlegt</span>`;
+    const delBtn = document.getElementById(`${prefix}-del-file-btn`);
+    if(delBtn) delBtn.style.display = "none";
+
+    // 4. Clear file selection list
+    if(state[prefix]) state[prefix].files = [];
     renderFileList(prefix);
 
-    // 4. Save & reload
+    // 5. Save & reload
     await saveAllToGitHub();
     await loadCheats();
 
-    logADMINAction("CHEAT_FILE_DELETED", fileName, `Cheat-Datei '${fileName}' fr ${key} restlos gelscht`);
-    showToast(`Cheat-Datei '${fileName}' wurde erfolgreich gelscht!`, "ok");
+    logADMINAction("CHEAT_FILE_DELETED", fileName, `Cheat-Datei '${fileName}' fuer ${key} restlos geloescht`);
+    showToast(`Cheat-Datei '${fileName}' wurde erfolgreich geloescht!`, "ok");
   } catch(e) {
-    showToast("Fehler beim Lschen: " + e.message, "err");
+    showToast("Fehler beim Loeschen: " + e.message, "err");
   }
 }
 
 async function saveAllToGitHub() {
   if(!CURRENT_USER.is_admin && !CURRENT_USER.permissions.can_manage_cheats) {
-    alert("Keine Berechtigung zum ndern der Cheats!");
+    alert("Keine Berechtigung zum Aendern der Cheats!");
     return;
   }
   try {
@@ -4954,13 +4966,15 @@ async function saveAllToGitHub() {
     const legacyOut = {};
 
     CHEATS.forEach(c => {
-      const iconVal = (document.getElementById(`${c.prefix}-icon`)||{}).value || c.icon || "⚡";
-      const subVal = (document.getElementById(`${c.prefix}-sub`)||{}).value || c.subscription || "";
-      const verVal = (document.getElementById(`${c.prefix}-ver`)||{}).value || c.version || "";
-      const statVal = (document.getElementById(`${c.prefix}-status`)||{}).value || c.status || "UNDETECTED";
-      const lastVal = (document.getElementById(`${c.prefix}-last`)||{}).value || c.last_update || "";
-      const urlVal = (document.getElementById(`${c.prefix}-url`)||{}).value || c.download_url || "";
+      const iconVal = document.getElementById(`${c.prefix}-icon`) ? document.getElementById(`${c.prefix}-icon`).value : (c.icon || "⚡");
+      const subVal = document.getElementById(`${c.prefix}-sub`) ? document.getElementById(`${c.prefix}-sub`).value : (c.subscription || "");
+      const verVal = document.getElementById(`${c.prefix}-ver`) ? document.getElementById(`${c.prefix}-ver`).value : (c.version || "");
+      const statVal = document.getElementById(`${c.prefix}-status`) ? document.getElementById(`${c.prefix}-status`).value : (c.status || "UNDETECTED");
+      const lastVal = document.getElementById(`${c.prefix}-last`) ? document.getElementById(`${c.prefix}-last`).value : (c.last_update || "");
+      const urlInput = document.getElementById(`${c.prefix}-url`);
+      const urlVal = urlInput ? urlInput.value.trim() : (c.download_url !== undefined ? c.download_url : "");
       const loadVal = document.getElementById(`${c.prefix}-load`) ? document.getElementById(`${c.prefix}-load`).checked : (c.loadable !== false);
+      const folderVal = c.folder || c.key.toLowerCase().replace(/[^a-z0-9_]/g, '_');
 
       c.icon = iconVal;
       c.subscription = subVal;
@@ -4969,6 +4983,7 @@ async function saveAllToGitHub() {
       c.last_update = lastVal;
       c.download_url = urlVal;
       c.loadable = loadVal;
+      c.folder = folderVal;
 
       configArray.push({
         key: c.key,
@@ -4976,6 +4991,7 @@ async function saveAllToGitHub() {
         icon: iconVal,
         color: c.color || "#ffcc00",
         prefix: c.prefix,
+        folder: folderVal,
         subscription: subVal,
         version: verVal,
         status: statVal,
@@ -4986,6 +5002,7 @@ async function saveAllToGitHub() {
 
       legacyOut[c.key] = {
         icon: iconVal,
+        folder: folderVal,
         subscription: subVal,
         version: verVal,
         status: statVal,
