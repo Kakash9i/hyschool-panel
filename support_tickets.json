@@ -1,0 +1,27 @@
+{
+    "id":  "T100001",
+    "createdAt":  "2026-10-07T03:40:07.395Z",
+    "assignedTo":  "ADMIN",
+    "customerKey":  "HYS-VIP-MARC",
+    "customerName":  "Marc",
+    "topic":  "[VALORANT] Injection Support \\u0026 Configs",
+    "messages":  [
+                     {
+                         "sender":  "Marc",
+                         "time":  "03:40",
+                         "timestamp":  1791337207402,
+                         "text":  "Hey Support Team! Test-Ticket f\\u00fcr das 1-on-1 System.",
+                         "role":  "Kunde"
+                     },
+                     {
+                         "sender":  "ADMIN",
+                         "time":  "03:41",
+                         "timestamp":  1791337207408,
+                         "text":  "Hey Marc! Dein Ticket ist live angekommen. Wir helfen dir gerne weiter!",
+                         "role":  "Inhaber"
+                     }
+                 ],
+    "description":  "Willkommen im 1-on-1 Support System von HySchool!",
+    "closedAt":  null,
+    "status":  "open"
+}
