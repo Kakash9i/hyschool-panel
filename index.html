@@ -7631,15 +7631,6 @@ async function clearTeamChat() {
     try { localStorage.setItem("hyschool_chat_cache", "[]"); } catch(_) {}
     await aeonSaveData("chat.json", []);
     renderChatMessages();
-    showToast("Team-Chat erfolgreich geleert!", "ok");
-  } catch(e) {
-    showToast("Fehler beim Leeren des Chats: " + e.message, "err");
-  }
-}
-
-    ALL_CHAT_MESSAGES = [];
-    try { localStorage.setItem("hyschool_chat_cache", JSON.stringify([])); } catch(_) {}
-    renderChatMessages();
     logADMINAction("CHAT_CLEARED", "-", "Team-Chat wurde vom ADMIN geleert");
     showToast("Team-Chat erfolgreich geleert!", "ok");
   } catch(e) {
