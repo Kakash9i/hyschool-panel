@@ -8897,8 +8897,15 @@ function renderTab9UserProfile(usernameOrKey) {
   const isOwner = typeof CURRENT_USER !== 'undefined' && CURRENT_USER && CURRENT_USER.is_admin;
   const isBanned = !!(prof && prof.is_banned);
   const avatarUrl = (prof && prof.avatar) ? prof.avatar : getAvatarUrl(usernameOrKey);
-  const userConfigs = (typeof ALL_CONFIGS !== 'undefined' && Array.isArray(ALL_CONFIGS)) ? ALL_CONFIGS.filter(c => c.user === (prof.username || usernameOrKey)) : [];
-  const userClips = (typeof ALL_HIGHLIGHTS !== 'undefined' && Array.isArray(ALL_HIGHLIGHTS)) ? ALL_HIGHLIGHTS.filter(h => (h.author || '').toLowerCase() === (prof.username || usernameOrKey).toLowerCase()) : [];
+  const targetNorm = String(prof.username || usernameOrKey || '').toLowerCase().trim();
+  const userConfigs = (typeof ALL_CONFIGS !== 'undefined' && Array.isArray(ALL_CONFIGS)) ? ALL_CONFIGS.filter(c => {
+    const cNorm = String(c.user || c.author || '').toLowerCase().trim();
+    return cNorm === targetNorm || (targetNorm === "admin" && (cNorm === "inhaber" || cNorm === "admin"));
+  }) : [];
+  const userClips = (typeof ALL_HIGHLIGHTS !== 'undefined' && Array.isArray(ALL_HIGHLIGHTS)) ? ALL_HIGHLIGHTS.filter(h => {
+    const aNorm = String(h.author || '').toLowerCase().trim();
+    return aNorm === targetNorm || (targetNorm === "admin" && (aNorm === "inhaber" || aNorm === "admin"));
+  }) : [];
   
   let bUrl = (prof && prof.banner) ? prof.banner : "";
   if (isSelf && !bUrl) {
@@ -10284,74 +10291,46 @@ async function uploadHighlightClip() {
 
   btn.disabled = true;
   progWrap.style.display = "block";
-  progFill.style.width = "25%";
+  progFill.style.width = "20%";
   progLbl.textContent = "Verarbeite Highlight Clip...";
 
   let videoUrl = urlInput;
   let videoType = "link";
 
   if(file) {
-    progFill.style.width = "30%";
-    progLbl.textContent = "Lade Video in Cloud hoch...";
-    let uploadedSuccessfully = false;
+    progFill.style.width = "40%";
+    progLbl.textContent = "Lade Video-Datei in Cloud hoch...";
 
-    // 1. Direct High-Speed GitHub Release Asset Storage
     try {
-      const token = getToken();
-      const cleanFileName = "hl_" + Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9_\.-]/g, "_");
-      const uploadRes = await fetch("https://uploads.github.com/repos/Kakash9i/hyschool-panel/releases/405118091/assets?name=" + encodeURIComponent(cleanFileName), {
-        method: "POST",
-        headers: {
-          "Authorization": "token " + token,
-          "Content-Type": file.type || "application/octet-stream"
-        },
-        body: file
-      });
-      if (uploadRes.ok) {
-        const assetData = await uploadRes.json();
-        if (assetData && assetData.browser_download_url) {
-          videoUrl = assetData.browser_download_url;
-          videoType = "direct";
-          uploadedSuccessfully = true;
-        }
-      }
-    } catch(ghErr) {
-      console.warn("GitHub Release upload error:", ghErr);
-    }
-
-    // 2. Fallback to Catbox if needed
-    if(!uploadedSuccessfully) {
-      try {
-        const formData = new FormData();
-        formData.append("reqtype", "fileupload");
-        formData.append("fileToUpload", file);
-        const res = await fetch("https://catbox.moe/user/api.php", {
-          method: "POST",
-          body: formData
-        });
-        if(res.ok) {
-          const hostedUrl = await res.text();
-          if(hostedUrl && hostedUrl.startsWith("http")) {
-            videoUrl = hostedUrl.trim();
-            videoType = "direct";
-            uploadedSuccessfully = true;
-          }
-        }
-      } catch(_) {}
-    }
-
-    // 3. Fallback to DataURL
-    if(!uploadedSuccessfully) {
       const reader = new FileReader();
-      const b64Data = await new Promise(resolve => {
-        reader.onload = e => resolve(e.target.result);
+      const b64Data = await new Promise((resolve, reject) => {
+        reader.onload = () => {
+          const res = reader.result;
+          const b64 = res.split(',')[1];
+          resolve(b64);
+        };
+        reader.onerror = reject;
         reader.readAsDataURL(file);
       });
-      videoUrl = b64Data;
+
+      progFill.style.width = "65%";
+      progLbl.textContent = "Speichere Video in Cloud-Speicher...";
+
+      const cleanFileName = "hl_" + Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9_\.-]/g, "_");
+      await uploadFileToGitHub("clips/" + cleanFileName, b64Data, `Upload Clip: ${cleanFileName}`);
+
+      videoUrl = `${RAW_BASE}/clips/${cleanFileName}`;
       videoType = "direct";
+
+      await finishHighlightUpload();
+      return;
+    } catch(err) {
+      console.error("Clip upload failed:", err);
+      progLbl.textContent = "Fehler: " + err.message;
+      showToast("Fehler beim Video-Upload: " + err.message, "err");
+      btn.disabled = false;
+      return;
     }
-    await finishHighlightUpload();
-    return;
   } else {
     if(urlInput.includes("youtube.com") || urlInput.includes("youtu.be")) videoType = "youtube";
     else if(urlInput.includes("medal.tv")) videoType = "medal";
@@ -10361,25 +10340,46 @@ async function uploadHighlightClip() {
   }
 
   async function finishHighlightUpload() {
-    progFill.style.width = "75%";
-    progLbl.textContent = "Speichere Highlight in Cloud-Datenbank...";
+    progFill.style.width = "85%";
+    progLbl.textContent = "Aktualisiere Highlights-Datenbank...";
 
     const newHighlight = {
       id: "hl_" + Date.now(),
       title: title,
       game: game,
       desc: desc || "Keine Beschreibung",
-      author: CURRENT_USER.name,
+      author: (CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : "ADMIN",
       isCensored: isCensored,
       censoredName: "[Zensiert \uD83D\uDD12]",
-      rank: CURRENT_USER.role ? CURRENT_USER.role.toLowerCase() : "ADMIN",
-      isUserClip: !CURRENT_USER.is_admin,
+      rank: (CURRENT_USER && CURRENT_USER.role) ? CURRENT_USER.role.toLowerCase() : "ADMIN",
+      isUserClip: !(CURRENT_USER && CURRENT_USER.is_admin),
       videoUrl: videoUrl,
       videoType: videoType,
       date: new Date().toLocaleDateString("de-DE") + " " + new Date().toLocaleTimeString("de-DE", {hour:'2-digit', minute:'2-digit'}),
       likes: 1,
-      likedBy: [CURRENT_USER.name]
+      likedBy: [(CURRENT_USER && CURRENT_USER.name) ? CURRENT_USER.name : "ADMIN"]
     };
+
+    // Merge remote highlights first
+    const token = getToken();
+    try {
+      const res = await fetch(`${API_BASE}/highlights.json?nc=${Date.now()}_${Math.random()}`, {
+        cache: "no-store",
+        headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+      });
+      if(res.ok) {
+        const info = await res.json();
+        if(info && info.content) {
+          const remoteHl = JSON.parse(b64_to_utf8(info.content));
+          if(Array.isArray(remoteHl)) {
+            const map = new Map();
+            remoteHl.forEach(h => { if(h && h.id) map.set(h.id, h); });
+            ALL_HIGHLIGHTS.forEach(h => { if(h && h.id) map.set(h.id, h); });
+            ALL_HIGHLIGHTS = Array.from(map.values());
+          }
+        }
+      }
+    } catch(_) {}
 
     ALL_HIGHLIGHTS.unshift(newHighlight);
     filterHighlights();
@@ -10388,7 +10388,7 @@ async function uploadHighlightClip() {
     try {
       const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
       const finalB64 = utf8_to_b64(fullJson);
-      await uploadFileToGitHub("highlights.json", finalB64, "Upload Highlight: [" + CURRENT_USER.name + "] " + title);
+      await uploadFileToGitHub("highlights.json", finalB64, "Upload Highlight: [" + newHighlight.author + "] " + title);
 
       progFill.style.width = "100%";
       progLbl.textContent = "Highlight erfolgreich ver\u00f6ffentlicht!";
@@ -10403,6 +10403,10 @@ async function uploadHighlightClip() {
       document.getElementById("hl-drop-sublabel").textContent = "Max 25MB (f\u00fcr gr\u00f6ssere Clips bitte Link nutzen)";
       _uploadedHighlightFile = null;
       toggleHighlightUploadCard();
+
+      if(typeof _activeProfileTarget !== 'undefined' && _activeProfileTarget) {
+        try { renderTab9UserProfile(_activeProfileTarget); } catch(_) {}
+      }
     } catch(err) {
       console.error(err);
       showToast("Fehler beim Ver\u00f6ffentlichen: " + err.message, "err");
