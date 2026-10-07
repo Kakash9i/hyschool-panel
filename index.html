@@ -7475,26 +7475,45 @@ async function loadTeamChat(silent = false, manualToast = false) {
     } catch(_) {}
   }
 
+  const token = getToken();
   let remoteMessages = null;
   let loaded = false;
 
-  // Primary: Load from Aeonfree Backend
   try {
-    const data = await aeonFetchData("chat.json");
-    if(data && Array.isArray(data)) {
-      remoteMessages = data;
+    const res = await fetch(`${API_BASE}/chat.json?nc=${Date.now()}_${Math.random()}`, {
+      cache: "no-store",
+      headers: { 
+        Authorization: `token ${token}`, 
+        Accept: "application/vnd.github.v3+json"
+      }
+    });
+    if(res.ok) {
+      const info = await res.json();
+      if(info && info.content) {
+        const decoded = b64_to_utf8(info.content);
+        remoteMessages = JSON.parse(decoded);
+        loaded = true;
+      }
+    } else if(res.status === 404) {
+      remoteMessages = [];
       loaded = true;
     }
   } catch(_) {}
 
+  if(!loaded) {
+    try {
+      const rawRes = await fetch(`${RAW_BASE}/chat.json?nc=${Date.now()}_${Math.random()}`, { cache: "no-store" });
+      if(rawRes.ok) {
+        remoteMessages = await rawRes.json();
+        loaded = true;
+      }
+    } catch(_) {}
+  }
+
   if(loaded && Array.isArray(remoteMessages)) {
     const map = new Map();
-    remoteMessages.forEach(m => {
-      if(m && m.id) map.set(m.id, m);
-    });
-    ALL_CHAT_MESSAGES.forEach(m => {
-      if(m && m.id) map.set(m.id, m);
-    });
+    remoteMessages.forEach(m => { if(m && m.id) map.set(m.id, m); });
+    ALL_CHAT_MESSAGES.forEach(m => { if(m && m.id) map.set(m.id, m); });
     ALL_CHAT_MESSAGES = Array.from(map.values()).sort((a,b) => (a.timestamp || 0) - (b.timestamp || 0));
     try { localStorage.setItem("hyschool_chat_cache", JSON.stringify(ALL_CHAT_MESSAGES)); } catch(_) {}
     renderChatMessages();
@@ -7607,12 +7626,36 @@ async function sendChatMessage() {
   const wrap = document.getElementById("chat-messages-wrap");
   if(wrap) wrap.scrollTop = wrap.scrollHeight;
 
+  const token = getToken();
   try {
-    // Save to Aeonfree Database
-    await aeonSaveData("chat.json", ALL_CHAT_MESSAGES);
+    try {
+      const infoRes = await fetch(`${API_BASE}/chat.json?nc=${Date.now()}_${Math.random()}`, {
+        cache: "no-store",
+        headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+      });
+      if(infoRes.ok) {
+        const info = await infoRes.json();
+        if(info && info.content) {
+          const remoteList = JSON.parse(b64_to_utf8(info.content));
+          if(Array.isArray(remoteList)) {
+            const map = new Map();
+            remoteList.forEach(m => { if(m && m.id) map.set(m.id, m); });
+            ALL_CHAT_MESSAGES.forEach(m => { if(m && m.id) map.set(m.id, m); });
+            ALL_CHAT_MESSAGES = Array.from(map.values()).sort((a,b) => (a.timestamp || 0) - (b.timestamp || 0));
+          }
+        }
+      }
+    } catch(_) {}
+
+    try { localStorage.setItem("hyschool_chat_cache", JSON.stringify(ALL_CHAT_MESSAGES)); } catch(_) {}
+
+    const jsonStr = JSON.stringify(ALL_CHAT_MESSAGES, null, 2);
+    const b64 = utf8_to_b64(jsonStr);
+
+    await uploadFileToGitHub("chat.json", b64, `Chat: [${newMsg.user}] ${text.substring(0, 30)}`);
     renderChatMessages();
   } catch(e) {
-    showToast("Nachricht konnte nicht an Aeonfree gesendet werden: " + e.message, "err");
+    showToast("Nachricht konnte nicht an Cloud gesendet werden: " + e.message, "err");
   } finally {
     if(btn) btn.disabled = false;
     if(inp) inp.focus();
@@ -7629,7 +7672,8 @@ async function clearTeamChat() {
   try {
     ALL_CHAT_MESSAGES = [];
     try { localStorage.setItem("hyschool_chat_cache", "[]"); } catch(_) {}
-    await aeonSaveData("chat.json", []);
+    const b64 = utf8_to_b64("[]");
+    await uploadFileToGitHub("chat.json", b64, "Clear Team Chat via ADMIN Panel");
     renderChatMessages();
     logADMINAction("CHAT_CLEARED", "-", "Team-Chat wurde vom ADMIN geleert");
     showToast("Team-Chat erfolgreich geleert!", "ok");
@@ -7659,36 +7703,49 @@ const PRESET_AVATARS = [
 ];
 
 async function loadProfiles() {
+  const token = getToken();
   try {
-    const remote = await aeonFetchData("profiles.json");
-    if(remote && typeof remote === "object") {
-      USER_PROFILES = remote;
-      
-      // Re-populate lowercase aliases
-      for (let k of Object.keys(USER_PROFILES)) {
-        const low = k.toLowerCase();
-        if(!USER_PROFILES[low]) USER_PROFILES[low] = USER_PROFILES[k];
+    const res = await fetch(`${API_BASE}/profiles.json?nc=${Date.now()}_${Math.random()}`, {
+      cache: "no-store",
+      headers: { 
+        Authorization: `token ${token}`, 
+        Accept: "application/vnd.github.v3+json"
       }
+    });
+    if(res.ok) {
+      const info = await res.json();
+      if(info && info.content) {
+        const remote = JSON.parse(b64_to_utf8(info.content));
+        if(remote && typeof remote === "object") {
+          USER_PROFILES = remote;
+          
+          // Re-populate lowercase aliases
+          for (let k of Object.keys(USER_PROFILES)) {
+            const low = k.toLowerCase();
+            if(!USER_PROFILES[low]) USER_PROFILES[low] = USER_PROFILES[k];
+          }
 
-      try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
-      renderGlobalUserBadges();
-      
-      // Immediate live avatar sync for current user across header and dashboard
-      if (typeof CURRENT_USER !== 'undefined' && CURRENT_USER) {
-        const myProf = getUserProfile(CURRENT_USER.name) || getUserProfile("ADMIN") || {};
-        const myAvatar = myProf.avatar || (typeof getAvatarUrl === 'function' ? getAvatarUrl(CURRENT_USER.name) : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(CURRENT_USER.name || "ADMIN")}`);
-        const headImg = document.getElementById("header-user-avatar");
-        const dashImg = document.getElementById("dash-avatar-img");
-        if (headImg) headImg.src = myAvatar;
-        if (dashImg) dashImg.src = myAvatar;
-      }
+          try { localStorage.setItem("hyschool_profiles_cache", JSON.stringify(USER_PROFILES)); } catch(_) {}
+          renderGlobalUserBadges();
+          
+          // Immediate live avatar sync for current user across header and dashboard
+          if (typeof CURRENT_USER !== 'undefined' && CURRENT_USER) {
+            const myProf = getUserProfile(CURRENT_USER.name) || getUserProfile("ADMIN") || {};
+            const myAvatar = myProf.avatar || (typeof getAvatarUrl === 'function' ? getAvatarUrl(CURRENT_USER.name) : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(CURRENT_USER.name || "ADMIN")}`);
+            const headImg = document.getElementById("header-user-avatar");
+            const dashImg = document.getElementById("dash-avatar-img");
+            if (headImg) headImg.src = myAvatar;
+            if (dashImg) dashImg.src = myAvatar;
+          }
 
-      // If Tab 9 is open, refresh user list and profile immediately
-      const tc9 = document.getElementById("tc-9");
-      if (tc9 && tc9.classList.contains("active")) {
-        try { renderTab9SidebarUserList(); } catch(_) {}
-        if (typeof _activeProfileTarget !== 'undefined' && _activeProfileTarget) {
-          try { renderTab9UserProfile(_activeProfileTarget); } catch(_) {}
+          // If Tab 9 is open, refresh user list and profile immediately
+          const tc9 = document.getElementById("tc-9");
+          if (tc9 && tc9.classList.contains("active")) {
+            try { renderTab9SidebarUserList(); } catch(_) {}
+            if (typeof _activeProfileTarget !== 'undefined' && _activeProfileTarget) {
+              try { renderTab9UserProfile(_activeProfileTarget); } catch(_) {}
+            }
+          }
         }
       }
     }
@@ -7714,9 +7771,7 @@ async function loadProfiles() {
       cache: "no-store",
       headers: { 
         Authorization: `token ${token}`, 
-        Accept: "application/vnd.github.v3+json",
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        "Pragma": "no-cache"
+        Accept: "application/vnd.github.v3+json"
       }
     });
     if(rolesRes.ok) {
@@ -9194,8 +9249,8 @@ function handleAvatarUpload(e) {
       USER_PROFILES[target].avatar = dataUrl;
       if(target.toUpperCase() === "ADMIN") USER_PROFILES["ADMIN"].avatar = dataUrl;
 
-      // Primary save to Aeonfree
-      await aeonSaveData("profiles.json", USER_PROFILES);
+      const fullJson = JSON.stringify(USER_PROFILES, null, 2);
+      await uploadFileToGitHub("profiles.json", utf8_to_b64(fullJson), `Update avatar for ${target}`);
       showToast("Profilbild erfolgreich für alle PCs synchronisiert!", "ok");
     } catch(err) {
       console.warn("Avatar sync error:", err);
@@ -9269,11 +9324,30 @@ function handleBannerUpload(e) {
     showToast("Banner erfolgreich aktualisiert! Synchronisiere...", "ok");
 
     try {
+      const token = getToken();
+      try {
+        const getRes = await fetch(`${API_BASE}/profiles.json?nc=${Date.now()}_${Math.random()}`, {
+          cache: "no-store",
+          headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+        });
+        if(getRes.ok) {
+          const info = await getRes.json();
+          if(info && info.content) {
+            const remoteMap = JSON.parse(b64_to_utf8(info.content));
+            if(remoteMap && typeof remoteMap === 'object') {
+              Object.keys(remoteMap).forEach(k => {
+                if(!USER_PROFILES[k]) USER_PROFILES[k] = remoteMap[k];
+              });
+            }
+          }
+        }
+      } catch(_) {}
+
       USER_PROFILES[target].banner = dataUrl;
       if(target.toUpperCase() === "ADMIN") USER_PROFILES["ADMIN"].banner = dataUrl;
 
-      // Primary save to Aeonfree
-      await aeonSaveData("profiles.json", USER_PROFILES);
+      const fullJson = JSON.stringify(USER_PROFILES, null, 2);
+      await uploadFileToGitHub("profiles.json", utf8_to_b64(fullJson), `Update banner for ${target}`);
       showToast("Banner erfolgreich für alle PCs synchronisiert!", "ok");
     } catch(err) {
       console.warn("Banner sync error:", err);
@@ -10217,47 +10291,35 @@ async function uploadHighlightClip() {
   let videoType = "link";
 
   if(file) {
-    progFill.style.width = "40%";
-    progLbl.textContent = "Lade Video auf Aeonfree Webserver hoch...";
+    progFill.style.width = "30%";
+    progLbl.textContent = "Lade Video in Cloud hoch...";
     let uploadedSuccessfully = false;
 
-    // 1. Direct Aeonfree PHP Upload Endpoint
+    // 1. Direct High-Speed GitHub Release Asset Storage
     try {
-      const aeonUrl = await aeonUploadFile(file);
-      if (aeonUrl) {
-        videoUrl = aeonUrl;
-        videoType = "direct";
-        uploadedSuccessfully = true;
-      }
-    } catch(aeonErr) {
-      console.warn("Aeonfree upload error:", aeonErr);
-    }
-
-    // 2. Fallback to GitHub Release Storage if needed
-    if(!uploadedSuccessfully) {
-      try {
-        const token = getToken();
-        const cleanFileName = "hl_" + Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9_\.-]/g, "_");
-        const uploadRes = await fetch("https://uploads.github.com/repos/Kakash9i/hyschool-panel/releases/405118091/assets?name=" + encodeURIComponent(cleanFileName), {
-          method: "POST",
-          headers: {
-            "Authorization": "token " + token,
-            "Content-Type": file.type || "application/octet-stream"
-          },
-          body: file
-        });
-        if (uploadRes.ok) {
-          const assetData = await uploadRes.json();
-          if (assetData && assetData.browser_download_url) {
-            videoUrl = assetData.browser_download_url;
-            videoType = "direct";
-            uploadedSuccessfully = true;
-          }
+      const token = getToken();
+      const cleanFileName = "hl_" + Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9_\.-]/g, "_");
+      const uploadRes = await fetch("https://uploads.github.com/repos/Kakash9i/hyschool-panel/releases/405118091/assets?name=" + encodeURIComponent(cleanFileName), {
+        method: "POST",
+        headers: {
+          "Authorization": "token " + token,
+          "Content-Type": file.type || "application/octet-stream"
+        },
+        body: file
+      });
+      if (uploadRes.ok) {
+        const assetData = await uploadRes.json();
+        if (assetData && assetData.browser_download_url) {
+          videoUrl = assetData.browser_download_url;
+          videoType = "direct";
+          uploadedSuccessfully = true;
         }
-      } catch(_) {}
+      }
+    } catch(ghErr) {
+      console.warn("GitHub Release upload error:", ghErr);
     }
 
-    // 3. Fallback to Catbox if needed
+    // 2. Fallback to Catbox if needed
     if(!uploadedSuccessfully) {
       try {
         const formData = new FormData();
@@ -10278,7 +10340,7 @@ async function uploadHighlightClip() {
       } catch(_) {}
     }
 
-    // 4. Fallback to DataURL
+    // 3. Fallback to DataURL
     if(!uploadedSuccessfully) {
       const reader = new FileReader();
       const b64Data = await new Promise(resolve => {
@@ -10299,8 +10361,8 @@ async function uploadHighlightClip() {
   }
 
   async function finishHighlightUpload() {
-    progFill.style.width = "85%";
-    progLbl.textContent = "Speichere Highlight auf Aeonfree Server...";
+    progFill.style.width = "75%";
+    progLbl.textContent = "Speichere Highlight in Cloud-Datenbank...";
 
     const newHighlight = {
       id: "hl_" + Date.now(),
@@ -10324,11 +10386,12 @@ async function uploadHighlightClip() {
     try { localStorage.setItem("hyschool_highlights_cache", JSON.stringify(ALL_HIGHLIGHTS)); } catch(_) {}
 
     try {
-      // Primary: Save to Aeonfree Database
-      await aeonSaveData("highlights.json", ALL_HIGHLIGHTS);
+      const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
+      const finalB64 = utf8_to_b64(fullJson);
+      await uploadFileToGitHub("highlights.json", finalB64, "Upload Highlight: [" + CURRENT_USER.name + "] " + title);
 
       progFill.style.width = "100%";
-      progLbl.textContent = "Highlight erfolgreich auf Aeonfree ver\u00f6ffentlicht!";
+      progLbl.textContent = "Highlight erfolgreich ver\u00f6ffentlicht!";
       showToast("Highlight \"" + title + "\" ver\u00f6ffentlicht!", "ok");
 
       document.getElementById("hl-upload-title").value = "";
@@ -10370,7 +10433,9 @@ async function toggleHighlightLike(highlightId) {
   try { localStorage.setItem("hyschool_highlights_cache", JSON.stringify(ALL_HIGHLIGHTS)); } catch(_) {}
 
   try {
-    await aeonSaveData("highlights.json", ALL_HIGHLIGHTS);
+    const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
+    const finalB64 = utf8_to_b64(fullJson);
+    await uploadFileToGitHub("highlights.json", finalB64, "Like Highlight: " + h.title);
   } catch(e) {
     console.error("Like sync error:", e);
   }
@@ -10395,9 +10460,11 @@ async function deleteHighlight(highlightId) {
   showToast("Highlight gel\u00f6scht!", "ok");
 
   try {
-    await aeonSaveData("highlights.json", ALL_HIGHLIGHTS);
+    const fullJson = JSON.stringify(ALL_HIGHLIGHTS, null, 2);
+    const finalB64 = utf8_to_b64(fullJson);
+    await uploadFileToGitHub("highlights.json", finalB64, "Delete Highlight: " + h.title);
   } catch(e) {
-    showToast("Aeonfree Sync Fehler: " + e.message, "err");
+    showToast("Cloud-Sync Fehler: " + e.message, "err");
   }
 }
 
@@ -10504,25 +10571,36 @@ async function loadHighlights(silent = false, manualToast = false) {
     container.innerHTML = `<div style="grid-column: 1/-1;text-align:center;color:#e5a93c;padding:40px;font-size:12px;">\uD83C\uDFAC Lade Highlight Clips...</div>`;
   }
 
+  const token = getToken();
   let loaded = false;
   let remoteHl = null;
 
-  // 1. Primary: Load from Aeonfree Backend
   try {
-    const data = await aeonFetchData("highlights.json");
-    if (data && Array.isArray(data)) {
-      remoteHl = data;
+    const res = await fetch(`${API_BASE}/highlights.json?nc=${Date.now()}_${Math.random()}`, {
+      cache: "no-store",
+      headers: { 
+        Authorization: `token ${token}`, 
+        Accept: "application/vnd.github.v3+json"
+      }
+    });
+    if(res.ok) {
+      const info = await res.json();
+      if(info && info.content) {
+        remoteHl = JSON.parse(b64_to_utf8(info.content));
+        loaded = true;
+      }
+    } else if(res.status === 404) {
+      remoteHl = [];
       loaded = true;
     }
   } catch(_) {}
 
-  // 2. Fallback: Local Cache
   if(!loaded) {
     try {
-      const local = localStorage.getItem("hyschool_highlights_cache");
-      if (local) {
-        remoteHl = JSON.parse(local);
-        if (Array.isArray(remoteHl)) loaded = true;
+      const rawRes = await fetch(`${RAW_BASE}/highlights.json?nc=${Date.now()}_${Math.random()}`, { cache: "no-store" });
+      if(rawRes.ok) {
+        remoteHl = await rawRes.json();
+        loaded = true;
       }
     } catch(_) {}
   }
